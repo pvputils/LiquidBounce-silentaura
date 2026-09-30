@@ -700,14 +700,6 @@ public final class net/ccbluex/liquidbounce/features/command/brigadier/ClientCom
 	public fun suggestRegistryElements (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/commands/SharedSuggestionProvider$ElementSuggestionType;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lcom/mojang/brigadier/context/CommandContext;Ljava/util/function/Predicate;)Ljava/util/concurrent/CompletableFuture;
 }
 
-public final class net/ccbluex/liquidbounce/features/command/commands/ingame/CommandCenter : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/features/command/CommandRegistrar {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
 public final class net/ccbluex/liquidbounce/features/command/commands/ingame/CommandServerInfo : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/features/command/CommandRegistrar {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
