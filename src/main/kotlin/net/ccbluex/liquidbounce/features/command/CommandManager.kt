@@ -54,7 +54,6 @@ import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandPing
 import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandServerInfo
 import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandTps
 import net.ccbluex.liquidbounce.features.command.commands.ingame.fakeplayer.CommandFakePlayer
-import net.ccbluex.liquidbounce.features.command.commands.translate.CommandAutoTranslate
 import net.ccbluex.liquidbounce.features.misc.SelfDestruct
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.features.addon.AddonApi

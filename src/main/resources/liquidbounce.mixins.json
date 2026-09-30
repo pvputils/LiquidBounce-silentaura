@@ -108,7 +108,6 @@
     "minecraft.network.MixinServerboundUseItemOnPacket",
     "minecraft.network.MixinServerboundUseItemPacket",
     "minecraft.network.MixinServerNameResolver",
-    "minecraft.registry.MixinBuiltInRegistries",
     "minecraft.render.MixinBakedQuadMaterialInfo",
     "minecraft.render.MixinCamera",
     "minecraft.render.MixinEnchantTableRenderer",

@@ -21,22 +21,16 @@ package net.ccbluex.liquidbounce.features.module.modules.misc.betterchat
 import com.mojang.blaze3d.platform.InputConstants
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
 import net.ccbluex.liquidbounce.config.types.list.Tagged
-import net.ccbluex.liquidbounce.event.events.ChatReceiveEvent
 import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent
 import net.ccbluex.liquidbounce.event.events.NotificationEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.event.suspendHandler
 import net.ccbluex.liquidbounce.features.command.CommandManager
-import net.ccbluex.liquidbounce.features.global.GlobalSettingsAutoTranslate
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.interfaces.GuiMessageLineAddition
-import net.ccbluex.liquidbounce.utils.client.MessageMetadata
-import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.notification
 import net.ccbluex.liquidbounce.utils.client.openChat
 import net.ccbluex.liquidbounce.utils.text.appendTo
-import net.ccbluex.liquidbounce.utils.text.stripMinecraftColorCodes
 import net.minecraft.client.gui.screens.DeathScreen
 import net.minecraft.client.multiplayer.chat.GuiMessage
 import net.minecraft.util.FormattedCharSink
@@ -79,7 +73,6 @@ object ModuleBetterChat : ClientModule("BetterChat", ModuleCategories.RENDER, al
         override fun getMessage(content: String) = content + suffix
     }
 
-    private val autoTranslate by multiEnumChoice<ChatReceiveEvent.ChatType>("AutoTranslate")
 
     object Copy : ToggleableValueGroup(this, "Copy", true) {
         private val notify by boolean("Notify", true)
@@ -136,26 +129,6 @@ object ModuleBetterChat : ClientModule("BetterChat", ModuleCategories.RENDER, al
             options.keyChat.key.value -> mc.openChat("")
             options.keyCommand.key.value -> mc.openChat("/")
             prefix.code -> mc.openChat(prefix.toString())
-        }
-    }
-
-    @Suppress("unused")
-    private val chatReceiveHandler = suspendHandler<ChatReceiveEvent> { event ->
-        if (event.type !in autoTranslate) {
-            return@suspendHandler
-        }
-
-        val plainMessage = event.message.stripMinecraftColorCodes()
-        if (plainMessage.isBlank()) {
-            return@suspendHandler
-        }
-
-        val result = GlobalSettingsAutoTranslate.translate(text = plainMessage)
-        if (result.isValid) {
-            chat(
-                result.toResultText(),
-                metadata = MessageMetadata(prefix = false)
-            )
         }
     }
 

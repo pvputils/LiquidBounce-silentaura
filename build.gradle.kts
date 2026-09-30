@@ -193,7 +193,6 @@ dependencies {
     // External utils
     compileOnlyApi(libs.fastutil4k.extensionsOnly)
     jij(libs.fastutil4k.moreCollections)
-    jij(libs.discord.ipc)
 
     // Test libraries
     testImplementation(kotlin("test"))
