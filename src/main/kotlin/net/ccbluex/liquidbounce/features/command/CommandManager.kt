@@ -50,30 +50,11 @@ import net.ccbluex.liquidbounce.features.command.commands.client.CommandValue
 import net.ccbluex.liquidbounce.features.command.commands.client.client.CommandClient
 import net.ccbluex.liquidbounce.features.command.commands.client.marketplace.CommandMarketplace
 import net.ccbluex.liquidbounce.features.command.commands.deeplearn.CommandModels
-import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandCenter
-import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandCoordinates
 import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandPing
-import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandRemoteView
-import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandSay
 import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandServerInfo
 import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandTps
-import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandUsername
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemEnchant
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemGive
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemRename
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemSkull
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemStack
-import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandMapImage
 import net.ccbluex.liquidbounce.features.command.commands.ingame.fakeplayer.CommandFakePlayer
-import net.ccbluex.liquidbounce.features.command.commands.module.CommandAutoAccount
-import net.ccbluex.liquidbounce.features.command.commands.module.CommandAutoDisable
-import net.ccbluex.liquidbounce.features.command.commands.module.CommandInvsee
-import net.ccbluex.liquidbounce.features.command.commands.module.CommandXRay
-import net.ccbluex.liquidbounce.features.command.commands.module.teleport.CommandPlayerTeleport
-import net.ccbluex.liquidbounce.features.command.commands.module.teleport.CommandTeleport
-import net.ccbluex.liquidbounce.features.command.commands.module.teleport.CommandVClip
 import net.ccbluex.liquidbounce.features.command.commands.translate.CommandAutoTranslate
-import net.ccbluex.liquidbounce.features.command.commands.translate.CommandTranslate
 import net.ccbluex.liquidbounce.features.misc.SelfDestruct
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.features.addon.AddonApi
@@ -138,29 +119,16 @@ object CommandManager : EventListener {
     fun registerInbuilt() {
         register(CommandPing)
         register(CommandTps)
-        register(CommandUsername)
         register(CommandClear)
-        register(CommandCoordinates)
-        register(CommandMapImage)
         register(CommandHide)
         register(CommandPanic)
-        register(CommandSay)
-        register(CommandTranslate)
-        register(CommandAutoTranslate)
-        register(CommandItemRename)
         register(CommandMarketplace)
         register(CommandToggle)
         register(CommandTargets)
         register(CommandBinds)
-        register(CommandAutoDisable)
-        register(CommandInvsee)
-        register(CommandXRay)
         register(CommandValue)
         register(CommandBind)
-        register(CommandAutoAccount)
-        register(CommandCenter)
         register(CommandHelp)
-        register(CommandRemoteView)
         register(CommandDebug)
         register(CommandFriend)
         register(CommandClient)
@@ -168,13 +136,6 @@ object CommandManager : EventListener {
         register(CommandLocalConfig)
         register(CommandAddon)
         register(CommandFakePlayer)
-        register(CommandItemGive)
-        register(CommandItemSkull)
-        register(CommandItemStack)
-        register(CommandItemEnchant)
-        register(CommandVClip)
-        register(CommandTeleport)
-        register(CommandPlayerTeleport)
         register(CommandServerInfo)
         register(CommandModels)
     }

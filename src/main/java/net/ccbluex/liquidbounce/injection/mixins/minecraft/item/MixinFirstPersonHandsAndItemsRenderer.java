@@ -19,11 +19,7 @@
 
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.item;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleSilentHotbar;
 import net.ccbluex.liquidbounce.features.module.modules.render.animations.ModuleAnimations;
-import net.ccbluex.liquidbounce.utils.client.SilentHotbar;
 import net.minecraft.client.player.FirstPersonHandsAndItems;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -36,25 +32,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FirstPersonHandsAndItems.class)
 public abstract class MixinFirstPersonHandsAndItemsRenderer {
-
-    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getMainHandItem()Lnet/minecraft/world/item/ItemStack;"))
-    private ItemStack injectSilentHotbar(ItemStack original, @Local(argsOnly = true, name = "player") LocalPlayer player) {
-        if (ModuleSilentHotbar.INSTANCE.getRunning()) {
-            // noinspection DataFlowIssue
-            return player.getInventory().getNonEquipmentItems().get(SilentHotbar.INSTANCE.getClientsideSlot());
-        }
-
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F"))
-    private float injectSilentHotbarNoCooldown(float original) {
-        if (ModuleSilentHotbar.INSTANCE.getRunning() && ModuleSilentHotbar.INSTANCE.getNoCooldownProgress() && SilentHotbar.INSTANCE.isSlotModified()) {
-            return 1f;
-        }
-
-        return original;
-    }
 
     @Inject(method = "itemUsed", at = @At("HEAD"), cancellable = true)
     private void injectIgnorePlace(InteractionHand hand, CallbackInfo ci) {

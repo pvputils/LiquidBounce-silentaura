@@ -21,7 +21,6 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.network;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.*;
-import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleAutoBow;
 import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.trigger.triggers.ClientBlockBreakTrigger;
 import net.ccbluex.liquidbounce.utils.client.SilentHotbar;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -92,11 +91,6 @@ public abstract class MixinMultiPlayerGameMode {
     private void hookItemInteractAtHead(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         final var event = EventManager.INSTANCE.callEvent(new PlayerInteractItemEvent(player, hand));
         if (event.isCancelled()) cir.setReturnValue(InteractionResult.PASS);
-    }
-
-    @Inject(method = "releaseUsingItem", at = @At("HEAD"))
-    private void stopUsingItem(Player player, CallbackInfo callbackInfo) {
-        ModuleAutoBow.onStopUsingItem();
     }
 
     @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
