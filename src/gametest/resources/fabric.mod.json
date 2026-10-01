@@ -1,1 +1,17 @@
-{"schemaVersion":1,"id":"killaura-standalone-gametest","version":"1.0.0","environment":"client","entrypoints":{"fabric-client-gametest":["mod.killaura.KillAuraGameTestTodoAi"]},"depends":{"killaura_standalone":"*","fabric-client-gametest-api-v1":"*"}}
+{
+  "schemaVersion": 1,
+  "id": "liquidbounce-gametest",
+  "version": "1.0.0",
+  "name": "LiquidBounce Game Tests",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": [
+      "net.ccbluex.liquidbounce.gametest.CommandGameTest",
+      "net.ccbluex.liquidbounce.gametest.MarketplaceCommandGameTest"
+    ]
+  },
+  "depends": {
+    "liquidbounce": "*",
+    "fabric-client-gametest-api-v1": "*"
+  }
+}

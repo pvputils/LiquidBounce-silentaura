@@ -1,6 +1,5 @@
-# // codex start
 * text=auto
-gradlewTodoAi text eol=lf
+*.kt text eol=lf
+*.java text eol=lf
+*.sh text eol=lf
 *.bat text eol=crlf
-*.jar binary
-# //codex end
