@@ -1,0 +1,24 @@
+.idea/*
+!.idea/copyright/
+!.idea/codeInsightSettings.xml
+*.iml
+*.ipr
+*.iws
+/bin/
+/.settings/
+/.gradle/
+/build/
+/run/
+/mcef/
+/logs/
+/.kotlin/
+.DS_Store
+*.log
+/.fabric/
+.env
+/anti-cheats/
+.narrafork
+
+# // codex start
+/run-standaloneTodoAi/
+# //codex end

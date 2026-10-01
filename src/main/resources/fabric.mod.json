@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "killaura_standalone",
+  "version": "${version}",
+  "name": "KillAura Standalone",
+  "description": "Standalone client targeting, aiming and attack logic derived from LiquidBounce KillAura.",
+  "authors": ["pvputils", "CCBlueX (original KillAura)"],
+  "license": "GPL-3.0-or-later",
+  "environment": "client",
+  "entrypoints": {"client": ["mod.killaura.KillAuraClientTodoAi"]},
+  "depends": {"fabricloader": ">=0.19.5", "minecraft": "26.3", "java": ">=25", "fabric-api": "*"}
+}
