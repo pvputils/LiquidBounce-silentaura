@@ -700,14 +700,6 @@ public final class net/ccbluex/liquidbounce/features/command/brigadier/ClientCom
 	public fun suggestRegistryElements (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/commands/SharedSuggestionProvider$ElementSuggestionType;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lcom/mojang/brigadier/context/CommandContext;Ljava/util/function/Predicate;)Ljava/util/concurrent/CompletableFuture;
 }
 
-public final class net/ccbluex/liquidbounce/features/command/commands/ingame/CommandCenter : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/features/command/CommandRegistrar {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
 public final class net/ccbluex/liquidbounce/features/command/commands/ingame/CommandServerInfo : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/features/command/CommandRegistrar {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
@@ -733,14 +725,6 @@ public final class net/ccbluex/liquidbounce/features/cosmetic/CapeCosmeticsManag
 }
 
 public final class net/ccbluex/liquidbounce/features/cosmetic/CosmeticService : net/ccbluex/liquidbounce/config/types/group/ValueGroup, net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/features/global/GlobalSettingsAutoTranslate : net/ccbluex/liquidbounce/config/types/group/ValueGroup, net/ccbluex/liquidbounce/api/thirdparty/translator/TranslatorApi, net/ccbluex/liquidbounce/event/EventListener {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
@@ -925,14 +909,6 @@ public final class net/ccbluex/liquidbounce/features/module/modules/combat/cryst
 }
 
 public abstract class net/ccbluex/liquidbounce/features/module/modules/combat/crystalaura/trigger/Trigger : net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/features/module/modules/player/autoshop/AutoShopInventoryManager : net/ccbluex/liquidbounce/event/EventListener {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;

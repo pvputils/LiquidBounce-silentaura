@@ -206,13 +206,6 @@ public abstract class MixinLevelRenderer {
         return original || liquid_bounce$hasCustomOutlineMesh;
     }
 
-    @Inject(method = "submitBlockOutline", at = @At("HEAD"), cancellable = true)
-    private void cancelBlockOutline(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, LevelRenderState levelRenderState, CallbackInfo ci) {
-        if (ModuleBlockOutline.INSTANCE.getRunning()) {
-            ci.cancel();
-        }
-    }
-
     @WrapWithCondition(method = "submitBlockDestroyAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitBreakingBlockModel(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;IZ)V"))
     private boolean cancelRenderBreakingTexture(SubmitNodeCollector instance, PoseStack poseStack, List<?> list, int i, boolean b) {
         return ModuleAntiBlind.canRender(DoRender.BLOCK_BREAK_OVERLAY);

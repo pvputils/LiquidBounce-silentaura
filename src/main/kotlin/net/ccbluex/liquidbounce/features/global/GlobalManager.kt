@@ -36,10 +36,7 @@ object GlobalManager : Config("Settings") {
         tree(CommandManager.GlobalSettings)
         tree(GlobalSettingsTarget)
         tree(BlinkManager)
-        tree(GlobalSettingsAutoTranslate)
         tree(GlobalBrowserSettings)
-        tree(GlobalSettingsClientChat)
-        tree(GlobalSettingsRichPresence)
     }
 
 }

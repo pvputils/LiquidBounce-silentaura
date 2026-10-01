@@ -24,7 +24,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.PerspectiveEvent;
 import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleDroneControl;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleAspect;
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam;
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeLook;
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNoFov;
@@ -204,13 +203,6 @@ public abstract class MixinCamera {
         }
 
         return original;
-    }
-
-    @ModifyArgs(method = "createProjectionMatrixForCulling", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix4f;perspective(FFFFZ)Lorg/joml/Matrix4f;", remap = false))
-    private void hookBasicProjectionMatrix(Args args) {
-        if (ModuleAspect.INSTANCE.getRunning()) {
-            args.set(1, (float) args.get(1) / ModuleAspect.getRatioMultiplier());
-        }
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

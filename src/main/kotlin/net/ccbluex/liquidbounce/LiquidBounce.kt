@@ -55,7 +55,6 @@ import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.command.CommandManager
 import net.ccbluex.liquidbounce.features.cosmetic.ClientAccountManager
 import net.ccbluex.liquidbounce.features.cosmetic.CosmeticService
-import net.ccbluex.liquidbounce.features.creativetab.tabs.HeadsCreativeModeTab
 import net.ccbluex.liquidbounce.features.global.GlobalManager
 import net.ccbluex.liquidbounce.features.marketplace.MarketplaceItems
 import net.ccbluex.liquidbounce.features.marketplace.MarketplaceManager
@@ -331,10 +330,6 @@ object LiquidBounce : EventListener {
                 CosmeticService.refreshCarriers(force = true) {
                     logger.info("Successfully loaded ${CosmeticService.carriers.size} cosmetics carriers.")
                 }
-            }
-            launch {
-                // Download player heads
-                HeadsCreativeModeTab.heads.getFinalState()
             }
             launch {
                 MarketplaceConfigs.refresh()

@@ -35,9 +35,7 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleNoMissCooldown;
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock;
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions;
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleMiddleClickAction;
 import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoBreak;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoBlockInteract;
 import net.ccbluex.liquidbounce.features.module.modules.player.ModuleReach;
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam;
 import net.ccbluex.liquidbounce.injection.mixins.minecraft.entity.MixinEntityAccessor;
@@ -67,7 +65,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.component.AttackRange;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -293,13 +290,6 @@ public abstract class MixinMinecraft {
         rightClickDelay = useCooldownEvent.getCooldown();
     }
 
-    @Inject(method = "pickBlockOrEntity", at = @At("HEAD"), cancellable = true)
-    private void hookItemPick(CallbackInfo ci) {
-        if (ModuleMiddleClickAction.Pearl.INSTANCE.cancelPick()) {
-            ci.cancel();
-        }
-    }
-
     @ModifyExpressionValue(method = "startAttack",
             at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
     private int injectNoMissCooldown(int original) {
@@ -422,19 +412,6 @@ public abstract class MixinMinecraft {
     @Inject(method = "clearDownloadedResourcePacks", at = @At("HEAD"))
     private void handleDisconnection(CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(DisconnectEvent.INSTANCE);
-    }
-
-    @Inject(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"), cancellable = true)
-    private void hookBlockInteract(CallbackInfo ci) {
-        final BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
-        if (blockHitResult == null) return; // it should never be null
-
-        if (ModuleNoBlockInteract.INSTANCE.getRunning() &&
-                ModuleNoBlockInteract.INSTANCE.shouldSneak(blockHitResult)) {
-
-            ModuleNoBlockInteract.INSTANCE.startSneaking();
-            ci.cancel();
-        }
     }
 
     @Inject(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/renderpearl/api/commands/CommandEncoder;submit()V", shift = At.Shift.BEFORE))

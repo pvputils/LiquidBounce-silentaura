@@ -19,7 +19,6 @@
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.render.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -28,7 +27,6 @@ import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAntiExploit
 import net.ccbluex.liquidbounce.features.module.modules.render.*;
 import net.ccbluex.liquidbounce.features.module.modules.render.esp.ModuleESP;
 import net.ccbluex.liquidbounce.features.module.modules.render.esp.modes.EspGlowMode;
-import net.ccbluex.liquidbounce.features.module.modules.render.nametags.ModuleNametags;
 import net.ccbluex.liquidbounce.interfaces.EntityRenderStateAddition;
 import net.ccbluex.liquidbounce.render.engine.type.Color4b;
 import net.ccbluex.liquidbounce.utils.combat.CombatExtensionsKt;
@@ -78,16 +76,6 @@ public abstract class MixinEntityRenderer<T extends Entity, S extends EntityRend
         }
     }
 
-    @Inject(method = "submit", at = @At("HEAD"))
-    private void renderMobOwners(S state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState, CallbackInfo ci) {
-        var entity = ((EntityRenderStateAddition) state).liquid_bounce$getEntity();
-        var ownerName = ModuleMobOwners.INSTANCE.getOwnerInfoText(entity);
-
-        if (ownerName != null) {
-            renderLabel(entity, ownerName, matrices, queue, state.lightCoords);
-        }
-    }
-
     @SuppressWarnings("unused")
     @Unique
     private void renderLabel(
@@ -121,11 +109,6 @@ public abstract class MixinEntityRenderer<T extends Entity, S extends EntityRend
             Color4b.BLACK.argb(), -1
         );
         matrices.popPose();
-    }
-
-    @WrapWithCondition(method = "submitNameDisplay(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitNameTag(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZILnet/minecraft/client/renderer/state/level/CameraRenderState;)V"))
-    private boolean disableVanillaNametag(SubmitNodeCollector instance, PoseStack poseStack, Vec3 vec3, int i, Component component, boolean b, int j, CameraRenderState cameraRenderState, @Local(argsOnly = true, name = "state") S state) {
-        return ModuleNametags.INSTANCE.shouldRenderVanillaNametag(state);
     }
 
     @ModifyArg(method = "submitNameDisplay(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitNameTag(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZILnet/minecraft/client/renderer/state/level/CameraRenderState;)V"), index = 3)

@@ -28,7 +28,6 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.player.cheststealer.features.FeatureChestAura
-import net.ccbluex.liquidbounce.features.module.modules.player.cheststealer.features.FeatureSilentScreen
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.CleanupPlanGenerator
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.InventoryCleanupPlan
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.ItemCategorization
@@ -81,7 +80,6 @@ object ModuleChestStealer : ClientModule("ChestStealer", ModuleCategories.PLAYER
 
     init {
         tree(FeatureChestAura)
-        tree(FeatureSilentScreen)
     }
 
     @Suppress("unused")
