@@ -27,7 +27,6 @@ import net.ccbluex.liquidbounce.features.command.arguments.ClientStringArgumentT
 import net.ccbluex.liquidbounce.features.command.brigadier.ClientCommandSource
 import net.ccbluex.liquidbounce.features.command.brigadier.get
 import net.ccbluex.liquidbounce.features.command.brigadier.register
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleClickGui
 import net.ccbluex.liquidbounce.utils.client.MessageMetadata
 import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.regular
@@ -65,7 +64,6 @@ object CommandValue : CommandRegistrar {
 
                             try {
                                 configValue.setByString(valueString)
-                                ModuleClickGui.sync()
                             } catch (e: Exception) {
                                 throw CommandException(t("set.valueError", valueKey, e.message ?: ""))
                             }
@@ -92,7 +90,6 @@ object CommandValue : CommandRegistrar {
                             ?: throw CommandException(t("reset.valueNotFound", valueKey))
 
                         configValue.restore()
-                        ModuleClickGui.sync()
                         chat(
                             regular(t("reset.resetSuccess", variable(valueKey))),
                             metadata = MessageMetadata(id = "CValue#reset${valueKey}")
@@ -115,7 +112,6 @@ object CommandValue : CommandRegistrar {
                         valueGroup.collectValuesRecursively()
                             .filter { !it.name.equals("Bind", true) }
                             .forEach { it.restore() }
-                        ModuleClickGui.sync()
                         chat(
                             regular(t("reset-all.resetAllSuccess", variable(valueGroupKey))),
                             metadata = MessageMetadata(id = "CValue#resetAll${valueGroupKey}")

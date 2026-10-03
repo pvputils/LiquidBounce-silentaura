@@ -27,7 +27,6 @@ import net.ccbluex.liquidbounce.features.command.brigadier.CmdLiteralScope
 import net.ccbluex.liquidbounce.features.command.brigadier.get
 import net.ccbluex.liquidbounce.features.command.brigadier.register
 import net.ccbluex.liquidbounce.features.global.GlobalSettingsTarget
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleClickGui
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.MessageMetadata
 import net.ccbluex.liquidbounce.utils.client.chat
@@ -73,7 +72,6 @@ object CommandTargets : CommandRegistrar {
                     metadata = MessageMetadata(id = "CTargets#info")
                 )
 
-                ModuleClickGui.sync()
                 1
             }
         }

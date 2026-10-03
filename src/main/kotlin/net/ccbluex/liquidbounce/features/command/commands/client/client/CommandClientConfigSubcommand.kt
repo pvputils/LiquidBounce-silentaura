@@ -30,7 +30,6 @@ import net.ccbluex.liquidbounce.features.command.brigadier.CmdLiteralScope
 import net.ccbluex.liquidbounce.features.command.brigadier.CmdI18n
 import net.ccbluex.liquidbounce.features.command.brigadier.get
 import net.ccbluex.liquidbounce.features.command.brigadier.suggestions
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleHud
 import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.markAsError
 import net.ccbluex.liquidbounce.utils.client.regular
@@ -159,14 +158,9 @@ object CommandClientConfigSubcommand {
                 chat(regular(t("config.reset.resetting", variable(formattedNames))))
 
                 for (config in effectiveConfigs) {
-                    // TODO: We could straight up use configurable.restore(), however, we
-                    //   want to filter out the ModuleHud module
 
                     for (value in config.inner) {
-                        // TODO: Remove when HUD no longer contains the Element Configuration
-                        if (value is ModuleHud) {
-                            continue
-                        }
+
 
                         value.restore()
                     }

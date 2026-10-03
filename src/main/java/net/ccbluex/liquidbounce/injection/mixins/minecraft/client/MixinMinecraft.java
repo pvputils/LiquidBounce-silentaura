@@ -39,9 +39,6 @@ import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoBreak;
 import net.ccbluex.liquidbounce.features.module.modules.player.ModuleReach;
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam;
 import net.ccbluex.liquidbounce.injection.mixins.minecraft.entity.MixinEntityAccessor;
-import net.ccbluex.liquidbounce.integration.backend.BrowserBackendManager;
-import net.ccbluex.liquidbounce.integration.backend.browser.GlobalBrowserSettings;
-import net.ccbluex.liquidbounce.integration.screen.ScreenManager;
 import net.ccbluex.liquidbounce.render.ClientTesselator;
 import net.ccbluex.liquidbounce.render.buffers.StaticGpuBufferPool;
 import net.ccbluex.liquidbounce.render.mesh.MeshDraw;
@@ -199,18 +196,7 @@ public abstract class MixinMinecraft {
         }
 
         // For debugging purposes, will be removed until we have a stable release
-        var backend = BrowserBackendManager.INSTANCE.getBackend();
-        if (backend != null && backend.isInitialized() && backend.getAccelerationFlags().isSupported()) {
-            var accelerated = GlobalBrowserSettings.INSTANCE.getAccelerated();
 
-            if (accelerated != null && accelerated.get()) {
-                titleBuilder.append(" | Accelerated Paint is ON");
-                // Hotkey only works when not in-game
-                if (this.level == null && this.player == null) {
-                    titleBuilder.append(" [Hotkey: F12]");
-                }
-            }
-        }
 
         ClientPacketListener clientPlayNetworkHandler = this.getConnection();
         if (clientPlayNetworkHandler != null && clientPlayNetworkHandler.getConnection().isConnected()) {
@@ -372,17 +358,7 @@ public abstract class MixinMinecraft {
     /**
      * Alternative input handler of [handleInputEvents] while being inside a client-side screen.
      */
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void passthroughInputHandler(CallbackInfo ci, @Local(name = "profiler") ProfilerFiller profiler) {
-        if (this.gui.overlay() == null && this.player != null && this.level
-            != null && ScreenManager.isClientScreen(this.gui.screen())) {
-            profiler.popPush("Keybindings");
 
-            if (ModuleAutoBreak.INSTANCE.getEnabled()) {
-                this.continueAttack(this.options.keyAttack.isDown());
-            }
-        }
-    }
 
     @ModifyExpressionValue(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z", ordinal = 0))
     private boolean injectMultiActionsAttackingWhileUsingAndEnforcedBlockingState(boolean isUsingItem) {
@@ -402,12 +378,7 @@ public abstract class MixinMinecraft {
         return false;
     }
 
-    @WrapWithCondition(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.PUTFIELD))
-    private boolean injectFixAttackCooldownOnVirtualBrowserScreen(Minecraft instance, int value) {
-        // Do not reset attack cooldown when we are in the vr/browser screen, as this poses an
-        // unintended modification to the attack cooldown, which is not intended.
-        return !ScreenManager.isClientScreen(this.gui.screen());
-    }
+
 
     @Inject(method = "clearDownloadedResourcePacks", at = @At("HEAD"))
     private void handleDisconnection(CallbackInfo ci) {

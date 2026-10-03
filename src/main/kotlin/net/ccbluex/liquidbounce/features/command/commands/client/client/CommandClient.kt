@@ -37,10 +37,7 @@ object CommandClient : CommandRegistrar {
     override fun register(dispatcher: CommandDispatcher<ClientCommandSource>) {
         dispatcher.register("client") {
             with(CommandClientInfoSubcommand) { info() }
-            with(CommandClientBrowserSubcommand) { browser() }
-            with(CommandClientIntegrationSubcommand) { integration() }
             with(CommandClientLanguageSubcommand) { language() }
-            with(CommandClientThemeSubcommand) { theme() }
             with(CommandClientPrefixSubcommand) { prefix() }
             with(CommandClientDestructSubcommand) { destruct() }
             with(CommandClientAccountSubcommand) { account() }

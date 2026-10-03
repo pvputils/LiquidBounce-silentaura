@@ -29,7 +29,6 @@ import net.ccbluex.liquidbounce.event.EventManager.callEvent
 import net.ccbluex.liquidbounce.event.events.ClientShutdownEvent
 import net.ccbluex.liquidbounce.features.command.CommandManager
 import net.ccbluex.liquidbounce.features.module.ModuleManager
-import net.ccbluex.liquidbounce.integration.screen.ScreenManager
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.modmenu.ModMenuCompatibility
 import net.fabricmc.loader.impl.FabricLoaderImpl
@@ -80,7 +79,7 @@ object SelfDestruct {
     }
 
     private fun restoreVanilla() {
-        ScreenManager.restoreOriginalScreen()
+        mc.gui.setScreen(null) //codex (ScreenManager.restoreOriginalScreen())
         mc.updateTitle()
         mc.window.setIcon(
             mc.vanillaPackResources.fullResources(),

@@ -21,7 +21,6 @@ package net.ccbluex.liquidbounce.features.global
 import net.ccbluex.liquidbounce.config.types.Config
 import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.command.CommandManager
-import net.ccbluex.liquidbounce.integration.backend.browser.GlobalBrowserSettings
 import net.ccbluex.liquidbounce.lang.LanguageManager
 
 /**
@@ -36,7 +35,6 @@ object GlobalManager : Config("Settings") {
         tree(CommandManager.GlobalSettings)
         tree(GlobalSettingsTarget)
         tree(BlinkManager)
-        tree(GlobalBrowserSettings)
     }
 
 }

@@ -12,8 +12,6 @@ fabric-loader = "0.19.5"
 fabric-loaderMin = "0.18.4"
 fabric-api = "0.160.5+26.3"
 
-# mcef
-mcef = "3.5.0-26.3"
 
 # MinecraftAuth (CCBlueX fork of RaphiMC/MinecraftAuth)
 minecraftauth = "5.0.3-SNAPSHOT"
@@ -62,7 +60,6 @@ lwjgl = "3.4.3"
 detekt = "2.0.0-alpha.6"
 gradleGitProperties = "4.0.1"
 dokka = "2.2.0"
-nodeGradle = "7.1.0"
 
 [libraries]
 minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
@@ -81,7 +78,6 @@ thealtening = { group = "com.thealtening.api", name = "api", version.ref = "thea
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
-mcef = { group = "net.ccbluex", name = "mcef", version.ref = "mcef" }
 semver4j = { group = "com.vdurmont", name = "semver4j", version.ref = "semver4j" }
 ahocorasick = { group = "org.ahocorasick", name = "ahocorasick", version.ref = "ahocorasick" }
 fastutil4k-extensionsOnly = { group = "net.ccbluex", name = "fastutil4k-extensions-only", version.ref = "fastutil4k" }
@@ -120,7 +116,6 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 gradleGitProperties = { id = "com.gorylenko.gradle-git-properties", version.ref = "gradleGitProperties" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-nodeGradle = { id = "com.github.node-gradle.node", version.ref = "nodeGradle" }
 
 [bundles]
 okhttp = ["okhttp", "okhttp-coroutines"]

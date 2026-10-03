@@ -1,32 +1,24 @@
-# KillAura with its original supporting framework
+# KillAura with a native Fabric configuration screen
 
-This branch preserves the complete original KillAura implementation and its
-configuration dependencies. It is a buildable Fabric client, not a source-only
-snapshot or a rewritten standalone aura.
+Open **Mods > LiquidBounce > Configure** through Mod Menu, or press **Right Shift**
+while in game. The menu uses ordinary Minecraft buttons and text fields.
 
-## Preserved functionality
+- Click a section to browse its settings. Use Search and page arrows within a section.
+- Click a boolean to toggle it. Click a choice to select an option; multi-choice
+  entries can be toggled independently.
+- Open a mode group to select any mode and edit its nested settings.
+- Numeric and range editors validate the allowed bounds. Ranges use `minimum..maximum`.
+- Colors accept `#RRGGBB` or `#AARRGGBB`. Curves accept `x,y; x,y` points with axis bounds.
+- Keybinds support keyboard/mouse names, Toggle/Hold/Smart actions, and modifiers.
+- Texture paths and all original rotation, AI, targeting, blocking, rendering,
+  and FightBot settings use the existing configuration objects.
+- Apply changes a value; Cancel discards the current text edit; Reset restores that
+  value. Done/Escape saves through the existing configuration system.
 
-- Every KillAura source file, local setting, range option, attack requirement,
-  raycast mode, critical-hit selection, and inventory-handling option.
-- All inherited click scheduling, cooldown, target-tracking, and aim-point options.
-- Rotation timing, movement correction, reset behavior, Linear, Sigmoid,
-  Interpolation, Acceleration, and AI smoothing, plus their nested settings.
-- AutoBlock, FailSwing, FightBot (including inherited movement assistance),
-  range indication, failed-hit handling, and all eight target-rendering modes.
-- The original configuration framework, settings UI, persistence, event hooks,
-  mixins, rendering resources, AI models, and build dependencies.
+The web theme, browser/JCEF backends, GUI HTTP server, ClickGUI, HUD editor,
+custom backgrounds, branded splash screen, and their build steps are removed.
+Vanilla game menus remain in place. Shared rendering required by KillAura target
+visuals and the AI engine are retained. KillAura is the only registered module.
 
-KillAura is the only registered built-in module. Separate modules are not exposed
-as additional toggles; referenced module classes remain where shared code needs
-them. This preserves KillAura's own option tree without claiming that every
-separate LiquidBounce module is enabled. Further framework removal must preserve
-these dependencies and their runtime initialization.
-
-## Validation
-
-The KillAura sources and shared configuration, aiming, clicking, combat,
-navigation, rendering, deep-learning, integration/UI, theme, and resource trees
-match the original upstream base at 0a80fecbdd3dedff68235454bd34ef71cd7596d3.
-The restored branch passes `gradlew.bat build --offline` with Java 25, including
-unit tests, Detekt, ABI checks, access-widener validation, and JAR packaging.
-This does not substitute for testing every combat setting against a live server.
+Build with Java 25 and `gradlew.bat build`. No Node.js or browser runtime is required.
+The original GPL license and attribution still apply.
