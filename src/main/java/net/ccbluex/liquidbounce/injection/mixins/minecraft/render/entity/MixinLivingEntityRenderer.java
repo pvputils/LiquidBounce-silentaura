@@ -21,8 +21,6 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.render.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import kotlin.Pair;
@@ -34,15 +32,12 @@ import net.ccbluex.liquidbounce.render.engine.type.Color4b;
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.UvMapping;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -119,47 +114,6 @@ public abstract class MixinLivingEntityRenderer<T extends LivingEntity, S extend
             return Mth.rotLerp(tickDelta, overwriteRotation.getFirst().xRot(), overwriteRotation.getSecond().xRot());
         }
 
-        return original;
-    }
-
-    @WrapOperation(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/UvMapping;I)V"))
-    private void injectTrueSight(
-        SubmitNodeCollector instance, Model<?> model,
-        Object o, PoseStack poseStack,
-        RenderType renderType, int light,
-        int overlay, int tintedColor,
-        @Nullable UvMapping uvMapping, int outlineColor,
-        Operation<Void> original,
-        @Local(argsOnly = true, name = "state") S state
-    ) {
-        if (ModuleLogoffSpot.INSTANCE.isLogoffEntity(state)) {
-            tintedColor = ESP_TRUE_SIGHT_REQUIREMENT_COLOR;
-        }
-
-        var trueSightModule = ModuleTrueSight.INSTANCE;
-        var trueSight = trueSightModule.getRunning() && trueSightModule.getEntities();
-        if (ModuleTrueSight.canRenderEntities(state)) {
-            tintedColor = trueSight ? trueSightModule.getEntityColor().argb() : ESP_TRUE_SIGHT_REQUIREMENT_COLOR;
-        }
-        original.call(
-            instance, model,
-            o, poseStack,
-            renderType, light,
-            overlay, tintedColor,
-            uvMapping, outlineColor
-        );
-    }
-
-    @ModifyReturnValue(method = "getRenderType", at = @At("RETURN"))
-    private RenderType injectTrueSight(RenderType original, S state, boolean showBody, boolean translucent, boolean showOutline) {
-        if (ModuleLogoffSpot.INSTANCE.isLogoffEntity(state)) {
-            return RenderTypes.entityTranslucentCull(this.getTextureLocation(state));
-        }
-
-        if (ModuleTrueSight.canRenderEntities(state) && !showBody && !translucent && !showOutline) {
-            state.isInvisible = false;
-            return RenderTypes.entityTranslucentCull(this.getTextureLocation(state));
-        }
         return original;
     }
 

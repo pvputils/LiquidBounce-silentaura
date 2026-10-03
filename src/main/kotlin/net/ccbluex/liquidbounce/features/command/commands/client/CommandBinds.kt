@@ -35,7 +35,6 @@ import net.ccbluex.liquidbounce.features.command.brigadier.suggestions
 import net.ccbluex.liquidbounce.features.command.preset.pagedList
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleManager
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleClickGui
 import net.ccbluex.liquidbounce.utils.client.MessageMetadata
 import net.ccbluex.liquidbounce.utils.client.bold
 import net.ccbluex.liquidbounce.utils.client.chat
@@ -173,7 +172,6 @@ object CommandBinds : CommandRegistrar {
         }
 
         module.bindValue.bind(bindKey, resolvedAction, resolvedModifiers)
-        ModuleClickGui.sync()
         chat(
             regular(
                 t("add.moduleBound",
@@ -205,7 +203,6 @@ object CommandBinds : CommandRegistrar {
             )
         }
 
-        ModuleClickGui.sync()
     }
 
 }

@@ -42,9 +42,9 @@ nor legally binding.
 
 ## Setting up a Workspace
 
-LiquidBounce uses Gradle; to make sure that it is installed properly, you can
-check [Gradle's website](https://gradle.org/install/). It also requires [Node.js](https://nodejs.org) to be installed for
-our [theme](https://github.com/CCBlueX/LiquidBounce/tree/nextgen/src-theme).
+This KillAura-focused fork uses Gradle and Java 25. It uses a native Minecraft
+configuration screen and does not require Node.js or an embedded browser. See
+[the KillAura configuration guide](README-TodoAi.md).
 
 1. Clone the repository using `git clone --recurse-submodules https://github.com/CCBlueX/LiquidBounce`.
 2. CD into the local repository. (`cd LiquidBounce`)

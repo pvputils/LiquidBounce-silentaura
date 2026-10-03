@@ -31,7 +31,6 @@ import net.ccbluex.liquidbounce.features.command.brigadier.get
 import net.ccbluex.liquidbounce.features.command.brigadier.register
 import net.ccbluex.liquidbounce.features.command.brigadier.suggestions
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleClickGui
 import net.ccbluex.liquidbounce.utils.client.MessageMetadata
 import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.regular
@@ -89,7 +88,6 @@ object CommandBind : CommandRegistrar {
 
         if (keyName.equals("none", true)) {
             module.bindValue.unbind()
-            ModuleClickGui.sync()
             chat(
                 regular(t("moduleUnbound", variable(module.name))),
                 metadata = MessageMetadata(id = "Bind#${module.name}")
@@ -107,7 +105,6 @@ object CommandBind : CommandRegistrar {
         }
 
         module.bindValue.bind(boundKey, resolvedAction, resolvedModifiers)
-        ModuleClickGui.sync()
         chat(
             regular(
                 t("moduleBound",

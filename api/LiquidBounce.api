@@ -633,7 +633,6 @@ public abstract class net/ccbluex/liquidbounce/features/addon/LiquidBounceAddon 
 	public fun onStopping ()V
 	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun parent ()Lnet/ccbluex/liquidbounce/event/EventListener;
-	public final fun registerBrowserBackend (Lnet/ccbluex/liquidbounce/integration/backend/BrowserBackendProvider;)V
 	public final fun registerCategory (Lnet/ccbluex/liquidbounce/features/module/ModuleCategory;)Lnet/ccbluex/liquidbounce/features/module/ModuleCategory;
 	public final fun registerCommand (Lnet/ccbluex/liquidbounce/features/command/CommandRegistrar;)V
 	public final fun registerCommandNodes (Ljava/util/Collection;)V
@@ -700,14 +699,6 @@ public final class net/ccbluex/liquidbounce/features/command/brigadier/ClientCom
 	public fun suggestRegistryElements (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/commands/SharedSuggestionProvider$ElementSuggestionType;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lcom/mojang/brigadier/context/CommandContext;Ljava/util/function/Predicate;)Ljava/util/concurrent/CompletableFuture;
 }
 
-public final class net/ccbluex/liquidbounce/features/command/commands/ingame/CommandCenter : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/features/command/CommandRegistrar {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
 public final class net/ccbluex/liquidbounce/features/command/commands/ingame/CommandServerInfo : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/features/command/CommandRegistrar {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
@@ -733,14 +724,6 @@ public final class net/ccbluex/liquidbounce/features/cosmetic/CapeCosmeticsManag
 }
 
 public final class net/ccbluex/liquidbounce/features/cosmetic/CosmeticService : net/ccbluex/liquidbounce/config/types/group/ValueGroup, net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/features/global/GlobalSettingsAutoTranslate : net/ccbluex/liquidbounce/config/types/group/ValueGroup, net/ccbluex/liquidbounce/api/thirdparty/translator/TranslatorApi, net/ccbluex/liquidbounce/event/EventListener {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
@@ -932,312 +915,12 @@ public abstract class net/ccbluex/liquidbounce/features/module/modules/combat/cr
 	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
 }
 
-public final class net/ccbluex/liquidbounce/features/module/modules/player/autoshop/AutoShopInventoryManager : net/ccbluex/liquidbounce/event/EventListener {
+public final class net/ccbluex/liquidbounce/gui/KillAuraConfigScreenTodoAi$Companion : net/ccbluex/liquidbounce/event/EventListener {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
 	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
 	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/features/module/modules/render/ModuleClickGui : net/ccbluex/liquidbounce/features/module/ClientModule {
-	public static final field INSTANCE Lnet/ccbluex/liquidbounce/features/module/modules/render/ModuleClickGui;
-	public fun getRunning ()Z
-	public final fun invalidate ()V
-	public final fun isInSearchBar ()Z
-	public fun onEnabled ()V
-	public final fun sync ()V
-	public final fun updateStandaloneScreen ()Z
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags {
-	public static final field Companion Lnet/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags$Companion;
-	public static final field UNSUPPORTED Lnet/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags;
-	public fun <init> (ZZ)V
-	public final fun component1 ()Z
-	public final fun component2 ()Z
-	public final fun copy (ZZ)Lnet/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags;
-	public static synthetic fun copy$default (Lnet/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags;ZZILjava/lang/Object;)Lnet/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public final fun isBeta ()Z
-	public final fun isSupported ()Z
-	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class net/ccbluex/liquidbounce/integration/backend/BrowserBackend {
-	public abstract fun createBrowser (Ljava/lang/String;Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserSettings;SZLnet/ccbluex/liquidbounce/integration/backend/input/InputAcceptor;)Lnet/ccbluex/liquidbounce/integration/backend/browser/Browser;
-	public static synthetic fun createBrowser$default (Lnet/ccbluex/liquidbounce/integration/backend/BrowserBackend;Ljava/lang/String;Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserSettings;SZLnet/ccbluex/liquidbounce/integration/backend/input/InputAcceptor;ILjava/lang/Object;)Lnet/ccbluex/liquidbounce/integration/backend/browser/Browser;
-	public abstract fun getAccelerationFlags ()Lnet/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags;
-	public abstract fun getBrowsers ()Ljava/util/List;
-	public abstract fun getSupportsIncognito ()Z
-	public abstract fun isInitialized ()Z
-	public abstract fun makeDependenciesAvailable (Lnet/ccbluex/liquidbounce/integration/task/TaskManager;Lkotlin/jvm/functions/Function0;)V
-	public abstract fun setAccelerationFlags (Lnet/ccbluex/liquidbounce/integration/backend/BrowserAccelerationFlags;)V
-	public abstract fun start ()V
-	public abstract fun stop ()V
-	public abstract fun update ()V
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/BrowserBackend$DefaultImpls {
-	public static synthetic fun createBrowser$default (Lnet/ccbluex/liquidbounce/integration/backend/BrowserBackend;Ljava/lang/String;Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserSettings;SZLnet/ccbluex/liquidbounce/integration/backend/input/InputAcceptor;ILjava/lang/Object;)Lnet/ccbluex/liquidbounce/integration/backend/browser/Browser;
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/BrowserBackendManager : net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public final fun registerBackend (Lnet/ccbluex/liquidbounce/integration/backend/BrowserBackendProvider;)V
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/BrowserBackendProvider : net/ccbluex/liquidbounce/config/types/list/Tagged {
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getCreate ()Lkotlin/jvm/functions/Function0;
-	public final fun getDescription ()Ljava/lang/String;
-	public final fun getId ()Ljava/lang/String;
-	public final fun getName ()Ljava/lang/String;
-	public final fun getSelectable ()Z
-	public fun getTag ()Ljava/lang/String;
-	public fun getTagAliases ()Ljava/util/List;
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/BrowserTexture : java/lang/Record {
-	public fun <init> (Lnet/minecraft/client/gui/render/TextureSetup;IIZFFFF)V
-	public synthetic fun <init> (Lnet/minecraft/client/gui/render/TextureSetup;IIZFFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun bgra ()Z
-	public final fun component1 ()Lnet/minecraft/client/gui/render/TextureSetup;
-	public final fun component2 ()I
-	public final fun component3 ()I
-	public final fun component4 ()Z
-	public final fun component5 ()F
-	public final fun component6 ()F
-	public final fun component7 ()F
-	public final fun component8 ()F
-	public final fun copy (Lnet/minecraft/client/gui/render/TextureSetup;IIZFFFF)Lnet/ccbluex/liquidbounce/integration/backend/BrowserTexture;
-	public static synthetic fun copy$default (Lnet/ccbluex/liquidbounce/integration/backend/BrowserTexture;Lnet/minecraft/client/gui/render/TextureSetup;IIZFFFFILjava/lang/Object;)Lnet/ccbluex/liquidbounce/integration/backend/BrowserTexture;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public final fun height ()I
-	public final fun textureSetup ()Lnet/minecraft/client/gui/render/TextureSetup;
-	public fun toString ()Ljava/lang/String;
-	public final fun u1 ()F
-	public final fun u2 ()F
-	public final fun v1 ()F
-	public final fun v2 ()F
-	public final fun width ()I
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/backends/cef/CefBrowserBackend : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/integration/backend/BrowserBackend {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/backends/external/ExternalSystemBrowserBackend : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/integration/backend/BrowserBackend {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public abstract interface class net/ccbluex/liquidbounce/integration/backend/browser/Browser : java/lang/AutoCloseable {
-	public abstract fun forceReload ()V
-	public abstract fun getPriority ()S
-	public abstract fun getState ()Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserState;
-	public abstract fun getTexture ()Lnet/ccbluex/liquidbounce/integration/backend/BrowserTexture;
-	public abstract fun getUrl ()Ljava/lang/String;
-	public abstract fun getViewport ()Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;
-	public abstract fun getVisible ()Z
-	public abstract fun goBack ()V
-	public abstract fun goForward ()V
-	public abstract fun invalidate ()V
-	public abstract fun isIncognito ()Z
-	public abstract fun isInitialized ()Z
-	public abstract fun reload ()V
-	public abstract fun setPriority (S)V
-	public abstract fun setUrl (Ljava/lang/String;)V
-	public abstract fun setViewport (Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;)V
-	public abstract fun setVisible (Z)V
-	public abstract fun toString ()Ljava/lang/String;
-	public abstract fun update (II)V
-	public static synthetic fun update$default (Lnet/ccbluex/liquidbounce/integration/backend/browser/Browser;IIILjava/lang/Object;)V
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/browser/Browser$DefaultImpls {
-	public static synthetic fun update$default (Lnet/ccbluex/liquidbounce/integration/backend/browser/Browser;IIILjava/lang/Object;)V
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/browser/BrowserRenderer : java/lang/AutoCloseable, net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public class net/ccbluex/liquidbounce/integration/backend/browser/BrowserSettings : net/ccbluex/liquidbounce/config/types/group/ValueGroup {
-	public fun <init> (ILjava/lang/Runnable;)V
-	public synthetic fun <init> (ILjava/lang/Runnable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getCurrentFps ()I
-	public final fun getFps ()Lnet/ccbluex/liquidbounce/config/types/Value;
-}
-
-public abstract class net/ccbluex/liquidbounce/integration/backend/browser/BrowserState {
-	public final fun isCompleted ()Z
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport : java/lang/Record {
-	public fun <init> (IIIIZ)V
-	public synthetic fun <init> (IIIIZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()I
-	public final fun component2 ()I
-	public final fun component3 ()I
-	public final fun component4 ()I
-	public final fun component5 ()Z
-	public final fun copy (IIIIZ)Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;
-	public static synthetic fun copy$default (Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;IIIIZILjava/lang/Object;)Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun fullScreen ()Z
-	public static final fun fullscreen ()Lnet/ccbluex/liquidbounce/integration/backend/browser/BrowserViewport;
-	public final fun getScaledDimensions (F)Lorg/joml/Vector2ic;
-	public final fun getZoomLevel (F)D
-	public fun hashCode ()I
-	public final fun height ()I
-	public fun toString ()Ljava/lang/String;
-	public final fun transform (DD)Lorg/joml/Vector2dc;
-	public final fun transformMouse (DDF)Lorg/joml/Vector2ic;
-	public final fun width ()I
-	public final fun x ()I
-	public final fun y ()I
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/browser/GlobalBrowserSettings : net/ccbluex/liquidbounce/config/types/group/ValueGroup, net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public abstract interface class net/ccbluex/liquidbounce/integration/backend/input/InputAcceptor {
-	public abstract fun acceptsInput ()Z
-}
-
-public abstract interface class net/ccbluex/liquidbounce/integration/backend/input/InputHandler {
-	public abstract fun charTyped (I)V
-	public abstract fun keyPressed (III)V
-	public abstract fun keyReleased (III)V
-	public abstract fun mouseClicked (DDI)V
-	public abstract fun mouseMoved (DD)V
-	public abstract fun mouseReleased (DDI)V
-	public abstract fun mouseScrolled (DDD)V
-}
-
-public final class net/ccbluex/liquidbounce/integration/backend/input/InputListener : java/lang/AutoCloseable, net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/integration/interop/protocol/rest/v1/game/ActiveServerList : net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/integration/screen/ScreenManager : net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public abstract class net/ccbluex/liquidbounce/integration/theme/component/HudComponent : net/ccbluex/liquidbounce/config/types/group/ToggleableValueGroup {
-	public fun <init> (Ljava/lang/String;ZLnet/ccbluex/liquidbounce/utils/render/Alignment;[Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;ZLnet/ccbluex/liquidbounce/utils/render/Alignment;[Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getAlignment ()Lnet/ccbluex/liquidbounce/utils/render/Alignment;
-	public final fun getComponentDescription ()Ljava/lang/String;
-	public final fun getId ()Ljava/util/UUID;
-	public final fun getTweaks ()[Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public final fun getZIndex ()I
-	protected final fun registerComponentListen (Lnet/ccbluex/liquidbounce/config/types/group/ValueGroup;)V
-	public final fun resetAlignment ()V
-	public final fun setZIndex (I)V
-}
-
-public final class net/ccbluex/liquidbounce/integration/theme/component/HudComponentFactory$NativeHudComponentFactory : net/ccbluex/liquidbounce/integration/theme/component/HudComponentFactory {
-	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public fun <init> (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;)V
-	public fun <init> (Ljava/lang/String;ZZLjava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public synthetic fun <init> (Ljava/lang/String;ZZLjava/lang/String;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Ljava/lang/String;ZZLkotlin/jvm/functions/Function0;)V
-	public synthetic fun createComponent ()Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponent;
-	public fun createComponent ()Lnet/ccbluex/liquidbounce/integration/theme/component/components/NativeHudComponent;
-	public final fun getDescription ()Ljava/lang/String;
-	public fun getEnabled ()Z
-	public final fun getId ()Ljava/util/UUID;
-	public fun getName ()Ljava/lang/String;
-	public fun getSingleton ()Z
-}
-
-public final class net/ccbluex/liquidbounce/integration/theme/component/HudComponentManager {
-	public static final field INSTANCE Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentManager;
-	public final fun addComponent (Ljava/lang/String;)Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponent;
-	public final fun bringComponentToFront (Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponent;)I
-	public final fun getComponent (Ljava/lang/String;)Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponent;
-	public final fun getComponentCatalog (Ljava/lang/String;)Ljava/util/List;
-	public static final fun getComponentWithTweak (Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;)Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponent;
-	public final fun getComponents ()Ljava/util/List;
-	public final fun getComponents (Ljava/lang/String;)Ljava/util/List;
-	public final fun getFactory (Ljava/lang/String;)Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentFactory$NativeHudComponentFactory;
-	public final fun getNativeComponents ()Ljava/util/List;
-	public static final fun isTweakEnabled (Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;)Z
-	public final fun register (Lnet/ccbluex/liquidbounce/integration/theme/component/components/NativeHudComponent;)V
-	public final fun registerFactory (Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentFactory$NativeHudComponentFactory;)V
-	public final fun unregister (Lnet/ccbluex/liquidbounce/integration/theme/component/components/NativeHudComponent;)V
-	public final fun unregisterFactory (Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentFactory$NativeHudComponentFactory;)V
-	public final fun updateComponents ()V
-}
-
-public final class net/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak : java/lang/Enum, net/ccbluex/liquidbounce/config/types/list/Tagged {
-	public static final field DISABLE_CROSSHAIR Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_EXP_BAR Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_HELD_ITEM_TOOL_TIP Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_LOCATOR_BAR Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_OVERLAY_MESSAGE Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_SCOREBOARD Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_STATUS_BAR Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_STATUS_EFFECT_OVERLAY Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field DISABLE_SUBTITLE_OVERLAY Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static final field TWEAK_HOTBAR Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public fun getTag ()Ljava/lang/String;
-	public fun getTagAliases ()Ljava/util/List;
-	public static fun valueOf (Ljava/lang/String;)Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-	public static fun values ()[Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;
-}
-
-public abstract class net/ccbluex/liquidbounce/integration/theme/component/components/NativeHudComponent : net/ccbluex/liquidbounce/integration/theme/component/HudComponent {
-	public fun <init> (Ljava/lang/String;ZLnet/ccbluex/liquidbounce/utils/render/Alignment;[Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;ZLnet/ccbluex/liquidbounce/utils/render/Alignment;[Lnet/ccbluex/liquidbounce/integration/theme/component/HudComponentTweak;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	protected final fun getGuiScaledBounds (FF)Lnet/ccbluex/liquidbounce/render/engine/type/BoundingBox2f;
-	public static synthetic fun getGuiScaledBounds$default (Lnet/ccbluex/liquidbounce/integration/theme/component/components/NativeHudComponent;FFILjava/lang/Object;)Lnet/ccbluex/liquidbounce/render/engine/type/BoundingBox2f;
-	public abstract fun getGuiScaledHeight ()F
-	public abstract fun getGuiScaledWidth ()F
-	public final fun getHeight ()F
-	public final fun getWidth ()F
 }
 
 public final class net/ccbluex/liquidbounce/lang/LanguageKt {
@@ -1320,14 +1003,6 @@ public final class net/ccbluex/liquidbounce/render/WorldRenderEnvironment {
 }
 
 public final class net/ccbluex/liquidbounce/render/atlas/ItemImageAtlas : net/ccbluex/liquidbounce/event/EventListener {
-	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun on (Ljava/lang/Class;SLjava/util/function/Consumer;)Ljava/lang/AutoCloseable;
-	public fun onTick (Ljava/lang/Runnable;)Ljava/lang/AutoCloseable;
-}
-
-public final class net/ccbluex/liquidbounce/render/engine/BlurEffectRenderer : net/ccbluex/liquidbounce/event/EventListener, net/ccbluex/liquidbounce/features/module/MinecraftShortcuts {
 	public fun after (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun every (ILjava/lang/Runnable;)Ljava/lang/AutoCloseable;
 	public fun on (Ljava/lang/Class;Ljava/util/function/Consumer;)Ljava/lang/AutoCloseable;

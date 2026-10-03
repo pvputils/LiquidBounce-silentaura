@@ -19,8 +19,6 @@
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.render;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -41,8 +39,6 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Lightmap;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.fog.FogRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.Mth;
@@ -140,39 +136,6 @@ public abstract class MixinGameRenderer {
             return FogRenderer.FogMode.NONE;
         }
         return fogMode;
-    }
-
-    @WrapOperation(
-        method = "renderItemInHand",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;prepareFrame(Lnet/minecraft/client/renderer/SubmitNodeStorage;)Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;"
-        )
-    )
-    private FeatureRenderDispatcher.PreparedFrame drawItemCharmsOnHandPrepareFrame(
-        FeatureRenderDispatcher instance, SubmitNodeStorage submitNodeStorage,
-        Operation<FeatureRenderDispatcher.PreparedFrame> original
-    ) {
-        return ModuleItemChams.Lightmap.doOverride(() -> original.call(instance, submitNodeStorage));
-    }
-
-    @Inject(
-        method = "render",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/Lightmap;render(Lnet/minecraft/client/renderer/state/LightmapRenderState;)V",
-            shift = At.Shift.AFTER
-        )
-    )
-    private void hookItemChamsLightmapRefresh(CallbackInfo ci) {
-        ModuleItemChams.Lightmap.refresh(this.lightmap.getTextureView());
-    }
-
-    @Inject(method = "bobHurt", at = @At("HEAD"), cancellable = true)
-    private void injectHurtCam(CameraRenderState cameraState, PoseStack poseStack, CallbackInfo ci) {
-        if (ModuleNoHurtCam.INSTANCE.getRunning()) {
-            ci.cancel();
-        }
     }
 
     /**

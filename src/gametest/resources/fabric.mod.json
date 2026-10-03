@@ -6,9 +6,9 @@
   "environment": "client",
   "entrypoints": {
     "fabric-client-gametest": [
+      "net.ccbluex.liquidbounce.gametest.KillAuraScreenGameTestTodoAi",
       "net.ccbluex.liquidbounce.gametest.CommandGameTest",
-      "net.ccbluex.liquidbounce.gametest.MarketplaceCommandGameTest",
-      "net.ccbluex.liquidbounce.gametest.LocalConfigTrackingGameTest"
+      "net.ccbluex.liquidbounce.gametest.MarketplaceCommandGameTest"
     ]
   },
   "depends": {

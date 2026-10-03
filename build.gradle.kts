@@ -17,7 +17,6 @@
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.github.gradle.node.npm.task.NpmTask
 import dev.detekt.gradle.DetektCreateBaselineTask
 import groovy.json.JsonOutput
 import java.time.Duration
@@ -30,7 +29,6 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.gradleGitProperties)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.nodeGradle)
     alias(libs.plugins.dokka)
     `maven-publish`
 }
@@ -105,13 +103,10 @@ fabricApi {
     }
 }
 
-// JCEF and the deep learning engine outlive the run directory, which is wiped before every run
+// The deep learning engine outlives the test run directory.
 val gameTestLibraries = gradle.gradleUserHomeDir.resolve("liquidbounce-gametest")
 
 loom.runs.named("clientGameTest") {
-    // Keeps the vanilla screens the test API waits for; the browser still starts. Drop it to test the theme UI.
-    systemProperties.put("net.ccbluex.liquidbounce.ui.basicMode", "true")
-    systemProperties.put("net.ccbluex.liquidbounce.browser.libraries", gameTestLibraries.resolve("mcef").path)
     systemProperties.put("net.ccbluex.liquidbounce.deeplearning.engines", gameTestLibraries.resolve("djl").path)
 }
 
@@ -158,21 +153,11 @@ dependencies {
     // LWJGL EGL
     jij(libs.lwjgl.egl)
 
-    // JCEF Support
-    api(libs.mcef)
-    include(libs.mcef)
 
 
-    // Ktor Server
+    // OAuth callback server
     jij(libs.ktor.server.core)
     jij(libs.ktor.server.cio)
-    jij(libs.ktor.server.websockets)
-    jij(libs.ktor.server.sse)
-    jij(libs.ktor.server.cors)
-    jij(libs.ktor.server.compression)
-    jij(libs.ktor.server.content.negotiation)
-    jij(libs.ktor.server.status.pages)
-    jij(libs.ktor.serialization.gson)
 
     // Machine Learning
     jij(libs.djl.api)
@@ -193,7 +178,6 @@ dependencies {
     // External utils
     compileOnlyApi(libs.fastutil4k.extensionsOnly)
     jij(libs.fastutil4k.moreCollections)
-    jij(libs.discord.ipc)
 
     // Test libraries
     testImplementation(kotlin("test"))
@@ -204,12 +188,6 @@ dependencies {
 addResolvedDependencies(jij, "compileOnly", "include", "api")
 
 tasks.processResources {
-    dependsOn("buildTheme")
-
-    from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
-    }
-
     val modVersion = providers.gradleProperty("mod_version")
     val minecraftVersion = providers.gradleProperty("mod_mc_version")
     val fabricVersion = libs.versions.fabric.api
@@ -256,51 +234,6 @@ tasks.processResources {
             )
         )
     }
-}
-
-// The following code will include the theme into the build
-
-// The plugin uses global tools when download=false, so include their actual versions in the cache key.
-val nodeVersion = providers.exec {
-    commandLine("node", "--version")
-}.standardOutput.asText.map(String::trim)
-val npmVersion = providers.exec {
-    // On Windows, CreateProcess cannot launch bare "npm" (a .cmd shim); node-gradle uses npm.cmd as well.
-    val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) "npm.cmd" else "npm"
-    commandLine(npmExecutable, "--version")
-}.standardOutput.asText.map(String::trim)
-
-tasks.register<NpmTask>("npmInstallTheme") {
-    description = "Installs the locked dependencies for the web theme"
-    workingDir = file("src-theme")
-    args.set(listOf("ci"))
-
-    inputs.files("src-theme/package.json", "src-theme/package-lock.json")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.dir("src-theme/node_modules")
-}
-
-tasks.register<NpmTask>("buildTheme") {
-    description = "Builds the distributable web theme assets"
-    dependsOn("npmInstallTheme")
-    workingDir = file("src-theme")
-    args.set(listOf("run", "build"))
-
-    inputs.property("nodeVersion", nodeVersion)
-    inputs.property("npmVersion", npmVersion)
-    inputs.files(
-        "src-theme/package.json",
-        "src-theme/package-lock.json",
-        "src-theme/index.html",
-        "src-theme/svelte.config.js",
-        "src-theme/tsconfig.json",
-        "src-theme/tsconfig.node.json",
-        "src-theme/vite.config.ts",
-    ).withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.dir("src-theme/src").withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.dir("src-theme/public").withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.dir("src-theme/dist")
-    outputs.cacheIf("Theme output is reproducible for locked dependencies and tool versions") { true }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
@@ -491,13 +424,14 @@ tasks.register<Copy>("copyZipInclude") {
     into("build/libs/zip")
 }
 
-tasks.named<Jar>("sourcesJar") {
-    dependsOn("buildTheme", "generateGitProperties")
-    from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
-    }
-}
+
 
 tasks.named("build") {
     dependsOn("copyZipInclude")
 }
+
+// codex start
+tasks.named<Jar>("sourcesJar") {
+    dependsOn("generateGitProperties")
+}
+//codex end

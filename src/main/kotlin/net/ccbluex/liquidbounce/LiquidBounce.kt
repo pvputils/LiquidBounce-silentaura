@@ -55,7 +55,6 @@ import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.command.CommandManager
 import net.ccbluex.liquidbounce.features.cosmetic.ClientAccountManager
 import net.ccbluex.liquidbounce.features.cosmetic.CosmeticService
-import net.ccbluex.liquidbounce.features.creativetab.tabs.HeadsCreativeModeTab
 import net.ccbluex.liquidbounce.features.global.GlobalManager
 import net.ccbluex.liquidbounce.features.marketplace.MarketplaceItems
 import net.ccbluex.liquidbounce.features.marketplace.MarketplaceManager
@@ -66,19 +65,11 @@ import net.ccbluex.liquidbounce.features.misc.FriendManager
 import net.ccbluex.liquidbounce.features.misc.proxy.ProxyManager
 import net.ccbluex.liquidbounce.features.module.ModuleManager
 import net.ccbluex.liquidbounce.features.spoofer.SpooferManager
-import net.ccbluex.liquidbounce.integration.backend.BrowserBackendManager
-import net.ccbluex.liquidbounce.integration.backend.BrowserSelectionScreen
-import net.ccbluex.liquidbounce.integration.interop.ClientInteropServer
-import net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game.ActiveServerList
-import net.ccbluex.liquidbounce.integration.screen.ScreenManager
 import net.ccbluex.liquidbounce.integration.task.TaskManager
-import net.ccbluex.liquidbounce.integration.task.TaskProgressScreen
-import net.ccbluex.liquidbounce.integration.theme.ThemeManager
 import net.ccbluex.liquidbounce.lang.LanguageManager
 import net.ccbluex.liquidbounce.render.FontManager
 import net.ccbluex.liquidbounce.render.HAS_AMD_VEGA_APU
 import net.ccbluex.liquidbounce.render.atlas.ItemImageAtlas
-import net.ccbluex.liquidbounce.render.engine.BlurEffectRenderer
 import net.ccbluex.liquidbounce.utils.aiming.PostRotationExecutor
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.block.ChunkScanner
@@ -280,7 +271,6 @@ object LiquidBounce : EventListener {
         FriendManager
         InventoryManager
         EnderChestInventoryTracker
-        ActiveServerList
         ConfigSystem.root(ClientAccountManager)
         ConfigSystem.root(SpooferManager)
         ConfigSystem.root(GlobalManager)
@@ -300,6 +290,9 @@ object LiquidBounce : EventListener {
         // Register commands and modules
         CommandManager.registerInbuilt()
         ModuleManager.registerInbuilt()
+        // codex start
+        net.ccbluex.liquidbounce.gui.KillAuraConfigScreenTodoAi.register()
+        //codex end
 
         AddonManager.registerCategories()
         AddonManager.initializeAddons()
@@ -331,10 +324,6 @@ object LiquidBounce : EventListener {
                 CosmeticService.refreshCarriers(force = true) {
                     logger.info("Successfully loaded ${CosmeticService.carriers.size} cosmetics carriers.")
                 }
-            }
-            launch {
-                // Download player heads
-                HeadsCreativeModeTab.heads.getFinalState()
             }
             launch {
                 MarketplaceConfigs.refresh()
@@ -374,39 +363,14 @@ object LiquidBounce : EventListener {
     }
 
     /**
-     * Prepares the GUI stage of the client.
-     * This will load [ThemeManager], as well as the [BrowserBackendManager] and [ClientInteropServer].
+     * Initializes the AI engine and fonts used by KillAura target rendering.
      */
     private suspend fun prepareGuiStage(
         dispatcher: CoroutineDispatcher
     ) = withContext(dispatcher) {
         RenderSystem.assertOnRenderThread()
 
-        BrowserBackendManager.init()
-        ClientInteropServer.start()
-
-        // Preload marketplace items
-        ConfigSystem.load(MarketplaceManager)
-        MarketplaceManager.subscribedItems.forEach(SubscribedItem::restoreRetired)
-        AddonInstaller.stageSubscribedAddons()
-        MarketplaceManager.reloadHandlers()
-
-        if (!ClientInteropServer.isSkipping) {
-            ThemeManager.init()
-            ConfigSystem.load(ThemeManager)
-            ThemeManager.load()
-        }
-
-        BlurEffectRenderer
-        ScreenManager
-
-        // Holds the chosen browser backend
-        ConfigSystem.load(GlobalManager)
-
         taskManager = TaskManager(ioScope).apply {
-            // Either immediately starts browser or spawns a task to request browser dependencies,
-            // and then starts the browser through render thread.
-            BrowserBackendManager.makeDependenciesAvailable(this)
 
             // Initialize deep learning engine as task, because we cannot know if DJL will request
             // resources from the internet.
@@ -425,15 +389,7 @@ object LiquidBounce : EventListener {
                 }
             }
 
-            launch("Marketplace") { task ->
-                runCatching {
-                    MarketplaceManager.updateAll(task)
-                }.onFailure { exception ->
-                    logger.error("Failed to update marketplace items.", exception)
-                }
 
-                task.isCompleted = true
-            }
         }
 
         // Prepare glyph manager
@@ -459,18 +415,12 @@ object LiquidBounce : EventListener {
         FontManager.closeGlyphManager()
         EventManager.unregisterAll()
 
-        // Shutdown HTTP server
-        ioScope.launch {
-            ClientInteropServer.stop()
-        }
-
         AddonManager.notifyStopping()
 
         // Save all configurations
         ConfigSystem.storeAll()
 
         // Shutdown browser
-        BrowserBackendManager.stop()
     }
 
     /**
@@ -495,7 +445,6 @@ object LiquidBounce : EventListener {
             val resourceManager = mc.resourceManager
             if (resourceManager is ReloadableResourceManager) {
                 resourceManager.registerReloadListener(ClientResourceReloader)
-                resourceManager.registerReloadListener(ThemeManager.reloader)
             } else {
                 logger.warn("Failed to register resource reloader!")
 
@@ -503,31 +452,10 @@ object LiquidBounce : EventListener {
                 initializeClient(
                     workerDispatcher = Dispatchers.Default,
                     renderThreadDispatcher = Dispatchers.Main,
-                ).thenCompose {
-                    ThemeManager.reloader.reload()
-                }
+                ) //codex ().thenCompose { ThemeManager.reloader.reload() })
             }
         }.onFailure {
             ErrorHandler.fatal(it, additionalMessage = "Client start")
-        }
-    }
-
-    @Suppress("unused")
-    private val screenHandler = handler<ScreenEvent>(priority = FIRST_PRIORITY) { event ->
-        val taskManager = taskManager ?: return@handler
-
-        val selection = BrowserBackendManager.pendingSelection
-        if (selection != null && !selection.isCompleted) {
-            if (event.screen !is BrowserSelectionScreen) {
-                event.cancelEvent()
-                mc.gui.setScreen(BrowserSelectionScreen(BrowserBackendManager.selectableBackends, selection))
-            }
-            return@handler
-        }
-
-        if (!taskManager.isCompleted && event.screen !is TaskProgressScreen) {
-            event.cancelEvent()
-            mc.gui.setScreen(TaskProgressScreen("Loading Required Libraries", taskManager))
         }
     }
 

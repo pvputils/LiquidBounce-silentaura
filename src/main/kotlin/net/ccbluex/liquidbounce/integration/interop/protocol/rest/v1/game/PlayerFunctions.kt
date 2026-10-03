@@ -19,10 +19,6 @@
 
 package net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game
 
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
 import net.ccbluex.fastutil.mapToArray
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock.hideShieldSlot
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock.shouldHideOffhand
@@ -54,35 +50,6 @@ import net.minecraft.world.scores.Scoreboard
 import kotlin.math.min
 
 // GET /api/v1/client/player
-private fun Route.getPlayerData() = get {
-    val playerData = mc.player?.let(PlayerData::fromPlayer)
-    if (playerData != null) {
-        call.respond(playerData)
-    } else {
-        call.respond(io.ktor.http.HttpStatusCode.NoContent)
-    }
-}
-
-// GET /api/v1/client/player/inventory
-private fun Route.getPlayerInventory() = get("/inventory") {
-    val playerInventoryData = mc.player?.let(PlayerInventoryData::fromPlayer)
-    if (playerInventoryData != null) {
-        call.respond(playerInventoryData)
-    } else {
-        call.respond(io.ktor.http.HttpStatusCode.NoContent)
-    }
-}
-
-// GET /api/v1/client/crosshair
-private fun Route.getCrosshairData() = get("/crosshair") {
-    val crosshairData = mc.hitResult
-    if (crosshairData != null) {
-        call.respond(crosshairData)
-    } else {
-        call.respond(io.ktor.http.HttpStatusCode.NoContent)
-    }
-}
-
 @JvmRecord
 data class PlayerData(
     val username: String,
@@ -229,11 +196,3 @@ data class ScoreboardData(val header: Component, val entries: List<SidebarEntry?
  * GSON is not happy with NaN values, so we fix them to be 0.
  */
 private fun Float.fixNaN() = if (isNaN()) 0f else this
-
-internal fun Route.playerRoutes() {
-    route("/player") {
-        getPlayerData()
-        getPlayerInventory()
-    }
-    getCrosshairData()
-}

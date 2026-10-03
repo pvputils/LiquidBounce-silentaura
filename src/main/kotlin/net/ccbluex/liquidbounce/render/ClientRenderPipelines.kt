@@ -44,10 +44,6 @@ object ClientRenderPipelines {
 
     private val renderPipelines = Object2ObjectOpenHashMap<Identifier, RenderPipeline>()
 
-    /**
-     * Blend mode for JCEF compatible blending.
-     */
-    private val JCEF_COMPATIBLE_BLEND = BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA
 
     internal inline fun newPipeline(
         name: String,
@@ -113,51 +109,6 @@ object ClientRenderPipelines {
         withFragmentShader("core/position_color")
         withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
         withPrimitiveTopology(mode)
-    }
-
-    object JCEF {
-        @JvmField
-        val SMOOTH_TEXTURE = newPipeline("jcef/smooth_texture") {
-            withSnippet(RenderPipelines.GUI_TEXTURED_SNIPPET)
-            withColorTargetState(ColorTargetState(BlendFunction.TRANSLUCENT))
-            withDepthStencilState(optional())
-        }
-
-        @JvmField
-        val BLURRED_TEXTURE = newPipeline("jcef/blurred_texture") {
-            withSnippet(RenderPipelines.GUI_TEXTURED_SNIPPET)
-            withColorTargetState(ColorTargetState(JCEF_COMPATIBLE_BLEND))
-        }
-
-        @JvmField
-        val BGRA_TEXTURE = newPipeline("jcef/bgra_texture") {
-            bgraPosTexColorQuads()
-            withColorTargetState(ColorTargetState(JCEF_COMPATIBLE_BLEND))
-        }
-
-        @JvmField
-        val BGRA_BLURRED_TEXTURE = newPipeline("jcef/bgra_blurred_texture") {
-            bgraPosTexColorQuads()
-            withColorTargetState(ColorTargetState(JCEF_COMPATIBLE_BLEND))
-        }
-
-        /**
-         * @see RenderPipelines.ENTITY_OUTLINE_BLIT
-         */
-        @JvmField
-        val Blit = newPipeline("jcef_blit") {
-            screenQuadSnippet()
-            withFragmentShader("core/blit_screen")
-            withBindGroupLayout(BindGroupLayouts.IN_SAMPLER)
-            withColorTargetState(
-                ColorTargetState(
-                    optional(JCEF_COMPATIBLE_BLEND),
-                    GpuFormat.RGBA8_UNORM,
-                    ColorTargetState.WRITE_COLOR,
-                )
-            )
-            withDepthStencilState(optional())
-        }
     }
 
     object GUI {
@@ -552,7 +503,6 @@ object ClientRenderPipelines {
      * Precompile
      */
     fun precompile() {
-        JCEF
         GUI
 
         renderPipelines.fastIterator().forEach { (_, pipeline) ->

@@ -64,30 +64,7 @@ public abstract class MixinConnectScreen extends MixinScreen {
     @Unique
     private ServerAddress serverAddress = null;
 
-    @Inject(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;centeredText(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;III)V"))
-    private void injectRender(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta, final CallbackInfo callback) {
-        /*
-         * Make a text demonstration of the connection status
-         * This is useful for debugging the connection trace
-         *
-         * Looks like this: Client <> Proxy <> Server
-         *
-         * For Client, it should show the actual client IP
-         * For Proxy, it should show the proxy IP
-         * For Server, it should show the server IP
-         */
 
-        var clientConnection = this.connection;
-        var serverAddress = this.serverAddress;
-
-        if (clientConnection == null || this.serverAddress == null || SelfDestruct.INSTANCE.isDestructed()) {
-            return;
-        }
-
-        var connectionDetails = getConnectionDetails(clientConnection, serverAddress);
-        context.centeredText(this.font, connectionDetails, this.width / 2,
-            this.height / 2 - 60, -1);
-    }
 
 
     @Inject(method = "connect(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/multiplayer/resolver/ServerAddress;Lnet/minecraft/client/multiplayer/ServerData;Lnet/minecraft/client/multiplayer/TransferState;)V", at = @At("HEAD"), cancellable = true)
@@ -100,54 +77,9 @@ public abstract class MixinConnectScreen extends MixinScreen {
         }
     }
 
-    @ModifyConstant(method = "extractRenderState", constant = @Constant(intValue = 50))
-    private int modifyStatusY(int original) {
-        return original + 30;
-    }
 
-    @Unique
-    private Component getConnectionDetails(Connection clientConnection, ServerAddress serverAddress) {
-        // This will either be the socket address or the server address
-        var socketAddr = getSocketAddress(clientConnection, serverAddress);
-        var serverAddr = String.format(
-                "%s:%s",
-                hideSensitiveAddress(serverAddress.getHost()),
-                serverAddress.getPort()
-        );
-        var ipInfo = IpInfoApi.INSTANCE.getCurrent();
 
-        var spacer = PlainText.of(" ⟺ ", ChatFormatting.DARK_GRAY);
 
-        var textParts = new ArrayList<Component>();
-
-        var client = PlainText.of("Client", ChatFormatting.BLUE);
-        textParts.add(client);
-
-        if (ipInfo != null) {
-            var country = ipInfo.getCountry();
-
-            if (country != null) {
-                textParts.add(PlainText.of(" (", ChatFormatting.DARK_GRAY));
-                textParts.add(PlainText.of(country, ChatFormatting.BLUE));
-                textParts.add(PlainText.of(")", ChatFormatting.DARK_GRAY));
-            }
-        }
-        textParts.add(spacer);
-
-        var socket = PlainText.of(
-            socketAddr,
-            ProxyManager.INSTANCE.getCurrentProxy() != null
-                ? ChatFormatting.GOLD // No proxy - shows server address
-                : ChatFormatting.RED // Proxy good
-        );
-        textParts.add(socket);
-        textParts.add(spacer);
-
-        var server = PlainText.of(serverAddr, ChatFormatting.GREEN);
-        textParts.add(server);
-
-        return TextList.of(textParts);
-    }
 
     @Unique
     private static String getSocketAddress(Connection clientConnection, ServerAddress serverAddress) {

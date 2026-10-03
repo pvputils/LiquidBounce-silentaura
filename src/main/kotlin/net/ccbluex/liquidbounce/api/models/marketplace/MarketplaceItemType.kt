@@ -23,7 +23,6 @@ import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.addon.AddonInstaller
 import net.ccbluex.liquidbounce.features.marketplace.MarketplaceManager
-import net.ccbluex.liquidbounce.integration.theme.ThemeManager
 
 @AddonApi
 enum class MarketplaceItemType(
@@ -47,7 +46,7 @@ enum class MarketplaceItemType(
     OTHER("Other", false, false);
 
     suspend fun reload() = when (this) {
-        THEME -> ThemeManager.load()
+        THEME -> Unit //codex (THEME -> ThemeManager.load())
         ADDON -> AddonInstaller.stageSubscribedAddons()
         else -> MarketplaceManager.reloadHandled(this)
     }

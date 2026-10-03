@@ -30,8 +30,6 @@ import net.ccbluex.liquidbounce.event.events.AccountManagerRemovalResultEvent
 import net.ccbluex.liquidbounce.event.events.SessionEvent
 import net.ccbluex.liquidbounce.injection.mixins.realms.MixinRealmsAvailabilityAccessor
 import net.ccbluex.liquidbounce.injection.mixins.realms.MixinRealmsClientAccessor
-import net.ccbluex.liquidbounce.integration.backend.BrowserBackendManager
-import net.ccbluex.liquidbounce.integration.screen.impl.MicrosoftLoginScreen
 import net.ccbluex.liquidbounce.utils.client.logger
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.with
@@ -206,47 +204,7 @@ object AccountManager : Config("Accounts"), EventListener {
     /**
      * Runs asynchronously; the result is surfaced via [AccountManagerAdditionResultEvent].
      */
-    fun newMicrosoftAccountViaWebView() {
-        if (!microsoftLoginInProgress.compareAndSet(false, true)) {
-            EventManager.callEvent(
-                AccountManagerAdditionResultEvent(error = "A Microsoft sign-in is already in progress!")
-            )
-            return
-        }
 
-        // The login has to run in a browser we control, both to read the redirect back and to keep the
-        // Microsoft session out of the client's cookie store.
-        if (BrowserBackendManager.backend?.takeIf { it.isInitialized && it.supportsIncognito } == null) {
-            microsoftLoginInProgress.set(false)
-            EventManager.callEvent(
-                AccountManagerAdditionResultEvent(error = "The browser is not available, use another sign-in method")
-            )
-            return
-        }
-
-        thread(name = "microsoft-account-webview", isDaemon = true) {
-            runCatching {
-                MicrosoftAccount.buildFromWebView(
-                    onOpen = { service ->
-                        val url = service.authenticationUrl.toString()
-                        mc.execute {
-                            mc.gui.setScreen(MicrosoftLoginScreen(url, service, mc.gui.screen()))
-                        }
-                    },
-                    onClose = {
-                        mc.execute { (mc.gui.screen() as? MicrosoftLoginScreen)?.onClose() }
-                    },
-                )
-            }.onSuccess {
-                handleNewMicrosoftAccount(it)
-            }.onFailure {
-                logger.error("Failed to create new account", it)
-                EventManager.callEvent(AccountManagerAdditionResultEvent(error = it.message ?: "Unknown error"))
-            }
-
-            microsoftLoginInProgress.set(false)
-        }
-    }
 
     /**
      * Does not support accounts with two-factor authentication enabled. Runs asynchronously; the result is

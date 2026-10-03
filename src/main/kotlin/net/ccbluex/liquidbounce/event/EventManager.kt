@@ -58,7 +58,6 @@ import net.ccbluex.liquidbounce.event.events.ClientPlayerInventoryEvent
 import net.ccbluex.liquidbounce.event.events.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.events.ClientStartEvent
 import net.ccbluex.liquidbounce.event.events.ClosedCaptionsEvent
-import net.ccbluex.liquidbounce.event.events.ComponentsUpdateEvent
 import net.ccbluex.liquidbounce.event.events.DeathEvent
 import net.ccbluex.liquidbounce.event.events.DisconnectEvent
 import net.ccbluex.liquidbounce.event.events.DrawOutlinesEvent
@@ -138,7 +137,6 @@ import net.ccbluex.liquidbounce.event.events.UseCooldownEvent
 import net.ccbluex.liquidbounce.event.events.UserLoggedInEvent
 import net.ccbluex.liquidbounce.event.events.UserLoggedOutEvent
 import net.ccbluex.liquidbounce.event.events.ValueChangedEvent
-import net.ccbluex.liquidbounce.event.events.VirtualScreenEvent
 import net.ccbluex.liquidbounce.event.events.WindowResizeEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.events.WorldEntityRemoveEvent
@@ -235,7 +233,6 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     AccountManagerAdditionResultEvent::class.java,
     AccountManagerRemovalResultEvent::class.java,
     AccountManagerLoginResultEvent::class.java,
-    VirtualScreenEvent::class.java,
     FpsChangeEvent::class.java,
     FpsLimitEvent::class.java,
     ClientPlayerDataEvent::class.java,
@@ -249,7 +246,6 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     BlockCountChangeEvent::class.java,
     BedStateChangeEvent::class.java,
     GameModeChangeEvent::class.java,
-    ComponentsUpdateEvent::class.java,
     ResourceReloadEvent::class.java,
     ProxyCheckResultEvent::class.java,
     ScaleFactorChangeEvent::class.java,

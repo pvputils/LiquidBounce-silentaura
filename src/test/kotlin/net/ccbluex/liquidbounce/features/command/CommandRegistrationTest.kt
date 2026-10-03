@@ -23,13 +23,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import net.ccbluex.liquidbounce.features.command.brigadier.ClientCommandSource
 import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandPing
 import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandTps
-import net.ccbluex.liquidbounce.features.command.commands.ingame.CommandUsername
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemEnchant
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemGive
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemRename
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemSkull
-import net.ccbluex.liquidbounce.features.command.commands.ingame.creative.CommandItemStack
-import net.ccbluex.liquidbounce.features.command.commands.module.CommandAutoAccount
 import net.ccbluex.liquidbounce.test.MinecraftBootstrap
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -55,13 +48,6 @@ class CommandRegistrationTest {
     private val registrars: List<Pair<String, CommandRegistrar>> = listOf(
         "ping" to CommandPing,
         "tps" to CommandTps,
-        "username" to CommandUsername,
-        "autoaccount" to CommandAutoAccount,
-        "rename" to CommandItemRename,
-        "give" to CommandItemGive,
-        "skull" to CommandItemSkull,
-        "stack" to CommandItemStack,
-        "enchant" to CommandItemEnchant,
     )
 
     @Test

@@ -32,7 +32,7 @@ import net.ccbluex.liquidbounce.api.services.marketplace.MarketplaceApi
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.addon.AddonInstaller
 import net.ccbluex.liquidbounce.integration.task.type.ResourceTask
-import net.ccbluex.liquidbounce.mcef.listeners.OkHttpProgressInterceptor
+import net.ccbluex.liquidbounce.api.core.OkHttpProgressInterceptorTodoAi as OkHttpProgressInterceptor
 import net.ccbluex.liquidbounce.utils.io.extractZip
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap

@@ -42,7 +42,6 @@ import net.ccbluex.liquidbounce.features.command.brigadier.register
 import net.ccbluex.liquidbounce.features.command.brigadier.suggestions
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.modes.DebugCombatRecorder
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.modes.DebugCombatTrainerRecorder
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleClickGui
 import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.clickablePath
 import net.ccbluex.liquidbounce.utils.client.logger
@@ -244,7 +243,6 @@ object CommandModels : CommandRegistrar {
 
             withContext(Dispatchers.Main) {
                 models.setByString(name)
-                ModuleClickGui.sync()
             }
         }
 
