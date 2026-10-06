@@ -30,4 +30,3 @@ import net.minecraft.world.level.block.state.BlockState
 @AddonApi
 @Tag("blockChange")
 class BlockChangeEvent(val blockPos: BlockPos, val newState: BlockState) : Event()
-

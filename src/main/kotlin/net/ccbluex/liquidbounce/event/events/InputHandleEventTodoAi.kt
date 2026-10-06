@@ -27,4 +27,3 @@ import net.ccbluex.liquidbounce.event.Event
 // Input events
 @Tag("inputHandle")
 object InputHandleEvent : Event()
-

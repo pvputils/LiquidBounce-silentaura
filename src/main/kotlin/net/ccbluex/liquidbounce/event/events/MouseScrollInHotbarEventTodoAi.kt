@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.CancellableEvent
 
 @Tag("mouseScrollInHotbar")
 class MouseScrollInHotbarEvent(val speed: Int) : CancellableEvent()
-

@@ -28,4 +28,3 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 @AddonApi
 @Tag("moduleToggle")
 class ModuleToggleEvent(val moduleName: String, val hidden: Boolean, val enabled: Boolean) : Event()
-

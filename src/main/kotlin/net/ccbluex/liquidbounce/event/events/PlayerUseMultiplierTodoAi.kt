@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("playerUseMultiplier")
 class PlayerUseMultiplier(var forward: Float, var sideways: Float) : Event()
-

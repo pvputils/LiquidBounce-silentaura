@@ -27,4 +27,3 @@ import net.ccbluex.liquidbounce.event.Event
 // Entity events bound to client-user entity
 @Tag("healthUpdate")
 class HealthUpdateEvent(val health: Float, val food: Int, val saturation: Float, val previousHealth: Float) : Event()
-

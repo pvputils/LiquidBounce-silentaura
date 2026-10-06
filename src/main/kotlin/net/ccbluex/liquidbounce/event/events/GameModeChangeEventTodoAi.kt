@@ -27,4 +27,3 @@ import net.minecraft.world.level.GameType
 
 @Tag("gameModeChange")
 class GameModeChangeEvent(val gameMode: GameType) : Event()
-

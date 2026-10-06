@@ -27,4 +27,3 @@ import net.minecraft.world.entity.LivingEntity
 
 @Tag("entityHealthUpdate")
 class EntityHealthUpdateEvent(val entity: LivingEntity, val old: Float, val new: Float, val max: Float) : Event()
-

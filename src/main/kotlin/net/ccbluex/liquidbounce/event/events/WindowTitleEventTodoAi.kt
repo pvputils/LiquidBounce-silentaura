@@ -28,4 +28,3 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 @AddonApi
 @Tag("windowTitle")
 class WindowTitleEvent(val title: StringBuilder) : Event()
-

@@ -29,4 +29,3 @@ import net.minecraft.client.multiplayer.ClientLevel
 @AddonApi
 @Tag("worldChange")
 class WorldChangeEvent(val world: ClientLevel?) : Event()
-

@@ -27,4 +27,3 @@ import net.minecraft.world.entity.Entity
 
 @Tag("entityMargin")
 class EntityMarginEvent(val entity: Entity, var margin: Float) : Event()
-

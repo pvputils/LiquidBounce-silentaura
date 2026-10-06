@@ -28,4 +28,3 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 @AddonApi
 @Tag("chunkLoad")
 class ChunkLoadEvent(val x: Int, val z: Int) : Event()
-

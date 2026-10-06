@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("tickPacketProcess")
 object TickPacketProcessEvent : Event()
-

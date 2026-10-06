@@ -55,4 +55,3 @@ class ScheduleInventoryActionEvent(val schedule: MutableList<InventoryAction.Cha
         this.schedule.add(InventoryAction.Chain(constrains, actions, priority))
     }
 }
-

@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.CancellableEvent
 
 @Tag("selectHotbarSlotSilently")
 class SelectHotbarSlotSilentlyEvent(val requester: Any?, val slot: Int): CancellableEvent()
-

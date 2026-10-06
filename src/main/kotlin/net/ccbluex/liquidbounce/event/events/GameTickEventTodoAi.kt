@@ -28,4 +28,3 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 @AddonApi
 @Tag("gameTick")
 object GameTickEvent : Event()
-

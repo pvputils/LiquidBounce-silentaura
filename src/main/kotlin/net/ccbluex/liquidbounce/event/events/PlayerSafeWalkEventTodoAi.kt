@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("playerSafeWalk")
 class PlayerSafeWalkEvent(var isSafeWalk: Boolean = false) : Event()
-

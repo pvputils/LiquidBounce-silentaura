@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("playerStep")
 class PlayerStepEvent(var height: Float) : Event()
-

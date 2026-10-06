@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.CancellableEvent
 
 @Tag("cancelBlockBreaking")
 class CancelBlockBreakingEvent : CancellableEvent()
-

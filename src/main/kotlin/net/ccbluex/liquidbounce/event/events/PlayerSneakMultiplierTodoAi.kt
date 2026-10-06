@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("playerSneakMultiplier")
 class PlayerSneakMultiplier(var multiplier: Double) : Event()
-

@@ -28,4 +28,3 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 @AddonApi
 @Tag("playerTick")
 class PlayerTickEvent : CancellableEvent()
-

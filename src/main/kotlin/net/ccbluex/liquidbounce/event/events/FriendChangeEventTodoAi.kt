@@ -28,4 +28,3 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 @AddonApi
 @Tag("friendChange")
 class FriendChangeEvent(val name: String, val added: Boolean) : Event()
-

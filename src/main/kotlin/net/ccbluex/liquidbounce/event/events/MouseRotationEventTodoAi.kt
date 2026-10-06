@@ -29,4 +29,3 @@ class MouseRotationEvent(
     var cursorDeltaX: Double,
     var cursorDeltaY: Double,
 ) : CancellableEvent()
-

@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("mouseCursor")
 class MouseCursorEvent(val x: Double, val y: Double) : Event()
-

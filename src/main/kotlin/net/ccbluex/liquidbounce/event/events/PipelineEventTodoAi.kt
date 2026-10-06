@@ -27,4 +27,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("pipeline")
 class PipelineEvent(val channelPipeline: ChannelPipeline, val local: Boolean) : Event()
-

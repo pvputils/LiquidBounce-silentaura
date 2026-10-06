@@ -28,4 +28,3 @@ import net.ccbluex.liquidbounce.event.Event
 class UseCooldownEvent(
     var cooldown: Int,
 ) : Event()
-

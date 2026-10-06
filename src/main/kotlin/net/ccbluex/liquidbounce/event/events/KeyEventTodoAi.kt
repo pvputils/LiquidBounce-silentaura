@@ -30,4 +30,3 @@ class KeyEvent(
     val key: InputConstants.Key,
     val action: Int,
 ) : Event()
-

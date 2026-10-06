@@ -28,4 +28,3 @@ import net.minecraft.world.level.material.Fluid
 
 @Tag("playerFluidCollisionCheck")
 class PlayerFluidCollisionCheckEvent(val fluid: TagKey<Fluid>) : CancellableEvent()
-

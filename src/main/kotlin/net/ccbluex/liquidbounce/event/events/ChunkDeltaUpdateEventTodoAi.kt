@@ -27,4 +27,3 @@ import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket
 
 @Tag("chunkDeltaUpdate")
 class ChunkDeltaUpdateEvent(val packet: ClientboundSectionBlocksUpdatePacket) : Event()
-

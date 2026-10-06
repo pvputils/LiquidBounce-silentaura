@@ -27,4 +27,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("valueChanged")
 class ValueChangedEvent(val value: Value<*>) : Event()
-

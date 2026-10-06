@@ -27,4 +27,3 @@ import net.minecraft.core.BlockPos
 
 @Tag("blockBreakingProgress")
 class BlockBreakingProgressEvent(val pos: BlockPos) : Event()
-

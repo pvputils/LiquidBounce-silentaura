@@ -46,4 +46,3 @@ object PerspectiveEvent : Event() {
         distance = entity.cameraDistance
     }
 }
-

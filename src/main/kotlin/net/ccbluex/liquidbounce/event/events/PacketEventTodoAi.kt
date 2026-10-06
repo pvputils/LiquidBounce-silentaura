@@ -29,4 +29,3 @@ import net.minecraft.network.protocol.Packet
 @AddonApi
 @Tag("packet")
 class PacketEvent(val origin: TransferOrigin, val packet: Packet<*>, val original: Boolean = true) : CancellableEvent()
-
