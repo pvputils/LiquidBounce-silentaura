@@ -47,4 +47,3 @@ class MouseButtonEvent(
     val isMiddleClick: Boolean get() = isPressed && isMiddleButton
     val isRightClick: Boolean get() = isPressed && isRightButton
 }
-

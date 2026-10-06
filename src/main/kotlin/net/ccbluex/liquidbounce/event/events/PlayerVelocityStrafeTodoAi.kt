@@ -27,4 +27,3 @@ import net.minecraft.world.phys.Vec3
 
 @Tag("playerStrafe")
 class PlayerVelocityStrafe(val movementInput: Vec3, val speed: Float, val yaw: Float, var velocity: Vec3) : Event()
-

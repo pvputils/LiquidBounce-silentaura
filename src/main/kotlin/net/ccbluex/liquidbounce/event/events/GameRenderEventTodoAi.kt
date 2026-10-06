@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("gameRender")
 object GameRenderEvent : Event()
-

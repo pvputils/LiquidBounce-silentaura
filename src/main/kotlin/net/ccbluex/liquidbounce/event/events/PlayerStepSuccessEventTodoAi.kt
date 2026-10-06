@@ -27,4 +27,3 @@ import net.minecraft.world.phys.Vec3
 
 @Tag("playerStepSuccess")
 class PlayerStepSuccessEvent(val movementVec: Vec3, var adjustedVec: Vec3) : Event()
-

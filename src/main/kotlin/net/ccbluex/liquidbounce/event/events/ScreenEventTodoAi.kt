@@ -31,4 +31,3 @@ import net.minecraft.client.gui.screens.Screen
 class ScreenEvent(
     val screen: Screen?,
 ) : CancellableEvent()
-

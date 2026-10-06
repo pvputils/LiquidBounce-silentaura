@@ -27,4 +27,3 @@ import net.minecraft.core.BlockPos
 
 @Tag("blockAttack")
 class BlockAttackEvent(val pos: BlockPos) : CancellableEvent()
-

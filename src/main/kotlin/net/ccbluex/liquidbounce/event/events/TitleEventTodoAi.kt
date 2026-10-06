@@ -42,4 +42,3 @@ sealed class TitleEvent : CancellableEvent() {
     @Tag("clearTitle")
     class Clear(var reset: Boolean) : TitleEvent()
 }
-

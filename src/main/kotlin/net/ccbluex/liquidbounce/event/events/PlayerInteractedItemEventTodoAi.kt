@@ -33,4 +33,3 @@ class PlayerInteractedItemEvent(
     val hand: InteractionHand,
     val actionResult: InteractionResult,
 ) : Event()
-

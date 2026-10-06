@@ -33,4 +33,3 @@ class NotificationEvent(val title: String, val message: String, val severity: Se
         INFO, SUCCESS, ERROR, ENABLED, DISABLED
     }
 }
-

@@ -48,4 +48,3 @@ class DrawOutlinesEvent(
         this.dirtyFlag = true
     }
 }
-

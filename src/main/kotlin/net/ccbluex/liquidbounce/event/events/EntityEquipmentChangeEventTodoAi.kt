@@ -31,4 +31,3 @@ import net.minecraft.world.item.ItemStack
 class EntityEquipmentChangeEvent(
     val entity: LivingEntity, val equipmentSlot: EquipmentSlot, val itemStack: ItemStack
 ) : Event()
-

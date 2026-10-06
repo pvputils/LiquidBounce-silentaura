@@ -26,4 +26,3 @@ import net.ccbluex.liquidbounce.event.Event
 
 @Tag("mouseScroll")
 class MouseScrollEvent(val horizontal: Double, val vertical: Double) : Event()
-

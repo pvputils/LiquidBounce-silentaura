@@ -41,4 +41,3 @@ class KeyboardKeyEvent(
     val isReleased: Boolean get() = action == InputConstants.RELEASE
     val isRepeat: Boolean get() = action == InputConstants.REPEAT
 }
-

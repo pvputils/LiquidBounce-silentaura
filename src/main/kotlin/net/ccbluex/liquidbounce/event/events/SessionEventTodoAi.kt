@@ -29,4 +29,3 @@ import net.minecraft.client.User
 class SessionEvent(
     val session: User,
 ) : Event()
-

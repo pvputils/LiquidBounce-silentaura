@@ -30,4 +30,3 @@ import net.minecraft.world.phys.Vec3
 @AddonApi
 @Tag("playerMove")
 class PlayerMoveEvent(val type: MoverType, var movement: Vec3) : Event()
-

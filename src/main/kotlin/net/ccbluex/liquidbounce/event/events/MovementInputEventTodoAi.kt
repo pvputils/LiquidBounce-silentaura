@@ -33,4 +33,3 @@ class MovementInputEvent(
     var jump: Boolean,
     var sneak: Boolean,
 ) : Event()
-

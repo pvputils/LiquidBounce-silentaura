@@ -27,4 +27,3 @@ import net.minecraft.world.level.ChunkPos
 
 @Tag("chunkUnload")
 class ChunkUnloadEvent(val pos: ChunkPos) : Event()
-

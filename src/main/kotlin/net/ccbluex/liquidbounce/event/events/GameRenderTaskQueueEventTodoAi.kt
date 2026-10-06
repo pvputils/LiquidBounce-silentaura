@@ -31,4 +31,3 @@ import net.ccbluex.liquidbounce.event.Event
  */
 @Tag("gameRenderTaskQueue")
 object GameRenderTaskQueueEvent : Event()
-

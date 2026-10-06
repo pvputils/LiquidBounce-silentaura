@@ -35,4 +35,3 @@ class PlayerNetworkMovementTickEvent(
     var z: Double,
     var ground: Boolean
 ) : CancellableEvent()
-

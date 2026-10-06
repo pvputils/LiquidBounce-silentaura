@@ -27,4 +27,3 @@ import net.ccbluex.liquidbounce.event.Event
 @Tag("fps")
 @Suppress("unused")
 class FpsChangeEvent(val fps: Int) : Event()
-

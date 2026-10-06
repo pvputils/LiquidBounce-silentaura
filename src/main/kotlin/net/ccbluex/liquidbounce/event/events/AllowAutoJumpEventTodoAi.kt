@@ -32,4 +32,3 @@ class AllowAutoJumpEvent(
 /**
  * All events which are related to the minecraft client
  */
-

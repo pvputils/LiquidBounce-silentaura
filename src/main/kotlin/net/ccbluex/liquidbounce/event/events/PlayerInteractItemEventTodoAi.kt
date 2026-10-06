@@ -31,4 +31,3 @@ import net.minecraft.world.entity.player.Player
  */
 @Tag("playerInteractItem")
 class PlayerInteractItemEvent(val player: Player, val hand: InteractionHand) : CancellableEvent()
-

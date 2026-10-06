@@ -30,4 +30,3 @@ class KeybindIsPressedEvent(
     val keyBinding: KeyMapping,
     var isPressed: Boolean,
 ) : Event()
-
