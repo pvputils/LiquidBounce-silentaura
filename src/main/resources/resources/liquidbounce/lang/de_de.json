@@ -299,7 +299,6 @@
   "liquidbounce.module.autoBuild.messages.noObsidian": "Es wurde kein Obsidian gefunden, deaktiviere Modul...",
   "liquidbounce.module.autoBuild.messages.noPosition": "Es wurde keine mögliche Position gefunden, deaktiviere Modul...",
   "liquidbounce.module.autoChatGame.description": "Verwendet OpenAI, um Chat-Spiele zu spielen.",
-  "liquidbounce.module.autoClicker.description": "Klickt automatisch, wenn die Angriffstaste gedrückt gehalten wird.",
   "liquidbounce.module.autoConfig.description": "Wählt automatisch die richtige Konfiguration für den Server aus, auf dem du spielst.",
   "liquidbounce.module.autoConfig.messages.failed": "Konfiguration %s konnte nicht geladen werden.",
   "liquidbounce.module.autoConfig.messages.loaded": "Konfiguration geladen für %s.",

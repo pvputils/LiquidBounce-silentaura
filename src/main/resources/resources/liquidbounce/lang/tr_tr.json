@@ -233,7 +233,6 @@
   "liquidbounce.module.autoBuild.messages.noObsidian": "Obsidiyen bulunamadı, kapatılıyor...",
   "liquidbounce.module.autoBuild.messages.noPosition": "Olası bir konum bulunamadı, kapatılıyor...",
   "liquidbounce.module.autoChatGame.description": "OpenAI kullanarak sohbet oyunlarını oynar.",
-  "liquidbounce.module.autoClicker.description": "Saldırı tuşuna basılı tutarken otomatik olarak tıklar.",
   "liquidbounce.module.autoConfig.description": "Oynadığınız sunucuya uygun yapılandırmayı otomatik olarak uygular.",
   "liquidbounce.module.autoConfig.messages.failed": "%s için yapılandırma yüklenemedi.",
   "liquidbounce.module.autoConfig.messages.loaded": "%s için yapılandırma uygulandı.",

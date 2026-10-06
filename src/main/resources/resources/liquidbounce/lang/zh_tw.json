@@ -426,7 +426,6 @@
   "liquidbounce.module.autoBuild.messages.noObsidian": "沒有足夠的黑曜石, 關閉中...",
   "liquidbounce.module.autoBuild.messages.noPosition": "沒有找到合適的位置，關閉中...",
   "liquidbounce.module.autoChatGame.description": "使用OpenAI玩聊天遊戲。",
-  "liquidbounce.module.autoClicker.description": "按住滑鼠按鈕時自動點擊。",
   "liquidbounce.module.autoConfig.description": "自動應用適合你當前遊玩的伺服器的正確設定。",
   "liquidbounce.module.autoConfig.messages.failed": "針對 %s 的設定載入失敗。",
   "liquidbounce.module.autoConfig.messages.loaded": "已應用針對 %s 的設定。",

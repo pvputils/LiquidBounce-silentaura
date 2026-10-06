@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
 import com.google.gson.JsonObject
@@ -24,7 +28,6 @@ import net.ccbluex.liquidbounce.event.events.RotationUpdateEvent
 import net.ccbluex.liquidbounce.event.events.SprintEvent
 import net.ccbluex.liquidbounce.event.events.WorldRenderEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.event.tickHandler
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
@@ -76,13 +79,13 @@ import net.minecraft.world.item.ItemStack
 /**
  * KillAura module
  *
- * Automatically attacks enemies.
+ * Aims at enemies and redirects real attack-button presses. //codex (Automatically attacks enemies.)
  */
 @Suppress("MagicNumber")
 object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
-    // Attack speed
-    val clicker = tree(KillAuraClicker)
+    // Real attack input //codex (Attack speed)
+    val realAttack = KillAuraRealAttackTodoAi //codex (val clicker = tree(KillAuraClicker))
     val range = tree(KillAuraRange)
     val targetTracker = tree(KillAuraTargetTracker)
 
@@ -122,6 +125,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     }
 
     override fun onDisabled() {
+        // codex start
+        realAttack.reset()
+        //codex end
         targetTracker.reset()
         failedHits.clear()
         KillAuraNotifyWhenFail.failedHitsIncrement = 0
@@ -158,10 +164,12 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         ModuleAutoWeapon.onTarget(targetTracker.target)
     }
 
-    @Suppress("unused")
-    private val gameHandler = tickHandler {
+    // codex start
+    @Suppress("CognitiveComplexMethod")
+    //codex end
+    private fun performRealAttack() { //codex (private val gameHandler = tickHandler {)
         if (player.isDeadOrDying || player.isSpectator) {
-            return@tickHandler
+            return //codex (return@tickHandler)
         }
 
         // Check if there is target to attack
@@ -169,7 +177,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         if (CombatManager.shouldPauseCombat) {
             KillAuraAutoBlock.stopBlocking()
-            return@tickHandler
+            return //codex (return@tickHandler)
         }
 
         if (target == null) {
@@ -183,15 +191,15 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
                     dealWithFakeSwing(null)
                 }
             }
-            return@tickHandler
+            return //codex (return@tickHandler)
         }
 
         // Check if the module should (not) continue after the blocking state is updated
         if (!requirementsMet) {
-            return@tickHandler
+            return //codex (return@tickHandler)
         }
 
-        val rotation = (if (rotations.rotationTiming == ON_TICK) {
+        val rotation = (if (rotations.rotationTiming == ON_TICK || rotations.rotationTiming == SNAP) { //codex (val rotation = (if (rotations.rotationTiming == ON_TICK) {)
             findRotation(target, range.interactionRange, range.interactionThroughWallsRange)?.rotation
         } else {
             null
@@ -217,9 +225,19 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         attackTarget(crosshairTarget, rotation)
     }
 
+    // codex start
+    fun handleRealAttack(): Boolean {
+        if (!running || mc.gui.screen() != null || player.isSpectator || player.isDeadOrDying) return false
+        // Leave block breaking and attacks without an aura target to vanilla.
+        if (targetTracker.target == null) return false
+        realAttack.handleInput { performRealAttack() }
+        return true
+    }
+    //codex end
+
     val shouldBlockSprinting
         get() = !ModuleElytraTarget.running
-            && criticalsSelectionMode.shouldStopSprinting(clicker, targetTracker.target)
+            && criticalsSelectionMode.shouldStopSprinting(realAttack.isAttacking, targetTracker.target) //codex (&& criticalsSelectionMode.shouldStopSprinting(clicker, targetTracker.target))
 
     @Suppress("unused")
     private val sprintHandler = handler<SprintEvent> { event ->
@@ -254,7 +272,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         if (!isInRange) {
             if (KillAuraAutoBlock.enabled && KillAuraAutoBlock.onScanRange &&
                 player.squaredBoxedDistanceTo(target) <= range.scanRange.sq()) {
-                if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {
+                if (realAttack.ticksSinceLastAttack >= KillAuraAutoBlock.reblockTicks) { //codex (if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {)
                     KillAuraAutoBlock.startBlocking()
                 }
 
@@ -275,10 +293,10 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         val mainHandStack = player.mainHandItem
 
-        // Attack enemy, according to the attack scheduler
-        if (clicker.isClickTick && canAttackNow(target, mainHandStack) &&
+        // Attack once during the current vanilla attack-button press. //codex (Attack enemy, according to the attack scheduler)
+        if (realAttack.isAttacking && canAttackNow(target, mainHandStack) && //codex (if (clicker.isClickTick && canAttackNow(target, mainHandStack) &&)
             !KillAuraAutoBlock.isPrioritizingBlocking) {
-            clicker.prepareForAttack(rotation) {
+            realAttack.prepareForAttack(rotation) { //codex (clicker.prepareForAttack(rotation) {)
                 // On each click, we check if we are still ready to attack
                 if (!canAttackNow(target, mainHandStack)) {
                     return@prepareForAttack false
@@ -294,7 +312,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
                 true
             }
-        } else if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {
+        } else if (realAttack.ticksSinceLastAttack >= KillAuraAutoBlock.reblockTicks) { //codex (} else if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {)
             KillAuraAutoBlock.startBlocking()
         }
     }
@@ -348,9 +366,8 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         when (rotations.rotationTiming) {
 
-            // If our click scheduler is not going to click the moment we reach the target,
-            // we should not start aiming towards the target just yet.
-            SNAP -> if (!clicker.willClickAt(ticks.coerceAtLeast(1))) {
+            // SNAP starts aiming only during a real attack press. //codex (If our click scheduler is not going to click the moment we reach the target, we should not start aiming towards the target just yet.)
+            SNAP -> if (!realAttack.isAttacking) { //codex (SNAP -> if (!clicker.willClickAt(ticks.coerceAtLeast(1))) {)
                 return true
             }
 

@@ -239,7 +239,6 @@
   "liquidbounce.module.autoBuff.description": "Автоматично накладає на вас бафи за допомогою різних предметів.",
   "liquidbounce.module.autoBuild.description": "Автоматично будує певні структури.",
   "liquidbounce.module.autoChatGame.description": "Використовує OpenAI для гри в чат-ігри.",
-  "liquidbounce.module.autoClicker.description": "Автоматично натискає, поки ви тримаєте кнопку натиснутою.",
   "liquidbounce.module.autoConfig.description": "Автоматично застосовує правильний конфіг для сервера, на якому ви граєте.",
   "liquidbounce.module.autoCrafter.description": "Автоматично створює предмети за допомогою Книги рецептів.",
   "liquidbounce.module.autoDeposit.description": "Автоматично кладе налаштовані предмети з інвентаря гравця в контейнери.",

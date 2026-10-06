@@ -223,7 +223,6 @@
   "liquidbounce.module.autoBuff.description": "Aplica buffs em você automaticamente usando vários itens.",
   "liquidbounce.module.autoBuild.description": "Constrói automaticamente certas estruturas.",
   "liquidbounce.module.autoChatGame.description": "Usa OpenAI para jogar jogos de chat.",
-  "liquidbounce.module.autoClicker.description": "Clica automaticamente quando segura um botão do mouse.",
   "liquidbounce.module.autoConfig.description": "Aplica automaticamente a config correta para o servidor em que você está jogando.",
   "liquidbounce.module.autoCrafter.description": "Cria itens automaticamente usando o Livro de Receitas.",
   "liquidbounce.module.autoDeposit.description": "Deposita automaticamente itens configurados do inventário do jogador em contêineres.",

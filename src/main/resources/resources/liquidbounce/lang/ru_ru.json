@@ -292,7 +292,6 @@
   "liquidbounce.module.autoBuild.messages.noObsidian": "Обсидиан не найден, отключаю...",
   "liquidbounce.module.autoBuild.messages.noPosition": "Не удалось найти подходящую позицию, отключаю...",
   "liquidbounce.module.autoChatGame.description": "Использует OpenAI для игры в чате.",
-  "liquidbounce.module.autoClicker.description": "Автоматически нажимает, пока вы держите кнопку нажатой.",
   "liquidbounce.module.autoConfig.description": "Автоматически применяет правильный конфиг для сервера, на котором вы играете.",
   "liquidbounce.module.autoConfig.messages.failed": "Ошибка загрузки конфига для %s.",
   "liquidbounce.module.autoConfig.messages.loaded": "Конфиг для %s применён.",

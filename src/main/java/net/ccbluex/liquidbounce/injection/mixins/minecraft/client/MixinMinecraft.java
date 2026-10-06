@@ -26,6 +26,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.Window;
 import net.ccbluex.liquidbounce.LiquidBounce;
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura;
 import net.ccbluex.liquidbounce.event.CoroutineTicker;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
@@ -73,6 +74,15 @@ import static net.ccbluex.liquidbounce.utils.client.ProtocolUtilKt.getUsesViaFab
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft {
+    // codex start
+    @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
+    private void codexRealKillAuraAttack(CallbackInfoReturnable<Boolean> cir) {
+        if (ModuleKillAura.INSTANCE.handleRealAttack()) {
+            cir.setReturnValue(false);
+        }
+    }
+    //codex end
+
 
     @Shadow
     @Nullable

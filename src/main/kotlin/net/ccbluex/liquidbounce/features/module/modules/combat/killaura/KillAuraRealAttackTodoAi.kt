@@ -16,108 +16,49 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
-// codex start
-@file:Suppress("MaxLineLength")
-//codex end
-
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.rotationTiming
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.simulateInventoryClosing
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
-import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
-import net.ccbluex.liquidbounce.utils.aiming.utils.canSeeBox
 import net.ccbluex.liquidbounce.utils.aiming.utils.withFixedYaw
-import net.ccbluex.liquidbounce.utils.clicking.Clicker
-import net.ccbluex.liquidbounce.utils.clicking.ItemCooldown
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.network
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.network.send1_11_1OpenInventory
 import net.ccbluex.liquidbounce.utils.network.sendCloseInventory
-import net.ccbluex.liquidbounce.utils.entity.PositionExtrapolation
-import net.ccbluex.liquidbounce.utils.entity.getBoundingBoxAt
 import net.ccbluex.liquidbounce.utils.entity.isBlockingServerside
-import net.ccbluex.liquidbounce.utils.entity.wouldBlockHit
 import net.ccbluex.liquidbounce.utils.inventory.InventoryManager
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.PosRot
-import kotlin.math.round
 
-object KillAuraClicker : Clicker<ModuleKillAura>(
-    ModuleKillAura,
-    mc.options.keyAttack,
-    KillAuraClickerItemCooldown()
-) {
 
-    override val isClickTick: Boolean
-        get() = super.isClickTick //codex (get() = super.isClickTick && (!VelocityReduce.running || VelocityReduce.remainingAttackCount == 0))
+object KillAuraRealAttackTodoAi {
+    var isAttacking = false
+        private set
+    private var lastAttackTick = Int.MIN_VALUE
 
-    private class KillAuraClickerItemCooldown : ItemCooldown() {
+    val ticksSinceLastAttack: Int
+        get() = if (lastAttackTick == Int.MIN_VALUE) Int.MAX_VALUE else player.tickCount - lastAttackTick
 
-        private val ignoreOnShieldBreak by boolean("IgnoreOnShieldBreak", true)
-        private val ignoreOnMaceSmash by boolean("IgnoreOnMaceSmash", true)
-        private val ignoreWhenExitingRange by boolean("IgnoreWhenExitingRange", true)
-
-        override fun isCooldownPassed(ticks: Int) = when {
-            super.isCooldownPassed(ticks) -> true
-            ignoreOnShieldBreak && ModuleKillAura.targetTracker.target?.wouldBlockHit == true
-                && ModuleAutoWeapon.willShieldBreak -> true
-            ignoreOnMaceSmash && ModuleAutoWeapon.willMaceSmash -> true
-            ignoreWhenExitingRange && ticks >= 0 && predictExitingRange(1.0 + ticks.toDouble()) -> true
-            else -> false
-        }
-
-        /**
-         * Predicts if we are going to move out of attack range.
-         */
-        fun predictExitingRange(ticks: Double): Boolean {
-            require(ticks > 0) { "ticks must be positive" }
-
-            val target = KillAuraTargetTracker.target ?: return false
-            if (target.hurtTime > 7) {
-                return false
-            }
-
-            val futurePos = PositionExtrapolation.getBestForEntity(player)
-                .getPositionInTicks(ticks)
-            val futureTargetPos = PositionExtrapolation.getBestForEntity(target)
-                .getPositionInTicks(ticks)
-
-            val ownEyePos = futurePos.add(0.0, player.getEyeHeight(player.pose).toDouble(), 0.0)
-            val targetBox = target.getBoundingBoxAt(futureTargetPos)
-
-            val isExitingRange = !canSeeBox(
-                eyes = ownEyePos,
-                box = targetBox,
-                range = ModuleKillAura.range.interactionRange.toDouble(),
-                wallsRange = ModuleKillAura.range.interactionThroughWallsRange.toDouble()
-            )
-            debugParameter("Is Exiting Range On ${round(ticks)}") { isExitingRange }
-            if (isExitingRange) {
-                debugGeometry("Exiting") { ModuleDebug.DebuggedPoint(futurePos, Color4b.RED, 0.4) }
-            }
-
-            return isExitingRange
-        }
-
+    fun reset() {
+        lastAttackTick = Int.MIN_VALUE
     }
 
-    /**
-     * Will prepare us for attacking using the [attack] function.
-     *
-     * This includes:
-     * - Closing the inventory if we are simulating inventory closing
-     * - Unblocking if we are blocking and the tick on is 0
-     */
+    /** Executes only during vanilla's attack-button press, with no queue, repeats or future click prediction. */
+    fun handleInput(attack: () -> Unit) {
+        isAttacking = true
+        try {
+            attack()
+        } finally {
+            isAttacking = false
+        }
+    }
+
     @Suppress("CognitiveComplexMethod")
     fun prepareForAttack(rotation: Rotation? = null, attack: () -> Boolean) {
-        if (!canExecuteClickNow()) {
+        if (!isAttacking) {
             // If we are not going to click, we don't need to prepare the environment
             return
         }
@@ -148,7 +89,7 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
         }
 
         // 3. Rotate to target (if we have on-tick enabled)
-        if (rotationTiming == KillAuraRotationsValueGroup.KillAuraRotationTiming.ON_TICK && rotation != null) {
+        if (rotationTiming != KillAuraRotationsValueGroup.KillAuraRotationTiming.NORMAL && rotation != null) {
             network.send(
                 PosRot(
                     player.x,
@@ -163,10 +104,10 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
         }
 
         // Run the attack
-        click(attack)
+        if (attack()) lastAttackTick = player.tickCount
 
         // 1. Rotate back
-        if (rotationTiming == KillAuraRotationsValueGroup.KillAuraRotationTiming.ON_TICK && rotation != null) {
+        if (rotationTiming != KillAuraRotationsValueGroup.KillAuraRotationTiming.NORMAL && rotation != null) {
             network.send(
                 PosRot(
                     player.x,

@@ -252,7 +252,6 @@
   "liquidbounce.module.autoBuild.messages.noObsidian": "Geen obsidian gevonden, module uitgeschakeld...",
   "liquidbounce.module.autoBuild.messages.noPosition": "Geen geschikte plek gevonden, module uitgeschakeld...",
   "liquidbounce.module.autoChatGame.description": "Gebruikt OpenAI om chatminigames te spelen.",
-  "liquidbounce.module.autoClicker.description": "Klikt automatisch zolang je de aanvalsknop ingedrukt houdt.",
   "liquidbounce.module.autoConfig.description": "Laadt automatisch de juiste configuratie voor de server waarop je speelt.",
   "liquidbounce.module.autoConfig.messages.failed": "Kon configuratie voor %s niet laden.",
   "liquidbounce.module.autoConfig.messages.loaded": "Configuratie voor %s toegepast.",

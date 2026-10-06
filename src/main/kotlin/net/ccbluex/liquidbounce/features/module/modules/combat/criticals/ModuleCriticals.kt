@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.combat.criticals
 
 import net.ccbluex.liquidbounce.config.types.group.NoneMode
@@ -32,7 +36,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes.C
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes.CriticalsPacket
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes.CriticalsTimer
 import net.ccbluex.liquidbounce.utils.block.collideBlockIntersects
-import net.ccbluex.liquidbounce.utils.clicking.Clicker
 import net.ccbluex.liquidbounce.utils.network.sendStopSprinting
 import net.ccbluex.liquidbounce.utils.combat.findEnemy
 import net.ccbluex.liquidbounce.utils.entity.box
@@ -169,7 +172,7 @@ object ModuleCriticals : ClientModule("Criticals", ModuleCategories.COMBAT) {
             }
         }
 
-        fun shouldStopSprinting(clicker: Clicker<*>, target: Entity?): Boolean {
+        fun shouldStopSprinting(isAttacking: Boolean, target: Entity?): Boolean { //codex (fun shouldStopSprinting(clicker: Clicker<*>, target: Entity?): Boolean {)
             // If we don't care about critical hits we don't have to stop sprinting.
             if (this == IGNORE) {
                 return false
@@ -181,7 +184,7 @@ object ModuleCriticals : ClientModule("Criticals", ModuleCategories.COMBAT) {
             }
 
             // If we are about to do a critical hit, we should stop sprinting.
-            return target != null && clicker.willClickAt(1)
+            return target != null && isAttacking //codex (return target != null && clicker.willClickAt(1))
         }
 
     }

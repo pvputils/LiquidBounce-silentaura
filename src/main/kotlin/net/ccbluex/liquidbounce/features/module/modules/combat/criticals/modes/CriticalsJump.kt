@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes
 
 import net.ccbluex.fastutil.component1
@@ -51,7 +55,6 @@ object CriticalsJump : Mode("Jump") {
     private val optimizeForCooldown by boolean("OptimizeForCooldown", true)
 
     private val checkKillaura by boolean("CheckKillaura", false)
-    private val checkAutoClicker by boolean("CheckAutoClicker", false)
     private val canBeSeen by boolean("CanBeSeen", true)
 
     /**
@@ -218,12 +221,11 @@ object CriticalsJump : Mode("Jump") {
         }
 
         // if both module checks are disabled, we can safely say that we are active
-        if (!checkKillaura && !checkAutoClicker) {
+        if (!checkKillaura) { //codex (if (!checkKillaura && !checkAutoClicker) {)
             return true
         }
 
-        return (ModuleKillAura.running && checkKillaura) ||
-            false //codex ((ModuleAutoClicker.running && checkAutoClicker))
+        return ModuleKillAura.running && checkKillaura //codex (return (ModuleKillAura.running && checkKillaura) || false)
     }
 
 }

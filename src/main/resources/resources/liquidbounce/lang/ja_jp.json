@@ -220,7 +220,6 @@
   "liquidbounce.module.autoBuff.description": "アイテムを使って自動的にバフをかけます。  ",
   "liquidbounce.module.autoBuild.description": "特定の構造物を自動的に建築します。",
   "liquidbounce.module.autoChatGame.description": "OpenAIを使ってチャットをさせます。 ",
-  "liquidbounce.module.autoClicker.description": "マウスボタンを押したままにすると、自動的にクリックします。",
   "liquidbounce.module.autoConfig.description": "プレイしているサーバーに適した設定を自動的に適用します。",
   "liquidbounce.module.autoCrafter.description": "レシピブックを使ってアイテムを自動的にクラフトします。",
   "liquidbounce.module.autoDeposit.description": "設定したアイテムをプレイヤーのインベントリからコンテナへ自動的に預けます。",

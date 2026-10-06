@@ -17,6 +17,10 @@
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget
 
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura as KillAura
@@ -62,7 +66,7 @@ internal object AutoFirework : ToggleableValueGroup(ModuleElytraTarget, "AutoFir
         if (!KillAura.running
             || !syncCooldownWithKillAura
             || (
-                KillAura.clicker.isClickTick
+                (KillAura.realAttack.ticksSinceLastAttack in 0..1) //codex (KillAura.clicker.isClickTick)
                 && KillAura.targetTracker.target
                     ?.squaredBoxedDistanceTo(player)
                     ?.takeIf { it >= KillAura.range.interactionRange.sq() } != null
@@ -76,7 +80,7 @@ internal object AutoFirework : ToggleableValueGroup(ModuleElytraTarget, "AutoFir
          * We can use the firework on the next tick.
          * After killaura performed the click
          */
-        return if (KillAura.clicker.isClickTick) {
+        return if (KillAura.realAttack.ticksSinceLastAttack in 0..1) { //codex (return if (KillAura.clicker.isClickTick) {)
             waitTicks(1)
             true
         } else {
