@@ -31,8 +31,6 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.features.module.modules.combat.backtrack.ModuleBacktrack
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection
 import net.ccbluex.liquidbounce.utils.aiming.utils.RotationUtil
@@ -104,10 +102,10 @@ object RotationManager : EventListener {
         private set
 
     private val fakeLagging
-        get() = BlinkManager.isLagging || ModuleBacktrack.isLagging()
+        get() = BlinkManager.isLagging //codex (get() = BlinkManager.isLagging || ModuleBacktrack.isLagging())
 
     private val freezing
-        get() = ModuleFreeze.running
+        get() = false //codex (get() = ModuleFreeze.running)
 
     @AddonApi
     val serverRotation: Rotation

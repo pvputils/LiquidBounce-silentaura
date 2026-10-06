@@ -20,7 +20,6 @@
 
 package net.ccbluex.liquidbounce.utils.math
 
-import net.ccbluex.liquidbounce.utils.math.geometry.AlignedFace
 import net.ccbluex.liquidbounce.utils.math.geometry.Line
 import net.minecraft.core.Direction
 import net.minecraft.core.Position

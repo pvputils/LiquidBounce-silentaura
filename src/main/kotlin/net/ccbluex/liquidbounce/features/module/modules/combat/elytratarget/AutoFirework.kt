@@ -19,6 +19,8 @@
 
 package net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget
 
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura as KillAura
+
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.tickHandler
@@ -32,7 +34,6 @@ import net.ccbluex.liquidbounce.utils.inventory.useHotbarSlotOrOffhand
 import net.ccbluex.liquidbounce.utils.math.sq
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket
 import net.minecraft.world.item.Items
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura as KillAura
 
 internal object AutoFirework : ToggleableValueGroup(ModuleElytraTarget, "AutoFirework", true) {
     private val useMode by enumChoice("UseMode", FireworkUseMode.NORMAL)

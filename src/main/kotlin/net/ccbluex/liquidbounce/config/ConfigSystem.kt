@@ -52,7 +52,7 @@ object ConfigSystem {
 
     // Config directory folder
     val rootFolder = File(
-        mc.gameDirectory, LiquidBounce.CLIENT_NAME
+        mc.gameDirectory, "LiquidBounceKillAura" //codex (mc.gameDirectory, LiquidBounce.CLIENT_NAME)
     ).apply {
         // Check if there is already a config folder and if not create new folder
         // (mkdirs not needed - .minecraft should always exist)

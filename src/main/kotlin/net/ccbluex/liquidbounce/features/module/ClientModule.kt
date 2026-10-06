@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength") // Original-line markers preserve upstream snippets verbatim.
+//codex end
+
 package net.ccbluex.liquidbounce.features.module
 
 import com.mojang.blaze3d.platform.InputConstants
@@ -26,7 +30,6 @@ import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig.loadingNow
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
-import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.eventListenerScope
@@ -64,7 +67,7 @@ open class ClientModule @JvmOverloads constructor(
     @Exclude val disableOnQuit: Boolean = false, // disables module when player leaves the world,
     aliases: List<String> = emptyList(), // additional names under which the module is known
     hide: Boolean = false // default hide
-) : ToggleableValueGroup(null, name, state, aliases = aliases), EventListener, MinecraftShortcuts {
+) : ToggleableValueGroup(null, name, state && KillAuraModulePolicyTodoAi.allows(name), aliases = aliases), EventListener, MinecraftShortcuts { //codex () : ToggleableValueGroup(null, name, state, aliases = aliases), EventListener, MinecraftShortcuts {)
 
     protected val logger = clientLogger("Module/$name")
 
@@ -146,6 +149,9 @@ open class ClientModule @JvmOverloads constructor(
 
     final override fun onEnabledValueRegistration(value: Value<Boolean>) =
         super.onEnabledValueRegistration(value).also { value ->
+            // codex start
+            value.onChange { it && KillAuraModulePolicyTodoAi.allows(name) }
+            //codex end
             // Might not include the enabled state of the module depending on the category
             if (category == ModuleCategories.MISC || category == ModuleCategories.FUN ||
                 category == ModuleCategories.RENDER) {

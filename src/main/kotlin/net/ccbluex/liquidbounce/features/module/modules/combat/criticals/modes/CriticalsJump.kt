@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.event.events.MovementInputEvent
 import net.ccbluex.liquidbounce.event.events.PlayerJumpEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals.allowsCriticalHit
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
@@ -224,7 +223,7 @@ object CriticalsJump : Mode("Jump") {
         }
 
         return (ModuleKillAura.running && checkKillaura) ||
-            (ModuleAutoClicker.running && checkAutoClicker)
+            false //codex ((ModuleAutoClicker.running && checkAutoClicker))
     }
 
 }

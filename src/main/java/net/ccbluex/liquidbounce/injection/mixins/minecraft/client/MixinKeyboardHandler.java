@@ -27,7 +27,6 @@ import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.KeyEvent;
 import net.ccbluex.liquidbounce.event.events.KeyboardCharEvent;
 import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent;
-import net.ccbluex.liquidbounce.features.module.modules.movement.inventorymove.ModuleInventoryMove;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -74,9 +73,6 @@ public abstract class MixinKeyboardHandler {
         EventManager.INSTANCE.callEvent(new KeyboardCharEvent(input.codepoint()));
     }
 
-    @WrapOperation(method = "keyPress", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;",  ordinal = 2))
-    private Screen modifyHandlesGameInput(Gui instance, Operation<Screen> original, @Local(name = "event", argsOnly = true) net.minecraft.client.input.KeyEvent event) {
-        return ModuleInventoryMove.shouldHandleInputs(event) ? null : original.call(instance);
-    }
+
 
 }

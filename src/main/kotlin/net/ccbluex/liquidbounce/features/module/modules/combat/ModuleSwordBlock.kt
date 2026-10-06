@@ -75,7 +75,7 @@ object ModuleSwordBlock : ClientModule("SwordBlock", ModuleCategories.COMBAT, al
         offHandStack: ItemStack = player.offhandItem,
         mainHandStack: ItemStack = player.mainHandItem
     ): Boolean {
-        if (!running && !KillAuraAutoBlock.blockVisual) {
+        if (!running) { //codex (if (!running && !KillAuraAutoBlock.blockVisual) {)
             return false
         }
 

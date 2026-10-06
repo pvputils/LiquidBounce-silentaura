@@ -31,8 +31,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes.C
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes.CriticalsNoGround
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes.CriticalsPacket
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.modes.CriticalsTimer
-import net.ccbluex.liquidbounce.features.module.modules.movement.fly.ModuleFly
-import net.ccbluex.liquidbounce.features.module.modules.movement.liquidwalk.ModuleLiquidWalk
 import net.ccbluex.liquidbounce.utils.block.collideBlockIntersects
 import net.ccbluex.liquidbounce.utils.clicking.Clicker
 import net.ccbluex.liquidbounce.utils.network.sendStopSprinting
@@ -198,8 +196,8 @@ object ModuleCriticals : ClientModule("Criticals", ModuleCategories.COMBAT) {
     fun allowsCriticalHit(ignoreOnGround: Boolean = false): Boolean {
         val blockingConditions = booleanArrayOf(
             // Modules
-            ModuleFly.running,
-            ModuleLiquidWalk.running && ModuleLiquidWalk.standingOnWater(),
+            false, //codex (ModuleFly.running,)
+            false, //codex (ModuleLiquidWalk.running && ModuleLiquidWalk.standingOnWater(),)
             player.isInLiquid, player.isPassenger,
             // Cobwebs
             player.box.collideBlockIntersects(checkCollisionShape = false) { it is WebBlock },

@@ -17,7 +17,6 @@
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.github.gradle.node.npm.task.NpmTask
 import dev.detekt.gradle.DetektCreateBaselineTask
 import groovy.json.JsonOutput
 import java.time.Duration
@@ -30,7 +29,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.gradleGitProperties)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.nodeGradle)
+    //codex (alias(libs.plugins.nodeGradle))
     alias(libs.plugins.dokka)
     `maven-publish`
 }
@@ -133,68 +132,72 @@ dependencies {
     api(libs.modmenu)
 
     // Recommended mods (on IDE)
-    api(libs.sodium)
-    api(libs.lithium)
-    runtimeOnly(libs.immediatelyFast)
-    runtimeOnly(libs.iris)
+    //codex (api(libs.sodium))
+    //codex (api(libs.lithium))
+    //codex (runtimeOnly(libs.immediatelyFast))
+    //codex (runtimeOnly(libs.iris))
 
     // ViaFabricPlus
-    api(libs.vfp.api)
-    runtimeOnly(libs.vfp)
+    compileOnlyApi(libs.vfp.api) //codex (api(libs.vfp.api))
+    // codex start
+    compileOnly(libs.vfp)
+    jij("com.squareup.okio:okio-jvm:3.18.1")
+    //codex end
+    //codex (runtimeOnly(libs.vfp))
 
     // Exploit Preventer
-    api(libs.exploitPreventer.api)
-    runtimeOnly(libs.exploitPreventer)
+    //codex (api(libs.exploitPreventer.api))
+    //codex (runtimeOnly(libs.exploitPreventer))
 
     // Minecraft account authentication (Microsoft/Xbox Live/XSTS token chain)
-    jij(libs.minecraftauth)
+    //codex (jij(libs.minecraftauth))
 
     // TheAltening alt service
-    jij(libs.thealtening)
+    //codex (jij(libs.thealtening))
 
     // Mojang REST APIs
-    jij(libs.bundles.retrofit)
+    //codex (jij(libs.bundles.retrofit))
 
     // LWJGL EGL
-    jij(libs.lwjgl.egl)
+    //codex (jij(libs.lwjgl.egl))
 
     // Chromium, through the bundled CEF add-on. It depends on the client, so it stays out of the published POM and
     // brings nothing along.
-    include(libs.liquidbounce.cef)
-    localRuntime(libs.liquidbounce.cef) { isTransitive = false }
+    //codex (include(libs.liquidbounce.cef))
+    //codex (localRuntime(libs.liquidbounce.cef) { isTransitive = false })
 
 
     // Ktor Server
-    jij(libs.ktor.server.core)
-    jij(libs.ktor.server.cio)
-    jij(libs.ktor.server.websockets)
-    jij(libs.ktor.server.sse)
-    jij(libs.ktor.server.cors)
-    jij(libs.ktor.server.compression)
-    jij(libs.ktor.server.content.negotiation)
-    jij(libs.ktor.server.status.pages)
-    jij(libs.ktor.serialization.gson)
+    //codex (jij(libs.ktor.server.core))
+    //codex (jij(libs.ktor.server.cio))
+    //codex (jij(libs.ktor.server.websockets))
+    //codex (jij(libs.ktor.server.sse))
+    //codex (jij(libs.ktor.server.cors))
+    //codex (jij(libs.ktor.server.compression))
+    //codex (jij(libs.ktor.server.content.negotiation))
+    //codex (jij(libs.ktor.server.status.pages))
+    //codex (jij(libs.ktor.serialization.gson))
 
     // Machine Learning
     jij(libs.djl.api)
     jij(libs.djl.pytorch)
 
     // HTTP library
-    jij(libs.bundles.okhttp)
+    //codex (jij(libs.bundles.okhttp))
 
     // SOCKS5 & HTTP Proxy Support
-    jij(libs.netty.handler.proxy)
+    //codex (jij(libs.netty.handler.proxy))
 
     // Update Checker
-    jij(libs.semver4j)
+    //codex (jij(libs.semver4j))
 
     // Name Protect
-    jij(libs.ahocorasick)
+    //codex (jij(libs.ahocorasick))
 
     // External utils
     compileOnlyApi(libs.fastutil4k.extensionsOnly)
     jij(libs.fastutil4k.moreCollections)
-    jij(libs.discord.ipc)
+    //codex (jij(libs.discord.ipc))
 
     // Test libraries
     testImplementation(kotlin("test"))
@@ -205,11 +208,9 @@ dependencies {
 addResolvedDependencies(jij, "compileOnly", "include", "api")
 
 tasks.processResources {
-    dependsOn("buildTheme")
+    //codex (dependsOn("buildTheme"))
 
-    from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
-    }
+    //codex (from("src-theme/dist") { into("resources/liquidbounce/themes/liquidbounce") })
 
     val modVersion = providers.gradleProperty("mod_version")
     val minecraftVersion = providers.gradleProperty("mod_mc_version")
@@ -244,6 +245,11 @@ tasks.processResources {
     inputs.property("contributors", contributors)
 
     filesMatching("fabric.mod.json") {
+        // codex start
+        filter { line ->
+            line.replace("\"main\": []", "\"main\": [], \"modmenu\": [\"net.ccbluex.liquidbounce.integration.screen.KillAuraModMenuTodoAi\"]")
+        }
+        //codex end
         expand(
             mapOf(
                 "version" to modVersion.get(),
@@ -257,51 +263,6 @@ tasks.processResources {
             )
         )
     }
-}
-
-// The following code will include the theme into the build
-
-// The plugin uses global tools when download=false, so include their actual versions in the cache key.
-val nodeVersion = providers.exec {
-    commandLine("node", "--version")
-}.standardOutput.asText.map(String::trim)
-val npmVersion = providers.exec {
-    // On Windows, CreateProcess cannot launch bare "npm" (a .cmd shim); node-gradle uses npm.cmd as well.
-    val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) "npm.cmd" else "npm"
-    commandLine(npmExecutable, "--version")
-}.standardOutput.asText.map(String::trim)
-
-tasks.register<NpmTask>("npmInstallTheme") {
-    description = "Installs the locked dependencies for the web theme"
-    workingDir = file("src-theme")
-    args.set(listOf("ci"))
-
-    inputs.files("src-theme/package.json", "src-theme/package-lock.json")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.dir("src-theme/node_modules")
-}
-
-tasks.register<NpmTask>("buildTheme") {
-    description = "Builds the distributable web theme assets"
-    dependsOn("npmInstallTheme")
-    workingDir = file("src-theme")
-    args.set(listOf("run", "build"))
-
-    inputs.property("nodeVersion", nodeVersion)
-    inputs.property("npmVersion", npmVersion)
-    inputs.files(
-        "src-theme/package.json",
-        "src-theme/package-lock.json",
-        "src-theme/index.html",
-        "src-theme/svelte.config.js",
-        "src-theme/tsconfig.json",
-        "src-theme/tsconfig.node.json",
-        "src-theme/vite.config.ts",
-    ).withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.dir("src-theme/src").withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.dir("src-theme/public").withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.dir("src-theme/dist")
-    outputs.cacheIf("Theme output is reproducible for locked dependencies and tool versions") { true }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
@@ -397,15 +358,7 @@ kotlin {
         freeCompilerArgs.add("-Xcompanion-blocks-and-extensions")
     }
 
-    // Add-ons are compiled against these; `./gradlew updateKotlinAbi` records a deliberate change.
-    @OptIn(ExperimentalAbiValidation::class)
-    abiValidation {
-        filters {
-            include {
-                annotatedWith.add("net.ccbluex.liquidbounce.features.addon.AddonApi")
-            }
-        }
-    }
+
 }
 
 tasks.jar {
@@ -493,10 +446,8 @@ tasks.register<Copy>("copyZipInclude") {
 }
 
 tasks.named<Jar>("sourcesJar") {
-    dependsOn("buildTheme", "generateGitProperties")
-    from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
-    }
+    dependsOn("generateGitProperties") //codex (dependsOn("buildTheme", "generateGitProperties"))
+    //codex (from("src-theme/dist") { into("resources/liquidbounce/themes/liquidbounce") })
 }
 
 tasks.named("build") {

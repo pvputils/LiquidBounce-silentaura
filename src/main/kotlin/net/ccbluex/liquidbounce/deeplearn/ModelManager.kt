@@ -28,7 +28,6 @@ import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.deeplearn.DeepLearningEngine.modelsFolder
 import net.ccbluex.liquidbounce.deeplearn.models.TwoDimensionalRegressionModel
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleClickGui
 import net.ccbluex.liquidbounce.utils.client.clientLogger
 import java.util.Locale
 import kotlin.time.measureTime
@@ -104,7 +103,7 @@ object ModelManager : EventListener, ValueGroup("AI") {
                 val nextModelName = choices.firstOrNull { model -> model.name == activeModelName }
                     ?.name ?: choices.first().name
                 models.setByString(nextModelName)
-                ModuleClickGui.sync()
+                //codex (ModuleClickGui.sync())
                 previousModels.asList()
             }.getOrElse { error ->
                 // Roll back the swap, keeping the previous models active.

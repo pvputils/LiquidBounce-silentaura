@@ -18,7 +18,6 @@
  */
 package net.ccbluex.liquidbounce.interfaces;
 
-import net.ccbluex.liquidbounce.features.module.modules.misc.betterchat.ModuleBetterChat;
 
 /**
  * Additions to {@link net.minecraft.client.GuiMessage}.

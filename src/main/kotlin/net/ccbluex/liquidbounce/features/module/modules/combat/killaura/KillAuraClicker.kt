@@ -16,13 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.rotationTiming
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.simulateInventoryClosing
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityReduce
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
@@ -53,7 +56,7 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
 ) {
 
     override val isClickTick: Boolean
-        get() = super.isClickTick && (!VelocityReduce.running || VelocityReduce.remainingAttackCount == 0)
+        get() = super.isClickTick //codex (get() = super.isClickTick && (!VelocityReduce.running || VelocityReduce.remainingAttackCount == 0))
 
     private class KillAuraClickerItemCooldown : ItemCooldown() {
 

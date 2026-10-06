@@ -27,74 +27,35 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.future.future
 import kotlinx.coroutines.internal.isMissing
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
-import net.ccbluex.liquidbounce.api.core.ApiConfig
-import net.ccbluex.liquidbounce.api.core.httpException
-import net.ccbluex.liquidbounce.api.core.ioScope
-import net.ccbluex.liquidbounce.api.models.auth.ClientAccount
-import net.ccbluex.liquidbounce.api.services.auth.isInvalidGrant
-import net.ccbluex.liquidbounce.api.services.client.ClientUpdate
-import net.ccbluex.liquidbounce.api.thirdparty.IpInfoApi
 import net.ccbluex.liquidbounce.config.ConfigSystem
 import net.ccbluex.liquidbounce.config.types.Config
-import net.ccbluex.liquidbounce.deeplearn.DeepLearningEngine
-import net.ccbluex.liquidbounce.deeplearn.ModelManager
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.features.addon.AddonInstaller
-import net.ccbluex.liquidbounce.features.addon.AddonManager
 import net.ccbluex.liquidbounce.event.events.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.events.ClientStartEvent
-import net.ccbluex.liquidbounce.event.events.ScreenEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.features.account.AccountManager
 import net.ccbluex.liquidbounce.features.blink.BlinkManager
-import net.ccbluex.liquidbounce.features.command.CommandManager
-import net.ccbluex.liquidbounce.features.cosmetic.ClientAccountManager
-import net.ccbluex.liquidbounce.features.cosmetic.CosmeticService
-import net.ccbluex.liquidbounce.features.creativetab.tabs.HeadsCreativeModeTab
 import net.ccbluex.liquidbounce.features.global.GlobalManager
-import net.ccbluex.liquidbounce.features.marketplace.MarketplaceItems
-import net.ccbluex.liquidbounce.features.marketplace.MarketplaceManager
-import net.ccbluex.liquidbounce.features.marketplace.SubscribedItem
-import net.ccbluex.liquidbounce.features.marketplace.autoconfig.ConfigTracker
-import net.ccbluex.liquidbounce.features.marketplace.autoconfig.MarketplaceConfigs
 import net.ccbluex.liquidbounce.features.misc.FriendManager
-import net.ccbluex.liquidbounce.features.misc.proxy.ProxyManager
 import net.ccbluex.liquidbounce.features.module.ModuleManager
-import net.ccbluex.liquidbounce.features.spoofer.SpooferManager
-import net.ccbluex.liquidbounce.integration.backend.BrowserBackendManager
-import net.ccbluex.liquidbounce.integration.backend.BrowserSelectionScreen
-import net.ccbluex.liquidbounce.integration.interop.ClientInteropServer
-import net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game.ActiveServerList
-import net.ccbluex.liquidbounce.integration.screen.ScreenManager
 import net.ccbluex.liquidbounce.integration.task.TaskManager
-import net.ccbluex.liquidbounce.integration.task.TaskProgressScreen
-import net.ccbluex.liquidbounce.integration.theme.ThemeManager
 import net.ccbluex.liquidbounce.lang.LanguageManager
 import net.ccbluex.liquidbounce.render.FontManager
 import net.ccbluex.liquidbounce.render.HAS_AMD_VEGA_APU
-import net.ccbluex.liquidbounce.render.atlas.ItemImageAtlas
-import net.ccbluex.liquidbounce.render.engine.BlurEffectRenderer
 import net.ccbluex.liquidbounce.utils.aiming.PostRotationExecutor
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.block.ChunkScanner
 import net.ccbluex.liquidbounce.utils.client.GitInfo
 import net.ccbluex.liquidbounce.utils.client.InteractionTracker
-import net.ccbluex.liquidbounce.utils.client.ServerObserver
 import net.ccbluex.liquidbounce.utils.client.clientIdentifier
 import net.ccbluex.liquidbounce.utils.client.error.ErrorHandler
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.combat.CombatManager
 import net.ccbluex.liquidbounce.utils.entity.RenderedEntities
 import net.ccbluex.liquidbounce.utils.input.InputTracker
-import net.ccbluex.liquidbounce.utils.inventory.EnderChestInventoryTracker
 import net.ccbluex.liquidbounce.utils.inventory.InventoryManager
 import net.ccbluex.liquidbounce.utils.io.readText
-import net.ccbluex.liquidbounce.utils.kotlin.EventPriorityConvention.FIRST_PRIORITY
 import net.ccbluex.liquidbounce.utils.network.LocalPlayerFallDamageTracker
 import net.ccbluex.liquidbounce.utils.network.PositionPacketSeparator
 import net.minecraft.resources.Identifier
@@ -103,7 +64,6 @@ import net.minecraft.server.packs.resources.ReloadableResourceManager
 import java.io.InputStream
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
 
 /**
@@ -246,7 +206,7 @@ object LiquidBounce : EventListener {
 
         // Load all configurations
         ConfigSystem.loadAll()
-        AddonManager.notifyStarted()
+        //codex (AddonManager.notifyStarted())
 
         isInitialized = true
         logger.info("$CLIENT_NAME has been successfully initialized.")
@@ -271,9 +231,9 @@ object LiquidBounce : EventListener {
 
         // Feature managers
         ModuleManager
-        CommandManager
-        ProxyManager
-        AccountManager
+        //codex (CommandManager)
+        //codex (ProxyManager)
+        //codex (AccountManager)
 
         // Utility managers
         RotationManager
@@ -284,18 +244,18 @@ object LiquidBounce : EventListener {
         CombatManager
         FriendManager
         InventoryManager
-        EnderChestInventoryTracker
-        ActiveServerList
-        ConfigSystem.root(ClientAccountManager)
-        ConfigSystem.root(SpooferManager)
+        //codex (EnderChestInventoryTracker)
+        //codex (ActiveServerList)
+        //codex (ConfigSystem.root(ClientAccountManager))
+        //codex (ConfigSystem.root(SpooferManager))
         ConfigSystem.root(GlobalManager)
-        ConfigSystem.root(MarketplaceManager)
-        ConfigSystem.root(ConfigTracker)
+        //codex (ConfigSystem.root(MarketplaceManager))
+        //codex (ConfigSystem.root(ConfigTracker))
         PostRotationExecutor
-        ServerObserver
-        ItemImageAtlas
+        //codex (ServerObserver)
+        //codex (ItemImageAtlas)
 
-        AddonManager.discover()
+        //codex (AddonManager.discover())
     }
 
     /**
@@ -303,11 +263,10 @@ object LiquidBounce : EventListener {
      */
     private fun initializeFeatures() {
         // Register commands and modules
-        CommandManager.registerInbuilt()
+        //codex (CommandManager.registerInbuilt())
         ModuleManager.registerInbuilt()
 
-        AddonManager.registerCategories()
-        AddonManager.initializeAddons()
+        //codex (AddonManager.registerCategories(); AddonManager.initializeAddons())
     }
 
     /**
@@ -318,128 +277,24 @@ object LiquidBounce : EventListener {
     private suspend fun initializeResources(
         dispatcher: CoroutineDispatcher,
     ) = withContext(dispatcher) {
-        logger.info("Initializing API...")
-        // Lookup API config
-        ApiConfig.config
-
-        supervisorScope {
-            launch {
-                // Load translations
-                LanguageManager.loadDefault()
-            }
-            launch {
-                val update = withTimeoutOrNull(8.seconds) { ClientUpdate.update.await() } ?: return@launch
-                logger.info("[Update] Update available: $clientVersion -> ${update.lbVersion}")
-            }
-            launch {
-                // Load cosmetics
-                CosmeticService.refreshCarriers(force = true) {
-                    logger.info("Successfully loaded ${CosmeticService.carriers.size} cosmetics carriers.")
-                }
-            }
-            launch {
-                // Download player heads
-                HeadsCreativeModeTab.heads.getFinalState()
-            }
-            launch {
-                MarketplaceConfigs.refresh()
-            }
-            launch {
-                MarketplaceItems.refresh()
-            }
-            launch {
-                MarketplaceManager.fillAuthors()
-            }
-            launch {
-                IpInfoApi.original
-            }
-            launch {
-                ConfigSystem.load(ClientAccountManager)
-                if (ClientAccount.ENV_ACCOUNT != null) {
-                    ClientAccountManager.clientAccount = ClientAccount.ENV_ACCOUNT
-                }
-
-                if (ClientAccountManager.clientAccount != ClientAccount.EMPTY_ACCOUNT) {
-                    runCatching {
-                        ClientAccountManager.clientAccount.renew()
-                    }.onFailure {
-                        logger.error("Failed to renew client account token.", it)
-                        if (it.httpException?.isInvalidGrant == true) {
-                            ClientAccountManager.clientAccount = ClientAccount.EMPTY_ACCOUNT
-                            ConfigSystem.store(ClientAccountManager)
-                        }
-                    }.onSuccess {
-                        logger.info("Successfully renewed client account token.")
-                    }
-                }
-            }
-        }
-
-        logger.info("API initialization done.")
+        // codex start
+        LanguageManager.loadDefault()
+        //codex end
     }
 
     /**
      * Prepares the GUI stage of the client.
-     * This will load [ThemeManager], as well as the [BrowserBackendManager] and [ClientInteropServer].
+     * Initializes native settings access and fonts for target rendering.
      */
     private suspend fun prepareGuiStage(
         dispatcher: CoroutineDispatcher
     ) = withContext(dispatcher) {
         RenderSystem.assertOnRenderThread()
 
-        BrowserBackendManager.init()
-        ClientInteropServer.start()
-
-        // Preload marketplace items
-        ConfigSystem.load(MarketplaceManager)
-        MarketplaceManager.subscribedItems.forEach(SubscribedItem::restoreRetired)
-        AddonInstaller.stageSubscribedAddons()
-        MarketplaceManager.reloadHandlers()
-
-        if (!ClientInteropServer.isSkipping) {
-            ThemeManager.init()
-            ConfigSystem.load(ThemeManager)
-            ThemeManager.load()
-        }
-
-        BlurEffectRenderer
-        ScreenManager
-
-        // Holds the chosen browser backend
-        ConfigSystem.load(GlobalManager)
-
-        taskManager = TaskManager(ioScope).apply {
-            // Either immediately starts browser or spawns a task to request browser dependencies,
-            // and then starts the browser through render thread.
-            BrowserBackendManager.makeDependenciesAvailable(this)
-
-            // Initialize deep learning engine as task, because we cannot know if DJL will request
-            // resources from the internet.
-            launch("Deep Learning") { task ->
-                runCatching {
-                    DeepLearningEngine.init(task)
-                    ModelManager.load()
-                    DeepLearningEngine.markInitialized()
-                }.onFailure { exception ->
-                    task.subTasks.clear()
-                    DeepLearningEngine.markUnavailable()
-
-                    // LiquidBounce can still run without deep learning,
-                    // and we don't want to crash the client if it fails.
-                    logger.info("Failed to initialize deep learning.", exception)
-                }
-            }
-
-            launch("Marketplace") { task ->
-                runCatching {
-                    MarketplaceManager.updateAll(task)
-                }.onFailure { exception ->
-                    logger.error("Failed to update marketplace items.", exception)
-                }
-
-                task.isCompleted = true
-            }
-        }
+        // codex start
+        net.ccbluex.liquidbounce.integration.screen.KillAuraConfigAccessTodoAi
+        net.ccbluex.liquidbounce.integration.screen.KillAuraAiLoaderTodoAi.start()
+        //codex end
 
         // Prepare glyph manager
         val duration = measureTime {
@@ -464,18 +319,15 @@ object LiquidBounce : EventListener {
         FontManager.closeGlyphManager()
         EventManager.unregisterAll()
 
-        // Shutdown HTTP server
-        ioScope.launch {
-            ClientInteropServer.stop()
-        }
+        //codex (ioScope.launch { ClientInteropServer.stop() })
 
-        AddonManager.notifyStopping()
+        //codex (AddonManager.notifyStopping())
 
         // Save all configurations
         ConfigSystem.storeAll()
 
         // Shutdown browser
-        BrowserBackendManager.stop()
+        //codex (BrowserBackendManager.stop())
     }
 
     /**
@@ -500,7 +352,7 @@ object LiquidBounce : EventListener {
             val resourceManager = mc.resourceManager
             if (resourceManager is ReloadableResourceManager) {
                 resourceManager.registerReloadListener(ClientResourceReloader)
-                resourceManager.registerReloadListener(ThemeManager.reloader)
+                //codex (resourceManager.registerReloadListener(ThemeManager.reloader))
             } else {
                 logger.warn("Failed to register resource reloader!")
 
@@ -508,33 +360,13 @@ object LiquidBounce : EventListener {
                 initializeClient(
                     workerDispatcher = Dispatchers.Default,
                     renderThreadDispatcher = Dispatchers.Main,
-                ).thenCompose {
-                    ThemeManager.reloader.reload()
-                }
+                ) //codex ().thenCompose { ThemeManager.reloader.reload() })
             }
         }.onFailure {
             ErrorHandler.fatal(it, additionalMessage = "Client start")
         }
     }
 
-    @Suppress("unused")
-    private val screenHandler = handler<ScreenEvent>(priority = FIRST_PRIORITY) { event ->
-        val taskManager = taskManager ?: return@handler
-
-        val selection = BrowserBackendManager.pendingSelection
-        if (selection != null && !selection.isCompleted) {
-            if (event.screen !is BrowserSelectionScreen) {
-                event.cancelEvent()
-                mc.gui.setScreen(BrowserSelectionScreen(BrowserBackendManager.selectableBackends, selection))
-            }
-            return@handler
-        }
-
-        if (!taskManager.isCompleted && event.screen !is TaskProgressScreen) {
-            event.cancelEvent()
-            mc.gui.setScreen(TaskProgressScreen("Loading Required Libraries", taskManager))
-        }
-    }
 
     /**
      * Resource reloader which is executed on client start and reload.

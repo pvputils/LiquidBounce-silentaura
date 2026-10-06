@@ -31,23 +31,13 @@ import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.features.misc.SelfDestruct;
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker;
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleNoMissCooldown;
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock;
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions;
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleMiddleClickAction;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoBreak;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoBlockInteract;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleReach;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam;
-import net.ccbluex.liquidbounce.injection.mixins.minecraft.entity.MixinEntityAccessor;
-import net.ccbluex.liquidbounce.integration.screen.ScreenManager;
 import net.ccbluex.liquidbounce.render.ClientTesselator;
 import net.ccbluex.liquidbounce.render.buffers.StaticGpuBufferPool;
 import net.ccbluex.liquidbounce.render.mesh.MeshDraw;
 import net.ccbluex.liquidbounce.render.utils.RenderingDebug;
 import net.ccbluex.liquidbounce.utils.client.vfp.VfpCompatibility;
-import net.ccbluex.liquidbounce.utils.combat.CombatManager;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -279,65 +269,15 @@ public abstract class MixinMinecraft {
         rightClickDelay = useCooldownEvent.getCooldown();
     }
 
-    @Inject(method = "pickBlockOrEntity", at = @At("HEAD"), cancellable = true)
-    private void hookItemPick(CallbackInfo ci) {
-        if (ModuleMiddleClickAction.Pearl.INSTANCE.cancelPick()) {
-            ci.cancel();
-        }
-    }
 
-    @ModifyExpressionValue(method = "startAttack",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
-    private int injectNoMissCooldown(int original) {
-        if (ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getRemoveAttackCooldown()) {
-            return 0;
-        }
 
-        if (ModuleAutoClicker.AttackButton.INSTANCE.getRunning()) {
-            var clickAmount = ModuleAutoClicker.AttackButton.INSTANCE.getClicker().getClickAmount();
-            if (clickAmount != null && clickAmount > 0) {
-                return 0;
-            }
-        }
 
-        return original;
-    }
 
-    @ModifyReceiver(
-        method = "startAttack",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/item/component/AttackRange;isInRange(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/phys/Vec3;)Z"
-        )
-    )
-    private AttackRange injectReachAttackRange(AttackRange instance, LivingEntity entity, Vec3 pos) {
-        if (ModuleReach.INSTANCE.getRunning()) {
-            return ModuleReach.INSTANCE.getEntity().adjustAttackRange(instance);
-        }
 
-        return instance;
-    }
 
-    @WrapWithCondition(method = "startAttack", at = @At(value = "FIELD",
-        target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 1, opcode = Opcodes.PUTFIELD))
-    private boolean disableAttackCooldown(Minecraft instance, int value) {
-        return !(ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getRemoveAttackCooldown());
-    }
 
-    @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
-    private void injectCombatPause(CallbackInfoReturnable<Boolean> cir) {
-        if (player == null || hitResult == null || hitResult.getType() == HitResult.Type.MISS) {
-            if (ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getCancelAttackOnMiss()) {
-                // Prevent swinging
-                cir.setReturnValue(true);
-            }
-            return;
-        }
 
-        if (CombatManager.INSTANCE.getShouldPauseCombat()) {
-            cir.setReturnValue(false);
-        }
-    }
+
 
     @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("HEAD"))
     private void hookWorldChangeEvent(ClientLevel world, boolean bl, CallbackInfo ci) {
@@ -365,20 +305,7 @@ public abstract class MixinMinecraft {
         return original && !ModuleMultiActions.mayPlaceWhileBreaking();
     }
 
-    /**
-     * Alternative input handler of [handleInputEvents] while being inside a client-side screen.
-     */
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void passthroughInputHandler(CallbackInfo ci, @Local(name = "profiler") ProfilerFiller profiler) {
-        if (this.gui.overlay() == null && this.player != null && this.level
-            != null && ScreenManager.isClientScreen(this.gui.screen())) {
-            profiler.popPush("Keybindings");
 
-            if (ModuleAutoBreak.INSTANCE.getEnabled()) {
-                this.continueAttack(this.options.keyAttack.isDown());
-            }
-        }
-    }
 
     @ModifyExpressionValue(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z", ordinal = 0))
     private boolean injectMultiActionsAttackingWhileUsingAndEnforcedBlockingState(boolean isUsingItem) {
@@ -398,30 +325,14 @@ public abstract class MixinMinecraft {
         return false;
     }
 
-    @WrapWithCondition(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.PUTFIELD))
-    private boolean injectFixAttackCooldownOnVirtualBrowserScreen(Minecraft instance, int value) {
-        // Do not reset attack cooldown when we are in the vr/browser screen, as this poses an
-        // unintended modification to the attack cooldown, which is not intended.
-        return !ScreenManager.isClientScreen(this.gui.screen());
-    }
+
 
     @Inject(method = "clearDownloadedResourcePacks", at = @At("HEAD"))
     private void handleDisconnection(CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(DisconnectEvent.INSTANCE);
     }
 
-    @Inject(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"), cancellable = true)
-    private void hookBlockInteract(CallbackInfo ci) {
-        final BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
-        if (blockHitResult == null) return; // it should never be null
 
-        if (ModuleNoBlockInteract.INSTANCE.getRunning() &&
-                ModuleNoBlockInteract.INSTANCE.shouldSneak(blockHitResult)) {
-
-            ModuleNoBlockInteract.INSTANCE.startSneaking();
-            ci.cancel();
-        }
-    }
 
     @Inject(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/renderpearl/api/commands/CommandEncoder;submit()V", shift = At.Shift.BEFORE))
     private void endDynamicGpuBufferFrame(boolean advanceGameTime, CallbackInfo ci) {
@@ -435,46 +346,5 @@ public abstract class MixinMinecraft {
         StaticGpuBufferPool.cleanup();
     }
 
-    @WrapOperation(method = "pick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;raycastHitResult(FLnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/HitResult;"))
-    private HitResult updateTargetedEntityInvoke(LocalPlayer instance, float a, Entity cameraEntity, Operation<HitResult> original) {
-        HitResult result;
-        if (cameraEntity == instance && ModuleFreeCam.shouldCameraInteractActive()) {
-            final Vec3 position = cameraEntity.position();
-            final AABB boundingBox = cameraEntity.getBoundingBox();
-            final Vec3 lastPosition = new Vec3(cameraEntity.xo, cameraEntity.yo, cameraEntity.zo);
-            final float yRot = cameraEntity.getYRot();
-            final float xRot = cameraEntity.getXRot();
-            final float yRot0 = cameraEntity.yRotO;
-            final float xRot0 = cameraEntity.xRotO;
 
-            final Vec3 cameraPosition = ModuleFreeCam.PositionState.pos.subtract(0.0, cameraEntity.getEyeHeight(), 0.0);
-            ((MixinEntityAccessor) cameraEntity).position(cameraPosition);
-            cameraEntity.setBoundingBox(boundingBox.move(cameraPosition.subtract(position)));
-            cameraEntity.xo = ModuleFreeCam.PositionState.lastPos.x;
-            cameraEntity.yo = ModuleFreeCam.PositionState.lastPos.y - cameraEntity.getEyeHeight();
-            cameraEntity.zo = ModuleFreeCam.PositionState.lastPos.z;
-            ((MixinEntityAccessor) cameraEntity).yRot(ModuleFreeCam.PositionState.rot.yRot());
-            ((MixinEntityAccessor) cameraEntity).xRot(ModuleFreeCam.PositionState.rot.xRot());
-            cameraEntity.yRotO = ModuleFreeCam.PositionState.lastRot.yRot();
-            cameraEntity.xRotO = ModuleFreeCam.PositionState.lastRot.xRot();
-
-            try {
-                result = original.call(instance, a, cameraEntity);
-            } finally {
-                ((MixinEntityAccessor) cameraEntity).position(position);
-                cameraEntity.setBoundingBox(boundingBox);
-                cameraEntity.xo = lastPosition.x;
-                cameraEntity.yo = lastPosition.y;
-                cameraEntity.zo = lastPosition.z;
-                ((MixinEntityAccessor) cameraEntity).yRot(yRot);
-                ((MixinEntityAccessor) cameraEntity).xRot(xRot);
-                cameraEntity.yRotO = yRot0;
-                cameraEntity.xRotO = xRot0;
-            }
-        } else {
-            result = original.call(instance, a, cameraEntity);
-        }
-
-        return result;
-    }
 }

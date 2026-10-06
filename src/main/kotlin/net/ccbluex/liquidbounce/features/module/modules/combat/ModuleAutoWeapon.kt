@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.combat
 
 import net.ccbluex.fastutil.enumSetOf
@@ -26,7 +30,6 @@ import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon.autoMace
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon.autoShieldBreak
-import net.ccbluex.liquidbounce.features.module.modules.player.autobuff.ModuleAutoBuff
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.ItemCategorization
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.WeaponItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
@@ -97,7 +100,7 @@ object ModuleAutoWeapon : ClientModule("AutoWeapon", ModuleCategories.COMBAT) {
      * Prioritize Auto Buff or consuming an item over Auto Weapon
      */
     private val isBusy: Boolean
-        get() = SilentHotbar.isSlotModifiedBy(ModuleAutoBuff) || player.isUsingItem && player.usingItemHand ==
+        get() = player.isUsingItem && player.usingItemHand == //codex (get() = player.isUsingItem)
             InteractionHand.MAIN_HAND && player.useItem.isConsumable
 
     /**
@@ -136,7 +139,7 @@ object ModuleAutoWeapon : ClientModule("AutoWeapon", ModuleCategories.COMBAT) {
 
     // https://minecraft.wiki/w/Mace#Falling
     private val canMaceSmash
-        get() = (!isOlderThanOrEqual1_8 && MaceItem.canSmashAttack(player)) || ModuleMaceKill.enabled
+        get() = (!isOlderThanOrEqual1_8 && MaceItem.canSmashAttack(player)) //codex (get() = (!isOlderThanOrEqual1_8 && MaceItem.canSmashAttack(player)) || ModuleMaceKill.enabled)
 
     @Suppress("unused")
     private val attackHandler = handler<AttackEntityEvent> { event ->

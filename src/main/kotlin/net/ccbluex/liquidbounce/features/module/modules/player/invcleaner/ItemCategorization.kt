@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.player.invcleaner
 
 import net.ccbluex.fastutil.enumMapOf
@@ -39,7 +43,7 @@ import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.SwordItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.ThrowableItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.WeaponItemFacet
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ScaffoldBlockItemSelection
+import net.ccbluex.liquidbounce.utils.item.BlockPreferencesTodoAi
 import net.ccbluex.liquidbounce.utils.inventory.ItemSlot
 import net.ccbluex.liquidbounce.utils.inventory.VirtualItemSlot
 import net.ccbluex.liquidbounce.utils.item.armor.ArmorComparator
@@ -246,8 +250,8 @@ class ItemCategorization(
                 is FishingRodItem -> add(RodItemFacet(slot))
                 is ShieldItem -> add(ShieldItemFacet(slot))
                 is BlockItem -> {
-                    if (ScaffoldBlockItemSelection.isValidBlock(itemStack)
-                        && !ScaffoldBlockItemSelection.isBlockUnfavourable(itemStack)
+                    if (itemStack.item is BlockItem //codex (if (ScaffoldBlockItemSelection.isValidBlock(itemStack))
+                        && !BlockPreferencesTodoAi.isUnfavourable(itemStack) //codex (&& !ScaffoldBlockItemSelection.isBlockUnfavourable(itemStack))
                     ) {
                         add(BlockItemFacet(slot))
                     } else {

@@ -16,11 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
+// codex start
+@file:Suppress("MaxLineLength")
+//codex end
+
 package net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items
 
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.ItemCategory
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.ItemType
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ModuleScaffold
 import net.ccbluex.liquidbounce.utils.inventory.ItemSlot
 import net.ccbluex.liquidbounce.utils.item.asHolderComparator
 import net.ccbluex.liquidbounce.utils.sorting.ComparatorChain
@@ -29,7 +32,7 @@ class BlockItemFacet(itemSlot: ItemSlot) : ItemFacet(itemSlot) {
     companion object {
         private val COMPARATOR =
             ComparatorChain<BlockItemFacet>(
-                ModuleScaffold.BLOCK_COMPARATOR_FOR_INVENTORY.asHolderComparator(),
+                net.ccbluex.liquidbounce.utils.item.BlockPreferencesTodoAi.inventoryComparator.asHolderComparator(), //codex (ModuleScaffold.BLOCK_COMPARATOR_FOR_INVENTORY.asHolderComparator(),)
                 PREFER_ITEMS_IN_HOTBAR,
                 STABILIZE_COMPARISON,
             )

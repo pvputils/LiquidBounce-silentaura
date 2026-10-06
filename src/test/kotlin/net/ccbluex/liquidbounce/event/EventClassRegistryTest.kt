@@ -51,7 +51,10 @@ class EventClassRegistryTest {
 
     @Test
     fun `events resolve by tag name, ignoring case`() {
-        val eventClass = ALL_EVENT_CLASSES.first()
+        val eventClass = AddonEvent::class.java //codex (val eventClass = ALL_EVENT_CLASSES.first())
+        // codex start
+        EventManager.registerEventClass(eventClass)
+        //codex end
         val name = eventClass.getAnnotation(Tag::class.java).name
 
         assertSame(eventClass, EventManager.eventClassByName(name))
