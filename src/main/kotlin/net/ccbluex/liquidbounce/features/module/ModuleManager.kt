@@ -20,7 +20,6 @@ package net.ccbluex.liquidbounce.features.module
 
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap
@@ -226,7 +225,6 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
         val builtin = arrayOf(
             ModuleKillAura,
             ModuleDebug,
-            ModuleMultiActions,
         )
         //codex end
 

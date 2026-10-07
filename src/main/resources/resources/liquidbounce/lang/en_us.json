@@ -658,7 +658,6 @@
   "liquidbounce.module.middleClickAction.messages.removedFriend": "%s was successfully removed from the friends list.",
   "liquidbounce.module.mobOwners.description": "Allows you to see which player a tamed entity or projectile belongs to.",
   "liquidbounce.module.moreCarry.description": "Allows you to store additional items in your crafting slots (only works in multiplayer).",
-  "liquidbounce.module.multiActions.description": "Allows you to do multiple things at the same time.",
   "liquidbounce.module.murderMystery.description": "Tells you who the murderer is.",
   "liquidbounce.module.nameCollector.description": "Collects the names of all players on the server.",
   "liquidbounce.module.nameProtect.description": "Hides the player's real username client-side (useful for videos).",

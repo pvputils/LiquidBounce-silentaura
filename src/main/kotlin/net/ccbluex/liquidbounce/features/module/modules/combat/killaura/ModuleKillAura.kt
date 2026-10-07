@@ -34,7 +34,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRange
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeIndicator
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
@@ -91,19 +90,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     // Bypass techniques
     internal val raycast by enumChoice("Raycast", TRACE_ALL)
 
-    // Inventory Handling
-    internal val ignoreOpenInventory by boolean("IgnoreOpenInventory", true)
-    internal val simulateInventoryClosing by boolean("SimulateInventoryClosing", true)
-
-    /**
-     * The use of suspend [waitTicks] is a bit too
-     * risky for a large and complex module
-     * such as KillAura. So back to the basics.
-     */
-    internal var waitTicks = 0
-
     init {
-        tree(KillAuraAutoBlock)
         tree(TargetRenderer(this) {
             targetTracker.target //codex (targetTracker.target?.takeUnless { ModuleElytraTarget.isSameTargetRendering(it) })
         })
@@ -126,15 +113,11 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     @Suppress("unused")
     private val rotationUpdateHandler = handler<RotationUpdateEvent> {
-        if (waitTicks > 0) {
-            waitTicks--
-        }
-
         // Make sure killaura-logic is not running while inventory is open
         val isInInventoryScreen = isInventoryOpen || mc.gui.screen() is ContainerScreen
         val shouldResetTarget = player.isSpectator || player.isDeadOrDying || !requirementsMet
 
-        if (isInInventoryScreen && !ignoreOpenInventory || shouldResetTarget) {
+        if (isInInventoryScreen || shouldResetTarget) { //codex (if (isInInventoryScreen && !ignoreOpenInventory || shouldResetTarget) {)
             // Reset current target
             targetTracker.reset()
             return@handler
@@ -157,13 +140,11 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         val target = targetTracker.target
 
         if (CombatManager.shouldPauseCombat) {
-            KillAuraAutoBlock.stopBlocking()
             return //codex (return@tickHandler)
         }
 
         // codex start
         if (target == null) {
-            KillAuraAutoBlock.stopBlocking()
             return
         }
         //codex end
@@ -212,7 +193,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     @Suppress("CognitiveComplexMethod", "CyclomaticComplexMethod")
     private fun attackTarget(target: Entity, rotation: Rotation) {
         // Make it seem like we are blocking
-        KillAuraAutoBlock.makeSeemBlock()
 
         debugParameter("Rotation") { rotation }
         debugParameter("Target") { target.scoreboardName }
@@ -229,32 +209,16 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         val isInRange = attackHitResult != null && range.isInRange(pos = attackHitResult.location) //codex (val isInRange = ModuleElytraTarget.canIgnoreKillAuraRotations || attackHitResult != null && range.isInRange(pos = attackHitResult.location))
         debugParameter("Is In Range") { isInRange }
 
-        // Check if our target is in range, otherwise deal with auto block
-        if (!isInRange) {
-            if (KillAuraAutoBlock.enabled && KillAuraAutoBlock.onScanRange &&
-                player.squaredBoxedDistanceTo(target) <= range.scanRange.sq()) {
-                if (realAttack.ticksSinceLastAttack >= KillAuraAutoBlock.reblockTicks) { //codex (if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {)
-                    KillAuraAutoBlock.startBlocking()
-                }
-
-                return
-            }
-
-            // Make sure we are not blocking
-            val hasUnblocked = KillAuraAutoBlock.stopBlocking()
-            if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
-                waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-            }
-            return
-        }
+        // codex start
+        if (!isInRange) return
+        //codex end
 
         debugParameter("Valid Rotation") { rotation }
 
         val mainHandStack = player.mainHandItem
 
         // Attack once during the current vanilla attack-button press. //codex (Attack enemy, according to the attack scheduler)
-        if (realAttack.isAttacking && canAttackNow(mainHandStack) && //codex (if (realAttack.isAttacking && canAttackNow(target, mainHandStack) &&)
-            !KillAuraAutoBlock.isPrioritizingBlocking) {
+        if (realAttack.isAttacking && canAttackNow(mainHandStack)) { //codex (if (realAttack.isAttacking && canAttackNow(mainHandStack) && !KillAuraAutoBlock.isPrioritizingBlocking) {)
             realAttack.prepareForAttack(rotation) { //codex (clicker.prepareForAttack(rotation) {)
                 // On each click, we check if we are still ready to attack
                 if (!canAttackNow(mainHandStack)) { //codex (if (!canAttackNow(target, mainHandStack)) {)
@@ -264,14 +228,11 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
                 // Attack enemy
                 attackEntity(target, SwingMode.DO_NOT_HIDE) //codex (attackEntity(target, SwingMode.DO_NOT_HIDE, keepSprint && !shouldBlockSprinting))
                 range.update()
-                KillAuraAutoBlock.hasBlockedSinceAttack = false
 
 
 
                 true
             }
-        } else if (realAttack.ticksSinceLastAttack >= KillAuraAutoBlock.reblockTicks) { //codex (} else if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {)
-            KillAuraAutoBlock.startBlocking()
         }
     }
 
@@ -334,7 +295,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             rotations.toRotationTarget(
                 rotation,
                 entity,
-                considerInventory = !ignoreOpenInventory
+                considerInventory = true //codex (considerInventory = !ignoreOpenInventory)
             ),
             priority = Priority.IMPORTANT_FOR_USAGE_2,
             provider = this@ModuleKillAura
@@ -415,9 +376,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             return false
         }
 
-        val isInventoryBlockingAttack = (isInventoryOpen || isInContainerScreen) &&
-            !ignoreOpenInventory && !simulateInventoryClosing
-        return !isInventoryBlockingAttack
+        return !(isInventoryOpen || isInContainerScreen) //codex (return !isInventoryBlockingAttack)
     }
 
     enum class RaycastMode(override val tag: String) : Tagged {

@@ -39,7 +39,7 @@ import kotlin.math.sin
 
 /**
  * Renders a circle around the player indicating the KillAura attack range.
- * Synced with KillAura settings for Range, WallRange, and IgnoreOpenInventory.
+ * Synced with KillAura settings for Range and WallRange. //codex (Range, WallRange, and IgnoreOpenInventory.)
  */
 object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndicator", false) {
 
@@ -144,7 +144,7 @@ object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndic
         return !((hideWhenDead && player.isDeadOrDying) ||
             (hideWhenSpectator && player.isSpectator) ||
             (hideInVehicle && player.vehicle != null) ||
-            (respectInventorySetting && !ModuleKillAura.ignoreOpenInventory &&
+            (respectInventorySetting && //codex (respectInventorySetting && !ModuleKillAura.ignoreOpenInventory &&)
                 (isInventoryOpen || mc.gui.screen() is ContainerScreen)))
     }
 

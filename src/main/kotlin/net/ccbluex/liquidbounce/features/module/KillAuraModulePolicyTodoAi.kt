@@ -26,7 +26,7 @@ import java.util.IdentityHashMap
 
 /** Restricts compatibility classes retained for shared utilities and mixins. */
 object KillAuraModulePolicyTodoAi {
-    private val names = setOf("KillAura", "Debug", "MultiActions")
+    private val names = setOf("KillAura", "Debug")
 
     fun allows(name: String) = name in names
 

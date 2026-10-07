@@ -457,7 +457,6 @@
   "liquidbounce.module.middleClickAction.messages.removedFriend": "%s удалён из списка друзей.",
   "liquidbounce.module.mobOwners.description": "Показывает кому принадлежит прирученная сущность или снаряд.",
   "liquidbounce.module.moreCarry.description": "Позволяет хранить дополнительные предметы в слотах для крафта (Только в мультиплеере!).",
-  "liquidbounce.module.multiActions.description": "Позволяет выполнять несколько действий одновременно.",
   "liquidbounce.module.murderMystery.description": "Расскажет, кто убийца.",
   "liquidbounce.module.nameCollector.description": "Собирает имена всех игроков на сервере.",
   "liquidbounce.module.nameProtect.description": "Изменяет имена вас и Ваших друзей на стороне клиента.",

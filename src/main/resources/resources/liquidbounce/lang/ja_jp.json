@@ -357,7 +357,6 @@
   "liquidbounce.module.middleClickAction.description": "マウスの中クリックでアクションを実行できるようにします。",
   "liquidbounce.module.mobOwners.description": "テイム可能なエンティティまたは投射物が属するプレイヤーを表示します。",
   "liquidbounce.module.moreCarry.description": "クラフト スロットに追加のアイテムを保存できます (マルチプレイでのみ機能します)。",
-  "liquidbounce.module.multiActions.description": "複数の動作を同時に行えるようにします。",
   "liquidbounce.module.murderMystery.description": "犯人が誰なのかわかるようになります。",
   "liquidbounce.module.nameCollector.description": "サーバー上の全プレイヤーの名前を収集します。",
   "liquidbounce.module.nameProtect.description": "クライアント側でプレイヤー名を変更します。",

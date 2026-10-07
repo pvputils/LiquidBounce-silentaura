@@ -19,30 +19,18 @@
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.rotationTiming
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.simulateInventoryClosing
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.utils.withFixedYaw
 import net.ccbluex.liquidbounce.utils.client.network
 import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.network.send1_11_1OpenInventory
-import net.ccbluex.liquidbounce.utils.network.sendCloseInventory
-import net.ccbluex.liquidbounce.utils.entity.isBlockingServerside
-import net.ccbluex.liquidbounce.utils.inventory.InventoryManager
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.PosRot
 
 
 object KillAuraRealAttackTodoAi {
     var isAttacking = false
         private set
-    private var lastAttackTick = Int.MIN_VALUE
-
-    val ticksSinceLastAttack: Int
-        get() = if (lastAttackTick == Int.MIN_VALUE) Int.MAX_VALUE else player.tickCount - lastAttackTick
-
     fun reset() {
-        lastAttackTick = Int.MIN_VALUE
+        isAttacking = false
     }
 
     /** Executes only during vanilla's attack-button press, with no queue, repeats or future click prediction. */
@@ -62,30 +50,7 @@ object KillAuraRealAttackTodoAi {
             return
         }
 
-        // 1. Stop blocking
-        if (player.isBlockingServerside || KillAuraAutoBlock.enforcedBlockingHand != null) {
-            if (!KillAuraAutoBlock.enabled && !ModuleMultiActions.mayAttackWhileUsing()) {
-                return
-            }
-
-            if (KillAuraAutoBlock.enabled && KillAuraAutoBlock.shouldUnblockToHit) {
-                if (KillAuraAutoBlock.stopBlocking(pauses = true) && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
-                    ModuleKillAura.waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-                    return
-                }
-            }
-        } else if (player.isUsingItem && !ModuleMultiActions.mayAttackWhileUsing()) {
-            // Since we are not allowed to attack while the player is using another item,
-            // we will return here.
-            return
-        }
-
-        val wasSimulatedInventoryClose = simulateInventoryClosing && InventoryManager.isInventoryOpen
-
-        // 2. Close Inventory
-        if (wasSimulatedInventoryClose) {
-            network.sendCloseInventory()
-        }
+        if (player.isUsingItem) return
 
         // 3. Rotate to target (if we have on-tick enabled)
         if (rotationTiming != KillAuraRotationsValueGroup.KillAuraRotationTiming.NORMAL && rotation != null) {
@@ -103,7 +68,7 @@ object KillAuraRealAttackTodoAi {
         }
 
         // Run the attack
-        if (attack()) lastAttackTick = player.tickCount
+        attack()
 
         // 1. Rotate back
         if (rotationTiming != KillAuraRotationsValueGroup.KillAuraRotationTiming.NORMAL && rotation != null) {
@@ -120,15 +85,6 @@ object KillAuraRealAttackTodoAi {
             )
         }
 
-        // 2. Start blocking again
-        if (KillAuraAutoBlock.blockImmediate) {
-            KillAuraAutoBlock.startBlocking()
-        }
-
-        // 3. Open inventory again
-        if (wasSimulatedInventoryClose) {
-            network.send1_11_1OpenInventory()
-        }
     }
 
 }

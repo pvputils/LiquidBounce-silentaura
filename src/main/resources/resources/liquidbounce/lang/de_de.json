@@ -462,7 +462,6 @@
   "liquidbounce.module.middleClickAction.messages.removedFriend": "%s wurde erfolgreich aus der Freundesliste entfernt.",
   "liquidbounce.module.mobOwners.description": "Ermöglicht dir zu sehen, zu welchem Spieler ein gezähmtes Entity oder Projektil gehört.",
   "liquidbounce.module.moreCarry.description": "Ermöglicht das Speichern zusätzlicher Gegenstände in deinen Crafting-Slots (funktioniert nur im Mehrspielermodus).",
-  "liquidbounce.module.multiActions.description": "Ermöglicht dir, mehrere Dinge gleichzeitig zu erledigen.",
   "liquidbounce.module.murderMystery.description": "Sagt dir, wer der Mörder ist.",
   "liquidbounce.module.nameCollector.description": "Sammelt die Namen aller Spieler auf dem Server.",
   "liquidbounce.module.nameProtect.description": "Versteckt den tatsächlichen Benutzernamen des Spielers auf der Clientseite (nützlich für Videos).",

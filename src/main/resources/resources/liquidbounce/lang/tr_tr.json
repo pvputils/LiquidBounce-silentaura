@@ -393,7 +393,6 @@
   "liquidbounce.module.middleClickAction.messages.removedFriend": "%s arkadaş listesinden başarıyla kaldırıldı.",
   "liquidbounce.module.mobOwners.description": "Evcil bir varlığın veya merminin hangi oyuncuya ait olduğunu görmenizi sağlar.",
   "liquidbounce.module.moreCarry.description": "Üretim yuvalarında ek eşya saklamanızı sağlar (sadece çok oyunculu modda çalışır).",
-  "liquidbounce.module.multiActions.description": "Aynı anda birden fazla şey yapmanızı sağlar.",
   "liquidbounce.module.murderMystery.description": "Katilin kim olduğunu söyler.",
   "liquidbounce.module.nameCollector.description": "Sunucudaki tüm oyuncuların isimlerini toplar.",
   "liquidbounce.module.nameProtect.description": "Oyuncunun gerçek kullanıcı adını istemci tarafında gizler (videolar için kullanışlı).",

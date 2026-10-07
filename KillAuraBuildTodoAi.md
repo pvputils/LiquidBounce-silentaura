@@ -1,8 +1,8 @@
 # KillAura Fabric extraction
 
-This client mod retains upstream KillAura and its direct support modules: Debug and MultiActions. Other module implementations, browser UI, remote control server, commands, account services, cosmetics and theme sources have been removed. Shared targeting, rotation, inventory, rendering, configuration and event code remains where required by those modules.
+This client mod retains upstream KillAura and its direct support modules: Debug. Other module implementations, browser UI, remote control server, commands, account services, cosmetics and theme sources have been removed. Shared targeting, rotation, inventory, rendering, configuration and event code remains where required by those modules.
 
-Teams, TargetLock, SwordBlock, ElytraTarget, Criticals, AutoWeapon, AntiBot, FightBot, FailSwing and KeepSprint are removed, along with their hooks, settings and unused dependencies. KillAura uses the weapon you actually hold.
+Teams, TargetLock, SwordBlock, ElytraTarget, Criticals, AutoWeapon, AntiBot, FightBot, FailSwing KeepSprint, MultiActions, AutoBlocking, IgnoreOpenInventory and SimulateInventoryClosing are removed, along with their hooks, settings and unused dependencies. KillAura uses the weapon you actually hold.
 
 ## Build and install
 
@@ -12,9 +12,11 @@ For development, use `./gradlew runClient`. Run `./gradlew runClientGameTest` fo
 
 ## Configuration
 
-Press **Right Shift** in a world, or choose Configure in Mod Menu. The native Minecraft screen exposes KillAura, every nested group and rotation mode, global target filters and retained support modules. Settings change live and save when the screen closes. Numeric and range inputs validate bounds; curves and complex values have text editors. Enable KillAura with its Enabled control or configure its keybind. Attacks now follow real presses of your configured Minecraft attack button. Each press can cause at most one aura attack; holding it never repeats attacks. There is no CPS setting, click scheduler, automatic cooldown click or delayed attack queue. Ordinary Minecraft weapon cooldown still determines damage. If range or blocking requirements reject a click, it is discarded rather than saved for later.
+Press **Right Shift** in a world, or choose Configure in Mod Menu. The native Minecraft screen exposes KillAura, every nested group and rotation mode, global target filters and retained support modules. Settings change live and save when the screen closes. Numeric and range inputs validate bounds; curves and complex values have text editors. Enable KillAura with its Enabled control or configure its keybind. Attacks now follow real presses of your configured Minecraft attack button. Each press can cause at most one aura attack; holding it never repeats attacks. There is no CPS setting, click scheduler, automatic cooldown click or delayed attack queue. Ordinary Minecraft weapon cooldown still determines damage. If range or item-use requirements reject a click, it is discarded rather than saved for later.
 
 Criticals selection, waiting for a crit, sprint cancellation, artificial ground flags, crit packet modes and fake crit effects are removed. Attacks use the vanilla Minecraft attack implementation, including native crit eligibility/damage, weapon cooldown and sprint slowdown. KeepSprint is removed because it bypassed that implementation.
+
+KillAura pauses while an inventory is open. It never simulates closing/reopening inventories, automatically blocks/unblocks, or enables simultaneous actions. Manual item use follows vanilla behavior.
 
 Settings are stored separately under `<game directory>/LiquidBounceKillAura`. The upstream resource namespace and mod ID remain `liquidbounce`; install this extraction in place of the full client.
 
