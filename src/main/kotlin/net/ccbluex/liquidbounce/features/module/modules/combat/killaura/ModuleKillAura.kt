@@ -36,15 +36,11 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKi
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeTodoAi
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeIndicator
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
-import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.render.renderEnvironment
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.data.RotationWithVector
-import net.ccbluex.liquidbounce.utils.aiming.point.PointTracker
 import net.ccbluex.liquidbounce.utils.aiming.preference.LeastDifferencePreference
 import net.ccbluex.liquidbounce.utils.aiming.utils.raytraceBox
 import net.ccbluex.liquidbounce.utils.block.SwingMode
@@ -80,13 +76,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     // Rotation
     private val rotations = tree(KillAuraRotationsValueGroup)
-    private val pointTracker = tree(PointTracker(this))
-
-    private val requires by multiEnumChoice<KillAuraRequirements>("Requires")
-
-    private val requirementsMet
-        get() = requires.all { it.asBoolean }
-
     // Bypass techniques
     internal val raycast by enumChoice("Raycast", TRACE_ALL)
 
@@ -115,7 +104,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     private val rotationUpdateHandler = handler<RotationUpdateEvent> {
         // Make sure killaura-logic is not running while inventory is open
         val isInInventoryScreen = isInventoryOpen || mc.gui.screen() is ContainerScreen
-        val shouldResetTarget = player.isSpectator || player.isDeadOrDying || !requirementsMet
+        val shouldResetTarget = player.isSpectator || player.isDeadOrDying //codex (val shouldResetTarget = player.isSpectator || player.isDeadOrDying || !requirementsMet)
 
         if (isInInventoryScreen || shouldResetTarget) { //codex (if (isInInventoryScreen && !ignoreOpenInventory || shouldResetTarget) {)
             // Reset current target
@@ -149,10 +138,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         }
         //codex end
 
-        // Check if the module should (not) continue after the blocking state is updated
-        if (!requirementsMet) {
-            return //codex (return@tickHandler)
-        }
 
         val rotation = (if (rotations.rotationTiming == ON_TICK || rotations.rotationTiming == SNAP) { //codex (val rotation = (if (rotations.rotationTiming == ON_TICK) {)
             findRotation(target, range.interactionRange, 0f)?.rotation //codex (findRotation(target, range.interactionRange, range.interactionThroughWallsRange)?.rotation)
@@ -325,17 +310,15 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         debugParameter("Lazy Rotation") { false }
         val eyes = player.eyePosition
-        val point = pointTracker.findPoint(eyes, entity)
+        val box = entity.boundingBox //codex (val point = pointTracker.findPoint(eyes, entity))
 
-        debugGeometry("Box") { ModuleDebug.DebuggedBox(point.box, Color4b.ORANGE.with(a = 90)) }
-        debugGeometry("Point") { ModuleDebug.DebuggedPoint(point.pos, Color4b.WHITE, size = 0.1) }
 
-        val rotationPreference = LeastDifferencePreference.leastDifferenceToLastPoint(eyes, point.pos)
+        val rotationPreference = LeastDifferencePreference.leastDifferenceToLastPoint(eyes, box.center) //codex (val rotationPreference = LeastDifferencePreference.leastDifferenceToLastPoint(eyes, point.pos))
 
         // raytrace to the point
         val rotation = raytraceBox(
             eyes = eyes,
-            box = point.box,
+            box = box, //codex (box = point.box,)
             range = range.toDouble(),
             wallsRange = wallsRange.toDouble(),
             rotationPreference = rotationPreference

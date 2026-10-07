@@ -108,6 +108,9 @@ fabricApi {
 val gameTestLibraries = gradle.gradleUserHomeDir.resolve("liquidbounce-gametest")
 
 loom.runs.named("clientGameTest") {
+    // codex start
+    environmentVariable("ALSOFT_DRIVERS", "null")
+    //codex end
     // Keeps the vanilla screens the test API waits for; the browser still starts. Drop it to test the theme UI.
     systemProperties.put("net.ccbluex.liquidbounce.ui.basicMode", "true")
     systemProperties.put("net.ccbluex.liquidbounce.browser.libraries", gameTestLibraries.resolve("mcef").path)

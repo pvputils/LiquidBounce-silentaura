@@ -24,6 +24,8 @@ Settings are stored separately under `<game directory>/LiquidBounceKillAura`. Th
 
 AI rotations initialize asynchronously. If the native inference engine cannot load, ordinary rotations remain available. Included model and render assets are retained for KillAura features.
 
+Requires and AimPoint are removed. Target aiming ray-traces the entity's current bounding box directly, without aim-point prediction, exemptions, delay, lazy tracking or Gaussian offsets. Client game tests use a silent OpenAL backend.
+
 ## Verification
 
 The client integration test checks startup, the exact module registry, the native settings screen, configuration persistence and KillAura hits on a stationary zombie in a local test world. It checks zero attacks while idle, one attack for a held press, no repeats after release, and one attack per subsequent physical press, including rapid presses. Forced out-of-range targets and targets behind a solid stone wall are rejected by the attack path. Grounded and naturally falling attack damage are compared with vanilla attacks. Unit tests cover retained shared utilities and invalid config input. Build runs Detekt, unit tests and access widener validation.

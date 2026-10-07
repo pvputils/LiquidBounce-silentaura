@@ -51,7 +51,7 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
                 EventManager.registerEventHook(AttackEntityEvent::class.java, EventHook<AttackEntityEvent>(listener) {
                     if (it.entity is Zombie) attacks.incrementAndGet()
                 })
-                check(ModuleKillAura.get().none { it.name in setOf("Clicker", "Criticals", "KeepSprint", "FightBot", "FailSwing", "AutoBlocking", "IgnoreOpenInventory", "SimulateInventoryClosing") })
+                check(ModuleKillAura.get().none { it.name in setOf("Clicker", "Criticals", "KeepSprint", "FightBot", "FailSwing", "AutoBlocking", "IgnoreOpenInventory", "SimulateInventoryClosing", "Requires", "AimPoint") })
                 ModuleKillAura.enabled = true
                 ConfigSystem.store(ModuleManager.modulesConfig)
                 ModuleKillAura.enabled = false
