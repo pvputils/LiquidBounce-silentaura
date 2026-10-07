@@ -47,7 +47,6 @@ mutable field net/minecraft/network/protocol/game/ServerboundMovePlayerPacket y 
 mutable field net/minecraft/network/protocol/game/ServerboundMovePlayerPacket z D
 mutable field net/minecraft/network/protocol/game/ServerboundMovePlayerPacket yRot F
 mutable field net/minecraft/network/protocol/game/ServerboundMovePlayerPacket xRot F
-mutable field net/minecraft/network/protocol/game/ServerboundMovePlayerPacket onGround Z
 mutable field net/minecraft/network/protocol/game/ServerboundMovePlayerPacket hasPos Z
 mutable field net/minecraft/network/protocol/game/ServerboundMovePlayerPacket hasRot Z
 
@@ -63,7 +62,6 @@ accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platfor
 accessible field net/minecraft/client/KeyMapping ALL Ljava/util/Map;
 accessible field net/minecraft/client/KeyMapping MAP Ljava/util/Map;
 accessible method net/minecraft/client/KeyMapping release ()V
-accessible field net/minecraft/world/entity/LivingEntity attackStrengthTicker I
 accessible field net/minecraft/world/entity/LivingEntity jumping Z
 accessible field net/minecraft/world/entity/LivingEntity noJumpDelay I
 accessible method net/minecraft/world/entity/Entity isInvulnerableToBase (Lnet/minecraft/world/damagesource/DamageSource;)Z
@@ -72,9 +70,7 @@ accessible method net/minecraft/world/entity/Entity canAddPassenger (Lnet/minecr
 accessible field net/minecraft/client/Options modelParts Ljava/util/Set;
 
 accessible method net/minecraft/world/entity/player/Player getBlockSpeedFactor ()F
-accessible method net/minecraft/world/entity/player/Player getEnchantedDamage (Lnet/minecraft/world/entity/Entity;FLnet/minecraft/world/damagesource/DamageSource;)F
 accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance
-accessible field net/minecraft/world/entity/LivingEntity autoSpinAttackDmg F
 accessible method net/minecraft/world/entity/Entity getInputVector (Lnet/minecraft/world/phys/Vec3;FF)Lnet/minecraft/world/phys/Vec3;
 accessible method net/minecraft/world/phys/AABB getDirection (Lnet/minecraft/world/phys/AABB;Lnet/minecraft/world/phys/Vec3;[DLnet/minecraft/core/Direction;DDD)Lnet/minecraft/core/Direction;
 

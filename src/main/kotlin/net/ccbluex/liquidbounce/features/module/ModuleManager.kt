@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTeams
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTargetLock
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock
-import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals
 import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 
@@ -238,7 +237,6 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             ModuleTargetLock,
             ModuleDebug,
             ModuleSwordBlock,
-            ModuleCriticals,
             ModuleElytraTarget,
             ModuleMultiActions,
         )

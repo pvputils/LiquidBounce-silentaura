@@ -87,14 +87,6 @@ fun ClientCommonPacketListenerImpl.send1_11_1OpenInventory() {
     )
 }
 
-fun ClientCommonPacketListenerImpl.sendStartSprinting() {
-    send(ServerboundPlayerCommandPacket(player, ServerboundPlayerCommandPacket.Action.START_SPRINTING))
-}
-
-fun ClientCommonPacketListenerImpl.sendStopSprinting() {
-    send(ServerboundPlayerCommandPacket(player, ServerboundPlayerCommandPacket.Action.STOP_SPRINTING))
-}
-
 fun ClientCommonPacketListenerImpl.sendSwapItemWithOffhand() {
     send(
         ServerboundPlayerActionPacket(
