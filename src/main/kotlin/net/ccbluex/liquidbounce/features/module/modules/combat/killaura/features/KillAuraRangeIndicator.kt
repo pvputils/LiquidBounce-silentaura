@@ -39,7 +39,7 @@ import kotlin.math.sin
 
 /**
  * Renders a circle around the player indicating the KillAura attack range.
- * Synced with KillAura settings for Range and WallRange. //codex (Range, WallRange, and IgnoreOpenInventory.)
+ * Displays the held item's vanilla attack range. //codex (Synced with KillAura settings for Range and WallRange.)
  */
 object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndicator", false) {
 
@@ -57,8 +57,6 @@ object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndic
     private val fadeAnimation by boolean("FadeAnimation", true)
     private val fadeSpeed by float("FadeSpeed", 0.1f, 0.01f..0.5f)
 
-    private val wallRangeColor by color("WallRangeColor", Color4b(255, 165, 0, 0))
-    private val scanRangeColor by color("ScanRangeColor", Color4b(100, 100, 255, 0))
     private val opponentRangeColor by color("OpponentRangeColor", Color4b(255, 0, 0, 0))
 
     private val hideWhenDead by boolean("HideWhenDead", true)
@@ -121,19 +119,6 @@ object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndic
             color = getColor(distance, maxRange),
             innerRadius = minRange
         )
-
-        if (wallRangeColor.a > 0 && ModuleKillAura.range.interactionThroughWallsRange < maxRange) {
-            val color = if (hasTarget) {
-                wallRangeColor.fade(1.5f)
-            } else {
-                wallRangeColor
-            }
-            drawRangeCircle(ModuleKillAura.range.interactionThroughWallsRange + pulseOffset * 0.5f, color, 80)
-        }
-
-        if (scanRangeColor.a > 0) {
-            drawRangeCircle(ModuleKillAura.range.scanRange, scanRangeColor, 60)
-        }
 
         if (opponentRangeColor.a > 0 && hasTarget) {
             drawRangeCircle(3f, opponentRangeColor, 100)

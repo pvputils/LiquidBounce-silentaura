@@ -24,7 +24,6 @@ import net.ccbluex.liquidbounce.utils.aiming.RotationsValueGroup
 object KillAuraRotationsValueGroup : RotationsValueGroup(ModuleKillAura, combatSpecific = true) {
 
     val rotationTiming by enumChoice("RotationTiming", KillAuraRotationTiming.NORMAL)
-    val aimThroughWalls by boolean("ThroughWalls", false)
 
     /**
      * When enabled, if current rotation can still raytrace the target, skip rotating.

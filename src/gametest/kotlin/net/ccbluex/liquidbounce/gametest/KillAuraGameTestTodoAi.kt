@@ -58,6 +58,25 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
                 ConfigSystem.load(ModuleManager.modulesConfig)
                 check(ModuleKillAura.enabled) { "Enabled state was not restored from disk" }
             }
+            // Explicitly force targets to verify the attack path cannot bypass acquisition checks.
+            world.server.runCommand("execute at @p run tp @e[type=minecraft:zombie,limit=1] ~ ~ ~6")
+            context.waitTicks(10)
+            context.runOnClient<RuntimeException> {
+                ModuleKillAura.targetTracker.target = mc.level!!.entitiesForRendering().filterIsInstance<Zombie>().first()
+                ModuleKillAura.handleRealAttack()
+            }
+            context.waitTicks(5)
+            check(attacks.get() == 0) { "Aura attacked beyond vanilla reach" }
+            world.server.runCommand("execute at @p run tp @e[type=minecraft:zombie,limit=1] ~ ~ ~2")
+            world.server.runCommand("execute at @p run fill ~-2 ~ ~1 ~2 ~3 ~1 minecraft:stone")
+            context.waitTicks(10)
+            context.runOnClient<RuntimeException> {
+                ModuleKillAura.targetTracker.target = mc.level!!.entitiesForRendering().filterIsInstance<Zombie>().first()
+                ModuleKillAura.handleRealAttack()
+            }
+            context.waitTicks(5)
+            check(attacks.get() == 0) { "Aura attacked through a solid wall" }
+            world.server.runCommand("execute at @p run fill ~-2 ~ ~1 ~2 ~3 ~1 minecraft:air")
             context.waitFor({ ModuleKillAura.targetTracker.target != null }, 200)
             context.waitTicks(40)
             check(attacks.get() == 0) { "KillAura attacked without a real input press" }

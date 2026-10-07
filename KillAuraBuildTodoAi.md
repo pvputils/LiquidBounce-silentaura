@@ -16,6 +16,8 @@ Press **Right Shift** in a world, or choose Configure in Mod Menu. The native Mi
 
 Criticals selection, waiting for a crit, sprint cancellation, artificial ground flags, crit packet modes and fake crit effects are removed. Attacks use the vanilla Minecraft attack implementation, including native crit eligibility/damage, weapon cooldown and sprint slowdown. KeepSprint is removed because it bypassed that implementation.
 
+KillAura uses only the held item's vanilla attack range and requires line of sight. Reach increases, extended scanning, through-wall aiming/attacks and legacy range migration are removed. The range indicator displays native reach.
+
 KillAura pauses while an inventory is open. It never simulates closing/reopening inventories, automatically blocks/unblocks, or enables simultaneous actions. Manual item use follows vanilla behavior.
 
 Settings are stored separately under `<game directory>/LiquidBounceKillAura`. The upstream resource namespace and mod ID remain `liquidbounce`; install this extraction in place of the full client.
@@ -24,7 +26,7 @@ AI rotations initialize asynchronously. If the native inference engine cannot lo
 
 ## Verification
 
-The client integration test checks startup, the exact module registry, the native settings screen, configuration persistence and KillAura hits on a stationary zombie in a local test world. It checks zero attacks while idle, one attack for a held press, no repeats after release, and one attack per subsequent physical press, including rapid presses. Grounded and naturally falling attack damage are compared with vanilla attacks. Unit tests cover retained shared utilities and invalid config input. Build runs Detekt, unit tests and access widener validation.
+The client integration test checks startup, the exact module registry, the native settings screen, configuration persistence and KillAura hits on a stationary zombie in a local test world. It checks zero attacks while idle, one attack for a held press, no repeats after release, and one attack per subsequent physical press, including rapid presses. Forced out-of-range targets and targets behind a solid stone wall are rejected by the attack path. Grounded and naturally falling attack damage are compared with vanilla attacks. Unit tests cover retained shared utilities and invalid config input. Build runs Detekt, unit tests and access widener validation.
 
 New source filenames use the requested TodoAi suffix. Changes to existing code carry codex provenance comments; imports and deletions need none. JSON metadata retains valid JSON syntax. File naming suppressions preserve upstream event type names, and line-length suppressions permit the requested old-code comments.
 

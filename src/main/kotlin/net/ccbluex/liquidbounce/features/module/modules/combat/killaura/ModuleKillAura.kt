@@ -34,7 +34,7 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRange
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeTodoAi
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeIndicator
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
@@ -75,7 +75,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     // Real attack input //codex (Attack speed)
     val realAttack = KillAuraRealAttackTodoAi //codex (val clicker = tree(KillAuraClicker))
-    val range = tree(KillAuraRange)
+    val range = KillAuraRangeTodoAi //codex (val range = tree(KillAuraRange))
     val targetTracker = tree(KillAuraTargetTracker)
 
     // Rotation
@@ -155,7 +155,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         }
 
         val rotation = (if (rotations.rotationTiming == ON_TICK || rotations.rotationTiming == SNAP) { //codex (val rotation = (if (rotations.rotationTiming == ON_TICK) {)
-            findRotation(target, range.interactionRange, range.interactionThroughWallsRange)?.rotation
+            findRotation(target, range.interactionRange, 0f)?.rotation //codex (findRotation(target, range.interactionRange, range.interactionThroughWallsRange)?.rotation)
         } else {
             null
         } ?: RotationManager.currentRotation ?: player.rotation).normalize()
@@ -201,7 +201,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             toEntity = target,
             rotation = rotation,
             range = range.interactionRange.toDouble(),
-            throughWallsRange = range.interactionThroughWallsRange.toDouble()
+            throughWallsRange = 0.0 //codex (throughWallsRange = range.interactionThroughWallsRange.toDouble())
         )
 
         debugParameter("Target Hit Result") { attackHitResult?.location }
@@ -227,7 +227,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
                 // Attack enemy
                 attackEntity(target, SwingMode.DO_NOT_HIDE) //codex (attackEntity(target, SwingMode.DO_NOT_HIDE, keepSprint && !shouldBlockSprinting))
-                range.update()
 
 
 
@@ -238,11 +237,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     private fun updateTarget() {
         // Calculate maximum range based on enemy distance
-        val maximumRange = if (targetTracker.closestSquaredEnemyDistance > range.interactionRange.sq()) {
-            range.scanRange
-        } else {
-            range.interactionRange
-        }
+        val maximumRange = range.interactionRange //codex (val maximumRange = if (targetTracker.closestSquaredEnemyDistance > range.interactionRange.sq()) range.scanRange else range.interactionRange)
 
         debugParameter("Maximum Range") { maximumRange }
         debugParameter("Range") { range }
@@ -253,7 +248,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         val target = targetTracker.targets()
             .filter { entity -> entity.squaredBoxedDistanceTo(player) <= squaredMaxRange }
             .sortedBy { entity -> if (entity.squaredBoxedDistanceTo(player) <= squaredNormalRange) 0 else 1 }
-            .firstOrNull { entity -> processTarget(entity, maximumRange, range.interactionThroughWallsRange) }
+            .firstOrNull { entity -> processTarget(entity, maximumRange, 0f) } //codex (.firstOrNull { entity -> processTarget(entity, maximumRange, range.interactionThroughWallsRange) })
 
         if (target != null) {
             targetTracker.target = target
@@ -346,20 +341,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             rotationPreference = rotationPreference
         )
 
-        return if (rotation == null && rotations.aimThroughWalls) {
-            val rotationThroughWalls = raytraceBox(
-                eyes = eyes,
-                box = point.box,
-                // Since [range] is squared, we need to square root
-                range = range.toDouble(),
-                wallsRange = range.toDouble(),
-                rotationPreference = rotationPreference
-            )
-
-            rotationThroughWalls
-        } else {
-            rotation
-        }
+        return rotation //codex (return if (rotation == null && rotations.aimThroughWalls) rotationThroughWalls else rotation)
     }
 
     /**
