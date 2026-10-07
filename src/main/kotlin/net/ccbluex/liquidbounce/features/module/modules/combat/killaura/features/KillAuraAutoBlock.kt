@@ -30,7 +30,6 @@ import net.ccbluex.liquidbounce.event.events.TransferOrigin
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.blink.BlinkManager
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
@@ -168,7 +167,7 @@ object KillAuraAutoBlock : ToggleableValueGroup(ModuleKillAura, "AutoBlocking", 
      */
     var blockVisual = false
         get() = field && running &&
-            (isOlderThanOrEqual1_8 || ModuleSwordBlock.running)
+            isOlderThanOrEqual1_8 //codex ((isOlderThanOrEqual1_8 || ModuleSwordBlock.running))
 
     val shouldUnblockToHit
         get() = unblockMode != UnblockMode.NONE

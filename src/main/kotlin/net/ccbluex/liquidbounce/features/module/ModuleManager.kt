@@ -19,13 +19,7 @@
 package net.ccbluex.liquidbounce.features.module
 
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
-import net.ccbluex.liquidbounce.features.module.modules.misc.antibot.ModuleAntiBot
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTeams
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTargetLock
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock
-import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet
@@ -231,13 +225,7 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
         // codex start
         val builtin = arrayOf(
             ModuleKillAura,
-            ModuleAutoWeapon,
-            ModuleAntiBot,
-            ModuleTeams,
-            ModuleTargetLock,
             ModuleDebug,
-            ModuleSwordBlock,
-            ModuleElytraTarget,
             ModuleMultiActions,
         )
         //codex end

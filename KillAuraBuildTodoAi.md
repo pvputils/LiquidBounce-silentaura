@@ -1,6 +1,8 @@
 # KillAura Fabric extraction
 
-This client mod retains upstream KillAura and its direct support modules: AutoWeapon, AntiBot, Teams, TargetLock, Debug, SwordBlock, ElytraTarget and MultiActions. Other module implementations, browser UI, remote control server, commands, account services, cosmetics and theme sources have been removed. Shared targeting, rotation, inventory, rendering, configuration and event code remains where required by those modules.
+This client mod retains upstream KillAura and its direct support modules: Debug and MultiActions. Other module implementations, browser UI, remote control server, commands, account services, cosmetics and theme sources have been removed. Shared targeting, rotation, inventory, rendering, configuration and event code remains where required by those modules.
+
+Teams, TargetLock, SwordBlock, ElytraTarget, Criticals, AutoWeapon, AntiBot, FightBot, FailSwing and KeepSprint are removed, along with their hooks, settings and unused dependencies. KillAura uses the weapon you actually hold.
 
 ## Build and install
 

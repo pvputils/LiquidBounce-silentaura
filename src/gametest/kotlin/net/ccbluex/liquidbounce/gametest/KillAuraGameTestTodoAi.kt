@@ -29,8 +29,7 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
     override fun runTest(context: ClientGameTestContext) {
         context.waitFor({ it.gui.screen() is TitleScreen && LiquidBounce.isInitialized }, 1200)
         context.runOnClient<RuntimeException> {
-            check(ModuleManager.map { it.name }.toSet() == setOf("KillAura", "AutoWeapon", "AntiBot", "Teams",
-                "TargetLock", "Debug", "SwordBlock", "ElytraTarget", "MultiActions"))
+            check(ModuleManager.map { it.name }.toSet() == setOf("KillAura", "Debug", "MultiActions"))
             val parent = mc.gui.screen()
             val screen = KillAuraConfigScreenTodoAi(parent)
             mc.gui.setScreen(screen)
@@ -52,7 +51,7 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
                 EventManager.registerEventHook(AttackEntityEvent::class.java, EventHook<AttackEntityEvent>(listener) {
                     if (it.entity is Zombie) attacks.incrementAndGet()
                 })
-                check(ModuleKillAura.get().none { it.name in setOf("Clicker", "Criticals", "KeepSprint") })
+                check(ModuleKillAura.get().none { it.name in setOf("Clicker", "Criticals", "KeepSprint", "FightBot", "FailSwing") })
                 ModuleKillAura.enabled = true
                 ConfigSystem.store(ModuleManager.modulesConfig)
                 ModuleKillAura.enabled = false

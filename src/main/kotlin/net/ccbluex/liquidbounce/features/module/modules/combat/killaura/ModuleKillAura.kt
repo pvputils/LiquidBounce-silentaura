@@ -29,20 +29,12 @@ import net.ccbluex.liquidbounce.event.events.WorldRenderEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
-import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.ON_TICK
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.SNAP
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFailSwing
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFailSwing.dealWithFakeSwing
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFightBot
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail.failedHits
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail.renderFailedHits
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRange
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeIndicator
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
@@ -113,10 +105,8 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     init {
         tree(KillAuraAutoBlock)
         tree(TargetRenderer(this) {
-            targetTracker.target?.takeUnless { ModuleElytraTarget.isSameTargetRendering(it) }
+            targetTracker.target //codex (targetTracker.target?.takeUnless { ModuleElytraTarget.isSameTargetRendering(it) })
         })
-        tree(KillAuraFailSwing)
-        tree(KillAuraFightBot)
         tree(KillAuraRangeIndicator)
     }
 
@@ -125,14 +115,11 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         realAttack.reset()
         //codex end
         targetTracker.reset()
-        failedHits.clear()
-        KillAuraNotifyWhenFail.failedHitsIncrement = 0
     }
 
     @Suppress("unused")
     private val renderHandler = handler<WorldRenderEvent> { event ->
         event.renderEnvironment {
-            renderFailedHits()
             KillAuraRangeIndicator.render(this, event.partialTicks)
         }
     }
@@ -156,8 +143,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         // Update the current target tracker to make sure you attack the best enemy
         updateTarget()
 
-        // Update Auto Weapon
-        ModuleAutoWeapon.onTarget(targetTracker.target)
     }
 
     // codex start
@@ -176,19 +161,12 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             return //codex (return@tickHandler)
         }
 
+        // codex start
         if (target == null) {
-            val hasUnblocked = KillAuraAutoBlock.stopBlocking()
-
-            // Deal with fake swing when there is no target
-            if (KillAuraFailSwing.enabled && requirementsMet) {
-                if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
-                    waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-                } else {
-                    dealWithFakeSwing(null)
-                }
-            }
-            return //codex (return@tickHandler)
+            KillAuraAutoBlock.stopBlocking()
+            return
         }
+        //codex end
 
         // Check if the module should (not) continue after the blocking state is updated
         if (!requirementsMet) {
@@ -248,8 +226,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         debugParameter("Target Hit Result") { attackHitResult?.location }
 
-        val isInRange = ModuleElytraTarget.canIgnoreKillAuraRotations ||
-            attackHitResult != null && range.isInRange(pos = attackHitResult.location)
+        val isInRange = attackHitResult != null && range.isInRange(pos = attackHitResult.location) //codex (val isInRange = ModuleElytraTarget.canIgnoreKillAuraRotations || attackHitResult != null && range.isInRange(pos = attackHitResult.location))
         debugParameter("Is In Range") { isInRange }
 
         // Check if our target is in range, otherwise deal with auto block
@@ -267,8 +244,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             val hasUnblocked = KillAuraAutoBlock.stopBlocking()
             if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
                 waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-            }else if (KillAuraFailSwing.enabled) {
-                dealWithFakeSwing(target)
             }
             return
         }
@@ -289,7 +264,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
                 // Attack enemy
                 attackEntity(target, SwingMode.DO_NOT_HIDE) //codex (attackEntity(target, SwingMode.DO_NOT_HIDE, keepSprint && !shouldBlockSprinting))
                 range.update()
-                KillAuraNotifyWhenFail.failedHitsIncrement = 0
                 KillAuraAutoBlock.hasBlockedSinceAttack = false
 
 
@@ -322,17 +296,6 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         if (target != null) {
             targetTracker.target = target
-        } else if (KillAuraFightBot.enabled) {
-            KillAuraFightBot.updateTarget()
-
-            RotationManager.setRotationTarget(
-                rotations.toRotationTarget(
-                    KillAuraFightBot.getMovementRotation(),
-                    considerInventory = !ignoreOpenInventory
-                ),
-                priority = Priority.IMPORTANT_FOR_USAGE_2,
-                provider = ModuleKillAura
-            )
         } else {
             targetTracker.reset()
         }

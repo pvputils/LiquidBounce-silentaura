@@ -31,7 +31,6 @@
     "minecraft.gui.MixinGuiRenderStateLayer",
     "minecraft.gui.MixinScreen",
     "minecraft.item.MixinFirstPersonHandsAndItems",
-    "minecraft.item.MixinFirstPersonHandsAndItemsRenderer",
     "minecraft.item.MixinItemCooldowns",
     "minecraft.item.MixinItemStack",
     "minecraft.network.MixinClientPacketListener",

@@ -24,8 +24,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock;
-import net.ccbluex.liquidbounce.interfaces.EntityRenderStateAddition;
 import net.ccbluex.liquidbounce.utils.render.FirstPersonShieldTint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -76,92 +74,5 @@ public abstract class MixinFirstPersonHandsAndItems {
 
 
 
-
-    @Unique
-    private static void liquid_bounce$applyTransformations(PoseStack matrices, float translateX, float translateY, float translateZ, float rotateX, float rotateY, float rotateZ) {
-        matrices.translate(translateX, translateY, translateZ);
-        matrices.rotate(Axis.XP.rotationDegrees(rotateX));
-        matrices.rotate(Axis.YP.rotationDegrees(rotateY));
-        matrices.rotate(Axis.ZP.rotationDegrees(rotateZ));
-    }
-
-
-
-    @Inject(method = "submitArmWithItem", at = @At("HEAD"), cancellable = true)
-    private void hideShield(PlayerRenderState playerState, FirstPersonHandsAndItemsRenderState state, float partialTicks, float xRot, InteractionHand hand, float attack, ItemStack itemStack, float inverseArmHeight, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
-        if (hand == InteractionHand.OFF_HAND && ModuleSwordBlock.INSTANCE.shouldHideOffhand(itemStack)) {
-            ci.cancel();
-        }
-    }
-
-
-
-
-
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "INVOKE",
-        target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;",
-        ordinal = 0
-    ))
-    private ItemUseAnimation hookUseAction(
-        ItemUseAnimation original,
-        @Local(argsOnly = true, name = "itemStack") ItemStack itemStack,
-        @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState
-    ) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity, itemStack)) {
-            return ItemUseAnimation.BLOCK;
-        }
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "FIELD",
-        target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isUsingItem:Z",
-        ordinal = 1,
-        opcode = Opcodes.GETFIELD)
-    )
-    private boolean hookIsUseItem(boolean original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
-            return true;
-        }
-
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "FIELD",
-        target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;useItemHand:Lnet/minecraft/world/InteractionHand;",
-        ordinal = 1,
-        opcode = Opcodes.GETFIELD)
-    )
-    private InteractionHand hookActiveHand(InteractionHand original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
-            return InteractionHand.MAIN_HAND;
-        }
-
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "FIELD",
-        target = "Lnet/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState;useItemRemainingTicks:I",
-        ordinal = 2,
-        opcode = Opcodes.GETFIELD)
-    )
-    private int hookItemUseItem(int original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
-            return 7200;
-        }
-        return original;
-    }
-
-    @Unique
-    private static @Nullable Entity liquid_bounce$getEntity(PlayerRenderState playerState) {
-        return playerState.avatarRenderState instanceof EntityRenderStateAddition entityRenderState ? entityRenderState.liquid_bounce$getEntity() : null;
-    }
 
 }
