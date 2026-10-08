@@ -43,11 +43,29 @@ public abstract class MixinGuiRenderer {
         return original || pipeline.getPrimitiveTopology().connectedPrimitives;
     }
 
+    // codex start
+    // @WrapOperation(
+    //     method = "draw",
+    //     at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;mainRenderTarget()Lcom/mojang/blaze3d/pipeline/RenderTarget;")
+    // )
+    // private RenderTarget injectBlurRenderTarget(GameRenderer instance, Operation<RenderTarget> original) {
+    //     BlurEffectRenderer blurEffectRenderer = BlurEffectRenderer.INSTANCE;
+    //     if (blurEffectRenderer.shouldDrawBlur()) {
+    //         blurEffectRenderer.setDrawingHudFramebuffer(true);
+    //         return blurEffectRenderer.getOverlayRenderTargetHolder().initAndGet();
+    //     }
+    //     return original.call(instance);
+    // }
+    //
+    // codex end
     @Inject(
         method = "draw", at = @At("RETURN")
     )
     private void afterRenderBlurOverlay(CallbackInfo ci) {
         GuiCircleLutAtlas.INSTANCE.resetForNextDraw();
+        // codex start
+        // BlurEffectRenderer.INSTANCE.blitBlurOverlay();
+        // codex end
     }
 
 }

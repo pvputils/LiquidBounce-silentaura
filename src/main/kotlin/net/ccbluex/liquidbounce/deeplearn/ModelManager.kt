@@ -103,6 +103,9 @@ object ModelManager : EventListener, ValueGroup("AI") {
                 val nextModelName = choices.firstOrNull { model -> model.name == activeModelName }
                     ?.name ?: choices.first().name
                 models.setByString(nextModelName)
+                // codex start
+                // ModuleClickGui.sync()
+                // codex end
                 previousModels.asList()
             }.getOrElse { error ->
                 // Roll back the swap, keeping the previous models active.

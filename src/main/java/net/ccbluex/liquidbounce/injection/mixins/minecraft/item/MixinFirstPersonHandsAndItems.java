@@ -73,6 +73,62 @@ public abstract class MixinFirstPersonHandsAndItems {
         original.call(instance, poseStack, submitNodeCollector, lightCoords, overlayCoords, outlineColor);
     }
 
+    // codex start
+    // @Inject(
+    //     method = "swingArm",
+    //     at = @At("HEAD"),
+    //     cancellable = true
+    // )
+    // private void cancelVanillaSwing(
+    //     float animation,
+    //     PoseStack poseStack,
+    //     int invert,
+    //     HumanoidArm arm,
+    //     CallbackInfo ci
+    // ) {
+    //     AbstractClientPlayer player = Minecraft.getInstance().player;
+    //
+    //     if (player == null || !ModuleAnimations.INSTANCE.getRunning() || !SwingAnimations.INSTANCE.getEnabled() || arm != player.getMainArm() || ModuleSwordBlock.shouldAnimateSwordBlock(player)) {
+    //         return;
+    //     }
+    //
+    //     SwingAnimations.INSTANCE.onRenderItem(
+    //         player,
+    //         InteractionHand.MAIN_HAND,
+    //         animation,
+    //         poseStack
+    //     );
+    //
+    //     ci.cancel();
+    // }
+    //
+    // @Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", shift = At.Shift.AFTER))
+    // private void hookRenderFirstPersonItem(
+    //     PlayerRenderState playerState, FirstPersonHandsAndItemsRenderState state, float partialTicks, float xRot, InteractionHand hand, float attack, ItemStack itemStack, float inverseArmHeight, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
+    //     if (ModuleAnimations.INSTANCE.getRunning()) {
+    //         var isInBothHands = InteractionHand.MAIN_HAND == hand && itemStack.has(DataComponents.MAP_ID) && state.offHandItem.isEmpty();
+    //         ModuleAnimations.MainHand mainHand = ModuleAnimations.MainHand.INSTANCE;
+    //         ModuleAnimations.OffHand offHand = ModuleAnimations.OffHand.INSTANCE;
+    //         if (isInBothHands && mainHand.getRunning() && offHand.getRunning()) {
+    //             liquid_bounce$applyTransformations(poseStack,
+    //                     (mainHand.getMainHandX() + offHand.getOffHandX()) / 2f,
+    //                     (mainHand.getMainHandY() + offHand.getOffHandY()) / 2f,
+    //                     (mainHand.getMainHandItemScale() + offHand.getOffHandItemScale()) / 2f,
+    //                     (mainHand.getMainHandPositiveX() + offHand.getOffHandPositiveX()) / 2f,
+    //                     (mainHand.getMainHandPositiveY() + offHand.getOffHandPositiveY()) / 2f,
+    //                     (mainHand.getMainHandPositiveZ() + offHand.getOffHandPositiveZ()) / 2f
+    //             );
+    //         } else if (isInBothHands && mainHand.getRunning()) {
+    //             poseStack.translate(0f, 0f, mainHand.getMainHandItemScale());
+    //         } else if (InteractionHand.MAIN_HAND == hand && mainHand.getRunning()) {
+    //             liquid_bounce$applyTransformations(poseStack, mainHand.getMainHandX(), mainHand.getMainHandY(), mainHand.getMainHandItemScale(), mainHand.getMainHandPositiveX(), mainHand.getMainHandPositiveY(), mainHand.getMainHandPositiveZ());
+    //         } else if (offHand.getRunning()) {
+    //             liquid_bounce$applyTransformations(poseStack, offHand.getOffHandX(), offHand.getOffHandY(), offHand.getOffHandItemScale(), offHand.getOffHandPositiveX(), offHand.getOffHandPositiveY(), offHand.getOffHandPositiveZ());
+    //         }
+    //     }
+    // }
+    //
+    // codex end
     @Unique
     private static void liquid_bounce$applyTransformations(PoseStack matrices, float translateX, float translateY, float translateZ, float rotateX, float rotateY, float rotateZ) {
         matrices.translate(translateX, translateY, translateZ);
@@ -81,11 +137,54 @@ public abstract class MixinFirstPersonHandsAndItems {
         matrices.rotate(Axis.ZP.rotationDegrees(rotateZ));
     }
 
+    // codex start
+    // @Inject(method = "submitArmWithItem",
+    //     slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;")),
+    //     at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V", ordinal = 0, shift = At.Shift.AFTER))
+    // private void transformBlockAnimation(
+    //     PlayerRenderState playerState, FirstPersonHandsAndItemsRenderState state, float partialTicks, float xRot, InteractionHand hand, float attack, ItemStack itemStack, float inverseArmHeight, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
+    //     if (ItemCategorizationsKt.isSword(itemStack) && liquid_bounce$getEntity(playerState) instanceof Player player) {
+    //         var arm = hand == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+    //
+    //         if (ModuleAnimations.INSTANCE.getRunning()) {
+    //             var activeChoice = ModuleAnimations.INSTANCE.getBlockAnimationChoice().getActiveMode();
+    //             activeChoice.transform(poseStack, arm, inverseArmHeight, attack);
+    //         } else {
+    //             // Default animation
+    //             ModuleAnimations.OneSevenAnimation.INSTANCE.transform(poseStack, arm, inverseArmHeight, attack);
+    //         }
+    //     }
+    // }
+    //
+    // codex end
     @Inject(method = "submitArmWithItem", at = @At("HEAD"), cancellable = true)
     private void hideShield(PlayerRenderState playerState, FirstPersonHandsAndItemsRenderState state, float partialTicks, float xRot, InteractionHand hand, float attack, ItemStack itemStack, float inverseArmHeight, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
         if (hand == InteractionHand.OFF_HAND && ModuleSwordBlock.INSTANCE.shouldHideOffhand(itemStack)) {
             ci.cancel();
         }
+    // codex start
+    // }
+    //
+    // @ModifyArg(method = "submitArmWithItem", at = @At(
+    //         value = "INVOKE",
+    //         target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V",
+    //         ordinal = 3
+    // ), index = 2)
+    // private float injectIgnoreBlocking(float equipProgress) {
+    //     if (ModuleAnimations.EquipOffset.INSTANCE.getRunning() && ModuleAnimations.EquipOffset.INSTANCE.getIgnoreBlocking()) {
+    //         return 0.0F;
+    //     }
+    //
+    //     return equipProgress;
+    // }
+    //
+    // @ModifyArg(method = "applyItemArmTransform", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"), index = 1)
+    // private float injectDisableEquipOffset(float y) {
+    //     if (ModuleAnimations.INSTANCE.getRunning() && !ModuleAnimations.EquipOffset.INSTANCE.getRunning()) {
+    //         return ITEM_POS_Y;
+    //     }
+    //     return y;
+    // codex end
     }
 
     @ModifyExpressionValue(method = "submitArmWithItem", at = @At(

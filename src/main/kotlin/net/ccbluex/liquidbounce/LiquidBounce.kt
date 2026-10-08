@@ -211,6 +211,9 @@ object LiquidBounce : EventListener {
 
         // Load all configurations
         ConfigSystem.loadAll()
+        // codex start
+        // AddonManager.notifyStarted()
+        // codex end
 
         isInitialized = true
         logger.info("$CLIENT_NAME has been successfully initialized.")
@@ -235,6 +238,11 @@ object LiquidBounce : EventListener {
 
         // Feature managers
         ModuleManager
+        // codex start
+        // CommandManager
+        // ProxyManager
+        // AccountManager
+        // codex end
 
         // Utility managers
         RotationManager
@@ -245,8 +253,24 @@ object LiquidBounce : EventListener {
         CombatManager
         FriendManager
         InventoryManager
+        // codex start
+        // EnderChestInventoryTracker
+        // ActiveServerList
+        // ConfigSystem.root(ClientAccountManager)
+        // ConfigSystem.root(SpooferManager)
+        // codex end
         ConfigSystem.root(GlobalManager)
+        // codex start
+        // ConfigSystem.root(MarketplaceManager)
+        // ConfigSystem.root(ConfigTracker)
+        // codex end
         PostRotationExecutor
+        // codex start
+        // ServerObserver
+        // ItemImageAtlas
+        //
+        // AddonManager.discover()
+        // codex end
     }
 
     /**
@@ -254,7 +278,15 @@ object LiquidBounce : EventListener {
      */
     private fun initializeFeatures() {
         // Register commands and modules
+        // codex start
+        // CommandManager.registerInbuilt()
+        // codex end
         ModuleManager.registerInbuilt()
+        // codex start
+        //
+        // AddonManager.registerCategories()
+        // AddonManager.initializeAddons()
+        // codex end
     }
 
     /**
@@ -265,12 +297,70 @@ object LiquidBounce : EventListener {
     private suspend fun initializeResources(
         dispatcher: CoroutineDispatcher,
     ) = withContext(dispatcher) {
+        // codex start
+        // logger.info("Initializing API...")
+        // // Lookup API config
+        // ApiConfig.config
+        //
+        // codex end
         supervisorScope {
             launch {
                 // Load translations
                 LanguageManager.loadDefault()
             }
+            // codex start
+            // launch {
+            //     val update = withTimeoutOrNull(8.seconds) { ClientUpdate.update.await() } ?: return@launch
+            //     logger.info("[Update] Update available: $clientVersion -> ${update.lbVersion}")
+            // }
+            // launch {
+            //     // Load cosmetics
+            //     CosmeticService.refreshCarriers(force = true) {
+            //         logger.info("Successfully loaded ${CosmeticService.carriers.size} cosmetics carriers.")
+            //     }
+            // }
+            // launch {
+            //     // Download player heads
+            //     HeadsCreativeModeTab.heads.getFinalState()
+            // }
+            // launch {
+            //     MarketplaceConfigs.refresh()
+            // }
+            // launch {
+            //     MarketplaceItems.refresh()
+            // }
+            // launch {
+            //     MarketplaceManager.fillAuthors()
+            // }
+            // launch {
+            //     IpInfoApi.original
+            // }
+            // launch {
+            //     ConfigSystem.load(ClientAccountManager)
+            //     if (ClientAccount.ENV_ACCOUNT != null) {
+            //         ClientAccountManager.clientAccount = ClientAccount.ENV_ACCOUNT
+            //     }
+            //
+            //     if (ClientAccountManager.clientAccount != ClientAccount.EMPTY_ACCOUNT) {
+            //         runCatching {
+            //             ClientAccountManager.clientAccount.renew()
+            //         }.onFailure {
+            //             logger.error("Failed to renew client account token.", it)
+            //             if (it.httpException?.isInvalidGrant == true) {
+            //                 ClientAccountManager.clientAccount = ClientAccount.EMPTY_ACCOUNT
+            //                 ConfigSystem.store(ClientAccountManager)
+            //             }
+            //         }.onSuccess {
+            //             logger.info("Successfully renewed client account token.")
+            //         }
+            //     }
+            // }
+            // codex end
         }
+        // codex start
+        //
+        // logger.info("API initialization done.")
+        // codex end
     }
 
     /**
@@ -282,7 +372,35 @@ object LiquidBounce : EventListener {
     ) = withContext(dispatcher) {
         RenderSystem.assertOnRenderThread()
 
+        // codex start
+        // BrowserBackendManager.init()
+        // ClientInteropServer.start()
+        //
+        // // Preload marketplace items
+        // ConfigSystem.load(MarketplaceManager)
+        // MarketplaceManager.subscribedItems.forEach(SubscribedItem::restoreRetired)
+        // AddonInstaller.stageSubscribedAddons()
+        // MarketplaceManager.reloadHandlers()
+        //
+        // if (!ClientInteropServer.isSkipping) {
+        //     ThemeManager.init()
+        //     ConfigSystem.load(ThemeManager)
+        //     ThemeManager.load()
+        // }
+        //
+        // BlurEffectRenderer
+        // ScreenManager
+        //
+        // // Holds the chosen browser backend
+        // ConfigSystem.load(GlobalManager)
+        //
+        // codex end
         taskManager = TaskManager(ioScope).apply {
+            // codex start
+            // // Either immediately starts browser or spawns a task to request browser dependencies,
+            // // and then starts the browser through render thread.
+            // BrowserBackendManager.makeDependenciesAvailable(this)
+            // codex end
 
             // Initialize deep learning engine as task, because we cannot know if DJL will request
             // resources from the internet.
@@ -301,6 +419,17 @@ object LiquidBounce : EventListener {
                 }
             }
 
+            // codex start
+            // launch("Marketplace") { task ->
+            //     runCatching {
+            //         MarketplaceManager.updateAll(task)
+            //     }.onFailure { exception ->
+            //         logger.error("Failed to update marketplace items.", exception)
+            //     }
+            //
+            //     task.isCompleted = true
+            // }
+            // codex end
         }
 
         // Prepare glyph manager
@@ -326,10 +455,22 @@ object LiquidBounce : EventListener {
         FontManager.closeGlyphManager()
         EventManager.unregisterAll()
 
+        // codex start
+        // // Shutdown HTTP server
+        // ioScope.launch {
+        //     ClientInteropServer.stop()
+        // }
+        //
+        // AddonManager.notifyStopping()
+        //
+        // codex end
         // Save all configurations
         ConfigSystem.storeAll()
 
         // Shutdown browser
+        // codex start
+        // BrowserBackendManager.stop()
+        // codex end
     }
 
     /**
@@ -354,6 +495,9 @@ object LiquidBounce : EventListener {
             val resourceManager = mc.resourceManager
             if (resourceManager is ReloadableResourceManager) {
                 resourceManager.registerReloadListener(ClientResourceReloader)
+                // codex start
+                // resourceManager.registerReloadListener(ThemeManager.reloader)
+                // codex end
             } else {
                 logger.warn("Failed to register resource reloader!")
 
@@ -361,10 +505,36 @@ object LiquidBounce : EventListener {
                 initializeClient(
                     workerDispatcher = Dispatchers.Default,
                     renderThreadDispatcher = Dispatchers.Main,
+                // codex start
+                // ).thenCompose {
+                //     ThemeManager.reloader.reload()
+                // }
+                // codex end
                 )
             }
         }.onFailure {
             ErrorHandler.fatal(it, additionalMessage = "Client start")
+    // codex start
+    //     }
+    // }
+    //
+    // @Suppress("unused")
+    // private val screenHandler = handler<ScreenEvent>(priority = FIRST_PRIORITY) { event ->
+    //     val taskManager = taskManager ?: return@handler
+    //
+    //     val selection = BrowserBackendManager.pendingSelection
+    //     if (selection != null && !selection.isCompleted) {
+    //         if (event.screen !is BrowserSelectionScreen) {
+    //             event.cancelEvent()
+    //             mc.gui.setScreen(BrowserSelectionScreen(BrowserBackendManager.selectableBackends, selection))
+    //         }
+    //         return@handler
+    //     }
+    //
+    //     if (!taskManager.isCompleted && event.screen !is TaskProgressScreen) {
+    //         event.cancelEvent()
+    //         mc.gui.setScreen(TaskProgressScreen("Loading Required Libraries", taskManager))
+    // codex end
         }
     }
 

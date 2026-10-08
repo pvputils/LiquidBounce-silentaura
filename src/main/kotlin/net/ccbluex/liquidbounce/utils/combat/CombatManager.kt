@@ -90,6 +90,11 @@ object CombatManager : EventListener {
         if (entity is LivingEntity && entity.shouldBeAttacked()) {
             duringCombat = PAUSE_COMBAT
 
+            // codex start
+            // if (entity is Player) {
+            //     EventManager.callEvent(TargetChangeEvent(PlayerData.fromPlayer(entity)))
+            // }
+            // codex end
         }
     }
 

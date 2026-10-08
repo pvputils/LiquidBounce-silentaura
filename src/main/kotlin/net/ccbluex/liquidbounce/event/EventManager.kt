@@ -161,8 +161,16 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     ChunkUnloadEvent::class.java,
     DisconnectEvent::class.java,
     GameRenderEvent::class.java,
+    // codex start
+    // WorldFeatureSubmitEvent::class.java,
+    // codex end
     WorldRenderEvent::class.java,
     OverlayRenderEvent::class.java,
+    // codex start
+    // ScreenRenderEvent::class.java,
+    // WindowResizeEvent::class.java,
+    // FramebufferResizeEvent::class.java,
+    // codex end
     WindowTitleEvent::class.java,
     MouseButtonEvent::class.java,
     MouseScrollEvent::class.java,
@@ -179,8 +187,19 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     AttackEntityEvent::class.java,
     SessionEvent::class.java,
     ScreenEvent::class.java,
+    // codex start
+    // ChatSendEvent::class.java,
+    // ChatReceiveEvent::class.java,
+    // codex end
     UseCooldownEvent::class.java,
+    // codex start
+    // BlockShapeEvent::class.java,
+    // codex end
     BlockBreakingProgressEvent::class.java,
+    // codex start
+    // BlockVelocityMultiplierEvent::class.java,
+    // BlockSlipperinessMultiplierEvent::class.java,
+    // codex end
     EntityMarginEvent::class.java,
     EntityHealthUpdateEvent::class.java,
     HealthUpdateEvent::class.java,
@@ -189,17 +208,29 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     PlayerPostTickEvent::class.java,
     PlayerMovementTickEvent::class.java,
     PlayerNetworkMovementTickEvent::class.java,
+    // codex start
+    // PlayerPushOutEvent::class.java,
+    // codex end
     PlayerMoveEvent::class.java,
     PlayerJumpEvent::class.java,
     PlayerAfterJumpEvent::class.java,
     PlayerUseMultiplier::class.java,
     PlayerInteractItemEvent::class.java,
     PlayerInteractedItemEvent::class.java,
+    // codex start
+    // ClientPlayerInventoryEvent::class.java,
+    // codex end
     PlayerVelocityStrafe::class.java,
+    // codex start
+    // PlayerStrideEvent::class.java,
+    // codex end
     PlayerSafeWalkEvent::class.java,
     CancelBlockBreakingEvent::class.java,
     PlayerStepEvent::class.java,
     PlayerStepSuccessEvent::class.java,
+    // codex start
+    // FluidPushEvent::class.java,
+    // codex end
     PipelineEvent::class.java,
     PacketEvent::class.java,
     ClientStartEvent::class.java,
@@ -210,15 +241,57 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     ModuleToggleEvent::class.java,
     FriendChangeEvent::class.java,
     NotificationEvent::class.java,
+    // codex start
+    // ClientChatStateChange::class.java,
+    // ClientChatMessageEvent::class.java,
+    // ClientChatErrorEvent::class.java,
+    // ClientChatJwtTokenEvent::class.java,
+    // codex end
     WorldChangeEvent::class.java,
+    // codex start
+    // AccountManagerMessageEvent::class.java,
+    // AccountManagerAdditionResultEvent::class.java,
+    // AccountManagerRemovalResultEvent::class.java,
+    // AccountManagerLoginResultEvent::class.java,
+    // VirtualScreenEvent::class.java,
+    // codex end
     FpsChangeEvent::class.java,
+    // codex start
+    // FpsLimitEvent::class.java,
+    // ClientPlayerDataEvent::class.java,
+    // ClientPlayerEffectEvent::class.java,
+    // codex end
     RotationUpdateEvent::class.java,
     RefreshArrayListEvent::class.java,
+    // codex start
+    // BrowserReadyEvent::class.java,
+    // ServerConnectEvent::class.java,
+    // ServerPingedEvent::class.java,
+    // TargetChangeEvent::class.java,
+    // BlockCountChangeEvent::class.java,
+    // BedStateChangeEvent::class.java,
+    // codex end
     GameModeChangeEvent::class.java,
+    // codex start
+    // ComponentsUpdateEvent::class.java,
+    // codex end
     ResourceReloadEvent::class.java,
+    // codex start
+    // ProxyCheckResultEvent::class.java,
+    // ScaleFactorChangeEvent::class.java,
+    // codex end
     DrawOutlinesEvent::class.java,
+    // codex start
+    // OverlayMessageEvent::class.java,
+    // codex end
     ScheduleInventoryActionEvent::class.java,
     SelectHotbarSlotSilentlyEvent::class.java,
+    // codex start
+    // SpaceSeperatedNamesChangeEvent::class.java,
+    // ClickGuiScaleChangeEvent::class.java,
+    // ThemeColorChangeEvent::class.java,
+    // BrowserUrlChangeEvent::class.java,
+    // codex end
     TagEntityEvent::class.java,
     MouseScrollInHotbarEvent::class.java,
     PlayerFluidCollisionCheckEvent::class.java,
@@ -227,6 +300,9 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     PerspectiveEvent::class.java,
     ItemLoreQueryEvent::class.java,
     EntityEquipmentChangeEvent::class.java,
+    // codex start
+    // ClickGuiValueChangeEvent::class.java,
+    // codex end
     BlockAttackEvent::class.java,
     BlinkPacketEvent::class.java,
     AllowAutoJumpEvent::class.java,
@@ -235,6 +311,11 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     TitleEvent.Subtitle::class.java,
     TitleEvent.Fade::class.java,
     TitleEvent.Clear::class.java,
+    // codex start
+    // ClosedCaptionsEvent::class.java,
+    // UserLoggedInEvent::class.java,
+    // UserLoggedOutEvent::class.java,
+    // codex end
 )
 
 inline fun <reified E : Event> eventFlow(): SharedFlow<E> =

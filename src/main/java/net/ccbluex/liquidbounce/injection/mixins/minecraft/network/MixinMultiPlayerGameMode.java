@@ -92,6 +92,13 @@ public abstract class MixinMultiPlayerGameMode {
         if (event.isCancelled()) cir.setReturnValue(InteractionResult.PASS);
     }
 
+    // codex start
+    // @Inject(method = "releaseUsingItem", at = @At("HEAD"))
+    // private void stopUsingItem(Player player, CallbackInfo callbackInfo) {
+    //     ModuleAutoBow.onStopUsingItem();
+    // }
+    //
+    // codex end
     @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
     private void setGameMode(GameType mode, CallbackInfo callbackInfo) {
         EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
@@ -102,6 +109,13 @@ public abstract class MixinMultiPlayerGameMode {
         EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
     }
 
+    // codex start
+    // @Inject(method = "destroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;destroy(Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", shift = At.Shift.AFTER))
+    // private void hookBreakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    //     ClientBlockBreakTrigger.INSTANCE.clientBreakHandler();
+    // }
+    //
+    // codex end
     @Inject(method = "handleContainerInput", at = @At("HEAD"), cancellable = true)
     private void hookContainerInput(int containerId, int slotNum, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
         final var event = EventManager.INSTANCE.callEvent(new PlayerContainerInputEvent(containerId, slotNum, buttonNum, containerInput));

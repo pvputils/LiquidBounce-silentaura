@@ -42,8 +42,28 @@ import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Block
 
+// codex start
+// @Tag("themeColorChange")
+// class ThemeColorChangeEvent(val themeId: String, val name: String, val value: Color4b) : Event(), WebSocketEvent
+//
+// @Deprecated(
+//     "The `clickGuiScaleChange` event has been deprecated.",
+//     ReplaceWith("ClickGuiScaleChangeEvent"),
+//     DeprecationLevel.WARNING
+// )
+// codex end
 @Tag("clickGuiScaleChange")
 class ClickGuiScaleChangeEvent(val value: Float) : Event(), WebSocketEvent
+// codex start
+//
+// @Tag("clickGuiValueChange")
+// class ClickGuiValueChangeEvent(val configurable: ValueGroup) : Event(), WebSocketEvent {
+//     override val serializeAsync get() = false
+// }
+//
+// @Tag("spaceSeperatedNamesChange")
+// class SpaceSeperatedNamesChangeEvent(val value: Boolean) : Event(), WebSocketEvent
+// codex end
 
 @Tag("clientStart")
 object ClientStartEvent : Event()
@@ -158,8 +178,48 @@ class ProxyCheckResultEvent(val proxy: Proxy? = null, val error: String? = null)
 @Tag("browserReady")
 object BrowserReadyEvent : Event()
 
+// codex start
+// @Tag("virtualScreen")
+// class VirtualScreenEvent(
+//     val type: CustomScreenType,
+//     @Deprecated("Use `type` instead") val screenName: String = type.routeName,
+//     val action: Action
+// ) : Event(), WebSocketEvent {
+//
+//     enum class Action {
+//         @SerializedName("open")
+//         OPEN,
+//
+//         @SerializedName("close")
+//         CLOSE
+//     }
+//
+// }
+//
+// codex end
 @Tag("serverPinged")
 class ServerPingedEvent(val server: ServerData) : Event(), WebSocketEvent
+// codex start
+//
+// @Tag("componentsUpdate")
+// class ComponentsUpdateEvent(
+//     val source: Source,
+//     val components: List<HudComponent>,
+//     val themeId: String? = null,
+// ) : Event(), WebSocketEvent {
+//     enum class Source {
+//         @SerializedName("native")
+//         NATIVE,
+//
+//         @SerializedName("theme")
+//         THEME,
+//     }
+//
+//     override val serializer get() = accessibleInteropGson
+//
+//     override val serializeAsync get() = false
+// }
+// codex end
 
 @Tag("rotationUpdate")
 object RotationUpdateEvent : Event()

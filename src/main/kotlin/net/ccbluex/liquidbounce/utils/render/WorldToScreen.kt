@@ -108,6 +108,12 @@ object WorldToScreen {
         val relativePos = cacheVec3f.set(transformedPos)
             .mulProject(this.projModelViewMatrix.invert(cacheMat4f))
 
+        // codex start
+        // ModuleProjectileAimbot.debugParameter("s2w") {
+        //     relativePos.toString(NumberFormat.getInstance())
+        // }
+        //
+        // codex end
         return Line(cameraPos, relativePos.toVec3d())
     }
 

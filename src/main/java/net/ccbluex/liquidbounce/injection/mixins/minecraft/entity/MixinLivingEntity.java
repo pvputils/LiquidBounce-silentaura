@@ -106,6 +106,57 @@ public abstract class MixinLivingEntity extends MixinEntity {
         return original;
     }
 
+    // codex start
+    // /**
+    //  * Disable [StatusEffects.LEVITATION] effect when [ModuleAntiLevitation] is enabled
+    //  */
+    // @ModifyExpressionValue(
+    //         method = "travelInAir",
+    //         at = @At(
+    //                 value = "INVOKE",
+    //                 target = "Lnet/minecraft/world/entity/LivingEntity;getEffect(Lnet/minecraft/core/Holder;)Lnet/minecraft/world/effect/MobEffectInstance;",
+    //                 ordinal = 0
+    //         ),
+    //         require = 1,
+    //         allow = 1
+    // )
+    // public @Nullable MobEffectInstance hookTravelStatusEffect(@Nullable MobEffectInstance original) {
+    //     if (original == null) {
+    //         return null;
+    //     }
+    //
+    //     // If we get anything other than levitation, the injection went wrong
+    //     assert original.getEffect() == MobEffects.LEVITATION;
+    //
+    //     if (ModuleAntiLevitation.INSTANCE.getRunning()) {
+    //         return null;
+    //     }
+    //
+    //     return original;
+    // }
+    //
+    // /**
+    //  * Disable [StatusEffects.SLOW_FALLING] effect when [ModuleAntiLevitation] is enabled
+    //  */
+    // @ModifyExpressionValue(
+    //         method = "getEffectiveGravity",
+    //         at = @At(
+    //                 value = "INVOKE",
+    //                 target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z",
+    //                 ordinal = 0
+    //         ),
+    //         require = 1,
+    //         allow = 1
+    // )
+    // public boolean hookTravelStatusEffect(boolean original) {
+    //     if (ModuleAntiLevitation.INSTANCE.getRunning()) {
+    //         return false;
+    //     }
+    //
+    //     return original;
+    // }
+    //
+    // codex end
     @Unique
     private PlayerJumpEvent jumpEvent;
 
@@ -175,8 +226,52 @@ public abstract class MixinLivingEntity extends MixinEntity {
         return new Vec3(-Mth.sin(yaw) * 0.2F, 0.0, Mth.cos(yaw) * 0.2F);
     }
 
+    // codex start
+    // @Inject(method = "aiStep", at = @At("HEAD"))
+    // private void hookTickMovement(CallbackInfo callbackInfo) {
+    //     // We don't want NoJumpDelay to interfere with AirJump which would lead to a Jetpack-like behavior
+    //     var noJumpDelay = ModuleNoJumpDelay.INSTANCE.getRunning() && !ModuleAirJump.INSTANCE.getAllowJump();
+    //
+    //     // The jumping cooldown would lead to very slow tower building
+    //     var towerActive = ModuleScaffold.INSTANCE.getRunning() &&
+    //             ModuleScaffold.INSTANCE.getTowerMode().getActiveMode() != ScaffoldTowerNone.INSTANCE &&
+    //             ModuleScaffold.INSTANCE.getTowerMode().getActiveMode().getRunning();
+    //
+    //     if (noJumpDelay || towerActive) {
+    //         this.noJumpDelay = 0;
+    //     }
+    // }
+    //
+    // @Inject(method = "aiStep", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;jumping:Z", opcode = Opcodes.GETFIELD))
+    // private void hookAirJump(CallbackInfo callbackInfo) {
+    //     if (ModuleAirJump.INSTANCE.getAllowJump() && jumping && noJumpDelay == 0) {
+    //         this.jumpFromGround();
+    //         noJumpDelay = 10;
+    //     }
+    // }
+    //
+    // codex end
     @Unique
     private boolean previousElytra = false;
+    // codex start
+    //
+    // @Inject(method = "aiStep", at = @At("TAIL"))
+    // public void recastIfLanded(CallbackInfo callbackInfo) {
+    //     if (!liquid_bounce$isClientPlayer()) {
+    //         return;
+    //     }
+    //
+    //     var elytra = isFallFlying();
+    //     if (ModuleElytraRecast.INSTANCE.getRunning() && previousElytra && !elytra) {
+    //         Minecraft.getInstance().getSoundManager().stop(SoundEvents.ELYTRA_FLYING.location(),
+    //                 SoundSource.PLAYERS);
+    //         ModuleElytraRecast.INSTANCE.recastElytra();
+    //         noJumpDelay = 0;
+    //     }
+    //
+    //     previousElytra = elytra;
+    // }
+    // codex end
 
     /**
      * Gliding using modified-rotation
@@ -195,6 +290,15 @@ public abstract class MixinLivingEntity extends MixinEntity {
         }
 
         return rotation.pitch();
+    // codex start
+    // }
+    //
+    // @Inject(method = "spawnItemParticles", at = @At("HEAD"), cancellable = true)
+    // private void hookEatParticles(ItemStack itemStack, int count, CallbackInfo ci) {
+    //     if (itemStack.getComponents().has(DataComponents.FOOD) && !ModuleAntiBlind.canRender(DoRender.EAT_PARTICLES)) {
+    //         ci.cancel();
+    //     }
+    // codex end
     }
 
     /**
@@ -257,4 +361,31 @@ public abstract class MixinLivingEntity extends MixinEntity {
         EventManager.INSTANCE.callEvent(new EntityEquipmentChangeEvent((LivingEntity) (Object) this, slot, itemStack));
     }
 
+    // codex start
+    // @ModifyExpressionValue(method = "getModifiedSwingDuration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/SwingAnimation;duration()I"), require = 0)
+    // private int hookSwingSpeed(int duration) {
+    //     var animations = ModuleAnimations.INSTANCE;
+    //     return animations.getRunning() && liquid_bounce$isClientPlayer() ? animations.getSwingDuration() : duration;
+    // }
+    //
+    // @Inject(method = "swing", at = @At(value = "HEAD"), cancellable = true)
+    // private void noSwing(InteractionHand hand, SwingAnimation animation, boolean sendToSwingingEntity, CallbackInfoReturnable<Boolean> cir) {
+    //     if (ModuleNoSwing.INSTANCE.shouldHideForClient() && liquid_bounce$isClientPlayer()) {
+    //         cir.cancel();
+    //     }
+    // }
+    //
+    // @ModifyExpressionValue(method = "handleDamageEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
+    // private SoundEvent hookHitFxSound(SoundEvent original) {
+    //     if (liquid_bounce$isClientPlayer() && ModuleHitFX.INSTANCE.getRunning()) {
+    //         var hitFxSound = ModuleHitFX.INSTANCE.getSelfSound();
+    //         if (hitFxSound != null) {
+    //             return hitFxSound;
+    //         }
+    //     }
+    //
+    //     return original;
+    // }
+    //
+    // codex end
 }

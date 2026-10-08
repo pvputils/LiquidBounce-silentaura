@@ -41,6 +41,18 @@ public abstract class MixinClientInput implements ClientInputAddition {
     @Unique
     protected Input untransformed = Input.EMPTY;
 
+    // codex start
+    // @ModifyReturnValue(method = "hasForwardImpulse", at = @At("RETURN"))
+    // private boolean hookOmnidirectionalSprint(boolean original) {
+    //     // Allow omnidirectional sprinting
+    //     if (ModuleSprint.INSTANCE.getShouldSprintOmnidirectional()) {
+    //         return Math.abs(moveVector.x) > 1.0E-5F || Math.abs(moveVector.y) > 1.0E-5F;
+    //     }
+    //
+    //     return original;
+    // }
+    //
+    // codex end
     @Override
     public void liquid_bounce$setMovementInput(Vec2 movementVector) {
         this.moveVector = movementVector;

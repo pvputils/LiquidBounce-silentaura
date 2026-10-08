@@ -50,6 +50,14 @@ class ValueFlagsSerializationTest {
         assertEquals(listOf("Stored", "Conditional"), publicGson.names(root))
     }
 
+    // codex start
+    // @Test
+    // fun `the gui gets transient values but not hidden ones`() {
+    //     assertEquals(listOf("Stored", "Transient", "Conditional"), interopGson.names(root))
+    //     shown = false
+    //     assertEquals(listOf("Stored", "Transient"), interopGson.names(root))
+    // }
+    // codex end
 
 
 }

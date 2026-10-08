@@ -253,53 +253,330 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
     fun registerInbuilt() {
         val builtin = arrayOf(
             // Combat
+            // codex start
+            // ModuleAimbot,
+            // ModuleAutoArmor,
+            // codex end
             ModuleAutoBow,
             ModuleAutoClicker,
+            // codex start
+            // ModuleAutoLeave,
+            // codex end
             ModuleAutoBuff,
+            // codex start
+            // ModuleAutoRod,
+            // codex end
             ModuleAutoWeapon,
+            // codex start
+            // ModuleFakeLag,
+            // codex end
             ModuleCriticals,
+            // codex start
+            // ModuleHitbox,
+            // codex end
             ModuleKillAura,
+            // codex start
+            // ModuleTpAura,
+            // ModuleSuperKnockback,
+            // ModuleTimerRange,
+            // ModuleTickBase,
+            // codex end
             ModuleVelocity,
+            // codex start
+            // ModuleBacktrack,
+            // codex end
             ModuleSwordBlock,
+            // codex start
+            // ModuleAutoShoot,
+            // ModuleKeepSprint,
+            // codex end
             ModuleMaceKill,
+            // codex start
+            // ModuleSpearKill,
+            // ModuleNoMissCooldown,
+            // codex end
 
             // Exploit
+            // codex start
+            // ModuleAbortBreaking,
+            // ModuleAntiReducedDebugInfo,
+            // ModuleAntiHunger,
+            // ModuleClip,
+            // ModuleExtendedFirework,
+            // ModuleResetVL,
+            // ModuleDamage,
+            // ModuleDisabler,
+            // ModuleGhostHand,
+            // ModuleKick,
+            // ModuleMoreCarry,
+            // codex end
             ModuleMultiActions,
+            // codex start
+            // ModuleNewChunks,
+            // ModuleNameCollector,
+            // ModuleNoPitchLimit,
+            // codex end
             ModulePingSpoof,
+            // codex start
+            // ModulePlugins,
+            // ModulePortalMenu,
+            // ModuleSleepWalker,
+            // ModuleVehicleOneHit,
+            // ModuleServerCrasher,
+            // ModuleDupe,
+            // ModuleClickTp,
+            // ModuleTimeShift,
+            // ModuleTeleport,
+            // ModulePhase,
+            // ModuleYggdrasilSignatureFix,
+            // codex end
 
             // Fun
+            // codex start
+            // ModuleDankBobbing,
+            // ModuleDerp,
+            // ModuleNotebot,
+            // ModuleSkinDerp,
+            // ModuleHandDerp,
+            // ModuleTwerk,
+            // ModuleVomit,
+            // codex end
 
             // Misc
+            // codex start
+            // ModuleAutoConfig,
+            // ModuleGUICloser,
+            // ModuleBookBot,
+            // codex end
             ModuleAntiBot,
+            // codex start
+            // ModuleBetterTab,
+            // ModuleItemScroller,
+            // ModuleBetterChat,
+            // codex end
             ModuleElytraTarget,
+            // codex start
+            // ModuleMacros,
+            // ModuleMiddleClickAction,
+            // ModuleInventoryTracker,
+            // codex end
             ModuleNameProtect,
+            // codex start
+            // ModuleTextFieldProtect,
+            // ModuleNotifier,
+            // ModuleSpammer,
+            // ModuleAutoAccount,
+            // codex end
             ModuleTeams,
+            // codex start
+            // ModuleElytraSwap,
+            // ModuleAutoChatGame,
+            // ModuleReportHelper,
+            // codex end
             ModuleTargetLock,
+            // codex start
+            // ModuleAutoPearl,
+            // ModuleAntiStaff,
+            // ModuleFlagCheck,
+            // codex end
             ModulePacketLogger,
             ModuleDebugRecorder,
+            // codex start
+            // ModuleAntiCheatDetect,
+            // codex end
             ModuleEasyPearl,
 
             // Movement
+            // codex start
+            // ModuleAirJump,
+            // ModuleAntiBounce,
+            // ModuleAntiLevitation,
+            // ModuleAutoDodge,
+            // ModuleAvoidHazards,
+            // ModuleBlockBounce,
+            // ModuleBlockWalk,
+            // ModuleElytraRecast,
+            // ModuleElytraFly,
+            // codex end
             ModuleFly,
             ModuleFreeze,
+            // codex start
+            // ModuleHighJump,
+            // ModuleInventoryMove,
+            // codex end
             ModuleLiquidWalk,
+            // codex start
+            // ModuleLongJump,
+            // ModuleNoClip,
+            // ModuleNoJumpDelay,
+            // ModuleNoPose,
+            // ModuleNoPush,
+            // ModuleNoSlow,
+            // ModuleNoWeb,
+            // ModuleParkour,
+            // ModuleEntityControl,
+            // codex end
             ModuleSafeWalk,
+            // codex start
+            // ModuleSneak,
+            // codex end
             ModuleSpeed,
+            // codex start
+            // ModuleSprint,
+            // ModuleStep,
+            // ModuleReverseStep,
+            // ModuleStrafe,
+            // ModuleTerrainSpeed,
+            // ModuleTridentBoost,
+            // ModuleVehicleBoost,
+            // ModuleVehicleControl,
+            // ModuleSpider,
+            // ModuleTargetStrafe,
+            // ModuleAnchor,
+            // ModuleSnapTap,
+            // codex end
 
             // Player
+            // codex start
+            // ModuleAntiVoid,
+            // ModuleAntiAFK,
+            // ModuleAntiExploit,
+            // ModuleAutoBreak,
+            // ModuleAutoCrafter,
+            // ModuleAutoFish,
+            // ModuleAutoRespawn,
+            // ModuleAutoWindCharge,
+            // codex end
             ModuleOffhand,
+            // codex start
+            // ModuleAutoShop,
+            // ModuleAutoWalk,
+            // ModuleBlink,
+            // ModuleChestCleaner,
+            // ModuleChestStealer,
+            // ModuleAutoDeposit,
+            // codex end
             ModuleEagle,
+            // codex start
+            // ModuleFastExp,
+            // codex end
             ModuleFastUse,
             ModuleInventoryCleaner,
+            // codex start
+            // ModuleNoBlockInteract,
+            // ModuleNoEntityInteract,
+            // codex end
             ModuleNoFall,
+            // codex start
+            // ModuleNoRotateSet,
+            // ModuleNoSlotSet,
+            // ModuleReach,
+            // ModuleAutoQueue,
+            // ModuleSmartEat,
+            // ModuleReplenish,
+            // ModulePotionSpoof,
+            // codex end
 
             // Render
+            // codex start
+            // ModuleAnimations,
+            // ModuleAntiBlind,
+            // ModuleBetterInventory,
+            // ModuleBlockESP,
+            // ModuleBlockOutline,
+            // ModuleBreadcrumbs,
+            // ModuleCameraClip,
+            // ModuleClickGui,
+            // ModuleDamageParticles,
+            // ModuleParticles,
+            // ModuleESP,
+            // ModuleLogoffSpot,
+            // ModuleFreeCam,
+            // ModuleSmoothCamera,
+            // ModuleFreeLook,
+            // ModuleFullBright,
+            // ModuleHoleESP,
+            // ModuleHud,
+            // ModuleHats,
+            // ModuleItemESP,
+            // ModuleItemTags,
+            // ModuleJumpEffect,
+            // ModuleMobOwners,
+            // ModuleMurderMystery,
+            // ModuleHitFX,
+            // ModuleNametags,
+            // codex end
             ModuleCombineMobs,
+            // codex start
+            // ModuleAspect,
+            // ModuleAutoF5,
+            // ModuleChams,
+            // ModuleBedPlates,
+            // ModuleNoBob,
+            // ModuleNoFov,
+            // ModuleNoHurtCam,
+            // ModuleNoSwing,
+            // ModuleCustomAmbience,
+            // ModuleProphuntESP,
+            // ModuleQuickPerspectiveSwap,
+            // ModuleRadar,
+            // ModuleRotations,
+            // ModuleSilentHotbar,
+            // ModuleStorageESP,
+            // ModuleTNTTimer,
+            // ModuleTracers,
+            // ModuleTrajectories,
+            // ModuleTrueSight,
+            // ModuleVoidESP,
+            // ModuleXRay,
+            // codex end
             ModuleDebug,
+            // codex start
+            // ModuleZoom,
+            // ModuleItemChams,
+            // ModuleCrystalView,
+            // ModuleSkinChanger,
+            // ModuleProtectionZones,
+            // ModuleCrosshair,
+            // ModuleWings,
+            // ModulePotionFX,
+            // ModuleTotemEffect,
+            // codex end
 
             // World
+            // codex start
+            // AutoMobHeal,
+            // ModuleAirPlace,
+            // ModuleAutoBuild,
+            // ModuleAutoDisable,
+            // ModuleAutoFarm,
+            // ModuleAutoTool,
+            // codex end
             ModuleCrystalAura,
+            // codex start
+            // ModuleFastBreak,
+            // ModuleFastPlace,
+            // ModuleFucker,
+            // ModuleAutoTrap,
+            // ModuleBlockTrap,
+            // ModuleNoSlowBreak,
+            // ModuleLiquidFiller,
+            // ModuleLiquidPlace,
+            // ModuleProjectilePuncher,
+            // codex end
             ModuleScaffold,
+            // codex start
+            // ModuleTimer,
+            // ModuleNuker,
+            // ModuleExtinguish,
+            // ModuleBedDefender,
+            // ModuleBlockIn,
+            // ModuleSurround,
+            // ModulePacketMine,
+            // ModuleHoleFiller,
+            // ModuleStrongholdFinder,
+            // ModuleNoInterpolation,
+            // codex end
         )
 
         builtin.forEach { module ->

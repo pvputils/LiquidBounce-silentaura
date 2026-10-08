@@ -127,6 +127,101 @@ public abstract class MixinGameRenderer {
         }
     }
 
+    // codex start
+    // @ModifyArg(
+    //     method = "renderLevel",
+    //     at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/fog/FogRenderer;getBuffer(Lnet/minecraft/client/renderer/fog/FogRenderer$FogMode;)Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;")
+    // )
+    // private FogRenderer.FogMode disableFog(FogRenderer.FogMode fogMode) {
+    //     var fogValueGroup = ModuleCustomAmbience.FogValueGroup.INSTANCE;
+    //     if (fogValueGroup.getRunning() && ModuleCustomAmbience.FogValueGroup.INSTANCE.getDisableWorldFog()) {
+    //         return FogRenderer.FogMode.NONE;
+    //     }
+    //     return fogMode;
+    // }
+    //
+    // @WrapOperation(
+    //     method = "renderItemInHand",
+    //     at = @At(
+    //         value = "INVOKE",
+    //         target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;prepareFrame(Lnet/minecraft/client/renderer/SubmitNodeStorage;)Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;"
+    //     )
+    // )
+    // private FeatureRenderDispatcher.PreparedFrame drawItemCharmsOnHandPrepareFrame(
+    //     FeatureRenderDispatcher instance, SubmitNodeStorage submitNodeStorage,
+    //     Operation<FeatureRenderDispatcher.PreparedFrame> original
+    // ) {
+    //     return ModuleItemChams.Lightmap.doOverride(() -> original.call(instance, submitNodeStorage));
+    // }
+    //
+    // @Inject(
+    //     method = "render",
+    //     at = @At(
+    //         value = "INVOKE",
+    //         target = "Lnet/minecraft/client/renderer/Lightmap;render(Lnet/minecraft/client/renderer/state/LightmapRenderState;)V",
+    //         shift = At.Shift.AFTER
+    //     )
+    // )
+    // private void hookItemChamsLightmapRefresh(CallbackInfo ci) {
+    //     ModuleItemChams.Lightmap.refresh(this.lightmap.getTextureView());
+    // }
+    //
+    // @Inject(method = "bobHurt", at = @At("HEAD"), cancellable = true)
+    // private void injectHurtCam(CameraRenderState cameraState, PoseStack poseStack, CallbackInfo ci) {
+    //     if (ModuleNoHurtCam.INSTANCE.getRunning()) {
+    //         ci.cancel();
+    //     }
+    // }
+    //
+    // /**
+    //  * Keeps the vanilla 26.1 walk interpolation inputs while applying the custom bobbing strength.
+    //  *
+    //  * {@code GameRenderer#bobView(CameraRenderState, PoseStack)} is private, so it cannot be referenced via {@code @see}.
+    //  *
+    //  * @see net.minecraft.client.Camera#extractRenderState(net.minecraft.client.renderer.state.level.CameraRenderState, net.minecraft.client.DeltaTracker)
+    //  * @see net.minecraft.client.renderer.state.level.CameraEntityRenderState#backwardsInterpolatedWalkDistance
+    //  * @see net.minecraft.client.renderer.state.level.CameraEntityRenderState#bob
+    //  */
+    // @Inject(method = "bobView", at = @At("HEAD"), cancellable = true)
+    // private void injectBobView(CameraRenderState cameraState, PoseStack poseStack, CallbackInfo ci) {
+    //     if (ModuleNoBob.INSTANCE.getRunning() ||
+    //         ModuleTracers.INSTANCE.getRunning() ||
+    //         (ModuleItemESP.INSTANCE.getRunning() && ModuleItemESP.INSTANCE.getShowTracers()) ||
+    //         ModuleStorageESP.INSTANCE.showTracers()) {
+    //
+    //         ci.cancel();
+    //         return;
+    //     }
+    //
+    //     if (!ModuleDankBobbing.INSTANCE.getRunning()) {
+    //         return;
+    //     }
+    //
+    //     final var entityRenderState = cameraState.entityRenderState;
+    //     if (!entityRenderState.isPlayer) {
+    //         return;
+    //     }
+    //
+    //     float additionalBobbing = ModuleDankBobbing.INSTANCE.getMotion();
+    //     float g = entityRenderState.backwardsInterpolatedWalkDistance;
+    //     float h = entityRenderState.bob;
+    //     poseStack.translate(Mth.sin(g * Mth.PI) * h * 0.5f, -Math.abs(Mth.cos(g * Mth.PI) * h), 0.0f);
+    //     poseStack.rotate(Axis.ZP.rotationDegrees(Mth.sin(h * Mth.PI) * h * (3.0F + additionalBobbing)));
+    //     poseStack.rotate(Axis.XP.rotationDegrees(Math.abs(Mth.cos(h * Mth.PI - (0.2F + additionalBobbing)) * h) * 5.0F));
+    //
+    //     ci.cancel();
+    // }
+    //
+    // @ModifyExpressionValue(method = "renderLevel", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F", ordinal = 0, remap = false))
+    // private float hookAntiNausea(float original) {
+    //     if (!ModuleAntiBlind.canRender(DoRender.NAUSEA)) {
+    //         return 0f;
+    //     }
+    //
+    //     return original;
+    // }
+    //
+    // codex end
     @ModifyExpressionValue(method = "extractOptions",
             at = @At(
                     value = "INVOKE",

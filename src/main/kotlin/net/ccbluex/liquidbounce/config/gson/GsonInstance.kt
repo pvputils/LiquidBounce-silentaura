@@ -119,6 +119,11 @@ internal val accessibleInteropGson: Gson = GsonBuilder()
     .registerCommonTypeAdapters()
     .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
     .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
+    // codex start
+    // .registerTypeHierarchyAdapter(Theme::class.javaObjectType, ReadOnlyThemeSerializer)
+    // .registerTypeHierarchyAdapter(HudComponent::class.javaObjectType, ReadOnlyComponentSerializer)
+    // .registerTypeHierarchyAdapter(Alignment::class.javaObjectType, AlignmentAdapter)
+    // codex end
     .create()
 
 /**
@@ -154,7 +159,15 @@ private fun GsonBuilder.registerCommonTypeAdapters() =
         .registerTypeHierarchyAdapter(InputConstants.Key::class.javaObjectType, SimpleStringTypeAdapter.INPUT_KEY)
         .registerTypeHierarchyAdapter(InputBind::class.javaObjectType, InputBindAdapter)
         .registerTypeHierarchyAdapter(Tagged::class.javaObjectType, TaggedSerializer)
+        // codex start
+        // .registerTypeHierarchyAdapter(MinecraftAccount::class.javaObjectType, MinecraftAccountAdapter)
+        // codex end
         .registerTypeHierarchyAdapter(Component::class.javaObjectType, CodecBasedAdapter.SANITIZED_COMPONENT)
+        // codex start
+        // .registerTypeHierarchyAdapter(Screen::class.javaObjectType, ScreenSerializer)
+        // .registerTypeHierarchyAdapter(User::class.javaObjectType, SessionSerializer)
+        // .registerTypeAdapter(ServerData::class.javaObjectType, ServerInfoSerializer)
+        // codex end
         .registerTypeHierarchyAdapter(StringRepresentable::class.java, StringRepresentableSerializer)
         .registerTypeAdapter(ItemStack::class.javaObjectType, ItemStackSerializer)
         .registerTypeAdapter(Identifier::class.javaObjectType, SimpleStringTypeAdapter.IDENTIFIER)

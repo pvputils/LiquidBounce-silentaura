@@ -50,6 +50,30 @@ public abstract class MixinConnection {
 
     @Shadow
     private static <T extends PacketListener> void genericsFtw(Packet<T> packet, PacketListener listener) {
+    // codex start
+    // }
+    //
+    // /**
+    //  * Handle sending packets
+    //  *
+    //  * @param packet       packet to send
+    //  * @param callbackInfo callback
+    //  */
+    // @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;)V", at = @At("HEAD"), cancellable = true)
+    // private void hookSendingPacket(Packet<?> packet, final CallbackInfo callbackInfo) {
+    //     if (packet instanceof ServerboundPunchPacket && ModuleNoSwing.INSTANCE.shouldHideForServer()) {
+    //         callbackInfo.cancel();
+    //         return;
+    //     }
+    //
+    //     final PacketEvent event = new PacketEvent(TransferOrigin.OUTGOING, packet, true);
+    //
+    //     EventManager.INSTANCE.callEvent(event);
+    //
+    //     if (event.isCancelled()) {
+    //         callbackInfo.cancel();
+    //     }
+    // codex end
     }
 
     /**

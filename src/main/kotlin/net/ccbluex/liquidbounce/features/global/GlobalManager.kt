@@ -30,7 +30,17 @@ object GlobalManager : Config("Settings") {
 
     init {
         tree(LanguageManager)
+        // codex start
+        // tree(CommandManager.GlobalSettings)
+        // codex end
         tree(GlobalSettingsTarget)
+        // codex start
+        // tree(BlinkManager)
+        // tree(GlobalSettingsAutoTranslate)
+        // tree(GlobalBrowserSettings)
+        // tree(GlobalSettingsClientChat)
+        // tree(GlobalSettingsRichPresence)
+        // codex end
     }
 
 }

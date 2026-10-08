@@ -70,12 +70,182 @@ public abstract class MixinCamera {
     @Final
     private Minecraft minecraft;
 
+    // codex start
+    // @Inject(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V", shift = At.Shift.AFTER))
+    // private void hookFreeCamModifiedPosition(float partialTicks, CallbackInfo ci) {
+    //     ModuleFreeCam.INSTANCE.applyCameraPosition(this.entity, partialTicks);
+    // }
+    //
+    // @ModifyArgs(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V"))
+    // private void hookFreeCamModifiedRotation(Args args, @Local(argsOnly = true, name = "partialTicks") float partialTicks) {
+    //     if (this.entity == this.minecraft.player && ModuleFreeCam.PositionState.INSTANCE.getAvailable()) {
+    //         final Rotation rot = ModuleFreeCam.PositionState.INSTANCE.interpolateRot(partialTicks);
+    //         args.set(0, rot.yaw());
+    //         args.set(1, rot.pitch());
+    //     }
+    // }
+    //
+    // @Inject(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V", shift = At.Shift.AFTER), cancellable = true)
+    // private void modifyCameraOrientation(float partialTicks, CallbackInfo ci) {
+    //     var freeLook = ModuleFreeLook.INSTANCE.getRunning();
+    //     var freeLockInvertedView = ModuleFreeLook.INSTANCE.isInvertedView();
+    //     var qps = ModuleQuickPerspectiveSwap.INSTANCE.getRunning();
+    //     var rearView = qps && ModuleQuickPerspectiveSwap.INSTANCE.getRearView() && !freeLook
+    //         && this.minecraft.options.getCameraType().isFirstPerson();
+    //
+    //     if (freeLook || qps) {
+    //         this.detached = true;
+    //
+    //         if (freeLook) {
+    //             var cameraYaw = ModuleFreeLook.INSTANCE.getCameraYaw();
+    //             var cameraPitch = ModuleFreeLook.INSTANCE.getCameraPitch();
+    //
+    //             if (freeLockInvertedView) {
+    //                 setRotation(cameraYaw + 180, -cameraPitch);
+    //             } else {
+    //                 setRotation(cameraYaw, cameraPitch);
+    //             }
+    //         }
+    //
+    //         if (qps && !rearView) {
+    //             setRotation(yRot + 180.0f, freeLook && !freeLockInvertedView ? xRot : -xRot);
+    //         }
+    //
+    //         float scale = this.entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1.0F;
+    //         float desiredCameraDistance = PerspectiveEvent.INSTANCE.getDistance();
+    //
+    //         move(-getMaxZoom(desiredCameraDistance * scale), 0.0f, 0.0f);
+    //
+    //         ci.cancel();
+    //         return;
+    //     }
+    //     var screen = ModuleDroneControl.INSTANCE.getScreen();
+    //
+    //     if (screen != null) {
+    //         this.setPosition(screen.getCameraPos());
+    //         this.setRotation(screen.getCameraRotation().yRot(), screen.getCameraRotation().xRot());
+    //     }
+    // }
+    //
+    // @Inject(method = "alignWithEntity", at = @At("TAIL"))
+    // private void applyFreeCamPlayerSelfRendering(float partialTicks, CallbackInfo ci) {
+    //     if (ModuleFreeCam.INSTANCE.getRunning()) {
+    //         this.detached = true;
+    //     }
+    // }
+    //
+    // @ModifyArg(
+    //     method = "alignWithEntity",
+    //     at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(Lnet/minecraft/world/phys/Vec3;)V")
+    // )
+    // private Vec3 modifyPositionVehicle(Vec3 original) {
+    //     if (ModuleFreeLook.INSTANCE.getRunning()) {
+    //         return original;
+    //     }
+    //
+    //     ModuleSmoothCamera.cameraUpdate(original);
+    //     return ModuleSmoothCamera.shouldApplyChanges() ? ModuleSmoothCamera.INSTANCE.getSmoothPos() : original;
+    // }
+    //
+    // @ModifyArgs(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V"))
+    // private void modifyPosition(Args args) {
+    //     if (ModuleFreeLook.INSTANCE.getRunning()) {
+    //         return;
+    //     }
+    //
+    //     Vec3 original = new Vec3(args.get(0), args.get(1), args.get(2));
+    //     ModuleSmoothCamera.cameraUpdate(original);
+    //     if (ModuleSmoothCamera.shouldApplyChanges()) {
+    //         Vec3 smoothPos = ModuleSmoothCamera.INSTANCE.getSmoothPos();
+    //         args.set(0, smoothPos.x);
+    //         args.set(1, smoothPos.y);
+    //         args.set(2, smoothPos.z);
+    //     }
+    // }
+    //
+    //
+    // /**
+    //  * <pre>
+    //  *     minecraft.options.fov.get().intValue();
+    //  * </pre>
+    //  */
+    // @ModifyExpressionValue(method = {
+    //     "createProjectionMatrixForCulling",
+    //     "getFluidInCamera",
+    //     "calculateFov",
+    // }, at = @At(value = "INVOKE", target = "Ljava/lang/Integer;intValue()I", remap = false))
+    // private int hookGetFov(int original) {
+    //     int result;
+    //
+    //     if (ModuleZoom.INSTANCE.getRunning()) {
+    //         return ModuleZoom.INSTANCE.getFov(true, 0);
+    //     } else {
+    //         result = ModuleZoom.INSTANCE.getFov(false, original);
+    //     }
+    //
+    //     if (ModuleNoFov.INSTANCE.getRunning() && result == original) {
+    //         return ModuleNoFov.INSTANCE.getFov(result);
+    //     }
+    //
+    //     return result;
+    // }
+    //
+    // /**
+    //  * <pre>
+    //  *     if (this.isPanoramicMode) {
+    //  *         return 90.0F;
+    //  *     }
+    //  *     ...
+    //  *     return this.modifyFovBasedOnDeathOrFluid(partialTicks, fov);
+    //  * </pre>
+    //  *
+    //  * The base fov above is an {@code int}, so the zoom would end in whole degrees. Re-add the fraction.
+    //  */
+    // @ModifyReturnValue(method = "calculateFov", at = @At("RETURN"))
+    // private float smoothZoomFov(float original) {
+    //     // The early return never reads the hooked fov, so its constant fov carries no fraction of ours.
+    //     if (this.isPanoramicMode()) {
+    //         return original;
+    //     }
+    //
+    //     return ModuleZoom.INSTANCE.applyFractionalFov(original);
+    // }
+    //
+    // @ModifyReturnValue(method = "getFov", at = @At("RETURN"))
+    // private float injectShit(float original) {
+    //     var screen = ModuleDroneControl.INSTANCE.getScreen();
+    //
+    //     if (screen != null) {
+    //         return Math.min(120f, original / screen.getZoomFactor());
+    //     }
+    //
+    //     return original;
+    // }
+    //
+    // @ModifyArgs(method = "createProjectionMatrixForCulling", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix4f;perspective(FFFFZ)Lorg/joml/Matrix4f;", remap = false))
+    // private void hookBasicProjectionMatrix(Args args) {
+    //     if (ModuleAspect.INSTANCE.getRunning()) {
+    //         args.set(1, (float) args.get(1) / ModuleAspect.getRatioMultiplier());
+    //     }
+    // }
+    //
+    // codex end
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         final PerspectiveEvent event = PerspectiveEvent.INSTANCE;
         event.update(minecraft, entity);
 
         EventManager.INSTANCE.callEvent(event);
+    // codex start
+    // }
+    //
+    // /**
+    //  * Set as spectator to disable smart culling
+    //  */
+    // @ModifyExpressionValue(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z"))
+    // private boolean hookFreeCamDisableSmartCullInBlocks(boolean original) {
+    //     return original || ModuleFreeCam.INSTANCE.getRunning();
+    // codex end
     }
 
     @ModifyExpressionValue(method = "alignWithEntity",

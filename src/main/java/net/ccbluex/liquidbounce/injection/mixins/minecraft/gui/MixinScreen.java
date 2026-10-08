@@ -57,6 +57,57 @@ public abstract class MixinScreen implements ScreenAddition {
     @Shadow
     private boolean initialized;
 
+    // codex start
+    // @Inject(method = "init(II)V", at = @At("TAIL"))
+    // private void objInit(CallbackInfo ci) {
+    //     if (!LiquidBounce.INSTANCE.isInitialized()) {
+    //         return;
+    //     }
+    //
+    //     ThemeManager.INSTANCE.loadBackgroundAsync();
+    // }
+    //
+    // @Inject(method = "init()V", at = @At("TAIL"))
+    // protected void init(CallbackInfo ci) {
+    //     if (!LiquidBounce.INSTANCE.isInitialized()) {
+    //         return;
+    //     }
+    //
+    //     ThemeManager.INSTANCE.loadBackgroundAsync();
+    // }
+    //
+    // @Inject(method = "extractTransparentBackground", at = @At("HEAD"), cancellable = true)
+    // private void hookRenderInGameBackground(GuiGraphicsExtractor context, CallbackInfo ci) {
+    //     if (!ModuleAntiBlind.canRender(DoRender.GUI_BACKGROUND)) {
+    //         ci.cancel();
+    //     }
+    // }
+    //
+    // @Inject(method = "extractRenderStateWithTooltipAndSubtitles", at = @At("HEAD"), cancellable = true)
+    // private void cancelRenderByChestStealer(CallbackInfo ci) {
+    //     if (LiquidBounce.INSTANCE.isInitialized() && FeatureSilentScreen.INSTANCE.getShouldHide()) {
+    //         ci.cancel();
+    //     }
+    // }
+    //
+    // @Inject(method = "extractBackground", at = @At("HEAD"), cancellable = true)
+    // private void renderBackgroundTexture(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    //     if (this.minecraft != null && this.minecraft.level == null && !SelfDestruct.INSTANCE.isDestructed()) {
+    //         if (!LiquidBounce.INSTANCE.isInitialized()) {
+    //             return;
+    //         }
+    //
+    //         if (ThemeManager.INSTANCE.isBasicMode() && !ScreenManager.isClientScreen((Screen) (Object) this)) {
+    //             return;
+    //         }
+    //
+    //         if (ThemeManager.INSTANCE.drawBackground(context, width, height, mouseX, mouseY, delta)) {
+    //             ci.cancel();
+    //         }
+    //     }
+    // }
+    //
+    // codex end
     /**
      * Allows the execution of {@link RunnableClickEvent}.
      * (default branch in switch pattern matching)

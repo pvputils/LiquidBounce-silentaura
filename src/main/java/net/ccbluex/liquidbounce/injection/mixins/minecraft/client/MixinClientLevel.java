@@ -46,10 +46,73 @@ import java.util.List;
 
 @Mixin(ClientLevel.class)
 public abstract class MixinClientLevel {
+    // codex start
+    //
+    // @ModifyReturnValue(method = "getMarkerParticleTarget", at = @At("RETURN"))
+    // private @Nullable Block injectBlockParticle(@Nullable Block original) {
+    //     var trueSight = ModuleTrueSight.INSTANCE;
+    //     if (trueSight.getRunning() && (trueSight.getBarriers() || trueSight.getLights())) {
+    //         return Blocks.BARRIER;
+    //     }
+    //     return original;
+    // }
+    //
+    // @Redirect(
+    //     method = "doAnimateTick",
+    //     at = @At(
+    //         value = "INVOKE",
+    //         target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;",
+    //         ordinal = 1
+    //     )
+    // )
+    // private Block injectTrueSightMarkerParticle(BlockState state) {
+    //     var trueSight = ModuleTrueSight.INSTANCE;
+    //     if (!trueSight.getRunning() || (!trueSight.getBarriers() && !trueSight.getLights())) {
+    //         return state.getBlock();
+    //     }
+    //
+    //     var block = state.getBlock();
+    //     // BARRIER only serves as the shared marker target here; the state itself keeps the actual particle texture.
+    //     return (trueSight.getBarriers() && block == Blocks.BARRIER)
+    //         || (trueSight.getLights() && block == Blocks.LIGHT) ? Blocks.BARRIER : block;
+    // }
+    //
+    // @Inject(method = "addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V", at = @At("HEAD"), cancellable = true)
+    // private void injectNoExplosionParticles(ParticleOptions parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ, CallbackInfo ci) {
+    //     var type = parameters.getType();
+    //     if (!ModuleAntiBlind.canRender(DoRender.EXPLOSION_PARTICLES) && (type == ParticleTypes.EXPLOSION || type == ParticleTypes.EXPLOSION_EMITTER)) {
+    //         ci.cancel();
+    //     }
+    // }
+    // codex end
 
     @Inject(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onClientRemoval()V"))
     private void injectRemoveEntity(int id, Entity.RemovalReason reason, CallbackInfo ci, @Local(name = "entity") Entity entity) {
         EventManager.INSTANCE.callEvent(new WorldEntityRemoveEvent(entity, reason));
     }
 
+    // codex start
+    // @Inject(method = "trackExplosionEffects", at = @At("HEAD"), cancellable = true)
+    // private void hookAddBlockParticleEffects(
+    //     Vec3 center, float radius, int blockCount, WeightedList<ExplosionParticleInfo> particles, CallbackInfo ci) {
+    //     if (!ModuleAntiBlind.canRender(DoRender.BLOCK_BREAK_PARTICLES)) {
+    //         ci.cancel();
+    //     }
+    // }
+    //
+    // @Inject(method = "addDestroyBlockEffect", at = @At("HEAD"), cancellable = true)
+    // private void hookAddBlockBreakParticles(BlockPos pos, BlockState state, CallbackInfo ci) {
+    //     if (!ModuleAntiBlind.canRender(DoRender.BLOCK_BREAK_PARTICLES)) {
+    //         ci.cancel();
+    //     }
+    // }
+    //
+    // @Inject(method = "getPushableEntities", at = @At("HEAD"), cancellable = true)
+    // private void hookGetPushableEntities(Entity pusher, AABB boundingBox, CallbackInfoReturnable<List<Entity>> cir) {
+    //     if (!ModuleNoPush.canPush(NoPushBy.ENTITIES)) {
+    //         cir.setReturnValue(List.of());
+    //         cir.cancel();
+    //     }
+    // }
+    // codex end
 }
