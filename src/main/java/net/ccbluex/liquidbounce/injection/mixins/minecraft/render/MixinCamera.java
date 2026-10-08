@@ -239,12 +239,15 @@ public abstract class MixinCamera {
     // codex start
     // }
     //
+    // codex end
+    // codex start
     // /**
     //  * Set as spectator to disable smart culling
     //  */
     // @ModifyExpressionValue(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z"))
     // private boolean hookFreeCamDisableSmartCullInBlocks(boolean original) {
     //     return original || ModuleFreeCam.INSTANCE.getRunning();
+    // }
     // codex end
     }
 

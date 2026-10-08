@@ -316,9 +316,12 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     // codex start
     // }
     //
+    // codex end
+    // codex start
     // @ModifyExpressionValue(method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"))
     // private static @Nullable EntityHitResult hookEntityHitResult(@Nullable EntityHitResult original) {
     //     return original == null || !ModuleNoEntityInteract.INSTANCE.test(original) ? null : original;
+    // }
     // codex end
     }
 
@@ -432,9 +435,12 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     // codex start
     // }
     //
+    // codex end
+    // codex start
     // @ModifyExpressionValue(method = "shouldStopRunSprinting", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/LocalPlayer;horizontalCollision:Z", opcode = Opcodes.GETFIELD))
     // private boolean hookSprintIgnoreCollision(boolean original) {
     //     return !ModuleSprint.INSTANCE.getShouldIgnoreCollision() && original;
+    // }
     // codex end
     }
 

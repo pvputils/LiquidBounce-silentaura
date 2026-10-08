@@ -247,11 +247,14 @@ public abstract class MixinPlayer extends MixinLivingEntity {
     //     }
     // }
     //
+    // codex end
+    // codex start
     // @Inject(method = "doSweepAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 0))
     // private void hookPlaySound4(Entity target, float damage, DamageSource damageSource, float cooldownProgress, CallbackInfo ci) {
     //     if(!ModuleHitFX.INSTANCE.getRunning()) {
     //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_SWEEP);
     //     }
+    // }
     // codex end
     }
 

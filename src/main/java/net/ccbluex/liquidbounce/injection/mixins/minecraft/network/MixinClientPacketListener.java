@@ -102,9 +102,12 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
     //     ExplodeSoundTrigger.INSTANCE.notify(packet);
     // }
     //
+    // codex end
+    // codex start
     // @Inject(method = "handleRemoveEntities", at = @At("RETURN"))
     // private void hookOnEntitiesDestroy(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
     //     CrystalDestroyTrigger.INSTANCE.notify(packet);
+    // }
     // codex end
     }
 

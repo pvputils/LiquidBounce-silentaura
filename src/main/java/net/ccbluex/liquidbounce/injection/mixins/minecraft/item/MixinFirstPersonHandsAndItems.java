@@ -178,12 +178,15 @@ public abstract class MixinFirstPersonHandsAndItems {
     //     return equipProgress;
     // }
     //
+    // codex end
+    // codex start
     // @ModifyArg(method = "applyItemArmTransform", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"), index = 1)
     // private float injectDisableEquipOffset(float y) {
     //     if (ModuleAnimations.INSTANCE.getRunning() && !ModuleAnimations.EquipOffset.INSTANCE.getRunning()) {
     //         return ITEM_POS_Y;
     //     }
     //     return y;
+    // }
     // codex end
     }
 

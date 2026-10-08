@@ -53,6 +53,8 @@ public abstract class MixinConnection {
     // codex start
     // }
     //
+    // codex end
+    // codex start
     // /**
     //  * Handle sending packets
     //  *
@@ -73,6 +75,7 @@ public abstract class MixinConnection {
     //     if (event.isCancelled()) {
     //         callbackInfo.cancel();
     //     }
+    // }
     // codex end
     }
 

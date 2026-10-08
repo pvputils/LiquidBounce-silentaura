@@ -111,10 +111,13 @@ public abstract class MixinEntity {
     //     return noLimit ? value : original.call(value, min, max);
     // }
     //
+    // codex end
+    // codex start
     // @WrapOperation(method = "setXRot", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;xRot:F", opcode = Opcodes.PUTFIELD))
     // public void hookNoPitchLimit2(Entity instance, float clamped, Operation<Void> original, @Local(argsOnly = true, name = "xRot") float xRot) {
     //     boolean noLimit = ModuleNoPitchLimit.INSTANCE.getRunning();
     //     original.call(instance, noLimit ? xRot : clamped);
+    // }
     // codex end
     }
 

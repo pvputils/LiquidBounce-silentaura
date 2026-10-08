@@ -293,11 +293,14 @@ public abstract class MixinLivingEntity extends MixinEntity {
     // codex start
     // }
     //
+    // codex end
+    // codex start
     // @Inject(method = "spawnItemParticles", at = @At("HEAD"), cancellable = true)
     // private void hookEatParticles(ItemStack itemStack, int count, CallbackInfo ci) {
     //     if (itemStack.getComponents().has(DataComponents.FOOD) && !ModuleAntiBlind.canRender(DoRender.EAT_PARTICLES)) {
     //         ci.cancel();
     //     }
+    // }
     // codex end
     }
 

@@ -406,6 +406,8 @@ public abstract class MixinMinecraft {
     // codex start
     // }
     //
+    // codex end
+    // codex start
     // @Inject(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"), cancellable = true)
     // private void hookBlockInteract(CallbackInfo ci) {
     //     final BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
@@ -417,6 +419,7 @@ public abstract class MixinMinecraft {
     //         ModuleNoBlockInteract.INSTANCE.startSneaking();
     //         ci.cancel();
     //     }
+    // }
     // codex end
     }
 
