@@ -27,16 +27,13 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.tickHandler
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
-import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.ON_TICK
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.SNAP
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFailSwing
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFailSwing.dealWithFakeSwing
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFightBot
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail.failedHits
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail.renderFailedHits
@@ -99,26 +96,38 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     // codex start
     // private val criticalsSelectionMode by enumChoice("Criticals", CriticalsSelectionMode.SMART)
     // codex end
-    private val keepSprint by boolean("KeepSprint", true)
+    // codex start
+    // private val keepSprint by boolean("KeepSprint", true)
+    // codex end
 
     // Inventory Handling
-    internal val ignoreOpenInventory by boolean("IgnoreOpenInventory", true)
-    internal val simulateInventoryClosing by boolean("SimulateInventoryClosing", true)
+    // codex start
+    // internal val ignoreOpenInventory by boolean("IgnoreOpenInventory", true)
+    // codex end
+    // codex start
+    // internal val simulateInventoryClosing by boolean("SimulateInventoryClosing", true)
+    // codex end
 
     /**
      * The use of suspend [waitTicks] is a bit too
      * risky for a large and complex module
      * such as KillAura. So back to the basics.
      */
-    internal var waitTicks = 0
+    // codex start
+    // internal var waitTicks = 0
+    // codex end
 
     init {
-        tree(KillAuraAutoBlock)
+        // codex start
+        // tree(KillAuraAutoBlock)
+        // codex end
         tree(TargetRenderer(this) {
-            targetTracker.target?.takeUnless { ModuleElytraTarget.isSameTargetRendering(it) }
+            targetTracker.target //codex (?.takeUnless { ModuleElytraTarget.isSameTargetRendering(it) })
         })
         tree(KillAuraFailSwing)
-        tree(KillAuraFightBot)
+        // codex start
+        // tree(KillAuraFightBot)
+        // codex end
         tree(KillAuraRangeIndicator)
     }
 
@@ -138,15 +147,17 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     @Suppress("unused")
     private val rotationUpdateHandler = handler<RotationUpdateEvent> {
-        if (waitTicks > 0) {
-            waitTicks--
-        }
+        // codex start
+        // if (waitTicks > 0) {
+        //     waitTicks--
+        // }
+        // codex end
 
         // Make sure killaura-logic is not running while inventory is open
         val isInInventoryScreen = isInventoryOpen || mc.gui.screen() is ContainerScreen
         val shouldResetTarget = player.isSpectator || player.isDeadOrDying || !requirementsMet
 
-        if (isInInventoryScreen && !ignoreOpenInventory || shouldResetTarget) {
+        if (isInInventoryScreen || shouldResetTarget) { //codex (&& !ignoreOpenInventory)
             // Reset current target
             targetTracker.reset()
             return@handler
@@ -171,20 +182,29 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         val target = targetTracker.target
 
         if (CombatManager.shouldPauseCombat) {
-            KillAuraAutoBlock.stopBlocking()
+            // codex start
+            // KillAuraAutoBlock.stopBlocking()
+            // codex end
             return@tickHandler
         }
 
         if (target == null) {
-            val hasUnblocked = KillAuraAutoBlock.stopBlocking()
+            // codex start
+            // val hasUnblocked = KillAuraAutoBlock.stopBlocking()
+            // codex end
 
             // Deal with fake swing when there is no target
             if (KillAuraFailSwing.enabled && requirementsMet) {
-                if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
-                    waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-                } else {
-                    dealWithFakeSwing(null)
-                }
+                // codex start
+                // if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
+                //     waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
+                // } else {
+                //     dealWithFakeSwing(null)
+                // }
+                // codex end
+
+                dealWithFakeSwing(null)
+
             }
             return@tickHandler
         }
@@ -239,7 +259,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     @Suppress("CognitiveComplexMethod", "CyclomaticComplexMethod")
     private fun attackTarget(target: Entity, rotation: Rotation) {
         // Make it seem like we are blocking
-        KillAuraAutoBlock.makeSeemBlock()
+        // codex start
+        // KillAuraAutoBlock.makeSeemBlock()
+        // codex end
 
         debugParameter("Rotation") { rotation }
         debugParameter("Target") { target.scoreboardName }
@@ -253,26 +275,39 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         debugParameter("Target Hit Result") { attackHitResult?.location }
 
-        val isInRange = ModuleElytraTarget.canIgnoreKillAuraRotations ||
+        // codex start
+        // val isInRange = ModuleElytraTarget.canIgnoreKillAuraRotations ||
+        //     attackHitResult != null && range.isInRange(pos = attackHitResult.location)
+        // codex end
+        val isInRange = //codex (ModuleElytraTarget.canIgnoreKillAuraRotations ||)
             attackHitResult != null && range.isInRange(pos = attackHitResult.location)
         debugParameter("Is In Range") { isInRange }
 
         // Check if our target is in range, otherwise deal with auto block
         if (!isInRange) {
-            if (KillAuraAutoBlock.enabled && KillAuraAutoBlock.onScanRange &&
-                player.squaredBoxedDistanceTo(target) <= range.scanRange.sq()) {
-                if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {
-                    KillAuraAutoBlock.startBlocking()
-                }
-
-                return
-            }
+            // codex start
+            // if (KillAuraAutoBlock.enabled && KillAuraAutoBlock.onScanRange &&
+            //     player.squaredBoxedDistanceTo(target) <= range.scanRange.sq()) {
+            //     if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {
+            //         KillAuraAutoBlock.startBlocking()
+            //     }
+            //
+            //     return
+            // }
+            // codex end
 
             // Make sure we are not blocking
-            val hasUnblocked = KillAuraAutoBlock.stopBlocking()
-            if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
-                waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-            }else if (KillAuraFailSwing.enabled) {
+            // codex start
+            // val hasUnblocked = KillAuraAutoBlock.stopBlocking()
+            // codex end
+            // codex start
+            // if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
+            //     waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
+            // }else if (KillAuraFailSwing.enabled) {
+            //     dealWithFakeSwing(target)
+            // }
+            // codex end
+            if (KillAuraFailSwing.enabled) { //codex (}else if (KillAuraFailSwing.enabled) {)
                 dealWithFakeSwing(target)
             }
             return
@@ -283,8 +318,12 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         val mainHandStack = player.mainHandItem
 
         // Attack enemy, according to the attack scheduler
-        if (clicker.isClickTick && canAttackNow(mainHandStack) && //codex (target,)
-            !KillAuraAutoBlock.isPrioritizingBlocking) {
+        // codex start
+        // if (clicker.isClickTick && canAttackNow(mainHandStack) && //codex (target,)
+        //     !KillAuraAutoBlock.isPrioritizingBlocking) {
+        // codex end
+        if (clicker.isClickTick && //codex (&& !KillAuraAutoBlock.isPrioritizingBlocking)
+            canAttackNow(mainHandStack)) { //codex (!KillAuraAutoBlock.isPrioritizingBlocking)
             clicker.prepareForAttack(rotation) {
                 // On each click, we check if we are still ready to attack
                 if (!canAttackNow(mainHandStack)) { //codex (target,)
@@ -292,10 +331,12 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
                 }
 
                 // Attack enemy
-                attackEntity(target, SwingMode.DO_NOT_HIDE, keepSprint) //codex (&& !shouldBlockSprinting)
+                attackEntity(target, SwingMode.DO_NOT_HIDE) //codex (, keepSprint)
                 range.update()
                 KillAuraNotifyWhenFail.failedHitsIncrement = 0
-                KillAuraAutoBlock.hasBlockedSinceAttack = false
+                // codex start
+                // KillAuraAutoBlock.hasBlockedSinceAttack = false
+                // codex end
 
                 GenericDebugRecorder.recordDebugInfo(ModuleKillAura, "attackEntity", JsonObject().apply {
                     add("player", GenericDebugRecorder.debugObject(player))
@@ -304,9 +345,13 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
                 true
             }
-        } else if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {
-            KillAuraAutoBlock.startBlocking()
         }
+// codex start
+// else if (KillAuraClicker.ticksSinceLastClick >= KillAuraAutoBlock.reblockTicks) {
+//             KillAuraAutoBlock.startBlocking()
+//         }
+// codex end
+
     }
 
     private fun updateTarget() {
@@ -330,18 +375,22 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         if (target != null) {
             targetTracker.target = target
-        } else if (KillAuraFightBot.enabled) {
-            KillAuraFightBot.updateTarget()
-
-            RotationManager.setRotationTarget(
-                rotations.toRotationTarget(
-                    KillAuraFightBot.getMovementRotation(),
-                    considerInventory = !ignoreOpenInventory
-                ),
-                priority = Priority.IMPORTANT_FOR_USAGE_2,
-                provider = ModuleKillAura
-            )
-        } else {
+        }
+// codex start
+// else if (KillAuraFightBot.enabled) {
+//             KillAuraFightBot.updateTarget()
+//
+//             RotationManager.setRotationTarget(
+//                 rotations.toRotationTarget(
+//                     KillAuraFightBot.getMovementRotation(),
+//                     considerInventory = !ignoreOpenInventory
+//                 ),
+//                 priority = Priority.IMPORTANT_FOR_USAGE_2,
+//                 provider = ModuleKillAura
+//             )
+//         }
+// codex end
+        else { //codex (} else if (KillAuraFightBot.enabled) {)
             targetTracker.reset()
         }
     }
@@ -380,7 +429,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             rotations.toRotationTarget(
                 rotation,
                 entity,
-                considerInventory = !ignoreOpenInventory
+                // codex start
+                // considerInventory = !ignoreOpenInventory
+                // codex end
             ),
             priority = Priority.IMPORTANT_FOR_USAGE_2,
             provider = this@ModuleKillAura
@@ -471,8 +522,11 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         // }
         //
         // codex end
-        val isInventoryBlockingAttack = (isInventoryOpen || isInContainerScreen) &&
-            !ignoreOpenInventory && !simulateInventoryClosing
+        // codex start
+        // val isInventoryBlockingAttack = (isInventoryOpen || isInContainerScreen) &&
+        //     !ignoreOpenInventory && !simulateInventoryClosing
+        // codex end
+        val isInventoryBlockingAttack = (isInventoryOpen || isInContainerScreen) //codex (&& !ignoreOpenInventory)
         return !isInventoryBlockingAttack
     }
 

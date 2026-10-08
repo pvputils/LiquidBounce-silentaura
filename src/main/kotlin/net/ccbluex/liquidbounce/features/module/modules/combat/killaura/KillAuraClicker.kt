@@ -19,8 +19,6 @@
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.rotationTiming
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.simulateInventoryClosing
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
@@ -125,29 +123,40 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
         }
 
         // 1. Stop blocking
-        if (player.isBlockingServerside || KillAuraAutoBlock.enforcedBlockingHand != null) {
-            if (!KillAuraAutoBlock.enabled) { //codex (&& !ModuleMultiActions.mayAttackWhileUsing())
-                return
-            }
-
-            if (KillAuraAutoBlock.enabled && KillAuraAutoBlock.shouldUnblockToHit) {
-                if (KillAuraAutoBlock.stopBlocking(pauses = true) && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
-                    ModuleKillAura.waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-                    return
-                }
-            }
-        } else if (player.isUsingItem) { //codex (&& !ModuleMultiActions.mayAttackWhileUsing())
+        // codex start
+        // if (player.isBlockingServerside || KillAuraAutoBlock.enforcedBlockingHand != null) {
+        //     if (!KillAuraAutoBlock.enabled) { //codex (&& !ModuleMultiActions.mayAttackWhileUsing())
+        //         return
+        //     }
+        //
+        //     if (KillAuraAutoBlock.enabled && KillAuraAutoBlock.shouldUnblockToHit) {
+        //         if (KillAuraAutoBlock.stopBlocking(pauses = true) && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
+        //             ModuleKillAura.waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
+        //             return
+        //         }
+        //     }
+        // } else if (player.isUsingItem) { //codex (&& !ModuleMultiActions.mayAttackWhileUsing())
+        //     // Since we are not allowed to attack while the player is using another item,
+        //     // we will return here.
+        //     return
+        // }
+        // codex end
+        if (player.isUsingItem) { //codex (&& !ModuleMultiActions.mayAttackWhileUsing())
             // Since we are not allowed to attack while the player is using another item,
             // we will return here.
             return
         }
 
-        val wasSimulatedInventoryClose = simulateInventoryClosing && InventoryManager.isInventoryOpen
+        // codex start
+        // val wasSimulatedInventoryClose = simulateInventoryClosing && InventoryManager.isInventoryOpen
+        // codex end
 
         // 2. Close Inventory
-        if (wasSimulatedInventoryClose) {
-            network.sendCloseInventory()
-        }
+        // codex start
+        // if (wasSimulatedInventoryClose) {
+        //     network.sendCloseInventory()
+        // }
+        // codex end
 
         // 3. Rotate to target (if we have on-tick enabled)
         if (rotationTiming == KillAuraRotationsValueGroup.KillAuraRotationTiming.ON_TICK && rotation != null) {
@@ -183,14 +192,18 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
         }
 
         // 2. Start blocking again
-        if (KillAuraAutoBlock.blockImmediate) {
-            KillAuraAutoBlock.startBlocking()
-        }
+        // codex start
+        // if (KillAuraAutoBlock.blockImmediate) {
+        //     KillAuraAutoBlock.startBlocking()
+        // }
+        // codex end
 
         // 3. Open inventory again
-        if (wasSimulatedInventoryClose) {
-            network.send1_11_1OpenInventory()
-        }
+        // codex start
+        // if (wasSimulatedInventoryClose) {
+        //     network.send1_11_1OpenInventory()
+        // }
+        // codex end
     }
 
 }

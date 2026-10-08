@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.event.events.EntityEquipmentChangeEvent;
 import net.ccbluex.liquidbounce.event.events.EntityHealthUpdateEvent;
 import net.ccbluex.liquidbounce.event.events.PlayerAfterJumpEvent;
 import net.ccbluex.liquidbounce.event.events.PlayerJumpEvent;
-import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection;
 import net.ccbluex.liquidbounce.utils.client.SilentHotbar;
@@ -325,28 +324,30 @@ public abstract class MixinLivingEntity extends MixinEntity {
 
     @Unique
     private boolean previousIsGliding = false;
-
-    @Inject(method = "isFallFlying", at = @At("RETURN"), cancellable = true)
-    private void hookIsGliding(CallbackInfoReturnable<Boolean> cir) {
-        if (!liquid_bounce$isClientPlayer()) {
-            return;
-        }
-
-        var player = (LocalPlayer) (Object) this;
-        var gliding = cir.getReturnValue();
-
-        if (previousIsGliding && !gliding) {
-            var flag = ModuleElytraTarget.canAlwaysGlide();
-            if (flag) {
-                player.startFallFlying();
-                player.connection.send(new ServerboundPlayerCommandPacket(player, ServerboundPlayerCommandPacket.Action.START_FALL_FLYING));
-            }
-
-            cir.setReturnValue(flag);
-        }
-
-        previousIsGliding = gliding;
-    }
+    // codex start
+    //
+    // @Inject(method = "isFallFlying", at = @At("RETURN"), cancellable = true)
+    // private void hookIsGliding(CallbackInfoReturnable<Boolean> cir) {
+    //     if (!liquid_bounce$isClientPlayer()) {
+    //         return;
+    //     }
+    //
+    //     var player = (LocalPlayer) (Object) this;
+    //     var gliding = cir.getReturnValue();
+    //
+    //     if (previousIsGliding && !gliding) {
+    //         var flag = ModuleElytraTarget.canAlwaysGlide();
+    //         if (flag) {
+    //             player.startFallFlying();
+    //             player.connection.send(new ServerboundPlayerCommandPacket(player, ServerboundPlayerCommandPacket.Action.START_FALL_FLYING));
+    //         }
+    //
+    //         cir.setReturnValue(flag);
+    //     }
+    //
+    //     previousIsGliding = gliding;
+    // }
+    // codex end
 
     @Inject(method = "setHealth", at = @At("HEAD"))
     private void hookSetHealth(float health, CallbackInfo callbackInfo) {

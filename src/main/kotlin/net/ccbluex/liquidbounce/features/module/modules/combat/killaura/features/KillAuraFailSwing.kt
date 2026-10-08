@@ -81,7 +81,9 @@ internal object KillAuraFailSwing : ToggleableValueGroup(ModuleKillAura, "FailSw
         }
 
         // Make it seem like we are blocking
-        KillAuraAutoBlock.makeSeemBlock()
+        // codex start
+        // KillAuraAutoBlock.makeSeemBlock()
+        // codex end
 
         prepareForAttack {
             // A click on a block starts digging it; only one into the air has the miss cooldown, which limits the

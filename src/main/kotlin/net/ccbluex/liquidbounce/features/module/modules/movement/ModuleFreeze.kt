@@ -34,7 +34,6 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.blink.BlinkManager.Action
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleEasyPearl
 import net.ccbluex.liquidbounce.render.drawLineStrip
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.render.renderEnvironment
@@ -275,8 +274,8 @@ object ModuleFreeze : ClientModule("Freeze", ModuleCategories.MOVEMENT, disableO
                     event.cancelEvent()
                     sendPacketSilently(
                         ServerboundMovePlayerPacket.Rot(
-                            ModuleEasyPearl.currentTargetRotation?.yaw ?: (player.yRot + yawOffset),
-                            ModuleEasyPearl.currentTargetRotation?.pitch ?: (player.xRot + pitchOffset),
+                            (player.yRot + yawOffset), //codex (ModuleEasyPearl.currentTargetRotation?.yaw ?:)
+                            (player.xRot + pitchOffset), //codex (ModuleEasyPearl.currentTargetRotation?.pitch ?:)
                             player.onGround(),
                             player.horizontalCollision
                         )

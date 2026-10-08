@@ -169,12 +169,16 @@ private fun Set<Targets>.isInteresting(suspect: Entity, info: EntityTargetingInf
 
 // Extensions
 @AddonApi
-@JvmOverloads
+// codex start
+// @JvmOverloads
+// codex end
 fun Entity?.shouldBeShown(enemyConf: Set<Targets> = GlobalSettingsTarget.visual) =
     this?.let { enemyConf.shouldShow(it) } ?: false
 
 @AddonApi
-@JvmOverloads
+// codex start
+// @JvmOverloads
+// codex end
 fun Entity?.shouldBeAttacked(enemyConf: Set<Targets> = GlobalSettingsTarget.combat) =
     this is Attackable && enemyConf.shouldAttack(this) && this.isWithinWorldBorder
 
@@ -193,7 +197,9 @@ private fun Entity.canBeAttackedWithVanillaPacket() =
  * Find the best enemy in the current world in a specific range.
  */
 @AddonApi
-@JvmOverloads
+// codex start
+// @JvmOverloads
+// codex end
 fun ClientLevel.findEnemy(
     range: ClosedFloatingPointRange<Float>,
     enemyConf: Set<Targets> = GlobalSettingsTarget.combat
@@ -203,7 +209,9 @@ fun ClientLevel.findEnemy(
  * Find the best enemy in the current world in a specific range.
  */
 @AddonApi
-@JvmOverloads
+// codex start
+// @JvmOverloads
+// codex end
 fun ClientLevel.findEnemy(
     minRange: Float,
     maxRange: Float,
@@ -212,7 +220,9 @@ fun ClientLevel.findEnemy(
     .minByOrNull { (_, distSqr) -> distSqr }?.key()
 
 @AddonApi
-@JvmOverloads
+// codex start
+// @JvmOverloads
+// codex end
 fun ClientLevel.findEnemies(
     minRange: Float,
     maxRange: Float,
@@ -252,8 +262,10 @@ inline fun ClientLevel.getEntitiesBoxInRange(
  */
 @AddonApi
 @Suppress("CognitiveComplexMethod")
-@JvmOverloads
-fun attackEntity(entity: Entity, swing: SwingMode, keepSprint: Boolean = false): Boolean {
+// codex start
+// @JvmOverloads
+// codex end
+fun attackEntity(entity: Entity, swing: SwingMode): Boolean { //codex (keepSprint: Boolean = false)
     val itemStack = player.getItemInHand(InteractionHand.MAIN_HAND)
     val piercingWeapon = itemStack.get(DataComponents.PIERCING_WEAPON)
 
@@ -279,41 +291,48 @@ fun attackEntity(entity: Entity, swing: SwingMode, keepSprint: Boolean = false):
         interaction.ensureHasSentCarriedItem()
         network.send(ServerboundAttackPacket(entity.id))
 
-        if (keepSprint) {
-            var genericAttackDamage =
-                if (this.isAutoSpinAttack) {
-                    this.autoSpinAttackDmg
-                } else {
-                    getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
-                }
-            val damageSource = this.damageSources().playerAttack(this)
-            var enchantAttackDamage = this.getEnchantedDamage(entity, genericAttackDamage,
-                damageSource) - genericAttackDamage
+        // codex start
+        // if (keepSprint) {
+        //     var genericAttackDamage =
+        //         if (this.isAutoSpinAttack) {
+        //             this.autoSpinAttackDmg
+        //         } else {
+        //             getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
+        //         }
+        //     val damageSource = this.damageSources().playerAttack(this)
+        //     var enchantAttackDamage = this.getEnchantedDamage(entity, genericAttackDamage,
+        //         damageSource) - genericAttackDamage
+        //
+        //     val attackCooldown = this.getAttackStrengthScale(0.5f)
+        //     genericAttackDamage *= 0.2f + attackCooldown * attackCooldown * 0.8f
+        //     enchantAttackDamage *= attackCooldown
+        //
+        //     if (genericAttackDamage > 0.0f || enchantAttackDamage > 0.0f) {
+        //         if (enchantAttackDamage > 0.0f) {
+        //             this.magicCrit(entity)
+        //         }
+        //
+        //         // codex start
+        //         // if (ModuleCriticals.wouldDoCriticalHit(true)) {
+        //         //     world.playSound(
+        //         //         null, x, y, z, SoundEvents.PLAYER_ATTACK_CRIT,
+        //         //         soundSource, 1.0f, 1.0f
+        //         //     )
+        //         //     crit(entity)
+        //         // }
+        //         // codex end
+        //     }
+        // } else {
+        //     if (interaction.playerMode != GameType.SPECTATOR) {
+        //         attack(entity)
+        //     }
+        // }
+        // codex end
 
-            val attackCooldown = this.getAttackStrengthScale(0.5f)
-            genericAttackDamage *= 0.2f + attackCooldown * attackCooldown * 0.8f
-            enchantAttackDamage *= attackCooldown
-
-            if (genericAttackDamage > 0.0f || enchantAttackDamage > 0.0f) {
-                if (enchantAttackDamage > 0.0f) {
-                    this.magicCrit(entity)
-                }
-
-                // codex start
-                // if (ModuleCriticals.wouldDoCriticalHit(true)) {
-                //     world.playSound(
-                //         null, x, y, z, SoundEvents.PLAYER_ATTACK_CRIT,
-                //         soundSource, 1.0f, 1.0f
-                //     )
-                //     crit(entity)
-                // }
-                // codex end
-            }
-        } else {
             if (interaction.playerMode != GameType.SPECTATOR) {
                 attack(entity)
             }
-        }
+
 
         // Reset cooldown
         this.attackStrengthTicker = 0

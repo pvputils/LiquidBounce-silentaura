@@ -32,17 +32,11 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.sequenceHandler
 import net.ccbluex.liquidbounce.event.tickUntil
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
-import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleAutoBow
-import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleEasyPearl
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
-import net.ccbluex.liquidbounce.features.module.modules.misc.antibot.ModuleAntiBot
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.ModuleDebugRecorder
 import net.ccbluex.liquidbounce.features.module.modules.misc.nameprotect.ModuleNameProtect
 import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleEagle
-import net.ccbluex.liquidbounce.features.module.modules.player.autobuff.ModuleAutoBuff
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleCombineMobs
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.addon.AddonApi
@@ -238,12 +232,16 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleAimbot,
             // ModuleAutoArmor,
             // codex end
-            ModuleAutoBow,
+            // codex start
+            // ModuleAutoBow,
+            // codex end
             ModuleAutoClicker,
             // codex start
             // ModuleAutoLeave,
             // codex end
-            ModuleAutoBuff,
+            // codex start
+            // ModuleAutoBuff,
+            // codex end
             // codex start
             // ModuleAutoRod,
             // codex end
@@ -343,13 +341,17 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleGUICloser,
             // ModuleBookBot,
             // codex end
-            ModuleAntiBot,
+            // codex start
+            // ModuleAntiBot,
+            // codex end
             // codex start
             // ModuleBetterTab,
             // ModuleItemScroller,
             // ModuleBetterChat,
             // codex end
-            ModuleElytraTarget,
+            // codex start
+            // ModuleElytraTarget,
+            // codex end
             // codex start
             // ModuleMacros,
             // ModuleMiddleClickAction,
@@ -383,7 +385,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // codex start
             // ModuleAntiCheatDetect,
             // codex end
-            ModuleEasyPearl,
+            // codex start
+            // ModuleEasyPearl,
+            // codex end
 
             // Movement
             // codex start
@@ -465,7 +469,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleChestStealer,
             // ModuleAutoDeposit,
             // codex end
-            ModuleEagle,
+            // codex start
+            // ModuleEagle,
+            // codex end
             // codex start
             // ModuleFastExp,
             // codex end

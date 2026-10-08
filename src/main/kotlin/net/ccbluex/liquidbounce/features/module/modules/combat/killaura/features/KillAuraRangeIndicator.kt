@@ -64,7 +64,9 @@ object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndic
     private val hideWhenDead by boolean("HideWhenDead", true)
     private val hideWhenSpectator by boolean("HideWhenSpectator", true)
     private val hideInVehicle by boolean("HideInVehicle", false)
-    private val respectInventorySetting by boolean("RespectInventorySetting", true)
+    // codex start
+    // private val respectInventorySetting by boolean("RespectInventorySetting", true)
+    // codex end
 
     private val canBeCovered by boolean("CanBeCovered", false)
 
@@ -143,9 +145,12 @@ object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndic
     private fun canRender(): Boolean {
         return !((hideWhenDead && player.isDeadOrDying) ||
             (hideWhenSpectator && player.isSpectator) ||
-            (hideInVehicle && player.vehicle != null) ||
-            (respectInventorySetting && !ModuleKillAura.ignoreOpenInventory &&
-                (isInventoryOpen || mc.gui.screen() is ContainerScreen)))
+            // codex start
+            // (hideInVehicle && player.vehicle != null) ||
+            // (respectInventorySetting && !ModuleKillAura.ignoreOpenInventory &&
+            //     (isInventoryOpen || mc.gui.screen() is ContainerScreen)))
+            // codex end
+            (hideInVehicle && player.vehicle != null)) //codex (respectInventorySetting)
     }
 
     private fun WorldRenderEnvironment.drawRangeCircle(
