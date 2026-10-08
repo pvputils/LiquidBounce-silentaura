@@ -18,54 +18,73 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
-import net.ccbluex.liquidbounce.utils.aiming.RotationManager
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.rotationTiming
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
+import net.ccbluex.liquidbounce.utils.aiming.utils.withFixedYaw
 import net.ccbluex.liquidbounce.utils.client.network
 import net.ccbluex.liquidbounce.utils.client.player
-import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.Rot
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.PosRot
+
 
 object KillAuraRealAttackTodoAi {
-    // codex start
-    var attackRotation: Rotation? = null
+    var isAttacking = false
         private set
-
     fun reset() {
-        attackRotation = null
+        isAttacking = false
     }
 
-    /** Scope rotation only; the callback runs vanilla picking and the complete vanilla click. */
-    fun withVanillaAttack(rotation: Rotation, attack: () -> Boolean): Boolean {
-        val previous = attackRotation
-        val restoreRotation = RotationManager.currentRotation ?: Rotation(player.yRot, player.xRot)
-        val yaw = player.yRot
-        val pitch = player.xRot
-        val oldYaw = player.yRotO
-        val oldPitch = player.xRotO
-        attackRotation = rotation
-        player.yRot = rotation.yaw
-        player.xRot = rotation.pitch
-        player.yRotO = rotation.yaw
-        player.xRotO = rotation.pitch
+    /** Executes only during vanilla's attack-button press, with no queue, repeats or future click prediction. */
+    fun handleInput(attack: () -> Unit) {
+        isAttacking = true
         try {
-            sendRotation(rotation)
-            return attack()
+            attack()
         } finally {
-            player.yRot = yaw
-            player.xRot = pitch
-            player.yRotO = oldYaw
-            player.xRotO = oldPitch
-            attackRotation = previous
-            sendRotation(restoreRotation)
+            isAttacking = false
         }
     }
 
-    private fun sendRotation(rotation: Rotation) {
-        network.send(
-            Rot(
-                rotation.yaw, rotation.pitch,
-                player.onGround(), player.horizontalCollision
+    @Suppress("CognitiveComplexMethod")
+    fun prepareForAttack(rotation: Rotation? = null, attack: () -> Boolean) {
+        if (!isAttacking) {
+            // If we are not going to click, we don't need to prepare the environment
+            return
+        }
+
+        if (player.isUsingItem) return
+
+        // 3. Rotate to target (if we have on-tick enabled)
+        if (rotationTiming != KillAuraRotationsValueGroup.KillAuraRotationTiming.NORMAL && rotation != null) {
+            network.send(
+                PosRot(
+                    player.x,
+                    player.y,
+                    player.z,
+                    rotation.yaw,
+                    rotation.pitch,
+                    player.onGround(),
+                    player.horizontalCollision
+                )
             )
-        )
+        }
+
+        // Run the attack
+        attack()
+
+        // 1. Rotate back
+        if (rotationTiming != KillAuraRotationsValueGroup.KillAuraRotationTiming.NORMAL && rotation != null) {
+            network.send(
+                PosRot(
+                    player.x,
+                    player.y,
+                    player.z,
+                    player.withFixedYaw(rotation),
+                    player.xRot,
+                    player.onGround(),
+                    player.horizontalCollision
+                )
+            )
+        }
+
     }
-    //codex end
+
 }

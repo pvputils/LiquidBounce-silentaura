@@ -22,6 +22,8 @@
 
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
+import com.google.gson.JsonObject
+import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.events.RotationUpdateEvent
 import net.ccbluex.liquidbounce.event.events.WorldRenderEvent
 import net.ccbluex.liquidbounce.event.handler
@@ -29,6 +31,9 @@ import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.ON_TICK
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.SNAP
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeTodoAi
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeIndicator
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
@@ -38,22 +43,28 @@ import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.data.RotationWithVector
 import net.ccbluex.liquidbounce.utils.aiming.preference.LeastDifferencePreference
 import net.ccbluex.liquidbounce.utils.aiming.utils.raytraceBox
+import net.ccbluex.liquidbounce.utils.block.SwingMode
 import net.ccbluex.liquidbounce.utils.combat.CombatManager
+import net.ccbluex.liquidbounce.utils.combat.attackEntity
+import net.ccbluex.liquidbounce.utils.combat.shouldBeAttacked
 import net.ccbluex.liquidbounce.utils.entity.rotation
 import net.ccbluex.liquidbounce.utils.entity.squaredBoxedDistanceTo
 import net.ccbluex.liquidbounce.utils.inventory.InventoryManager.isInventoryOpen
+import net.ccbluex.liquidbounce.utils.inventory.isInContainerScreen
 import net.ccbluex.liquidbounce.utils.kotlin.Priority
 import net.ccbluex.liquidbounce.utils.math.sq
+import net.ccbluex.liquidbounce.utils.raytracing.findEntityInCrosshair
 import net.ccbluex.liquidbounce.utils.raytracing.isLookingAtEntity
 import net.ccbluex.liquidbounce.utils.render.TargetRenderer
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.item.ItemStack
 
 /**
  * KillAura module
  *
- * Aims at enemies; attack input follows Minecraft's vanilla pipeline. //codex (Aims at enemies and redirects real attack-button presses.)
+ * Aims at enemies and redirects real attack-button presses. //codex (Automatically attacks enemies.)
  */
 @Suppress("MagicNumber")
 object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
@@ -65,6 +76,8 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     // Rotation
     private val rotations = tree(KillAuraRotationsValueGroup)
+    // Bypass techniques
+    internal val raycast by enumChoice("Raycast", TRACE_ALL)
 
     init {
         tree(TargetRenderer(this) {
@@ -105,19 +118,107 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     }
 
     // codex start
-    /** Provides only a rotation. Minecraft chooses and validates the actual click target. */
-    fun rotationForAttack(): Rotation? {
-        if (!running || mc.gui.screen() != null || player.isSpectator || player.isDeadOrDying
-            || CombatManager.shouldPauseCombat) {
-            return null
+    @Suppress("CognitiveComplexMethod")
+    //codex end
+    private fun performRealAttack() { //codex (private val gameHandler = tickHandler {)
+        if (player.isDeadOrDying || player.isSpectator) {
+            return //codex (return@tickHandler)
         }
-        val target = targetTracker.target ?: return null
-        return when (rotations.rotationTiming) {
-            ON_TICK, SNAP -> findRotation(target, range.interactionRange, 0f)?.rotation?.normalize()
-            else -> RotationManager.currentRotation
+
+        // Check if there is target to attack
+        val target = targetTracker.target
+
+        if (CombatManager.shouldPauseCombat) {
+            return //codex (return@tickHandler)
         }
+
+        // codex start
+        if (target == null) {
+            return
+        }
+        //codex end
+
+
+        val rotation = (if (rotations.rotationTiming == ON_TICK || rotations.rotationTiming == SNAP) { //codex (val rotation = (if (rotations.rotationTiming == ON_TICK) {)
+            findRotation(target, range.interactionRange, 0f)?.rotation //codex (findRotation(target, range.interactionRange, range.interactionThroughWallsRange)?.rotation)
+        } else {
+            null
+        } ?: RotationManager.currentRotation ?: player.rotation).normalize()
+
+        val crosshairTarget = when {
+            raycast != TRACE_NONE -> {
+                findEntityInCrosshair(range.interactionRange.toDouble(), rotation, predicate = {
+                    when (raycast) {
+                        TRACE_ONLYENEMY -> it.shouldBeAttacked()
+                        TRACE_ALL -> true
+                        else -> false
+                    }
+                })?.entity ?: target
+            }
+            else -> target
+        }
+
+        if (crosshairTarget is LivingEntity && crosshairTarget.shouldBeAttacked() && crosshairTarget != target) {
+            targetTracker.target = crosshairTarget
+        }
+
+        attackTarget(crosshairTarget, rotation)
+    }
+
+    // codex start
+    fun handleRealAttack(): Boolean {
+        if (!running || mc.gui.screen() != null || player.isSpectator || player.isDeadOrDying) return false
+        // Leave block breaking and attacks without an aura target to vanilla.
+        if (targetTracker.target == null) return false
+        realAttack.handleInput { performRealAttack() }
+        return true
     }
     //codex end
+
+    @Suppress("CognitiveComplexMethod", "CyclomaticComplexMethod")
+    private fun attackTarget(target: Entity, rotation: Rotation) {
+        // Make it seem like we are blocking
+
+        debugParameter("Rotation") { rotation }
+        debugParameter("Target") { target.scoreboardName }
+
+        val attackHitResult = isLookingAtEntity(
+            toEntity = target,
+            rotation = rotation,
+            range = range.interactionRange.toDouble(),
+            throughWallsRange = 0.0 //codex (throughWallsRange = range.interactionThroughWallsRange.toDouble())
+        )
+
+        debugParameter("Target Hit Result") { attackHitResult?.location }
+
+        val isInRange = attackHitResult != null && range.isInRange(pos = attackHitResult.location) //codex (val isInRange = ModuleElytraTarget.canIgnoreKillAuraRotations || attackHitResult != null && range.isInRange(pos = attackHitResult.location))
+        debugParameter("Is In Range") { isInRange }
+
+        // codex start
+        if (!isInRange) return
+        //codex end
+
+        debugParameter("Valid Rotation") { rotation }
+
+        val mainHandStack = player.mainHandItem
+
+        // Attack once during the current vanilla attack-button press. //codex (Attack enemy, according to the attack scheduler)
+        if (realAttack.isAttacking && canAttackNow(mainHandStack)) { //codex (if (realAttack.isAttacking && canAttackNow(mainHandStack) && !KillAuraAutoBlock.isPrioritizingBlocking) {)
+            realAttack.prepareForAttack(rotation) { //codex (clicker.prepareForAttack(rotation) {)
+                // On each click, we check if we are still ready to attack
+                if (!canAttackNow(mainHandStack)) { //codex (if (!canAttackNow(target, mainHandStack)) {)
+                    return@prepareForAttack false
+                }
+
+                // Attack enemy
+                attackEntity(target, SwingMode.DO_NOT_HIDE) //codex (attackEntity(target, SwingMode.DO_NOT_HIDE, keepSprint && !shouldBlockSprinting))
+
+
+
+                true
+            }
+        }
+    }
 
     private fun updateTarget() {
         // Calculate maximum range based on enemy distance
@@ -154,7 +255,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         when (rotations.rotationTiming) {
 
             // SNAP starts aiming only during a real attack press. //codex (If our click scheduler is not going to click the moment we reach the target, we should not start aiming towards the target just yet.)
-            SNAP -> { //codex (SNAP -> if (!realAttack.isAttacking) {)
+            SNAP -> if (!realAttack.isAttacking) { //codex (SNAP -> if (!clicker.willClickAt(ticks.coerceAtLeast(1))) {)
                 return true
             }
 
@@ -224,6 +325,29 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         )
 
         return rotation //codex (return if (rotation == null && rotations.aimThroughWalls) rotationThroughWalls else rotation)
+    }
+
+    /**
+     * Check if we can attack the target at the current moment
+     */
+    internal fun canAttackNow(
+        itemStack: ItemStack = player.mainHandItem,
+    ): Boolean {
+        if (!itemStack.isItemEnabled(world.enabledFeatures())) {
+            return false
+        }
+
+        if (player.cannotAttackWithItem(itemStack, 0)) {
+            return false
+        }
+
+        return !(isInventoryOpen || isInContainerScreen) //codex (return !isInventoryBlockingAttack)
+    }
+
+    enum class RaycastMode(override val tag: String) : Tagged {
+        TRACE_NONE("None"),
+        TRACE_ONLYENEMY("Enemy"),
+        TRACE_ALL("All")
     }
 
 }

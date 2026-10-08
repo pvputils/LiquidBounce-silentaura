@@ -26,7 +26,6 @@ import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.PlayerSafeWalkEvent;
 import net.ccbluex.liquidbounce.features.command.commands.ingame.fakeplayer.FakePlayer;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRealAttackTodoAi;
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -74,11 +73,6 @@ public abstract class MixinPlayer extends MixinLivingEntity {
             return original;
         }
 
-        // codex start
-        if (KillAuraRealAttackTodoAi.INSTANCE.getAttackRotation() != null) {
-            return original;
-        }
-        //codex end
         var rotationManager = RotationManager.INSTANCE;
         var rotation = rotationManager.getCurrentRotation();
         var rotationTarget = rotationManager.getActiveRotationTarget();

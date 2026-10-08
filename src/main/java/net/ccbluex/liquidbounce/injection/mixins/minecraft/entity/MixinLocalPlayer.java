@@ -28,8 +28,6 @@ import net.ccbluex.liquidbounce.event.EventState;
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.interfaces.LocalPlayerAddition;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRealAttackTodoAi;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation;
 import net.ccbluex.liquidbounce.utils.movement.DirectionalInput;
 import net.minecraft.client.Minecraft;
@@ -203,36 +201,17 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
 
 
 
-    // codex start
-    @WrapMethod(method = "raycastHitResult")
-    private HitResult codexVanillaPickRotation(float partialTick, Entity camera, Operation<HitResult> original) {
-        var rotation = KillAuraRealAttackTodoAi.INSTANCE.getAttackRotation();
-        if (rotation == null) {
-            rotation = RotationManager.INSTANCE.getCurrentRotation();
-        }
-        if (camera != Minecraft.getInstance().player || rotation == null) {
-            return original.call(partialTick, camera);
+    @ModifyExpressionValue(method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getViewVector(F)Lnet/minecraft/world/phys/Vec3;"))
+    private static Vec3 hookRotationVector(Vec3 original, Entity camera, double blockInteractionRange, double entityInteractionRange, float tickDelta) {
+        if (camera != Minecraft.getInstance().player) {
+            return original;
         }
 
-        // All vanilla raycast branches (weapon, blocks, entities) see the same rotation.
-        float yaw = camera.getYRot();
-        float pitch = camera.getXRot();
-        float oldYaw = camera.yRotO;
-        float oldPitch = camera.xRotO;
-        try {
-            camera.setYRot(rotation.yRot());
-            camera.setXRot(rotation.xRot());
-            camera.yRotO = rotation.yRot();
-            camera.xRotO = rotation.xRot();
-            return original.call(partialTick, camera);
-        } finally {
-            camera.setYRot(yaw);
-            camera.setXRot(pitch);
-            camera.yRotO = oldYaw;
-            camera.xRotO = oldPitch;
-        }
+        var rotation = RotationManager.INSTANCE.getCurrentRotation();
+        return rotation != null ? rotation.directionVector() : original;
     }
-    //codex end
+
+
 
     /**
      * Hook custom sneaking multiplier

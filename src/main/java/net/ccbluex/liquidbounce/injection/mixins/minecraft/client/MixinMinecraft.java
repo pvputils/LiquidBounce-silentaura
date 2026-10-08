@@ -20,7 +20,6 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReceiver;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -28,7 +27,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.Window;
 import net.ccbluex.liquidbounce.LiquidBounce;
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura;
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRealAttackTodoAi;
 import net.ccbluex.liquidbounce.event.CoroutineTicker;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
@@ -75,24 +73,10 @@ import static net.ccbluex.liquidbounce.utils.client.ProtocolUtilKt.getUsesViaFab
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft {
     // codex start
-    @Shadow
-    protected abstract void pick(float partialTick);
-
-    @WrapMethod(method = "startAttack")
-    private boolean codexVanillaKillAuraAttack(Operation<Boolean> original) {
-        var rotation = ModuleKillAura.INSTANCE.rotationForAttack();
-        if (rotation == null) {
-            return original.call();
-        }
-        try {
-            return KillAuraRealAttackTodoAi.INSTANCE.withVanillaAttack(rotation, () -> {
-                // Refresh through Minecraft's own picker; never substitute the aura target.
-                pick(1.0F);
-                return original.call();
-            });
-        } finally {
-            // Do not leave a Snap click's hit result behind for item use or block breaking.
-            pick(1.0F);
+    @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
+    private void codexRealKillAuraAttack(CallbackInfoReturnable<Boolean> cir) {
+        if (ModuleKillAura.INSTANCE.handleRealAttack()) {
+            cir.setReturnValue(false);
         }
     }
     //codex end
