@@ -6,6 +6,8 @@ import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.event.EventHook
 import net.ccbluex.liquidbounce.event.events.AttackEntityEvent
+import net.ccbluex.liquidbounce.event.events.BlockAttackEvent
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup
 import java.util.concurrent.atomic.AtomicInteger
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.config.ConfigSystem
@@ -22,7 +24,10 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.LivingEntity
 import net.ccbluex.liquidbounce.features.global.GlobalSettingsTarget
 import net.ccbluex.liquidbounce.utils.combat.Targets
-import net.ccbluex.liquidbounce.utils.client.interaction
+import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
+import net.ccbluex.liquidbounce.utils.aiming.RotationManager
+import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRealAttackTodoAi
+import net.minecraft.world.phys.EntityHitResult
 import kotlin.math.abs
 
 class KillAuraGameTestTodoAi : FabricClientGameTest {
@@ -46,12 +51,20 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
             world.server.runCommand("execute at @p run summon minecraft:zombie ~ ~ ~2 {NoAI:1b,PersistenceRequired:1b}")
             context.waitFor({ it.level?.entitiesForRendering()?.any { entity -> entity is Zombie } == true }, 200)
             val attacks = AtomicInteger()
+            // codex start
+            val blockAttacks = AtomicInteger()
+            //codex end
             val listener = object : EventListener {}
             context.runOnClient<RuntimeException> {
                 EventManager.registerEventHook(AttackEntityEvent::class.java, EventHook<AttackEntityEvent>(listener) {
                     if (it.entity is Zombie) attacks.incrementAndGet()
                 })
-                check(ModuleKillAura.get().none { it.name in setOf("Clicker", "Criticals", "KeepSprint", "FightBot", "FailSwing", "AutoBlocking", "IgnoreOpenInventory", "SimulateInventoryClosing", "Requires", "AimPoint") })
+                // codex start
+                EventManager.registerEventHook(BlockAttackEvent::class.java, EventHook<BlockAttackEvent>(listener) {
+                    blockAttacks.incrementAndGet()
+                })
+                //codex end
+                check(ModuleKillAura.get().none { it.name in setOf("Clicker", "Criticals", "KeepSprint", "FightBot", "FailSwing", "AutoBlocking", "IgnoreOpenInventory", "SimulateInventoryClosing", "Requires", "AimPoint", "Raycast") }) //codex (check(ModuleKillAura.get().none { it.name in setOf("Clicker", "Criticals", "KeepSprint", "FightBot", "FailSwing", "AutoBlocking", "IgnoreOpenInventory", "SimulateInventoryClosing", "Requires", "AimPoint") }))
                 ModuleKillAura.enabled = true
                 ConfigSystem.store(ModuleManager.modulesConfig)
                 ModuleKillAura.enabled = false
@@ -63,8 +76,10 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
             context.waitTicks(10)
             context.runOnClient<RuntimeException> {
                 ModuleKillAura.targetTracker.target = mc.level!!.entitiesForRendering().filterIsInstance<Zombie>().first()
-                ModuleKillAura.handleRealAttack()
             }
+            // codex start
+            context.input.pressKey { it.keyAttack }
+            //codex end
             context.waitTicks(5)
             check(attacks.get() == 0) { "Aura attacked beyond vanilla reach" }
             world.server.runCommand("execute at @p run tp @e[type=minecraft:zombie,limit=1] ~ ~ ~2")
@@ -72,12 +87,24 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
             context.waitTicks(10)
             context.runOnClient<RuntimeException> {
                 ModuleKillAura.targetTracker.target = mc.level!!.entitiesForRendering().filterIsInstance<Zombie>().first()
-                ModuleKillAura.handleRealAttack()
             }
+            // codex start
+            context.input.pressKey { it.keyAttack }
+            //codex end
             context.waitTicks(5)
             check(attacks.get() == 0) { "Aura attacked through a solid wall" }
+            // codex start
+            check(blockAttacks.get() > 0) { "The aura target swallowed vanilla block-breaking input" }
+            //codex end
             world.server.runCommand("execute at @p run fill ~-2 ~ ~1 ~2 ~3 ~1 minecraft:air")
             context.waitFor({ ModuleKillAura.targetTracker.target != null }, 200)
+            // codex start
+            context.runOnClient<RuntimeException> {
+                checkVanillaPickParity()
+                mc.player!!.yRot = 90f
+                mc.player!!.yRotO = 90f
+            }
+            //codex end
             context.waitTicks(40)
             check(attacks.get() == 0) { "KillAura attacked without a real input press" }
             context.input.holdKey { it.keyAttack }
@@ -108,15 +135,27 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
             world.server.runCommand("kill @e[type=minecraft:zombie]")
             context.runOnClient<RuntimeException> { GlobalSettingsTarget.combat.add(Targets.PASSIVE) }
             try {
+                // codex start
                 val vanillaGround = measureDamage(context, world.server::runCommand, false, false)
-                val auraGround = measureDamage(context, world.server::runCommand, true, false)
                 val vanillaFalling = measureDamage(context, world.server::runCommand, false, true)
-                val auraFalling = measureDamage(context, world.server::runCommand, true, true)
-                check(abs(vanillaGround - auraGround) < 0.01f) { "Grounded damage differs from vanilla" }
-                check(abs(vanillaFalling - auraFalling) < 0.01f) { "Critical damage differs from vanilla" }
-                check(vanillaFalling > vanillaGround) { "Falling baseline did not produce a vanilla critical: ground=$vanillaGround, falling=$vanillaFalling" }
+                check(vanillaFalling > vanillaGround) {
+                    "Falling baseline did not produce a vanilla critical: ground=$vanillaGround, falling=$vanillaFalling"
+                }
+                for (timing in listOf("Normal", "Snap", "OnTick")) {
+                    context.runOnClient<RuntimeException> {
+                        KillAuraRotationsValueGroup.get().first { it.name == "RotationTiming" }.setByString(timing)
+                    }
+                    val auraGround = measureDamage(context, world.server::runCommand, true, false)
+                    val auraFalling = measureDamage(context, world.server::runCommand, true, true)
+                    check(abs(vanillaGround - auraGround) < 0.01f) { "$timing grounded damage differs from vanilla" }
+                    check(abs(vanillaFalling - auraFalling) < 0.01f) { "$timing critical damage differs from vanilla" }
+                }
+                //codex end
             } finally {
                 context.runOnClient<RuntimeException> {
+                    // codex start
+                    KillAuraRotationsValueGroup.get().first { it.name == "RotationTiming" }.setByString("Normal")
+                    //codex end
                     GlobalSettingsTarget.combat.remove(Targets.PASSIVE)
                     ModuleKillAura.enabled = false
                     ConfigSystem.store(ModuleManager.modulesConfig)
@@ -124,6 +163,48 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
             }
         }
     }
+
+    // codex start
+    /** The managed picker must match vanilla at the same angle, including a near miss. */
+    private fun checkVanillaPickParity() {
+        val player = mc.player!!
+        val zombie = mc.level!!.entitiesForRendering().filterIsInstance<Zombie>().first()
+        val rotationField = RotationManager::class.java.getDeclaredField("currentRotation").apply { isAccessible = true }
+        val savedRotation = rotationField.get(RotationManager)
+        val savedHitResult = mc.hitResult
+        val aimed = Rotation.lookingAt(zombie.boundingBox.center, player.eyePosition)
+        val yaw = player.yRot
+        val pitch = player.xRot
+        val oldYaw = player.yRotO
+        val oldPitch = player.xRotO
+        try {
+            for (rotation in listOf(aimed, Rotation(aimed.yaw + 35f, aimed.pitch))) {
+                val managed = KillAuraRealAttackTodoAi.withVanillaAttack(rotation) {
+                    val hit = player.raycastHitResult(1f, player)
+                    mc.hitResult = hit
+                    true
+                }
+                check(managed)
+                val actual = mc.hitResult!!
+                rotationField.set(RotationManager, null)
+                player.yRot = rotation.yaw
+                player.xRot = rotation.pitch
+                player.yRotO = rotation.yaw
+                player.xRotO = rotation.pitch
+                val expected = player.raycastHitResult(1f, player)
+                check(actual.type == expected.type && actual.location.distanceTo(expected.location) < 0.00001)
+                check((actual as? EntityHitResult)?.entity === (expected as? EntityHitResult)?.entity)
+            }
+        } finally {
+            player.yRot = yaw
+            player.xRot = pitch
+            player.yRotO = oldYaw
+            player.xRotO = oldPitch
+            rotationField.set(RotationManager, savedRotation)
+            mc.hitResult = savedHitResult
+        }
+    }
+    //codex end
 
     /** Compare identical natural player states against Minecraft's own attack implementation. */
     private fun measureDamage(
@@ -156,12 +237,20 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
         context.runOnClient<RuntimeException> {
             check(!mc.player!!.isSprinting)
             check(mc.player!!.getAttackStrengthScale(0f) > 0.9f)
-            if (aura) {
-                check(ModuleKillAura.handleRealAttack())
-            } else {
-                interaction.attack(mc.player!!, cow)
+            // codex start
+            if (!aura) {
+                val rotation = Rotation.lookingAt(cow.boundingBox.center, mc.player!!.eyePosition)
+                mc.player!!.yRot = rotation.yaw
+                mc.player!!.xRot = rotation.pitch
+                mc.player!!.yRotO = rotation.yaw
+                mc.player!!.xRotO = rotation.pitch
             }
+            //codex end
         }
+        // codex start
+        context.waitTicks(1)
+        context.input.pressKey { it.keyAttack }
+        //codex end
         context.waitFor({ cow.health < initialHealth }, 100)
         return context.computeOnClient<Float, RuntimeException> { initialHealth - cow.health }
     }
