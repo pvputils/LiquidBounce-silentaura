@@ -24,7 +24,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock;
 import net.ccbluex.liquidbounce.interfaces.EntityRenderStateAddition;
 import net.ccbluex.liquidbounce.utils.render.FirstPersonShieldTint;
 import net.minecraft.client.Minecraft;
@@ -157,103 +156,115 @@ public abstract class MixinFirstPersonHandsAndItems {
     // }
     //
     // codex end
-    @Inject(method = "submitArmWithItem", at = @At("HEAD"), cancellable = true)
-    private void hideShield(PlayerRenderState playerState, FirstPersonHandsAndItemsRenderState state, float partialTicks, float xRot, InteractionHand hand, float attack, ItemStack itemStack, float inverseArmHeight, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
-        if (hand == InteractionHand.OFF_HAND && ModuleSwordBlock.INSTANCE.shouldHideOffhand(itemStack)) {
-            ci.cancel();
-        }
     // codex start
+    // @Inject(method = "submitArmWithItem", at = @At("HEAD"), cancellable = true)
+    // private void hideShield(PlayerRenderState playerState, FirstPersonHandsAndItemsRenderState state, float partialTicks, float xRot, InteractionHand hand, float attack, ItemStack itemStack, float inverseArmHeight, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, CallbackInfo ci) {
+    //     if (hand == InteractionHand.OFF_HAND && ModuleSwordBlock.INSTANCE.shouldHideOffhand(itemStack)) {
+    //         ci.cancel();
+    //     }
+    // // codex start
+    // // }
+    // //
+    // // @ModifyArg(method = "submitArmWithItem", at = @At(
+    // //         value = "INVOKE",
+    // //         target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V",
+    // //         ordinal = 3
+    // // ), index = 2)
+    // // private float injectIgnoreBlocking(float equipProgress) {
+    // //     if (ModuleAnimations.EquipOffset.INSTANCE.getRunning() && ModuleAnimations.EquipOffset.INSTANCE.getIgnoreBlocking()) {
+    // //         return 0.0F;
+    // //     }
+    // //
+    // //     return equipProgress;
+    // // }
+    // //
+    // // codex end
+    // // codex start
+    // // @ModifyArg(method = "applyItemArmTransform", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"), index = 1)
+    // // private float injectDisableEquipOffset(float y) {
+    // //     if (ModuleAnimations.INSTANCE.getRunning() && !ModuleAnimations.EquipOffset.INSTANCE.getRunning()) {
+    // //         return ITEM_POS_Y;
+    // //     }
+    // //     return y;
+    // // }
+    // // codex end
     // }
-    //
-    // @ModifyArg(method = "submitArmWithItem", at = @At(
-    //         value = "INVOKE",
-    //         target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;applyItemArmTransform(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/HumanoidArm;F)V",
-    //         ordinal = 3
-    // ), index = 2)
-    // private float injectIgnoreBlocking(float equipProgress) {
-    //     if (ModuleAnimations.EquipOffset.INSTANCE.getRunning() && ModuleAnimations.EquipOffset.INSTANCE.getIgnoreBlocking()) {
-    //         return 0.0F;
+    // codex end
+
+    // codex start
+    // @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
+    //     value = "INVOKE",
+    //     target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;",
+    //     ordinal = 0
+    // ))
+    // private ItemUseAnimation hookUseAction(
+    //     ItemUseAnimation original,
+    //     @Local(argsOnly = true, name = "itemStack") ItemStack itemStack,
+    //     @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState
+    // ) {
+    //     var entity = liquid_bounce$getEntity(playerState);
+    //     if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity, itemStack)) {
+    //         return ItemUseAnimation.BLOCK;
+    //     }
+    //     return original;
+    // }
+    // codex end
+
+    // codex start
+    // @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
+    //     value = "FIELD",
+    //     target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isUsingItem:Z",
+    //     ordinal = 1,
+    //     opcode = Opcodes.GETFIELD)
+    // )
+    // private boolean hookIsUseItem(boolean original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
+    //     var entity = liquid_bounce$getEntity(playerState);
+    //     if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
+    //         return true;
     //     }
     //
-    //     return equipProgress;
+    //     return original;
     // }
-    //
     // codex end
+
     // codex start
-    // @ModifyArg(method = "applyItemArmTransform", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V"), index = 1)
-    // private float injectDisableEquipOffset(float y) {
-    //     if (ModuleAnimations.INSTANCE.getRunning() && !ModuleAnimations.EquipOffset.INSTANCE.getRunning()) {
-    //         return ITEM_POS_Y;
+    // @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
+    //     value = "FIELD",
+    //     target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;useItemHand:Lnet/minecraft/world/InteractionHand;",
+    //     ordinal = 1,
+    //     opcode = Opcodes.GETFIELD)
+    // )
+    // private InteractionHand hookActiveHand(InteractionHand original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
+    //     var entity = liquid_bounce$getEntity(playerState);
+    //     if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
+    //         return InteractionHand.MAIN_HAND;
     //     }
-    //     return y;
+    //
+    //     return original;
     // }
     // codex end
-    }
 
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "INVOKE",
-        target = "Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;",
-        ordinal = 0
-    ))
-    private ItemUseAnimation hookUseAction(
-        ItemUseAnimation original,
-        @Local(argsOnly = true, name = "itemStack") ItemStack itemStack,
-        @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState
-    ) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity, itemStack)) {
-            return ItemUseAnimation.BLOCK;
-        }
-        return original;
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
+    //     value = "FIELD",
+    //     target = "Lnet/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState;useItemRemainingTicks:I",
+    //     ordinal = 2,
+    //     opcode = Opcodes.GETFIELD)
+    // )
+    // private int hookItemUseItem(int original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
+    //     var entity = liquid_bounce$getEntity(playerState);
+    //     if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
+    //         return 7200;
+    //     }
+    //     return original;
+    // }
+    // codex end
 
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "FIELD",
-        target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;isUsingItem:Z",
-        ordinal = 1,
-        opcode = Opcodes.GETFIELD)
-    )
-    private boolean hookIsUseItem(boolean original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
-            return true;
-        }
-
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "FIELD",
-        target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;useItemHand:Lnet/minecraft/world/InteractionHand;",
-        ordinal = 1,
-        opcode = Opcodes.GETFIELD)
-    )
-    private InteractionHand hookActiveHand(InteractionHand original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
-            return InteractionHand.MAIN_HAND;
-        }
-
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "submitArmWithItem", at = @At(
-        value = "FIELD",
-        target = "Lnet/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState;useItemRemainingTicks:I",
-        ordinal = 2,
-        opcode = Opcodes.GETFIELD)
-    )
-    private int hookItemUseItem(int original, @Local(argsOnly = true, name = "playerState") PlayerRenderState playerState) {
-        var entity = liquid_bounce$getEntity(playerState);
-        if (entity instanceof LivingEntity livingEntity && ModuleSwordBlock.shouldAnimateSwordBlock(livingEntity)) {
-            return 7200;
-        }
-        return original;
-    }
-
-    @Unique
-    private static @Nullable Entity liquid_bounce$getEntity(PlayerRenderState playerState) {
-        return playerState.avatarRenderState instanceof EntityRenderStateAddition entityRenderState ? entityRenderState.liquid_bounce$getEntity() : null;
-    }
+    // codex start
+    // @Unique
+    // private static @Nullable Entity liquid_bounce$getEntity(PlayerRenderState playerState) {
+    //     return playerState.avatarRenderState instanceof EntityRenderStateAddition entityRenderState ? entityRenderState.liquid_bounce$getEntity() : null;
+    // }
+    // codex end
 
 }

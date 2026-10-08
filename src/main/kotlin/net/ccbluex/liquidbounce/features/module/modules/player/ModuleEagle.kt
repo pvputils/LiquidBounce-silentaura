@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ScaffoldBlockItemSelection.isValidBlock
 import net.ccbluex.liquidbounce.utils.entity.isCloseToEdge
 import net.ccbluex.liquidbounce.utils.kotlin.EventPriorityConvention.SAFETY_FEATURE
 import net.ccbluex.liquidbounce.utils.kotlin.matchesAll
@@ -107,7 +106,9 @@ object ModuleEagle : ClientModule(
             RIGHT("Right"),
             FORWARDS("Forwards"),
             BACKWARDS("Backwards"),
-            HOLDING_BLOCKS("HoldingBlocks"),
+            // codex start
+            // HOLDING_BLOCKS("HoldingBlocks"),
+            // codex end
             ON_GROUND("OnGround"),
             SNEAK("Sneak");
 
@@ -116,7 +117,9 @@ object ModuleEagle : ClientModule(
                 RIGHT -> event.directionalInput.right
                 FORWARDS -> event.directionalInput.forwards
                 BACKWARDS -> event.directionalInput.backwards
-                HOLDING_BLOCKS -> isValidBlock(player.mainHandItem) || isValidBlock(player.offhandItem)
+                // codex start
+                // HOLDING_BLOCKS -> isValidBlock(player.mainHandItem) || isValidBlock(player.offhandItem)
+                // codex end
                 ON_GROUND -> player.onGround()
                 SNEAK -> event.sneak
             }

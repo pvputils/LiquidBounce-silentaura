@@ -19,7 +19,6 @@
 package net.ccbluex.liquidbounce.features.module.modules.player.offhand
 
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
-import net.ccbluex.liquidbounce.features.module.modules.player.nofall.ModuleNoFall
 import net.ccbluex.liquidbounce.utils.block.getBlock
 import net.ccbluex.liquidbounce.utils.block.getPotentialSecondBedBlock
 import net.ccbluex.liquidbounce.utils.block.getSortedSphere
@@ -110,7 +109,7 @@ internal object Totem : ToggleableValueGroup(ModuleOffhand, "Totem", true) {
             val ignoreElytra by boolean("IgnoreElytra", false)
 
             fun getFallDamage(): Float {
-                if (ModuleNoFall.running || !FallDamage.enabled || player.fallDistance <= 3f) {
+                if (!FallDamage.enabled || player.fallDistance <= 3f) { //codex (ModuleNoFall.running ||)
                     return 0f
                 }
 

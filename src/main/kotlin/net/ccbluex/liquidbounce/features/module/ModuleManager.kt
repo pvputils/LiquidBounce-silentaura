@@ -34,36 +34,27 @@ import net.ccbluex.liquidbounce.event.tickUntil
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleMaceKill
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock
 import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleAutoBow
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals
 import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.ModuleCrystalAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.ModuleVelocity
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModulePingSpoof
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleEasyPearl
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTargetLock
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTeams
 import net.ccbluex.liquidbounce.features.module.modules.misc.antibot.ModuleAntiBot
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.ModuleDebugRecorder
 import net.ccbluex.liquidbounce.features.module.modules.misc.nameprotect.ModuleNameProtect
 import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleSafeWalk
 import net.ccbluex.liquidbounce.features.module.modules.movement.fly.ModuleFly
 import net.ccbluex.liquidbounce.features.module.modules.movement.liquidwalk.ModuleLiquidWalk
-import net.ccbluex.liquidbounce.features.module.modules.movement.speed.ModuleSpeed
 import net.ccbluex.liquidbounce.features.module.modules.player.ModuleEagle
 import net.ccbluex.liquidbounce.features.module.modules.player.ModuleFastUse
 import net.ccbluex.liquidbounce.features.module.modules.player.autobuff.ModuleAutoBuff
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.ModuleInventoryCleaner
-import net.ccbluex.liquidbounce.features.module.modules.player.nofall.ModuleNoFall
 import net.ccbluex.liquidbounce.features.module.modules.player.offhand.ModuleOffhand
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleCombineMobs
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ModuleScaffold
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.utils.client.clientStartDurationMs
 import net.ccbluex.liquidbounce.utils.client.inGame
@@ -281,11 +272,15 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleTimerRange,
             // ModuleTickBase,
             // codex end
-            ModuleVelocity,
+            // codex start
+            // ModuleVelocity,
+            // codex end
             // codex start
             // ModuleBacktrack,
             // codex end
-            ModuleSwordBlock,
+            // codex start
+            // ModuleSwordBlock,
+            // codex end
             // codex start
             // ModuleAutoShoot,
             // ModuleKeepSprint,
@@ -316,7 +311,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleNameCollector,
             // ModuleNoPitchLimit,
             // codex end
-            ModulePingSpoof,
+            // codex start
+            // ModulePingSpoof,
+            // codex end
             // codex start
             // ModulePlugins,
             // ModulePortalMenu,
@@ -367,13 +364,17 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleSpammer,
             // ModuleAutoAccount,
             // codex end
-            ModuleTeams,
+            // codex start
+            // ModuleTeams,
+            // codex end
             // codex start
             // ModuleElytraSwap,
             // ModuleAutoChatGame,
             // ModuleReportHelper,
             // codex end
-            ModuleTargetLock,
+            // codex start
+            // ModuleTargetLock,
+            // codex end
             // codex start
             // ModuleAutoPearl,
             // ModuleAntiStaff,
@@ -416,11 +417,15 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleParkour,
             // ModuleEntityControl,
             // codex end
-            ModuleSafeWalk,
+            // codex start
+            // ModuleSafeWalk,
+            // codex end
             // codex start
             // ModuleSneak,
             // codex end
-            ModuleSpeed,
+            // codex start
+            // ModuleSpeed,
+            // codex end
             // codex start
             // ModuleSprint,
             // ModuleStep,
@@ -466,7 +471,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleNoBlockInteract,
             // ModuleNoEntityInteract,
             // codex end
-            ModuleNoFall,
+            // codex start
+            // ModuleNoFall,
+            // codex end
             // codex start
             // ModuleNoRotateSet,
             // ModuleNoSlotSet,
@@ -564,7 +571,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleLiquidPlace,
             // ModuleProjectilePuncher,
             // codex end
-            ModuleScaffold,
+            // codex start
+            // ModuleScaffold,
+            // codex end
             // codex start
             // ModuleTimer,
             // ModuleNuker,

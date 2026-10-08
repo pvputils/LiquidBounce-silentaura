@@ -22,7 +22,6 @@ import net.ccbluex.fastutil.enumMapOf
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.ArmorItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.ArrowItemFacet
-import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.BlockItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.BowItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.CrossbowItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.FoodItemFacet
@@ -39,7 +38,6 @@ import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.SwordItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.ThrowableItemFacet
 import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.items.WeaponItemFacet
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ScaffoldBlockItemSelection
 import net.ccbluex.liquidbounce.utils.inventory.ItemSlot
 import net.ccbluex.liquidbounce.utils.inventory.VirtualItemSlot
 import net.ccbluex.liquidbounce.utils.item.armor.ArmorComparator
@@ -245,15 +243,17 @@ class ItemCategorization(
                 is ArrowItem -> add(ArrowItemFacet(slot))
                 is FishingRodItem -> add(RodItemFacet(slot))
                 is ShieldItem -> add(ShieldItemFacet(slot))
-                is BlockItem -> {
-                    if (ScaffoldBlockItemSelection.isValidBlock(itemStack)
-                        && !ScaffoldBlockItemSelection.isBlockUnfavourable(itemStack)
-                    ) {
-                        add(BlockItemFacet(slot))
-                    } else {
-                        add(ItemFacet(slot))
-                    }
-                }
+                // codex start
+                // is BlockItem -> {
+                //     if (ScaffoldBlockItemSelection.isValidBlock(itemStack)
+                //         && !ScaffoldBlockItemSelection.isBlockUnfavourable(itemStack)
+                //     ) {
+                //         add(BlockItemFacet(slot))
+                //     } else {
+                //         add(ItemFacet(slot))
+                //     }
+                // }
+                // codex end
 
                 Items.MILK_BUCKET -> add(PrimitiveItemFacet(slot, ItemSortChoice.MILK.category))
                 is BucketItem -> {

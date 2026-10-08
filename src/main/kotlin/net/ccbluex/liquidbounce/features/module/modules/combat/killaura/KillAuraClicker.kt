@@ -22,7 +22,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.rotationTiming
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.simulateInventoryClosing
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.mode.VelocityReduce
 import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
@@ -52,8 +51,10 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
     KillAuraClickerItemCooldown()
 ) {
 
-    override val isClickTick: Boolean
-        get() = super.isClickTick && (!VelocityReduce.running || VelocityReduce.remainingAttackCount == 0)
+    // codex start
+    // override val isClickTick: Boolean
+    //     get() = super.isClickTick && (!VelocityReduce.running || VelocityReduce.remainingAttackCount == 0)
+    // codex end
 
     private class KillAuraClickerItemCooldown : ItemCooldown() {
 

@@ -29,7 +29,6 @@ import net.ccbluex.liquidbounce.event.tickHandler
 import net.ccbluex.liquidbounce.event.waitTicks
 import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.module.modules.movement.fly.ModuleFly
-import net.ccbluex.liquidbounce.features.module.modules.movement.speed.ModuleSpeed
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.Timer
 import net.ccbluex.liquidbounce.utils.client.chat
@@ -65,9 +64,11 @@ internal object FlySentinel26thDec : Mode("Sentinel26thDec") {
     private var hasBeenTeleported = false
 
     override fun enable() {
-        if (ModuleSpeed.enabled) {
-            ModuleSpeed.enabled = false
-        }
+        // codex start
+        // if (ModuleSpeed.enabled) {
+        //     ModuleSpeed.enabled = false
+        // }
+        // codex end
 
         hasBeenHurt = false
         hasBeenTeleported = false

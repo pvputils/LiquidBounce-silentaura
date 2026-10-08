@@ -31,8 +31,6 @@ import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.ModuleCrystalAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.features.module.modules.player.ModuleEagle
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ModuleScaffold
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ScaffoldBlockItemSelection
 import net.ccbluex.liquidbounce.utils.client.Chronometer
 import net.ccbluex.liquidbounce.utils.client.isNewerThanOrEquals1_16
 import net.ccbluex.liquidbounce.utils.client.usesViaFabricPlus
@@ -91,10 +89,12 @@ object ModuleOffhand : ClientModule("Offhand", ModuleCategories.PLAYER, aliases 
         val strengthBind by key("StrengthBind")
     }
 
-    private object Block : ToggleableValueGroup(this, "Block", false) {
-        val whileScaffold by boolean("WhileScaffold", true)
-        val whileEagle by boolean("WhileEagle", true)
-    }
+    // codex start
+    // private object Block : ToggleableValueGroup(this, "Block", false) {
+    //     val whileScaffold by boolean("WhileScaffold", true)
+    //     val whileEagle by boolean("WhileEagle", true)
+    // }
+    // codex end
 
     init {
         treeAll(
@@ -102,7 +102,9 @@ object ModuleOffhand : ClientModule("Offhand", ModuleCategories.PLAYER, aliases 
             Crystal,
             Gapple,
             Strength,
-            Block,
+            // codex start
+            // Block,
+            // codex end
         )
     }
 
@@ -299,13 +301,15 @@ object ModuleOffhand : ClientModule("Offhand", ModuleCategories.PLAYER, aliases 
         CRYSTAL("Crystal", Items.END_CRYSTAL) {
             override fun canCycleTo() = Crystal.enabled && (!Crystal.onlyWhileCa || ModuleCrystalAura.running)
         },
-        BLOCK("Block", ScaffoldBlockItemSelection::isValidBlock) {
-            override fun shouldEquip(): Boolean =
-                Block.enabled &&
-                    ((Block.whileEagle && ModuleEagle.enabled) || (Block.whileScaffold && ModuleScaffold.enabled))
-
-            override fun canCycleTo() = Block.enabled
-        },
+        // codex start
+        // BLOCK("Block", ScaffoldBlockItemSelection::isValidBlock) {
+        //     override fun shouldEquip(): Boolean =
+        //         Block.enabled &&
+        //             ((Block.whileEagle && ModuleEagle.enabled) || (Block.whileScaffold && ModuleScaffold.enabled))
+        //
+        //     override fun canCycleTo() = Block.enabled
+        // },
+        // codex end
         BACK("Back") {
             override fun getSlot(): ItemSlot? {
                 return last?.let {

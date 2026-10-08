@@ -26,9 +26,7 @@ import net.ccbluex.liquidbounce.event.events.PlayerMoveEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.tickHandler
 import net.ccbluex.liquidbounce.event.waitTicks
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModulePingSpoof
 import net.ccbluex.liquidbounce.features.module.modules.movement.fly.ModuleFly
-import net.ccbluex.liquidbounce.features.module.modules.movement.speed.ModuleSpeed
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.notification
@@ -62,13 +60,17 @@ internal object FlySentinel20thApr : Mode("Sentinel20thApr") {
     private var hasBeenTeleported = false
 
     override fun enable() {
-        if (!ModulePingSpoof.enabled) {
-            ModulePingSpoof.enabled = true
-        }
+        // codex start
+        // if (!ModulePingSpoof.enabled) {
+        //     ModulePingSpoof.enabled = true
+        // }
+        // codex end
 
-        if (ModuleSpeed.enabled) {
-            ModuleSpeed.enabled = false
-        }
+        // codex start
+        // if (ModuleSpeed.enabled) {
+        //     ModuleSpeed.enabled = false
+        // }
+        // codex end
 
         hasBeenHurt = false
         hasBeenTeleported = false
