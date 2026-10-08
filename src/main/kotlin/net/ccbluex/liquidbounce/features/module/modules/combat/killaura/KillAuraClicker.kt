@@ -18,11 +18,9 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.rotationTiming
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.simulateInventoryClosing
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
@@ -58,15 +56,21 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
 
     private class KillAuraClickerItemCooldown : ItemCooldown() {
 
-        private val ignoreOnShieldBreak by boolean("IgnoreOnShieldBreak", true)
-        private val ignoreOnMaceSmash by boolean("IgnoreOnMaceSmash", true)
+        // codex start
+        // private val ignoreOnShieldBreak by boolean("IgnoreOnShieldBreak", true)
+        // codex end
+        // codex start
+        // private val ignoreOnMaceSmash by boolean("IgnoreOnMaceSmash", true)
+        // codex end
         private val ignoreWhenExitingRange by boolean("IgnoreWhenExitingRange", true)
 
         override fun isCooldownPassed(ticks: Int) = when {
             super.isCooldownPassed(ticks) -> true
-            ignoreOnShieldBreak && ModuleKillAura.targetTracker.target?.wouldBlockHit == true
-                && ModuleAutoWeapon.willShieldBreak -> true
-            ignoreOnMaceSmash && ModuleAutoWeapon.willMaceSmash -> true
+            // codex start
+            // ignoreOnShieldBreak && ModuleKillAura.targetTracker.target?.wouldBlockHit == true
+            //     && ModuleAutoWeapon.willShieldBreak -> true
+            // ignoreOnMaceSmash && ModuleAutoWeapon.willMaceSmash -> true
+            // codex end
             ignoreWhenExitingRange && ticks >= 0 && predictExitingRange(1.0 + ticks.toDouble()) -> true
             else -> false
         }
@@ -122,7 +126,7 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
 
         // 1. Stop blocking
         if (player.isBlockingServerside || KillAuraAutoBlock.enforcedBlockingHand != null) {
-            if (!KillAuraAutoBlock.enabled && !ModuleMultiActions.mayAttackWhileUsing()) {
+            if (!KillAuraAutoBlock.enabled) { //codex (&& !ModuleMultiActions.mayAttackWhileUsing())
                 return
             }
 
@@ -132,7 +136,7 @@ object KillAuraClicker : Clicker<ModuleKillAura>(
                     return
                 }
             }
-        } else if (player.isUsingItem && !ModuleMultiActions.mayAttackWhileUsing()) {
+        } else if (player.isUsingItem) { //codex (&& !ModuleMultiActions.mayAttackWhileUsing())
             // Since we are not allowed to attack while the player is using another item,
             // we will return here.
             return

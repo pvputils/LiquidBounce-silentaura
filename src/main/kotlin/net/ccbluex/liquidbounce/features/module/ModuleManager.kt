@@ -32,27 +32,17 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.sequenceHandler
 import net.ccbluex.liquidbounce.event.tickUntil
 import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleMaceKill
 import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleAutoBow
-import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals
-import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.ModuleCrystalAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleEasyPearl
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
 import net.ccbluex.liquidbounce.features.module.modules.misc.antibot.ModuleAntiBot
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.ModuleDebugRecorder
 import net.ccbluex.liquidbounce.features.module.modules.misc.nameprotect.ModuleNameProtect
 import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
-import net.ccbluex.liquidbounce.features.module.modules.movement.fly.ModuleFly
-import net.ccbluex.liquidbounce.features.module.modules.movement.liquidwalk.ModuleLiquidWalk
 import net.ccbluex.liquidbounce.features.module.modules.player.ModuleEagle
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleFastUse
 import net.ccbluex.liquidbounce.features.module.modules.player.autobuff.ModuleAutoBuff
-import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.ModuleInventoryCleaner
-import net.ccbluex.liquidbounce.features.module.modules.player.offhand.ModuleOffhand
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleCombineMobs
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.addon.AddonApi
@@ -257,11 +247,15 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // codex start
             // ModuleAutoRod,
             // codex end
-            ModuleAutoWeapon,
+            // codex start
+            // ModuleAutoWeapon,
+            // codex end
             // codex start
             // ModuleFakeLag,
             // codex end
-            ModuleCriticals,
+            // codex start
+            // ModuleCriticals,
+            // codex end
             // codex start
             // ModuleHitbox,
             // codex end
@@ -285,7 +279,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleAutoShoot,
             // ModuleKeepSprint,
             // codex end
-            ModuleMaceKill,
+            // codex start
+            // ModuleMaceKill,
+            // codex end
             // codex start
             // ModuleSpearKill,
             // ModuleNoMissCooldown,
@@ -305,7 +301,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleKick,
             // ModuleMoreCarry,
             // codex end
-            ModuleMultiActions,
+            // codex start
+            // ModuleMultiActions,
+            // codex end
             // codex start
             // ModuleNewChunks,
             // ModuleNameCollector,
@@ -399,13 +397,17 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleElytraRecast,
             // ModuleElytraFly,
             // codex end
-            ModuleFly,
+            // codex start
+            // ModuleFly,
+            // codex end
             ModuleFreeze,
             // codex start
             // ModuleHighJump,
             // ModuleInventoryMove,
             // codex end
-            ModuleLiquidWalk,
+            // codex start
+            // ModuleLiquidWalk,
+            // codex end
             // codex start
             // ModuleLongJump,
             // ModuleNoClip,
@@ -452,7 +454,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleAutoRespawn,
             // ModuleAutoWindCharge,
             // codex end
-            ModuleOffhand,
+            // codex start
+            // ModuleOffhand,
+            // codex end
             // codex start
             // ModuleAutoShop,
             // ModuleAutoWalk,
@@ -465,8 +469,12 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // codex start
             // ModuleFastExp,
             // codex end
-            ModuleFastUse,
-            ModuleInventoryCleaner,
+            // codex start
+            // ModuleFastUse,
+            // codex end
+            // codex start
+            // ModuleInventoryCleaner,
+            // codex end
             // codex start
             // ModuleNoBlockInteract,
             // ModuleNoEntityInteract,
@@ -559,7 +567,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleAutoFarm,
             // ModuleAutoTool,
             // codex end
-            ModuleCrystalAura,
+            // codex start
+            // ModuleCrystalAura,
+            // codex end
             // codex start
             // ModuleFastBreak,
             // ModuleFastPlace,

@@ -66,7 +66,7 @@ internal object KillAuraFailSwing : ToggleableValueGroup(ModuleKillAura, "FailSw
     }
 
     fun dealWithFakeSwing(target: Entity?) {
-        if (!enabled || !canAttackNow()) {
+        if (!enabled || !canAttackNow()) { //codex (canAttackNow(target))
             return
         }
 

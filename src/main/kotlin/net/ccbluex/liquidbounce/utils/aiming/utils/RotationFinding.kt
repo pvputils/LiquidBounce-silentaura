@@ -22,7 +22,6 @@ package net.ccbluex.liquidbounce.utils.aiming.utils
 
 import net.ccbluex.fastutil.step
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.ModuleCrystalAura
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.render.FULL_BOX
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
@@ -613,86 +612,88 @@ fun raytraceUpperBlockSide(
  * and the current list is returned.
  */
 @Suppress("CognitiveComplexMethod", "LongParameterList")
-fun findClosestPointOnBlockInLineWithCrystal(
-    eyes: Vec3,
-    range: Double,
-    wallsRange: Double,
-    expectedTarget: BlockPos,
-    notFacingAway: Boolean,
-    rotationsNotToMatch: List<Rotation>? = null
-): Pair<RotationWithVector, Direction>? {
-    var best: Pair<RotationWithVector, Direction>? = null
-    var bestIntersects = false
-    var bestDistance = Double.MAX_VALUE
-
-    val predictedCrystal = AABB(
-        expectedTarget.x.toDouble() - 0.5,
-        expectedTarget.y.toDouble() + 1.0,
-        expectedTarget.z.toDouble() - 0.5,
-        expectedTarget.x.toDouble() + 1.5,
-        expectedTarget.y.toDouble() + 3.0,
-        expectedTarget.z.toDouble() + 1.5
-    )
-
-    mc.execute {
-        ModuleDebug.debugGeometry(
-            ModuleCrystalAura,
-            "predictedCrystal",
-            ModuleDebug.DebuggedBox(predictedCrystal, Color4b.RED.fade(0.4f))
-        )
-    }
-
-    checkCurrentRotation(range, wallsRange, expectedTarget, predictedCrystal, eyes)?.let { return it }
-
-    val rangeSquared = range.sq()
-    val wallsRangeSquared = wallsRange.sq()
-    val blockBB = FULL_BOX.move(expectedTarget)
-
-    val vec = expectedTarget.center
-    Direction.entries.forEach {
-        val vec3d = vec.relative(it, 0.5)
-
-        val coordinate = eyes[it.axis]
-        if (notFacingAway && !blockBB.contains(eyes) && when (it.axisDirection) {
-            Direction.AxisDirection.NEGATIVE -> coordinate > blockBB.min(it.axis)
-            Direction.AxisDirection.POSITIVE -> coordinate < blockBB.max(it.axis)
-        }) {
-            return@forEach
-        }
-
-        range(-0.45..0.45 step 0.05, -0.45..0.45 step 0.05) { x, y ->
-            val vec3 = pointOnSide(it, x, y, vec3d)
-
-            val intersects = predictedCrystal.isHitByLine(eyes, vec3)
-            if (bestIntersects && !intersects) {
-                return@range
-            }
-
-            val distance = eyes.distanceToSqr(vec3)
-
-            // skip if out of range or the current best is closer
-            if (distance > rangeSquared || bestDistance <= distance && (!intersects || bestIntersects)) {
-                return@range
-            }
-
-            // skip because not visible in range
-            if (distance > wallsRangeSquared && !player.isFacingBlock(eyes, vec3, expectedTarget, it)) {
-                return@range
-            }
-
-            val rotation = Rotation.lookingAt(point = vec3, from = eyes)
-            if (rotationsNotToMatch != null && rotation in rotationsNotToMatch) {
-                return@range
-            }
-
-            best = RotationWithVector(rotation, vec3) to it
-            bestDistance = distance
-            bestIntersects = intersects
-        }
-    }
-
-    return best
-}
+// codex start
+// fun findClosestPointOnBlockInLineWithCrystal(
+//     eyes: Vec3,
+//     range: Double,
+//     wallsRange: Double,
+//     expectedTarget: BlockPos,
+//     notFacingAway: Boolean,
+//     rotationsNotToMatch: List<Rotation>? = null
+// ): Pair<RotationWithVector, Direction>? {
+//     var best: Pair<RotationWithVector, Direction>? = null
+//     var bestIntersects = false
+//     var bestDistance = Double.MAX_VALUE
+//
+//     val predictedCrystal = AABB(
+//         expectedTarget.x.toDouble() - 0.5,
+//         expectedTarget.y.toDouble() + 1.0,
+//         expectedTarget.z.toDouble() - 0.5,
+//         expectedTarget.x.toDouble() + 1.5,
+//         expectedTarget.y.toDouble() + 3.0,
+//         expectedTarget.z.toDouble() + 1.5
+//     )
+//
+//     mc.execute {
+//         ModuleDebug.debugGeometry(
+//             ModuleCrystalAura,
+//             "predictedCrystal",
+//             ModuleDebug.DebuggedBox(predictedCrystal, Color4b.RED.fade(0.4f))
+//         )
+//     }
+//
+//     checkCurrentRotation(range, wallsRange, expectedTarget, predictedCrystal, eyes)?.let { return it }
+//
+//     val rangeSquared = range.sq()
+//     val wallsRangeSquared = wallsRange.sq()
+//     val blockBB = FULL_BOX.move(expectedTarget)
+//
+//     val vec = expectedTarget.center
+//     Direction.entries.forEach {
+//         val vec3d = vec.relative(it, 0.5)
+//
+//         val coordinate = eyes[it.axis]
+//         if (notFacingAway && !blockBB.contains(eyes) && when (it.axisDirection) {
+//             Direction.AxisDirection.NEGATIVE -> coordinate > blockBB.min(it.axis)
+//             Direction.AxisDirection.POSITIVE -> coordinate < blockBB.max(it.axis)
+//         }) {
+//             return@forEach
+//         }
+//
+//         range(-0.45..0.45 step 0.05, -0.45..0.45 step 0.05) { x, y ->
+//             val vec3 = pointOnSide(it, x, y, vec3d)
+//
+//             val intersects = predictedCrystal.isHitByLine(eyes, vec3)
+//             if (bestIntersects && !intersects) {
+//                 return@range
+//             }
+//
+//             val distance = eyes.distanceToSqr(vec3)
+//
+//             // skip if out of range or the current best is closer
+//             if (distance > rangeSquared || bestDistance <= distance && (!intersects || bestIntersects)) {
+//                 return@range
+//             }
+//
+//             // skip because not visible in range
+//             if (distance > wallsRangeSquared && !player.isFacingBlock(eyes, vec3, expectedTarget, it)) {
+//                 return@range
+//             }
+//
+//             val rotation = Rotation.lookingAt(point = vec3, from = eyes)
+//             if (rotationsNotToMatch != null && rotation in rotationsNotToMatch) {
+//                 return@range
+//             }
+//
+//             best = RotationWithVector(rotation, vec3) to it
+//             bestDistance = distance
+//             bestIntersects = intersects
+//         }
+//     }
+//
+//     return best
+// }
+// codex end
 
 private fun checkCurrentRotation(
     range: Double,

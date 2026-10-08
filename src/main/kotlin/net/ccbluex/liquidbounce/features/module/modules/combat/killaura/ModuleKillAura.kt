@@ -27,8 +27,6 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.tickHandler
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
-import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals.CriticalsSelectionMode
 import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.ON_TICK
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.SNAP
@@ -98,7 +96,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     // Bypass techniques
     internal val raycast by enumChoice("Raycast", TRACE_ALL)
-    private val criticalsSelectionMode by enumChoice("Criticals", CriticalsSelectionMode.SMART)
+    // codex start
+    // private val criticalsSelectionMode by enumChoice("Criticals", CriticalsSelectionMode.SMART)
+    // codex end
     private val keepSprint by boolean("KeepSprint", true)
 
     // Inventory Handling
@@ -156,7 +156,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         updateTarget()
 
         // Update Auto Weapon
-        ModuleAutoWeapon.onTarget(targetTracker.target)
+        // codex start
+        // ModuleAutoWeapon.onTarget(targetTracker.target)
+        // codex end
     }
 
     @Suppress("unused")
@@ -218,17 +220,21 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         attackTarget(crosshairTarget, rotation)
     }
 
-    val shouldBlockSprinting
-        get() = !ModuleElytraTarget.running
-            && criticalsSelectionMode.shouldStopSprinting(clicker, targetTracker.target)
+    // codex start
+    // val shouldBlockSprinting
+    //     get() = !ModuleElytraTarget.running
+    //         && criticalsSelectionMode.shouldStopSprinting(clicker, targetTracker.target)
+    // codex end
 
-    @Suppress("unused")
-    private val sprintHandler = handler<SprintEvent> { event ->
-        if (shouldBlockSprinting && (event.source == SprintEvent.Source.MOVEMENT_TICK ||
-                event.source == SprintEvent.Source.INPUT)) {
-            event.sprint = false
-        }
-    }
+    // codex start
+    // @Suppress("unused")
+    // private val sprintHandler = handler<SprintEvent> { event ->
+    //     if (shouldBlockSprinting && (event.source == SprintEvent.Source.MOVEMENT_TICK ||
+    //             event.source == SprintEvent.Source.INPUT)) {
+    //         event.sprint = false
+    //     }
+    // }
+    // codex end
 
     @Suppress("CognitiveComplexMethod", "CyclomaticComplexMethod")
     private fun attackTarget(target: Entity, rotation: Rotation) {
@@ -277,16 +283,16 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         val mainHandStack = player.mainHandItem
 
         // Attack enemy, according to the attack scheduler
-        if (clicker.isClickTick && canAttackNow(target, mainHandStack) &&
+        if (clicker.isClickTick && canAttackNow(mainHandStack) && //codex (target,)
             !KillAuraAutoBlock.isPrioritizingBlocking) {
             clicker.prepareForAttack(rotation) {
                 // On each click, we check if we are still ready to attack
-                if (!canAttackNow(target, mainHandStack)) {
+                if (!canAttackNow(mainHandStack)) { //codex (target,)
                     return@prepareForAttack false
                 }
 
                 // Attack enemy
-                attackEntity(target, SwingMode.DO_NOT_HIDE, keepSprint && !shouldBlockSprinting)
+                attackEntity(target, SwingMode.DO_NOT_HIDE, keepSprint) //codex (&& !shouldBlockSprinting)
                 range.update()
                 KillAuraNotifyWhenFail.failedHitsIncrement = 0
                 KillAuraAutoBlock.hasBlockedSinceAttack = false
@@ -445,7 +451,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
      * Check if we can attack the target at the current moment
      */
     internal fun canAttackNow(
-        target: Entity? = null,
+        // codex start
+        // target: Entity? = null,
+        // codex end
         itemStack: ItemStack = player.mainHandItem,
     ): Boolean {
         if (!itemStack.isItemEnabled(world.enabledFeatures())) {
@@ -456,11 +464,13 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             return false
         }
 
-        val criticalHitAllowed = target == null || player.isFallFlying || criticalsSelectionMode.isCriticalHit()
-        if (!criticalHitAllowed) {
-            return false
-        }
-
+        // codex start
+        // val criticalHitAllowed = target == null || player.isFallFlying || criticalsSelectionMode.isCriticalHit()
+        // if (!criticalHitAllowed) {
+        //     return false
+        // }
+        //
+        // codex end
         val isInventoryBlockingAttack = (isInventoryOpen || isInContainerScreen) &&
             !ignoreOpenInventory && !simulateInventoryClosing
         return !isInventoryBlockingAttack

@@ -25,7 +25,6 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.PlayerSafeWalkEvent;
 import net.ccbluex.liquidbounce.features.command.commands.ingame.fakeplayer.FakePlayer;
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection;
 import net.minecraft.sounds.SoundEvent;
@@ -202,61 +201,63 @@ public abstract class MixinPlayer extends MixinLivingEntity {
     // }
     //
     // codex end
-    @ModifyExpressionValue(method = "getCurrentItemAttackStrengthDelay", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAttributeValue(Lnet/minecraft/core/Holder;)D"))
-    private double hookAutoWeaponAttackSpeed(double original) {
-        // codex start
-        // if (liquid_bounce$isClientPlayer() && ModuleReach.INSTANCE.getRunning()) {
-        //     return original;
-        // }
-        //
-        // codex end
-        return ModuleAutoWeapon.INSTANCE.getAttackSpeed(original);
     // codex start
+    // @ModifyExpressionValue(method = "getCurrentItemAttackStrengthDelay", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getAttributeValue(Lnet/minecraft/core/Holder;)D"))
+    // private double hookAutoWeaponAttackSpeed(double original) {
+    //     // codex start
+    //     // if (liquid_bounce$isClientPlayer() && ModuleReach.INSTANCE.getRunning()) {
+    //     //     return original;
+    //     // }
+    //     //
+    //     // codex end
+    //     return ModuleAutoWeapon.INSTANCE.getAttackSpeed(original);
+    // // codex start
+    // // }
+    // //
+    // // /*
+    // //  * Sadly, mixins don't allow capturing parameters when redirecting,
+    // //  * so there needs to be an extra injection for every sound.
+    // //  */
+    // // @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 0))
+    // // private void hookPlaySound(Entity target, CallbackInfo ci) {
+    // //     if (!ModuleHitFX.INSTANCE.getRunning()) {
+    // //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_KNOCKBACK);
+    // //     }
+    // // }
+    // //
+    // // @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 1))
+    // // private void hookPlaySound1(Entity target, CallbackInfo ci) {
+    // //     if (!ModuleHitFX.INSTANCE.getRunning()) {
+    // //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_NODAMAGE);
+    // //     }
+    // // }
+    // //
+    // // @Inject(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 0))
+    // // private void hookPlaySound2(Entity target, boolean criticalHit, boolean sweeping, boolean cooldownPassed, boolean pierce, float enchantDamage, CallbackInfo ci) {
+    // //     if (!ModuleHitFX.INSTANCE.getRunning()) {
+    // //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_CRIT);
+    // //     }
+    // //
+    // // }
+    // //
+    // // @Inject(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 1))
+    // // private void hookPlaySound3(Entity target, boolean criticalHit, boolean sweeping, boolean cooldownPassed, boolean pierce, float enchantDamage, CallbackInfo ci) {
+    // //     if(!ModuleHitFX.INSTANCE.getRunning()) {
+    // //         liquid_bounce$playSoundIfFakePlayer(target, cooldownPassed ? SoundEvents.PLAYER_ATTACK_STRONG : SoundEvents.PLAYER_ATTACK_WEAK);
+    // //     }
+    // // }
+    // //
+    // // codex end
+    // // codex start
+    // // @Inject(method = "doSweepAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 0))
+    // // private void hookPlaySound4(Entity target, float damage, DamageSource damageSource, float cooldownProgress, CallbackInfo ci) {
+    // //     if(!ModuleHitFX.INSTANCE.getRunning()) {
+    // //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_SWEEP);
+    // //     }
+    // // }
+    // // codex end
     // }
-    //
-    // /*
-    //  * Sadly, mixins don't allow capturing parameters when redirecting,
-    //  * so there needs to be an extra injection for every sound.
-    //  */
-    // @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 0))
-    // private void hookPlaySound(Entity target, CallbackInfo ci) {
-    //     if (!ModuleHitFX.INSTANCE.getRunning()) {
-    //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_KNOCKBACK);
-    //     }
-    // }
-    //
-    // @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 1))
-    // private void hookPlaySound1(Entity target, CallbackInfo ci) {
-    //     if (!ModuleHitFX.INSTANCE.getRunning()) {
-    //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_NODAMAGE);
-    //     }
-    // }
-    //
-    // @Inject(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 0))
-    // private void hookPlaySound2(Entity target, boolean criticalHit, boolean sweeping, boolean cooldownPassed, boolean pierce, float enchantDamage, CallbackInfo ci) {
-    //     if (!ModuleHitFX.INSTANCE.getRunning()) {
-    //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_CRIT);
-    //     }
-    //
-    // }
-    //
-    // @Inject(method = "attackVisualEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 1))
-    // private void hookPlaySound3(Entity target, boolean criticalHit, boolean sweeping, boolean cooldownPassed, boolean pierce, float enchantDamage, CallbackInfo ci) {
-    //     if(!ModuleHitFX.INSTANCE.getRunning()) {
-    //         liquid_bounce$playSoundIfFakePlayer(target, cooldownPassed ? SoundEvents.PLAYER_ATTACK_STRONG : SoundEvents.PLAYER_ATTACK_WEAK);
-    //     }
-    // }
-    //
     // codex end
-    // codex start
-    // @Inject(method = "doSweepAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;playServerSideSound(Lnet/minecraft/sounds/SoundEvent;)V", ordinal = 0))
-    // private void hookPlaySound4(Entity target, float damage, DamageSource damageSource, float cooldownProgress, CallbackInfo ci) {
-    //     if(!ModuleHitFX.INSTANCE.getRunning()) {
-    //         liquid_bounce$playSoundIfFakePlayer(target, SoundEvents.PLAYER_ATTACK_SWEEP);
-    //     }
-    // }
-    // codex end
-    }
 
     /**
      * When the target is a fake player, this method will play a client side sound.

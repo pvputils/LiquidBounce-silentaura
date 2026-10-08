@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor
 import net.ccbluex.liquidbounce.event.events.PacketEvent
 import net.ccbluex.liquidbounce.event.events.TransferOrigin
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.SwitchMode
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.block.SwingMode
@@ -121,65 +120,67 @@ fun ClientPacketListener.sendChatOrCommand(message: String) =
         sendChat(message)
     }
 
-fun LocalPlayer.clickBlockWithSlot(
-    rayTraceResult: BlockHitResult,
-    slot: Int,
-    swingMode: SwingMode,
-    switchMode: SwitchMode = SwitchMode.SILENT,
-    sequenced: Boolean = true,
-) {
-    val hand = if (slot == Inventory.SLOT_OFFHAND) {
-        InteractionHand.OFF_HAND
-    } else {
-        InteractionHand.MAIN_HAND
-    }
-
-    val prevHotbarSlot = this.inventory.selectedSlot
-    if (hand == InteractionHand.MAIN_HAND) {
-        if (switchMode == SwitchMode.NONE && slot != prevHotbarSlot) {
-            // the slot is not selected and we can't switch
-            return
-        }
-
-        this.inventory.selectedSlot = slot
-
-        if (slot != prevHotbarSlot) {
-            connection.sendHeldItemChange(slot)
-        }
-    }
-
-    if (sequenced) {
-        interaction.startPrediction(world) { sequence ->
-            ServerboundUseItemOnPacket(hand, rayTraceResult, sequence)
-        }
-    } else {
-        connection.send(ServerboundUseItemOnPacket(hand, rayTraceResult, 0))
-    }
-
-    val itemUsageContext = UseOnContext(this, hand, rayTraceResult)
-
-    val itemStack = this.inventory.getItem(slot)
-
-    val actionResult: InteractionResult
-
-    if (this.isCreative) {
-        val i = itemStack.count
-        actionResult = itemStack.useOn(itemUsageContext)
-        itemStack.count = i
-    } else {
-        actionResult = itemStack.useOn(itemUsageContext)
-    }
-
-    if (actionResult.shouldSwingHand()) {
-        swingMode.swing(hand)
-    }
-
-    if (slot != prevHotbarSlot && hand == InteractionHand.MAIN_HAND && switchMode == SwitchMode.SILENT) {
-        connection.sendHeldItemChange(prevHotbarSlot)
-    }
-
-    this.inventory.selectedSlot = prevHotbarSlot
-}
+// codex start
+// fun LocalPlayer.clickBlockWithSlot(
+//     rayTraceResult: BlockHitResult,
+//     slot: Int,
+//     swingMode: SwingMode,
+//     switchMode: SwitchMode = SwitchMode.SILENT,
+//     sequenced: Boolean = true,
+// ) {
+//     val hand = if (slot == Inventory.SLOT_OFFHAND) {
+//         InteractionHand.OFF_HAND
+//     } else {
+//         InteractionHand.MAIN_HAND
+//     }
+//
+//     val prevHotbarSlot = this.inventory.selectedSlot
+//     if (hand == InteractionHand.MAIN_HAND) {
+//         if (switchMode == SwitchMode.NONE && slot != prevHotbarSlot) {
+//             // the slot is not selected and we can't switch
+//             return
+//         }
+//
+//         this.inventory.selectedSlot = slot
+//
+//         if (slot != prevHotbarSlot) {
+//             connection.sendHeldItemChange(slot)
+//         }
+//     }
+//
+//     if (sequenced) {
+//         interaction.startPrediction(world) { sequence ->
+//             ServerboundUseItemOnPacket(hand, rayTraceResult, sequence)
+//         }
+//     } else {
+//         connection.send(ServerboundUseItemOnPacket(hand, rayTraceResult, 0))
+//     }
+//
+//     val itemUsageContext = UseOnContext(this, hand, rayTraceResult)
+//
+//     val itemStack = this.inventory.getItem(slot)
+//
+//     val actionResult: InteractionResult
+//
+//     if (this.isCreative) {
+//         val i = itemStack.count
+//         actionResult = itemStack.useOn(itemUsageContext)
+//         itemStack.count = i
+//     } else {
+//         actionResult = itemStack.useOn(itemUsageContext)
+//     }
+//
+//     if (actionResult.shouldSwingHand()) {
+//         swingMode.swing(hand)
+//     }
+//
+//     if (slot != prevHotbarSlot && hand == InteractionHand.MAIN_HAND && switchMode == SwitchMode.SILENT) {
+//         connection.sendHeldItemChange(prevHotbarSlot)
+//     }
+//
+//     this.inventory.selectedSlot = prevHotbarSlot
+// }
+// codex end
 
 fun MultiPlayerGameMode.releaseUsingItemInTickLoop() = TickLoopTaskExecutor.executeInTickLoop {
     this.releaseUsingItem(player)

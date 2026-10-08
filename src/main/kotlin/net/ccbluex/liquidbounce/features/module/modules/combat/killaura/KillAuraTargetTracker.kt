@@ -18,7 +18,6 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
 import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_8
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.combat.TargetTracker
@@ -47,7 +46,7 @@ object KillAuraTargetTracker : TargetTracker() {
             return true
         }
 
-        if (player.mainHandItem.isAxe || ModuleAutoWeapon.willShieldBreak) {
+        if (player.mainHandItem.isAxe) { //codex (|| ModuleAutoWeapon.willShieldBreak)
             return true
         }
 

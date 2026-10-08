@@ -32,7 +32,6 @@ import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.features.misc.SelfDestruct;
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock;
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions;
 import net.ccbluex.liquidbounce.render.ClientTesselator;
 import net.ccbluex.liquidbounce.render.buffers.StaticGpuBufferPool;
 import net.ccbluex.liquidbounce.render.mesh.MeshDraw;
@@ -346,15 +345,19 @@ public abstract class MixinMinecraft {
         EventManager.INSTANCE.callEvent(ResourceReloadEvent.INSTANCE);
     }
 
-    @ModifyExpressionValue(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
-    private boolean injectMultiActionsBreakingWhileUsing(boolean original) {
-        return original && !ModuleMultiActions.mayBreakWhileUsing();
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
+    // private boolean injectMultiActionsBreakingWhileUsing(boolean original) {
+    //     return original && !ModuleMultiActions.mayBreakWhileUsing();
+    // }
+    // codex end
 
-    @ModifyExpressionValue(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
-    private boolean injectMultiActionsPlacingWhileBreaking(boolean original) {
-        return original && !ModuleMultiActions.mayPlaceWhileBreaking();
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
+    // private boolean injectMultiActionsPlacingWhileBreaking(boolean original) {
+    //     return original && !ModuleMultiActions.mayPlaceWhileBreaking();
+    // }
+    // codex end
 
     // codex start
     // /**
@@ -373,23 +376,25 @@ public abstract class MixinMinecraft {
     // }
     //
     // codex end
-    @ModifyExpressionValue(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z", ordinal = 0))
-    private boolean injectMultiActionsAttackingWhileUsingAndEnforcedBlockingState(boolean isUsingItem) {
-        if (isUsingItem) {
-            if (!this.options.keyUse.isDown() && !(KillAuraAutoBlock.INSTANCE.getRunning() && KillAuraAutoBlock.INSTANCE.getEnforcedBlockingHand() != null)) {
-                this.gameMode.releaseUsingItem(this.player);
-            }
-
-            if (!ModuleMultiActions.mayAttackWhileUsing()) {
-                this.options.keyAttack.clickCount = 0;
-            }
-
-            this.options.keyPickItem.clickCount = 0;
-            this.options.keyUse.clickCount = 0;
-        }
-
-        return false;
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z", ordinal = 0))
+    // private boolean injectMultiActionsAttackingWhileUsingAndEnforcedBlockingState(boolean isUsingItem) {
+    //     if (isUsingItem) {
+    //         if (!this.options.keyUse.isDown() && !(KillAuraAutoBlock.INSTANCE.getRunning() && KillAuraAutoBlock.INSTANCE.getEnforcedBlockingHand() != null)) {
+    //             this.gameMode.releaseUsingItem(this.player);
+    //         }
+    //
+    //         if (!ModuleMultiActions.mayAttackWhileUsing()) {
+    //             this.options.keyAttack.clickCount = 0;
+    //         }
+    //
+    //         this.options.keyPickItem.clickCount = 0;
+    //         this.options.keyUse.clickCount = 0;
+    //     }
+    //
+    //     return false;
+    // }
+    // codex end
 
     // codex start
     // @WrapWithCondition(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.PUTFIELD))

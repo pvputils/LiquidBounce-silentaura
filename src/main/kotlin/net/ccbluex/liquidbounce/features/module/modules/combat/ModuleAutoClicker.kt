@@ -30,7 +30,6 @@ import net.ccbluex.liquidbounce.event.tickUntil
 import net.ccbluex.liquidbounce.event.waitTicks
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.features.module.ModuleCategories
-import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals.CriticalsSelectionMode
 import net.ccbluex.liquidbounce.utils.clicking.Clicker
 import net.ccbluex.liquidbounce.utils.collection.blockSortedSetOf
 import net.ccbluex.liquidbounce.utils.collection.itemSortedSetOf
@@ -66,7 +65,9 @@ object ModuleAutoClicker : ClientModule("AutoClicker", ModuleCategories.COMBAT, 
         private val objectiveType by enumChoice("Objective", ObjectiveType.ANY)
         private val onItemUse by enumChoice("OnItemUse", Use.WAIT)
         private val weapon by multiEnumChoice("Weapon", enumSetOf(WeaponType.ANY), canBeNone = false)
-        internal val criticalsSelectionMode by enumChoice("Criticals", CriticalsSelectionMode.SMART)
+        // codex start
+        // internal val criticalsSelectionMode by enumChoice("Criticals", CriticalsSelectionMode.SMART)
+        // codex end
         private val delayPostStopUse by int("DelayPostStopUse", 0, 0..20, "ticks")
 
         private enum class ObjectiveType(override val tag: String) : Tagged {
@@ -113,19 +114,21 @@ object ModuleAutoClicker : ClientModule("AutoClicker", ModuleCategories.COMBAT, 
             }
         }
 
-        @Suppress("unused")
-        private val sprintHandler = handler<SprintEvent> { event ->
-            if (event.source == SprintEvent.Source.MOVEMENT_TICK || event.source == SprintEvent.Source.INPUT) {
-                if (!attack || !isOnObjective() || !isWeaponSelected()) {
-                    return@handler
-                }
-
-                val target = mc.hitResult as? EntityHitResult ?: return@handler
-                if (criticalsSelectionMode.shouldStopSprinting(clicker, target.entity)) {
-                    event.sprint = false
-                }
-            }
-        }
+        // codex start
+        // @Suppress("unused")
+        // private val sprintHandler = handler<SprintEvent> { event ->
+        //     if (event.source == SprintEvent.Source.MOVEMENT_TICK || event.source == SprintEvent.Source.INPUT) {
+        //         if (!attack || !isOnObjective() || !isWeaponSelected()) {
+        //             return@handler
+        //         }
+        //
+        //         val target = mc.hitResult as? EntityHitResult ?: return@handler
+        //         if (criticalsSelectionMode.shouldStopSprinting(clicker, target.entity)) {
+        //             event.sprint = false
+        //         }
+        //     }
+        // }
+        // codex end
 
     }
 
@@ -206,14 +209,16 @@ object ModuleAutoClicker : ClientModule("AutoClicker", ModuleCategories.COMBAT, 
                 return@run
             }
 
-            val crosshairTarget = mc.hitResult
-            if (crosshairTarget is EntityHitResult) {
-                ModuleAutoWeapon.onTarget(crosshairTarget.entity)
-
-                if (!criticalsSelectionMode.isCriticalHit()) {
-                    return@run
-                }
-            }
+            // codex start
+            // val crosshairTarget = mc.hitResult
+            // if (crosshairTarget is EntityHitResult) {
+            //     ModuleAutoWeapon.onTarget(crosshairTarget.entity)
+            //
+            //     if (!criticalsSelectionMode.isCriticalHit()) {
+            //         return@run
+            //     }
+            // }
+            // codex end
 
             if (player.isUsingItem) {
                 val encounterItemUse = encounterItemUse()
