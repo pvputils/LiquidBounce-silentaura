@@ -27,7 +27,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.ccbluex.liquidbounce.additions.MouseHandlerAddition;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.*;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleZoom;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.input.MouseButtonInfo;
@@ -97,16 +96,6 @@ public abstract class MixinMouseHandler implements MouseHandlerAddition {
     @Inject(method = "onMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isWindowActive()Z", shift = At.Shift.BEFORE, ordinal = 0))
     private void hookCursorPos(long handle, double xpos, double ypos, double xrel, double yrel, CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(new MouseCursorEvent(xpos, ypos));
-    }
-
-    @ModifyExpressionValue(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
-    private boolean injectZoomCondition1(boolean original) {
-        return original || ModuleZoom.INSTANCE.getRunning();
-    }
-
-    @ModifyExpressionValue(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isScoping()Z"))
-    private boolean injectZoomCondition2(boolean original) {
-        return original || ModuleZoom.INSTANCE.getRunning();
     }
 
     @WrapOperation(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), require = 1, allow = 1)

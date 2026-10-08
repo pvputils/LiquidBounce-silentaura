@@ -21,8 +21,6 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.network;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.*;
-import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleAutoBow;
-import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.trigger.triggers.ClientBlockBreakTrigger;
 import net.ccbluex.liquidbounce.utils.client.SilentHotbar;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
@@ -94,11 +92,6 @@ public abstract class MixinMultiPlayerGameMode {
         if (event.isCancelled()) cir.setReturnValue(InteractionResult.PASS);
     }
 
-    @Inject(method = "releaseUsingItem", at = @At("HEAD"))
-    private void stopUsingItem(Player player, CallbackInfo callbackInfo) {
-        ModuleAutoBow.onStopUsingItem();
-    }
-
     @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
     private void setGameMode(GameType mode, CallbackInfo callbackInfo) {
         EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
@@ -107,11 +100,6 @@ public abstract class MixinMultiPlayerGameMode {
     @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
     private void setGameModes(GameType mode, GameType previousMode, CallbackInfo callbackInfo) {
         EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
-    }
-
-    @Inject(method = "destroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;destroy(Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", shift = At.Shift.AFTER))
-    private void hookBreakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        ClientBlockBreakTrigger.INSTANCE.clientBreakHandler();
     }
 
     @Inject(method = "handleContainerInput", at = @At("HEAD"), cancellable = true)

@@ -18,7 +18,8 @@
   "icon": "resources/liquidbounce/icon_64x64.png",
   "environment": "client",
   "entrypoints": {
-    "main": []
+    "main": [],
+    "client": ["net.ccbluex.liquidbounce.integration.screen.KillAuraSettingsEntrypointTodoAi"]
   },
   "custom": {
     "modmenu": {

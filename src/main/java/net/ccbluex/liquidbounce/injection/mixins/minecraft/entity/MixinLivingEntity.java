@@ -26,14 +26,6 @@ import net.ccbluex.liquidbounce.event.events.EntityHealthUpdateEvent;
 import net.ccbluex.liquidbounce.event.events.PlayerAfterJumpEvent;
 import net.ccbluex.liquidbounce.event.events.PlayerJumpEvent;
 import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget;
-import net.ccbluex.liquidbounce.features.module.modules.movement.*;
-import net.ccbluex.liquidbounce.features.module.modules.render.DoRender;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNoSwing;
-import net.ccbluex.liquidbounce.features.module.modules.render.animations.ModuleAnimations;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleAntiBlind;
-import net.ccbluex.liquidbounce.features.module.modules.render.hitfx.ModuleHitFX;
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ModuleScaffold;
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.tower.ScaffoldTowerNone;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection;
 import net.ccbluex.liquidbounce.utils.client.SilentHotbar;
@@ -114,55 +106,6 @@ public abstract class MixinLivingEntity extends MixinEntity {
         return original;
     }
 
-    /**
-     * Disable [StatusEffects.LEVITATION] effect when [ModuleAntiLevitation] is enabled
-     */
-    @ModifyExpressionValue(
-            method = "travelInAir",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/LivingEntity;getEffect(Lnet/minecraft/core/Holder;)Lnet/minecraft/world/effect/MobEffectInstance;",
-                    ordinal = 0
-            ),
-            require = 1,
-            allow = 1
-    )
-    public @Nullable MobEffectInstance hookTravelStatusEffect(@Nullable MobEffectInstance original) {
-        if (original == null) {
-            return null;
-        }
-
-        // If we get anything other than levitation, the injection went wrong
-        assert original.getEffect() == MobEffects.LEVITATION;
-
-        if (ModuleAntiLevitation.INSTANCE.getRunning()) {
-            return null;
-        }
-
-        return original;
-    }
-
-    /**
-     * Disable [StatusEffects.SLOW_FALLING] effect when [ModuleAntiLevitation] is enabled
-     */
-    @ModifyExpressionValue(
-            method = "getEffectiveGravity",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z",
-                    ordinal = 0
-            ),
-            require = 1,
-            allow = 1
-    )
-    public boolean hookTravelStatusEffect(boolean original) {
-        if (ModuleAntiLevitation.INSTANCE.getRunning()) {
-            return false;
-        }
-
-        return original;
-    }
-
     @Unique
     private PlayerJumpEvent jumpEvent;
 
@@ -232,48 +175,8 @@ public abstract class MixinLivingEntity extends MixinEntity {
         return new Vec3(-Mth.sin(yaw) * 0.2F, 0.0, Mth.cos(yaw) * 0.2F);
     }
 
-    @Inject(method = "aiStep", at = @At("HEAD"))
-    private void hookTickMovement(CallbackInfo callbackInfo) {
-        // We don't want NoJumpDelay to interfere with AirJump which would lead to a Jetpack-like behavior
-        var noJumpDelay = ModuleNoJumpDelay.INSTANCE.getRunning() && !ModuleAirJump.INSTANCE.getAllowJump();
-
-        // The jumping cooldown would lead to very slow tower building
-        var towerActive = ModuleScaffold.INSTANCE.getRunning() &&
-                ModuleScaffold.INSTANCE.getTowerMode().getActiveMode() != ScaffoldTowerNone.INSTANCE &&
-                ModuleScaffold.INSTANCE.getTowerMode().getActiveMode().getRunning();
-
-        if (noJumpDelay || towerActive) {
-            this.noJumpDelay = 0;
-        }
-    }
-
-    @Inject(method = "aiStep", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/LivingEntity;jumping:Z", opcode = Opcodes.GETFIELD))
-    private void hookAirJump(CallbackInfo callbackInfo) {
-        if (ModuleAirJump.INSTANCE.getAllowJump() && jumping && noJumpDelay == 0) {
-            this.jumpFromGround();
-            noJumpDelay = 10;
-        }
-    }
-
     @Unique
     private boolean previousElytra = false;
-
-    @Inject(method = "aiStep", at = @At("TAIL"))
-    public void recastIfLanded(CallbackInfo callbackInfo) {
-        if (!liquid_bounce$isClientPlayer()) {
-            return;
-        }
-
-        var elytra = isFallFlying();
-        if (ModuleElytraRecast.INSTANCE.getRunning() && previousElytra && !elytra) {
-            Minecraft.getInstance().getSoundManager().stop(SoundEvents.ELYTRA_FLYING.location(),
-                    SoundSource.PLAYERS);
-            ModuleElytraRecast.INSTANCE.recastElytra();
-            noJumpDelay = 0;
-        }
-
-        previousElytra = elytra;
-    }
 
     /**
      * Gliding using modified-rotation
@@ -292,13 +195,6 @@ public abstract class MixinLivingEntity extends MixinEntity {
         }
 
         return rotation.pitch();
-    }
-
-    @Inject(method = "spawnItemParticles", at = @At("HEAD"), cancellable = true)
-    private void hookEatParticles(ItemStack itemStack, int count, CallbackInfo ci) {
-        if (itemStack.getComponents().has(DataComponents.FOOD) && !ModuleAntiBlind.canRender(DoRender.EAT_PARTICLES)) {
-            ci.cancel();
-        }
     }
 
     /**
@@ -359,31 +255,6 @@ public abstract class MixinLivingEntity extends MixinEntity {
     @Inject(method = "setItemSlot", at = @At("HEAD"))
     private void hookEquipmentChange(EquipmentSlot slot, ItemStack itemStack, CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(new EntityEquipmentChangeEvent((LivingEntity) (Object) this, slot, itemStack));
-    }
-
-    @ModifyExpressionValue(method = "getModifiedSwingDuration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/SwingAnimation;duration()I"), require = 0)
-    private int hookSwingSpeed(int duration) {
-        var animations = ModuleAnimations.INSTANCE;
-        return animations.getRunning() && liquid_bounce$isClientPlayer() ? animations.getSwingDuration() : duration;
-    }
-
-    @Inject(method = "swing", at = @At(value = "HEAD"), cancellable = true)
-    private void noSwing(InteractionHand hand, SwingAnimation animation, boolean sendToSwingingEntity, CallbackInfoReturnable<Boolean> cir) {
-        if (ModuleNoSwing.INSTANCE.shouldHideForClient() && liquid_bounce$isClientPlayer()) {
-            cir.cancel();
-        }
-    }
-
-    @ModifyExpressionValue(method = "handleDamageEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
-    private SoundEvent hookHitFxSound(SoundEvent original) {
-        if (liquid_bounce$isClientPlayer() && ModuleHitFX.INSTANCE.getRunning()) {
-            var hitFxSound = ModuleHitFX.INSTANCE.getSelfSound();
-            if (hitFxSound != null) {
-                return hitFxSound;
-            }
-        }
-
-        return original;
     }
 
 }

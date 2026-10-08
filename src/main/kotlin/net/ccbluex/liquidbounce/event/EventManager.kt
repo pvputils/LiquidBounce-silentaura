@@ -46,7 +46,6 @@ import net.ccbluex.liquidbounce.event.events.ChunkDeltaUpdateEvent
 import net.ccbluex.liquidbounce.event.events.ChunkLoadEvent
 import net.ccbluex.liquidbounce.event.events.ChunkUnloadEvent
 import net.ccbluex.liquidbounce.event.events.ClickGuiScaleChangeEvent
-import net.ccbluex.liquidbounce.event.events.ClickGuiValueChangeEvent
 import net.ccbluex.liquidbounce.event.events.ClientChatErrorEvent
 import net.ccbluex.liquidbounce.event.events.ClientChatJwtTokenEvent
 import net.ccbluex.liquidbounce.event.events.ClientChatMessageEvent
@@ -58,7 +57,6 @@ import net.ccbluex.liquidbounce.event.events.ClientPlayerInventoryEvent
 import net.ccbluex.liquidbounce.event.events.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.events.ClientStartEvent
 import net.ccbluex.liquidbounce.event.events.ClosedCaptionsEvent
-import net.ccbluex.liquidbounce.event.events.ComponentsUpdateEvent
 import net.ccbluex.liquidbounce.event.events.DeathEvent
 import net.ccbluex.liquidbounce.event.events.DisconnectEvent
 import net.ccbluex.liquidbounce.event.events.DrawOutlinesEvent
@@ -127,18 +125,15 @@ import net.ccbluex.liquidbounce.event.events.SelectHotbarSlotSilentlyEvent
 import net.ccbluex.liquidbounce.event.events.ServerConnectEvent
 import net.ccbluex.liquidbounce.event.events.ServerPingedEvent
 import net.ccbluex.liquidbounce.event.events.SessionEvent
-import net.ccbluex.liquidbounce.event.events.SpaceSeperatedNamesChangeEvent
 import net.ccbluex.liquidbounce.event.events.SprintEvent
 import net.ccbluex.liquidbounce.event.events.TagEntityEvent
 import net.ccbluex.liquidbounce.event.events.TargetChangeEvent
-import net.ccbluex.liquidbounce.event.events.ThemeColorChangeEvent
 import net.ccbluex.liquidbounce.event.events.TickPacketProcessEvent
 import net.ccbluex.liquidbounce.event.events.TitleEvent
 import net.ccbluex.liquidbounce.event.events.UseCooldownEvent
 import net.ccbluex.liquidbounce.event.events.UserLoggedInEvent
 import net.ccbluex.liquidbounce.event.events.UserLoggedOutEvent
 import net.ccbluex.liquidbounce.event.events.ValueChangedEvent
-import net.ccbluex.liquidbounce.event.events.VirtualScreenEvent
 import net.ccbluex.liquidbounce.event.events.WindowResizeEvent
 import net.ccbluex.liquidbounce.event.events.WindowTitleEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
@@ -166,12 +161,8 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     ChunkUnloadEvent::class.java,
     DisconnectEvent::class.java,
     GameRenderEvent::class.java,
-    WorldFeatureSubmitEvent::class.java,
     WorldRenderEvent::class.java,
     OverlayRenderEvent::class.java,
-    ScreenRenderEvent::class.java,
-    WindowResizeEvent::class.java,
-    FramebufferResizeEvent::class.java,
     WindowTitleEvent::class.java,
     MouseButtonEvent::class.java,
     MouseScrollEvent::class.java,
@@ -188,13 +179,8 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     AttackEntityEvent::class.java,
     SessionEvent::class.java,
     ScreenEvent::class.java,
-    ChatSendEvent::class.java,
-    ChatReceiveEvent::class.java,
     UseCooldownEvent::class.java,
-    BlockShapeEvent::class.java,
     BlockBreakingProgressEvent::class.java,
-    BlockVelocityMultiplierEvent::class.java,
-    BlockSlipperinessMultiplierEvent::class.java,
     EntityMarginEvent::class.java,
     EntityHealthUpdateEvent::class.java,
     HealthUpdateEvent::class.java,
@@ -203,21 +189,17 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     PlayerPostTickEvent::class.java,
     PlayerMovementTickEvent::class.java,
     PlayerNetworkMovementTickEvent::class.java,
-    PlayerPushOutEvent::class.java,
     PlayerMoveEvent::class.java,
     PlayerJumpEvent::class.java,
     PlayerAfterJumpEvent::class.java,
     PlayerUseMultiplier::class.java,
     PlayerInteractItemEvent::class.java,
     PlayerInteractedItemEvent::class.java,
-    ClientPlayerInventoryEvent::class.java,
     PlayerVelocityStrafe::class.java,
-    PlayerStrideEvent::class.java,
     PlayerSafeWalkEvent::class.java,
     CancelBlockBreakingEvent::class.java,
     PlayerStepEvent::class.java,
     PlayerStepSuccessEvent::class.java,
-    FluidPushEvent::class.java,
     PipelineEvent::class.java,
     PacketEvent::class.java,
     ClientStartEvent::class.java,
@@ -228,41 +210,15 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     ModuleToggleEvent::class.java,
     FriendChangeEvent::class.java,
     NotificationEvent::class.java,
-    ClientChatStateChange::class.java,
-    ClientChatMessageEvent::class.java,
-    ClientChatErrorEvent::class.java,
-    ClientChatJwtTokenEvent::class.java,
     WorldChangeEvent::class.java,
-    AccountManagerMessageEvent::class.java,
-    AccountManagerAdditionResultEvent::class.java,
-    AccountManagerRemovalResultEvent::class.java,
-    AccountManagerLoginResultEvent::class.java,
-    VirtualScreenEvent::class.java,
     FpsChangeEvent::class.java,
-    FpsLimitEvent::class.java,
-    ClientPlayerDataEvent::class.java,
-    ClientPlayerEffectEvent::class.java,
     RotationUpdateEvent::class.java,
     RefreshArrayListEvent::class.java,
-    BrowserReadyEvent::class.java,
-    ServerConnectEvent::class.java,
-    ServerPingedEvent::class.java,
-    TargetChangeEvent::class.java,
-    BlockCountChangeEvent::class.java,
-    BedStateChangeEvent::class.java,
     GameModeChangeEvent::class.java,
-    ComponentsUpdateEvent::class.java,
     ResourceReloadEvent::class.java,
-    ProxyCheckResultEvent::class.java,
-    ScaleFactorChangeEvent::class.java,
     DrawOutlinesEvent::class.java,
-    OverlayMessageEvent::class.java,
     ScheduleInventoryActionEvent::class.java,
     SelectHotbarSlotSilentlyEvent::class.java,
-    SpaceSeperatedNamesChangeEvent::class.java,
-    ClickGuiScaleChangeEvent::class.java,
-    ThemeColorChangeEvent::class.java,
-    BrowserUrlChangeEvent::class.java,
     TagEntityEvent::class.java,
     MouseScrollInHotbarEvent::class.java,
     PlayerFluidCollisionCheckEvent::class.java,
@@ -271,7 +227,6 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     PerspectiveEvent::class.java,
     ItemLoreQueryEvent::class.java,
     EntityEquipmentChangeEvent::class.java,
-    ClickGuiValueChangeEvent::class.java,
     BlockAttackEvent::class.java,
     BlinkPacketEvent::class.java,
     AllowAutoJumpEvent::class.java,
@@ -280,9 +235,6 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     TitleEvent.Subtitle::class.java,
     TitleEvent.Fade::class.java,
     TitleEvent.Clear::class.java,
-    ClosedCaptionsEvent::class.java,
-    UserLoggedInEvent::class.java,
-    UserLoggedOutEvent::class.java,
 )
 
 inline fun <reified E : Event> eventFlow(): SharedFlow<E> =

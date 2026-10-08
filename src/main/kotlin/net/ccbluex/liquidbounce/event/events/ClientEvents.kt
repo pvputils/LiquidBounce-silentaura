@@ -32,8 +32,6 @@ import net.ccbluex.liquidbounce.features.chat.packet.AxoUser
 import net.ccbluex.liquidbounce.features.misc.proxy.Proxy
 import net.ccbluex.liquidbounce.integration.interop.protocol.event.WebSocketEvent
 import net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game.PlayerData
-import net.ccbluex.liquidbounce.integration.screen.CustomScreenType
-import net.ccbluex.liquidbounce.integration.theme.component.HudComponent
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.block.bed.BedState
 import net.ccbluex.liquidbounce.utils.inventory.InventoryAction
@@ -44,24 +42,8 @@ import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Block
 
-@Tag("themeColorChange")
-class ThemeColorChangeEvent(val themeId: String, val name: String, val value: Color4b) : Event(), WebSocketEvent
-
-@Deprecated(
-    "The `clickGuiScaleChange` event has been deprecated.",
-    ReplaceWith("ClickGuiScaleChangeEvent"),
-    DeprecationLevel.WARNING
-)
 @Tag("clickGuiScaleChange")
 class ClickGuiScaleChangeEvent(val value: Float) : Event(), WebSocketEvent
-
-@Tag("clickGuiValueChange")
-class ClickGuiValueChangeEvent(val configurable: ValueGroup) : Event(), WebSocketEvent {
-    override val serializeAsync get() = false
-}
-
-@Tag("spaceSeperatedNamesChange")
-class SpaceSeperatedNamesChangeEvent(val value: Boolean) : Event(), WebSocketEvent
 
 @Tag("clientStart")
 object ClientStartEvent : Event()
@@ -176,44 +158,8 @@ class ProxyCheckResultEvent(val proxy: Proxy? = null, val error: String? = null)
 @Tag("browserReady")
 object BrowserReadyEvent : Event()
 
-@Tag("virtualScreen")
-class VirtualScreenEvent(
-    val type: CustomScreenType,
-    @Deprecated("Use `type` instead") val screenName: String = type.routeName,
-    val action: Action
-) : Event(), WebSocketEvent {
-
-    enum class Action {
-        @SerializedName("open")
-        OPEN,
-
-        @SerializedName("close")
-        CLOSE
-    }
-
-}
-
 @Tag("serverPinged")
 class ServerPingedEvent(val server: ServerData) : Event(), WebSocketEvent
-
-@Tag("componentsUpdate")
-class ComponentsUpdateEvent(
-    val source: Source,
-    val components: List<HudComponent>,
-    val themeId: String? = null,
-) : Event(), WebSocketEvent {
-    enum class Source {
-        @SerializedName("native")
-        NATIVE,
-
-        @SerializedName("theme")
-        THEME,
-    }
-
-    override val serializer get() = accessibleInteropGson
-
-    override val serializeAsync get() = false
-}
 
 @Tag("rotationUpdate")
 object RotationUpdateEvent : Event()

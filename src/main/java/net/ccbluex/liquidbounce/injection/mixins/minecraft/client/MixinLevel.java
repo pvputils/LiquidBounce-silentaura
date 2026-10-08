@@ -21,7 +21,6 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 import net.ccbluex.liquidbounce.common.ChunkUpdateFlag;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.BlockChangeEvent;
-import net.ccbluex.liquidbounce.features.module.modules.render.customambience.ModuleCustomAmbience;
 import net.ccbluex.liquidbounce.utils.block.BlockExtensionsKt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -43,31 +42,6 @@ public abstract class MixinLevel {
 
         // IMPORTANT: BlockPos might be a BlockPos.Mutable, so we need to create a new BlockPos instance to issues
         EventManager.INSTANCE.callEvent(new BlockChangeEvent(BlockExtensionsKt.getImmutable(pos), state));
-    }
-
-    @Inject(method = "getRainLevel", cancellable = true, at = @At("HEAD"))
-    private void injectOverrideWeather(float delta, CallbackInfoReturnable<Float> cir) {
-        var module = ModuleCustomAmbience.INSTANCE;
-        var desiredWeather = module.getWeather().get();
-        if (module.getRunning()) {
-            switch (desiredWeather) {
-                case SUNNY -> cir.setReturnValue(0.0f);
-                case RAINY, THUNDER -> cir.setReturnValue(1.0f);
-                case SNOWY -> cir.setReturnValue(0.9f);
-            }
-        }
-    }
-
-    @Inject(method = "getThunderLevel", cancellable = true, at = @At("HEAD"))
-    private void injectOverrideThunder(float delta, CallbackInfoReturnable<Float> cir) {
-        var module = ModuleCustomAmbience.INSTANCE;
-        var desiredWeather = module.getWeather().get();
-        if (module.getRunning()) {
-            switch (desiredWeather) {
-                case SUNNY, RAINY, SNOWY -> cir.setReturnValue(0.0f);
-                case THUNDER -> cir.setReturnValue(1.0f);
-            }
-        }
     }
 
 }

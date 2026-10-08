@@ -26,26 +26,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.EventState;
 import net.ccbluex.liquidbounce.event.events.*;
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModulePortalMenu;
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleEntityControl;
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleNoPush;
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleSprint;
-import net.ccbluex.liquidbounce.features.module.modules.movement.NoPushBy;
-import net.ccbluex.liquidbounce.features.module.modules.movement.noslow.ModuleNoSlow;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoEntityInteract;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleReach;
-import net.ccbluex.liquidbounce.features.module.modules.render.DoRender;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleAntiBlind;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam;
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleLiquidPlace;
-import net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game.PlayerData;
-import net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game.PlayerInventoryData;
-import net.ccbluex.liquidbounce.integration.screen.ScreenManager;
 import net.ccbluex.liquidbounce.interfaces.LocalPlayerAddition;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation;
 import net.ccbluex.liquidbounce.utils.movement.DirectionalInput;
-import net.ccbluex.liquidbounce.utils.raytracing.EntityRaytracingKt;
 import net.ccbluex.liquidbounce.utils.raytracing.RaytracingKt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -86,25 +70,12 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     public abstract boolean isUnderWater();
 
     @Unique
-    private PlayerData lastKnownStatistics = null;
-
-    @Unique
-    private PlayerInventoryData lastKnownInventory = null;
-
-    @Unique
     private PlayerNetworkMovementTickEvent eventMotion;
 
     @Unique
     private int onGroundTicks = 0;
     @Unique
     private int airTicks = 0;
-
-    @Inject(method = "displayItemActivation", at = @At("HEAD"), cancellable = true)
-    private void hookShowFloatingItem(ItemStack floatingItem, CallbackInfo ci) {
-        if (!ModuleAntiBlind.canRender(DoRender.FLOATING_ITEMS)) {
-            ci.cancel();
-        }
-    }
 
     /**
      * Hook entity tick event
@@ -130,19 +101,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     private void hookPostTickEvent(CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(PlayerPostTickEvent.INSTANCE);
 
-        // Call player statistics change event when statistics change
-        var statistics = PlayerData.Companion.fromPlayer((LocalPlayer) (Object) this);
-        if (lastKnownStatistics == null || !lastKnownStatistics.equals(statistics)) {
-            EventManager.INSTANCE.callEvent(new ClientPlayerDataEvent(statistics));
-        }
-        this.lastKnownStatistics = statistics;
-
-        // Call player inventory event when inventory changes
-        var playerInventory = PlayerInventoryData.Companion.fromPlayer((LocalPlayer) (Object) this);
-        if (lastKnownInventory == null || !lastKnownInventory.equals(playerInventory)) {
-            EventManager.INSTANCE.callEvent(new ClientPlayerInventoryEvent(playerInventory));
-        }
-        this.lastKnownInventory = playerInventory;
     }
 
     /**
@@ -202,23 +160,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     }
 
     /**
-     * Hook moveTowardsClosestSpace at HEAD and call PlayerPushoutEvent
-     */
-    @Inject(method = "moveTowardsClosestSpace", at = @At("HEAD"), cancellable = true)
-    private void hookPushOut(double x, double z, CallbackInfo ci) {
-        if (!ModuleNoPush.canPush(NoPushBy.BLOCKS)) {
-            ci.cancel();
-            return;
-        }
-
-        final PlayerPushOutEvent pushOutEvent = new PlayerPushOutEvent();
-        EventManager.INSTANCE.callEvent(pushOutEvent);
-        if (pushOutEvent.isCancelled()) {
-            ci.cancel();
-        }
-    }
-
-    /**
      * Hook move function to modify movement
      */
     @ModifyVariable(method = "move", at = @At("HEAD"), name = "delta", argsOnly = true)
@@ -251,18 +192,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     }
 
     /**
-     * Hook portal menu module to make opening menus in portals possible
-     */
-    @ModifyExpressionValue(method = "handlePortalTransitionEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;isAllowedInPortal()Z"))
-    private boolean hookNetherClosingScreen(boolean original) {
-        if (ModulePortalMenu.INSTANCE.getRunning()) {
-            return true;
-        }
-
-        return original;
-    }
-
-    /**
      * We change crossHairTarget according to server side rotations
      */
     @ModifyExpressionValue(method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;pick(DFZ)Lnet/minecraft/world/phys/HitResult;"))
@@ -274,34 +203,17 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
         var cameraRotation = new Rotation(camera.getViewYRot(tickDelta), camera.getViewXRot(tickDelta), true);
 
         Rotation rotation;
-        if (ModuleFreeCam.INSTANCE.getRunning()) {
-            var serverRotation = RotationManager.INSTANCE.getServerRotation();
-            rotation = ModuleFreeCam.INSTANCE.shouldDisableCameraInteract() ? serverRotation : cameraRotation;
-        } else if (RotationManager.INSTANCE.getCurrentRotation() != null) {
+        if (RotationManager.INSTANCE.getCurrentRotation() != null) { //codex (} else if (RotationManager.INSTANCE.getCurrentRotation() != null) {)
             rotation = RotationManager.INSTANCE.getCurrentRotation();
         } else {
             rotation = cameraRotation;
         }
 
-        // Through Walls Reach
-        if (ModuleReach.INSTANCE.getRunning()) {
-            var throughWallsRange = ModuleReach.INSTANCE.getEntity().getInteractionThroughWallsRange();
-
-            if (throughWallsRange > 0.0) {
-                var hitEntityResult = EntityRaytracingKt.findEntityInCrosshair(throughWallsRange, rotation, null);
-
-                if (hitEntityResult != null && hitEntityResult.getType() == HitResult.Type.ENTITY) {
-                    return hitEntityResult;
-                }
-            }
-        }
-
-
         return RaytracingKt.traceFromPlayer(
             rotation,
             Math.max(blockInteractionRange, entityInteractionRange),
             ClipContext.Block.OUTLINE,
-            ModuleLiquidPlace.INSTANCE.getRunning() ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE,
+            ClipContext.Fluid.NONE, //codex (ModuleLiquidPlace.INSTANCE.getRunning() ? ClipContext.Fluid.ANY : ClipContext.Fluid.NONE,)
             tickDelta
         );
     }
@@ -314,11 +226,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
 
         var rotation = RotationManager.INSTANCE.getCurrentRotation();
         return rotation != null ? rotation.directionVector() : original;
-    }
-
-    @ModifyExpressionValue(method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"))
-    private static @Nullable EntityHitResult hookEntityHitResult(@Nullable EntityHitResult original) {
-        return original == null || !ModuleNoEntityInteract.INSTANCE.test(original) ? null : original;
     }
 
     /**
@@ -350,18 +257,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
         );
     }
 
-    /**
-     * Hook sprint effect from NoSlow module
-     */
-    @ModifyExpressionValue(method = "isSlowDueToUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
-    private boolean hookSprintAffectStart(boolean original) {
-        if (ModuleNoSlow.INSTANCE.getRunning()) {
-            return false;
-        }
-
-        return original;
-    }
-
     // Silent rotations (Rotation Manager)
 
     @ModifyExpressionValue(method = {"sendPosition",
@@ -391,27 +286,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
         return EventManager.INSTANCE.callEvent(new AllowAutoJumpEvent(original)).isAllowed();
     }
 
-    @ModifyReturnValue(method = "getJumpRidingScale", at = @At("RETURN"))
-    private float hookMountJumpStrength(float original) {
-        if (ModuleEntityControl.getEnforceJumpStrength()) {
-            return 1f;
-        }
-
-        return original;
-    }
-
-    @ModifyExpressionValue(method = "aiStep", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/player/Abilities;mayfly:Z", opcode = Opcodes.GETFIELD))
-    private boolean hookFreeCamPreventCreativeFly(boolean original) {
-        return !ModuleFreeCam.INSTANCE.getRunning() && original;
-    }
-
-    @ModifyVariable(method = "sendPosition", at = @At("STORE"), name = "rot")
-    private boolean hookFreeCamPreventRotations(boolean bl4) {
-        // Prevent rotation changes when free cam is active, unless a rotation is being set via the rotation manager
-        return (!ModuleFreeCam.INSTANCE.getRunning() ||
-                RotationManager.INSTANCE.getCurrentRotation() != null) && bl4;
-    }
-
     @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;canStartSprinting()Z"))
     private boolean hookSprint0(boolean original) {
         var event = new SprintEvent(new DirectionalInput(input), original, SprintEvent.Source.MOVEMENT_TICK);
@@ -424,11 +298,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
         var event = new SprintEvent(new DirectionalInput(input), original, SprintEvent.Source.MOVEMENT_TICK);
         EventManager.INSTANCE.callEvent(event);
         return event.getSprint();
-    }
-
-    @ModifyExpressionValue(method = "shouldStopRunSprinting", at = @At(value = "FIELD", target = "Lnet/minecraft/client/player/LocalPlayer;horizontalCollision:Z", opcode = Opcodes.GETFIELD))
-    private boolean hookSprintIgnoreCollision(boolean original) {
-        return !ModuleSprint.INSTANCE.getShouldIgnoreCollision() && original;
     }
 
     @ModifyReturnValue(method = "shouldStopRunSprinting", at = @At("RETURN"))
@@ -462,21 +331,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
         return !event.getSprint();
     }
 
-    @ModifyExpressionValue(method = "canStartSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/ClientInput;hasForwardImpulse()Z"))
-    private boolean hookIsWalking(boolean original) {
-        if (!ModuleSprint.INSTANCE.getShouldSprintOmnidirectional()) {
-            return original;
-        }
-
-        float movementForward = input.getMoveVector().y;
-        float movementSideways = input.getMoveVector().x;
-        var hasMovement = Math.abs(movementForward) > 1.0E-5F ||
-                Math.abs(movementSideways) > 1.0E-5F;
-        var isWalking = (double) Math.abs(movementForward) >= 0.8 ||
-                (double) Math.abs(movementSideways) >= 0.8;
-        return this.isUnderWater() ? hasMovement : isWalking;
-    }
-
     @ModifyExpressionValue(method = "sendIsSprintingIfNeeded", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/player/LocalPlayer;isSprinting()Z")
@@ -485,12 +339,6 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
         var event = new SprintEvent(new DirectionalInput(input), original, SprintEvent.Source.NETWORK);
         EventManager.INSTANCE.callEvent(event);
         return event.getSprint();
-    }
-
-    @WrapWithCondition(method = "clientSideCloseContainer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"))
-    private boolean preventCloseScreen(Gui instance, Screen screen) {
-        // Prevent closing screen if the current screen is a client screen
-        return !ScreenManager.isClientScreen(screen);
     }
 
 }

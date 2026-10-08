@@ -30,8 +30,6 @@ import net.ccbluex.liquidbounce.event.events.AttackEntityEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.global.GlobalSettingsTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeLook
 import net.ccbluex.liquidbounce.utils.block.SwingMode
 import net.ccbluex.liquidbounce.utils.client.interaction
 import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_8
@@ -124,7 +122,7 @@ private fun Set<Targets>.shouldAttack(entity: Entity): Boolean {
 private fun Set<Targets>.shouldShow(entity: Entity): Boolean {
     if (entity === player || entity.hasPassenger(player)) {
         return Targets.SELF in this &&
-            (mc.options.cameraType !== CameraType.FIRST_PERSON || ModuleFreeCam.enabled || ModuleFreeLook.enabled)
+            (mc.options.cameraType !== CameraType.FIRST_PERSON) //codex (|| ModuleFreeCam.enabled)
     }
 
     val info = EntityTaggingManager.getTag(entity).targetingInfo

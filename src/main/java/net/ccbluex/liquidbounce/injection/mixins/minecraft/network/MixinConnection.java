@@ -29,7 +29,6 @@ import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.PacketEvent;
 import net.ccbluex.liquidbounce.event.events.PipelineEvent;
 import net.ccbluex.liquidbounce.event.events.TransferOrigin;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNoSwing;
 import net.minecraft.network.BandwidthDebugMonitor;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketListener;
@@ -43,7 +42,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
@@ -52,28 +50,6 @@ public abstract class MixinConnection {
 
     @Shadow
     private static <T extends PacketListener> void genericsFtw(Packet<T> packet, PacketListener listener) {
-    }
-
-    /**
-     * Handle sending packets
-     *
-     * @param packet       packet to send
-     * @param callbackInfo callback
-     */
-    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;)V", at = @At("HEAD"), cancellable = true)
-    private void hookSendingPacket(Packet<?> packet, final CallbackInfo callbackInfo) {
-        if (packet instanceof ServerboundPunchPacket && ModuleNoSwing.INSTANCE.shouldHideForServer()) {
-            callbackInfo.cancel();
-            return;
-        }
-
-        final PacketEvent event = new PacketEvent(TransferOrigin.OUTGOING, packet, true);
-
-        EventManager.INSTANCE.callEvent(event);
-
-        if (event.isCancelled()) {
-            callbackInfo.cancel();
-        }
     }
 
     /**
