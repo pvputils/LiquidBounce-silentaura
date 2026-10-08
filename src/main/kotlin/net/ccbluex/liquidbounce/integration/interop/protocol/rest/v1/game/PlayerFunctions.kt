@@ -24,7 +24,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import net.ccbluex.fastutil.mapToArray
-import net.ccbluex.liquidbounce.features.module.modules.misc.nameprotect.ModuleNameProtect
 import net.ccbluex.liquidbounce.features.module.modules.misc.nameprotect.sanitizeForeignInput
 import net.ccbluex.liquidbounce.injection.mixins.minecraft.gui.MixinHudAccessor
 import net.ccbluex.liquidbounce.utils.client.mc
@@ -116,7 +115,7 @@ data class PlayerData(
 
         @JvmStatic
         fun fromPlayer(player: Player) = PlayerData(
-            ModuleNameProtect.replace(player.scoreboardName),
+            player.scoreboardName, //codex (ModuleNameProtect.replace(player.scoreboardName),)
             player.stringUUID,
             player.level().dimension().identifier(),
             player.position(),

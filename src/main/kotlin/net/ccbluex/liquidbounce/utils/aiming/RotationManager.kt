@@ -31,7 +31,6 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection
 import net.ccbluex.liquidbounce.utils.aiming.utils.RotationUtil
@@ -105,12 +104,14 @@ object RotationManager : EventListener {
     private val fakeLagging
         get() = BlinkManager.isLagging //codex (|| ModuleBacktrack.isLagging())
 
-    private val freezing
-        get() = ModuleFreeze.running
+    // codex start
+    // private val freezing
+    //     get() = ModuleFreeze.running
+    // codex end
 
     @AddonApi
     val serverRotation: Rotation
-        get() = if (fakeLagging || freezing) theoreticalServerRotation else actualServerRotation
+        get() = if (fakeLagging) theoreticalServerRotation else actualServerRotation //codex (|| freezing)
 
     /**
      * Yaw used by [net.minecraft.world.entity.Entity.moveRelative] after movement correction.

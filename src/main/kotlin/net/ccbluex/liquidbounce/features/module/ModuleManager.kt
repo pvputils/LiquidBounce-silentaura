@@ -35,9 +35,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.ModuleDebugRecorder
-import net.ccbluex.liquidbounce.features.module.modules.misc.nameprotect.ModuleNameProtect
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleCombineMobs
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.utils.client.clientStartDurationMs
@@ -357,7 +354,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleMiddleClickAction,
             // ModuleInventoryTracker,
             // codex end
-            ModuleNameProtect,
+            // codex start
+            // ModuleNameProtect,
+            // codex end
             // codex start
             // ModuleTextFieldProtect,
             // ModuleNotifier,
@@ -404,7 +403,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // codex start
             // ModuleFly,
             // codex end
-            ModuleFreeze,
+            // codex start
+            // ModuleFreeze,
+            // codex end
             // codex start
             // ModuleHighJump,
             // ModuleInventoryMove,
@@ -527,7 +528,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleHitFX,
             // ModuleNametags,
             // codex end
-            ModuleCombineMobs,
+            // codex start
+            // ModuleCombineMobs,
+            // codex end
             // codex start
             // ModuleAspect,
             // ModuleAutoF5,

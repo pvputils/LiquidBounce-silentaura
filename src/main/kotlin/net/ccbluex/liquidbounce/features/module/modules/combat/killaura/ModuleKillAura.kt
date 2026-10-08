@@ -32,11 +32,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFailSwing
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraFailSwing.dealWithFakeSwing
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail.failedHits
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraNotifyWhenFail.renderFailedHits
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRange
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeIndicator
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.modes.GenericDebugRecorder
@@ -124,7 +119,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         tree(TargetRenderer(this) {
             targetTracker.target //codex (?.takeUnless { ModuleElytraTarget.isSameTargetRendering(it) })
         })
-        tree(KillAuraFailSwing)
+        // codex start
+        // tree(KillAuraFailSwing)
+        // codex end
         // codex start
         // tree(KillAuraFightBot)
         // codex end
@@ -133,14 +130,20 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
     override fun onDisabled() {
         targetTracker.reset()
-        failedHits.clear()
-        KillAuraNotifyWhenFail.failedHitsIncrement = 0
+        // codex start
+        // failedHits.clear()
+        // codex end
+        // codex start
+        // KillAuraNotifyWhenFail.failedHitsIncrement = 0
+        // codex end
     }
 
     @Suppress("unused")
     private val renderHandler = handler<WorldRenderEvent> { event ->
         event.renderEnvironment {
-            renderFailedHits()
+            // codex start
+            // renderFailedHits()
+            // codex end
             KillAuraRangeIndicator.render(this, event.partialTicks)
         }
     }
@@ -194,18 +197,20 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             // codex end
 
             // Deal with fake swing when there is no target
-            if (KillAuraFailSwing.enabled && requirementsMet) {
-                // codex start
-                // if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
-                //     waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
-                // } else {
-                //     dealWithFakeSwing(null)
-                // }
-                // codex end
-
-                dealWithFakeSwing(null)
-
-            }
+            // codex start
+            // if (KillAuraFailSwing.enabled && requirementsMet) {
+            //     // codex start
+            //     // if (hasUnblocked && KillAuraAutoBlock.pauseOnUnblockTicks > 0) {
+            //     //     waitTicks = KillAuraAutoBlock.pauseOnUnblockTicks
+            //     // } else {
+            //     //     dealWithFakeSwing(null)
+            //     // }
+            //     // codex end
+            //
+            //     dealWithFakeSwing(null)
+            //
+            // }
+            // codex end
             return@tickHandler
         }
 
@@ -307,9 +312,11 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
             //     dealWithFakeSwing(target)
             // }
             // codex end
-            if (KillAuraFailSwing.enabled) { //codex (}else if (KillAuraFailSwing.enabled) {)
-                dealWithFakeSwing(target)
-            }
+            // codex start
+            // if (KillAuraFailSwing.enabled) { //codex (}else if (KillAuraFailSwing.enabled) {)
+            //     dealWithFakeSwing(target)
+            // }
+            // codex end
             return
         }
 
@@ -333,7 +340,9 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
                 // Attack enemy
                 attackEntity(target, SwingMode.DO_NOT_HIDE) //codex (, keepSprint)
                 range.update()
-                KillAuraNotifyWhenFail.failedHitsIncrement = 0
+                // codex start
+                // KillAuraNotifyWhenFail.failedHitsIncrement = 0
+                // codex end
                 // codex start
                 // KillAuraAutoBlock.hasBlockedSinceAttack = false
                 // codex end
