@@ -20,7 +20,6 @@
 package net.ccbluex.liquidbounce.config.types.group
 
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.event.EventListener
@@ -37,7 +36,7 @@ import net.ccbluex.liquidbounce.utils.client.logger
  */
 @AddonApi
 abstract class ToggleableValueGroup @JvmOverloads constructor(
-    @Exclude @ProtocolExclude val parent: EventListener? = null,
+    @Exclude val parent: EventListener? = null, //codex (@ProtocolExclude)
     name: String,
     enabled: Boolean,
     aliases: List<String> = emptyList(),

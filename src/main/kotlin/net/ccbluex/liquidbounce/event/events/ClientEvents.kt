@@ -20,11 +20,7 @@
 package net.ccbluex.liquidbounce.event.events
 
 import net.ccbluex.liquidbounce.annotations.Tag
-import net.ccbluex.liquidbounce.config.types.Value
-import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
-import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.integration.interop.protocol.event.WebSocketEvent
 
 // codex start
 // @Tag("themeColorChange")
@@ -56,245 +52,263 @@ object ClientStartEvent : Event()
 
 @Tag("clientShutdown")
 object ClientShutdownEvent : Event()
-
-@Tag("clientLanguageChanged")
-class ClientLanguageChangedEvent : Event(), WebSocketEvent
-
-@Tag("valueChanged")
-class ValueChangedEvent(val value: Value<*>) : Event(), WebSocketEvent
-
-@Tag("moduleActivation")
-class ModuleActivationEvent(val moduleName: String) : Event(), WebSocketEvent
-
-@AddonApi
-@Tag("moduleToggle")
-class ModuleToggleEvent(val moduleName: String, val hidden: Boolean, val enabled: Boolean) : Event(), WebSocketEvent
 // codex start
 //
-// @AddonApi
-// @Tag("refreshArrayList")
-// object RefreshArrayListEvent : Event(), WebSocketEvent
-// codex end
-
-@AddonApi
-@Tag("friendChange")
-class FriendChangeEvent(val name: String, val added: Boolean) : Event()
-
-@AddonApi
-@Tag("notification")
-class NotificationEvent(val title: String, val message: String, val severity: Severity) : Event(), WebSocketEvent {
-    @AddonApi
-    enum class Severity {
-        INFO, SUCCESS, ERROR, ENABLED, DISABLED
-    }
-}
-// codex start
-//
-// @Tag("gameModeChange")
-// class GameModeChangeEvent(val gameMode: GameType) : Event(), WebSocketEvent
+// @Tag("clientLanguageChanged")
+// class ClientLanguageChangedEvent : Event(), WebSocketEvent
 // codex end
 // codex start
 //
-// @Tag("targetChange")
-// class TargetChangeEvent(val target: PlayerData?) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("blockCountChange")
-// class BlockCountChangeEvent(val nextBlock: Block?, val count: Int?) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("bedStateChange")
-// class BedStateChangeEvent(val bedStates: Collection<BedState>) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("clientChatStateChange")
-// class ClientChatStateChange(val state: State) : Event(), WebSocketEvent {
-//     enum class State {
-//         @SerializedName("connecting")
-//         CONNECTING,
-//
-//         @SerializedName("connected")
-//         CONNECTED,
-//
-//         @SerializedName("logon")
-//         LOGGING_IN,
-//
-//         @SerializedName("loggedIn")
-//         LOGGED_IN,
-//
-//         @SerializedName("disconnected")
-//         DISCONNECTED,
-//
-//         @SerializedName("authenticationFailed")
-//         AUTHENTICATION_FAILED,
-//     }
-// }
-// codex end
-// codex start
-//
-// @Tag("clientChatMessage")
-// class ClientChatMessageEvent(
-//     val user: AxoUser,
-//     val message: String,
-//     val chatGroup: ChatGroup,
-// ) : Event(), WebSocketEvent {
-//     enum class ChatGroup(override val tag: String) : Tagged {
-//         @SerializedName("public")
-//         PUBLIC_CHAT("PublicChat"),
-//
-//         @SerializedName("private")
-//         PRIVATE_CHAT("PrivateChat"),
-//     }
-// }
-// codex end
-// codex start
-//
-// @Tag("clientChatError")
-// class ClientChatErrorEvent(val error: String) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("clientChatJwtToken")
-// // Do not define as WebSocket event, because it contains sensitive data
-// class ClientChatJwtTokenEvent(val jwt: String) : Event()
-// codex end
-// codex start
-//
-// @Tag("accountManagerMessage")
-// class AccountManagerMessageEvent(val message: String) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("accountManagerLogin")
-// class AccountManagerLoginResultEvent(val username: String? = null, val error: String? = null) : Event(),
-// WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("accountManagerAddition")
-// class AccountManagerAdditionResultEvent(
-//     val username: String? = null, val error: String? = null
-// ) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("accountManagerRemoval")
-// class AccountManagerRemovalResultEvent(val username: String?) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("proxyCheckResult")
-// class ProxyCheckResultEvent(val proxy: Proxy? = null, val error: String? = null) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("browserReady")
-// object BrowserReadyEvent : Event()
-//
+// @Tag("valueChanged")
+// class ValueChangedEvent(val value: Value<*>) : Event(), WebSocketEvent
 // // codex start
-// // @Tag("virtualScreen")
-// // class VirtualScreenEvent(
-// //     val type: CustomScreenType,
-// //     @Deprecated("Use `type` instead") val screenName: String = type.routeName,
-// //     val action: Action
-// // ) : Event(), WebSocketEvent {
 // //
-// //     enum class Action {
-// //         @SerializedName("open")
-// //         OPEN,
+// // @Tag("moduleActivation")
+// // class ModuleActivationEvent(val moduleName: String) : Event(), WebSocketEvent
+// // codex end
+// // codex start
 // //
-// //         @SerializedName("close")
-// //         CLOSE
-// //     }
-// //
-// // }
-// //
+// // @AddonApi
+// // @Tag("moduleToggle")
+// // class ModuleToggleEvent(val moduleName: String, val hidden: Boolean, val enabled: Boolean) : Event(),
+// WebSocketEvent
+// // // codex start
+// // //
+// // // @AddonApi
+// // // @Tag("refreshArrayList")
+// // // object RefreshArrayListEvent : Event(), WebSocketEvent
+// // // codex end
+// // // codex start
+// // //
+// // // @AddonApi
+// // // @Tag("friendChange")
+// // // class FriendChangeEvent(val name: String, val added: Boolean) : Event()
+// // // codex end
 // // codex end
 // codex end
 // codex start
-// @Tag("serverPinged")
-// class ServerPingedEvent(val server: ServerData) : Event(), WebSocketEvent
+//
+// @AddonApi
+// @Tag("notification")
+// class NotificationEvent(val title: String, val message: String, val severity: Severity) : Event(), WebSocketEvent {
+//     @AddonApi
+//     enum class Severity {
+//         INFO, SUCCESS, ERROR, ENABLED, DISABLED
+//     }
+// }
 // // codex start
 // //
-// // @Tag("componentsUpdate")
-// // class ComponentsUpdateEvent(
-// //     val source: Source,
-// //     val components: List<HudComponent>,
-// //     val themeId: String? = null,
-// // ) : Event(), WebSocketEvent {
-// //     enum class Source {
-// //         @SerializedName("native")
-// //         NATIVE,
+// // @Tag("gameModeChange")
+// // class GameModeChangeEvent(val gameMode: GameType) : Event(), WebSocketEvent
+// // codex end
+// // codex start
 // //
-// //         @SerializedName("theme")
-// //         THEME,
+// // @Tag("targetChange")
+// // class TargetChangeEvent(val target: PlayerData?) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("blockCountChange")
+// // class BlockCountChangeEvent(val nextBlock: Block?, val count: Int?) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("bedStateChange")
+// // class BedStateChangeEvent(val bedStates: Collection<BedState>) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("clientChatStateChange")
+// // class ClientChatStateChange(val state: State) : Event(), WebSocketEvent {
+// //     enum class State {
+// //         @SerializedName("connecting")
+// //         CONNECTING,
+// //
+// //         @SerializedName("connected")
+// //         CONNECTED,
+// //
+// //         @SerializedName("logon")
+// //         LOGGING_IN,
+// //
+// //         @SerializedName("loggedIn")
+// //         LOGGED_IN,
+// //
+// //         @SerializedName("disconnected")
+// //         DISCONNECTED,
+// //
+// //         @SerializedName("authenticationFailed")
+// //         AUTHENTICATION_FAILED,
 // //     }
-// //
-// //     override val serializer get() = accessibleInteropGson
-// //
-// //     override val serializeAsync get() = false
 // // }
+// // codex end
+// // codex start
+// //
+// // @Tag("clientChatMessage")
+// // class ClientChatMessageEvent(
+// //     val user: AxoUser,
+// //     val message: String,
+// //     val chatGroup: ChatGroup,
+// // ) : Event(), WebSocketEvent {
+// //     enum class ChatGroup(override val tag: String) : Tagged {
+// //         @SerializedName("public")
+// //         PUBLIC_CHAT("PublicChat"),
+// //
+// //         @SerializedName("private")
+// //         PRIVATE_CHAT("PrivateChat"),
+// //     }
+// // }
+// // codex end
+// // codex start
+// //
+// // @Tag("clientChatError")
+// // class ClientChatErrorEvent(val error: String) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("clientChatJwtToken")
+// // // Do not define as WebSocket event, because it contains sensitive data
+// // class ClientChatJwtTokenEvent(val jwt: String) : Event()
+// // codex end
+// // codex start
+// //
+// // @Tag("accountManagerMessage")
+// // class AccountManagerMessageEvent(val message: String) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("accountManagerLogin")
+// // class AccountManagerLoginResultEvent(val username: String? = null, val error: String? = null) : Event(),
+// // WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("accountManagerAddition")
+// // class AccountManagerAdditionResultEvent(
+// //     val username: String? = null, val error: String? = null
+// // ) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("accountManagerRemoval")
+// // class AccountManagerRemovalResultEvent(val username: String?) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("proxyCheckResult")
+// // class ProxyCheckResultEvent(val proxy: Proxy? = null, val error: String? = null) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("browserReady")
+// // object BrowserReadyEvent : Event()
+// //
+// // // codex start
+// // // @Tag("virtualScreen")
+// // // class VirtualScreenEvent(
+// // //     val type: CustomScreenType,
+// // //     @Deprecated("Use `type` instead") val screenName: String = type.routeName,
+// // //     val action: Action
+// // // ) : Event(), WebSocketEvent {
+// // //
+// // //     enum class Action {
+// // //         @SerializedName("open")
+// // //         OPEN,
+// // //
+// // //         @SerializedName("close")
+// // //         CLOSE
+// // //     }
+// // //
+// // // }
+// // //
+// // // codex end
+// // codex end
+// // codex start
+// // @Tag("serverPinged")
+// // class ServerPingedEvent(val server: ServerData) : Event(), WebSocketEvent
+// // // codex start
+// // //
+// // // @Tag("componentsUpdate")
+// // // class ComponentsUpdateEvent(
+// // //     val source: Source,
+// // //     val components: List<HudComponent>,
+// // //     val themeId: String? = null,
+// // // ) : Event(), WebSocketEvent {
+// // //     enum class Source {
+// // //         @SerializedName("native")
+// // //         NATIVE,
+// // //
+// // //         @SerializedName("theme")
+// // //         THEME,
+// // //     }
+// // //
+// // //     override val serializer get() = accessibleInteropGson
+// // //
+// // //     override val serializeAsync get() = false
+// // // }
+// // // codex end
 // // codex end
 // codex end
 
 @Tag("rotationUpdate")
 object RotationUpdateEvent : Event()
-
-@Tag("resourceReload")
-object ResourceReloadEvent : Event()
 // codex start
 //
-// @Tag("scaleFactorChange")
-// class ScaleFactorChangeEvent(val scaleFactor: Int) : Event(), WebSocketEvent
+// @Tag("resourceReload")
+// object ResourceReloadEvent : Event()
 // // codex start
 // //
-// // @Tag("scheduleInventoryAction")
-// // class ScheduleInventoryActionEvent(val schedule: MutableList<InventoryAction.Chain> = mutableListOf()) : Event() {
-// //
-// //     fun schedule(
-// //         constrains: InventoryConstraints,
-// //         action: InventoryAction,
-// //         priority: Priority = Priority.NORMAL
-// //     ) {
-// //         this.schedule.add(InventoryAction.Chain(constrains, listOf(action), priority))
-// //     }
-// //
-// //     fun schedule(
-// //         constrains: InventoryConstraints,
-// //         vararg actions: InventoryAction,
-// //         priority: Priority = Priority.NORMAL
-// //     ) {
-// //         this.schedule.add(InventoryAction.Chain(constrains, actions.unmodifiable(), priority))
-// //     }
-// //
-// //     fun schedule(
-// //         constrains: InventoryConstraints,
-// //         actions: List<InventoryAction>,
-// //         priority: Priority = Priority.NORMAL
-// //     ) {
-// //         this.schedule.add(InventoryAction.Chain(constrains, actions, priority))
-// //     }
-// // }
+// // @Tag("scaleFactorChange")
+// // class ScaleFactorChangeEvent(val scaleFactor: Int) : Event(), WebSocketEvent
+// // // codex start
+// // //
+// // // @Tag("scheduleInventoryAction")
+// // // class ScheduleInventoryActionEvent(val schedule: MutableList<InventoryAction.Chain> = mutableListOf()) :
+// Event() {
+// // //
+// // //     fun schedule(
+// // //         constrains: InventoryConstraints,
+// // //         action: InventoryAction,
+// // //         priority: Priority = Priority.NORMAL
+// // //     ) {
+// // //         this.schedule.add(InventoryAction.Chain(constrains, listOf(action), priority))
+// // //     }
+// // //
+// // //     fun schedule(
+// // //         constrains: InventoryConstraints,
+// // //         vararg actions: InventoryAction,
+// // //         priority: Priority = Priority.NORMAL
+// // //     ) {
+// // //         this.schedule.add(InventoryAction.Chain(constrains, actions.unmodifiable(), priority))
+// // //     }
+// // //
+// // //     fun schedule(
+// // //         constrains: InventoryConstraints,
+// // //         actions: List<InventoryAction>,
+// // //         priority: Priority = Priority.NORMAL
+// // //     ) {
+// // //         this.schedule.add(InventoryAction.Chain(constrains, actions, priority))
+// // //     }
+// // // }
+// // // codex end
 // // codex end
 // codex end
-
-@Tag("selectHotbarSlotSilently")
-class SelectHotbarSlotSilentlyEvent(val requester: Any?, val slot: Int): CancellableEvent()
 // codex start
 //
-// @Tag("browserUrlChange")
-// class BrowserUrlChangeEvent(val index: Int, val url: String) : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("userLoggedIn")
-// object UserLoggedInEvent : Event(), WebSocketEvent
-// codex end
-// codex start
-//
-// @Tag("userLoggedOut")
-// object UserLoggedOutEvent : Event(), WebSocketEvent
+// @Tag("selectHotbarSlotSilently")
+// class SelectHotbarSlotSilentlyEvent(val requester: Any?, val slot: Int): CancellableEvent()
+// // codex start
+// //
+// // @Tag("browserUrlChange")
+// // class BrowserUrlChangeEvent(val index: Int, val url: String) : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("userLoggedIn")
+// // object UserLoggedInEvent : Event(), WebSocketEvent
+// // codex end
+// // codex start
+// //
+// // @Tag("userLoggedOut")
+// // object UserLoggedOutEvent : Event(), WebSocketEvent
+// // codex end
 // codex end

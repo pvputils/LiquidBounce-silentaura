@@ -23,7 +23,6 @@ import com.mojang.blaze3d.platform.InputConstants
 import net.ccbluex.liquidbounce.annotations.Tag
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.integration.interop.protocol.event.WebSocketEvent
 import net.minecraft.client.gui.screens.Screen
 // codex start
 //
@@ -35,10 +34,12 @@ import net.minecraft.client.gui.screens.Screen
 // @Tag("frameBufferResize")
 // class FramebufferResizeEvent(val width: Int, val height: Int) : Event()
 // codex end
-
-@AddonApi
-@Tag("windowTitle")
-class WindowTitleEvent(val title: StringBuilder) : Event()
+// codex start
+//
+// @AddonApi
+// @Tag("windowTitle")
+// class WindowTitleEvent(val title: StringBuilder) : Event()
+// codex end
 
 @AddonApi
 @Tag("mouseButton")
@@ -48,7 +49,7 @@ class MouseButtonEvent(
     val action: Int,
     val mods: Int,
     val screen: Screen? = null
-) : Event(), WebSocketEvent {
+) : Event() { //codex (, WebSocketEvent)
     val isPressed: Boolean get() = action == InputConstants.PRESS
     val isReleased: Boolean get() = action == InputConstants.RELEASE
 
@@ -85,7 +86,7 @@ class KeyboardKeyEvent(
     val action: Int,
     val mods: Int,
     val screen: Screen? = null
-) : Event(), WebSocketEvent {
+) : Event() { //codex (, WebSocketEvent)
     val isPressed: Boolean get() = action == InputConstants.PRESS
     val isReleased: Boolean get() = action == InputConstants.RELEASE
     val isRepeat: Boolean get() = action == InputConstants.REPEAT

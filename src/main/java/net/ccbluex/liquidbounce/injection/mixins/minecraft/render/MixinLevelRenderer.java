@@ -18,23 +18,12 @@
  */
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.render;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.events.DrawOutlinesEvent;
-import net.ccbluex.liquidbounce.utils.collection.Pools;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.state.level.LevelRenderState;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer {
@@ -47,8 +36,10 @@ public abstract class MixinLevelRenderer {
     @Shadow
     private RenderTarget entityOutlineTarget;
 
-    @Unique
-    private boolean liquid_bounce$hasCustomOutlineMesh = false;
+    // codex start
+    // @Unique
+    // private boolean liquid_bounce$hasCustomOutlineMesh = false;
+    // codex end
     // codex start
     //
     // @Inject(
@@ -132,66 +123,72 @@ public abstract class MixinLevelRenderer {
 //        OutlineShaderRenderer.INSTANCE.drawBlitIfDirty(Minecraft.getInstance().gameRenderer.mainRenderTarget());
 //    }
 
-    @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;executeOutline(Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;)V", shift = At.Shift.AFTER))
-    private void onRenderGlow(CallbackInfo ci) {
-        var minecraft = Minecraft.getInstance();
-        var entityOutlineFb = entityOutlineTarget;
-        if (entityOutlineFb == null
-            || !minecraft.gameRenderer.gameRenderState().levelRenderState.shouldShowEntityOutlines) {
-            return;
-        }
-
-        liquid_bounce$hasCustomOutlineMesh = false;
-        var matrixStack = Pools.MatStack.borrow();
-        var event = new DrawOutlinesEvent(
-            entityOutlineFb, matrixStack,
-            minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(false)
-        );
-        EventManager.INSTANCE.callEvent(event);
-        liquid_bounce$hasCustomOutlineMesh = event.getDirtyFlag();
-        Pools.MatStack.recycle(matrixStack);
-    }
+    // codex start
+    // @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;executeOutline(Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;)V", shift = At.Shift.AFTER))
+    // private void onRenderGlow(CallbackInfo ci) {
+    //     var minecraft = Minecraft.getInstance();
+    //     var entityOutlineFb = entityOutlineTarget;
+    //     if (entityOutlineFb == null
+    //         || !minecraft.gameRenderer.gameRenderState().levelRenderState.shouldShowEntityOutlines) {
+    //         return;
+    //     }
+    //
+    //     liquid_bounce$hasCustomOutlineMesh = false;
+    //     var matrixStack = Pools.MatStack.borrow();
+    //     var event = new DrawOutlinesEvent(
+    //         entityOutlineFb, matrixStack,
+    //         minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(false)
+    //     );
+    //     EventManager.INSTANCE.callEvent(event);
+    //     liquid_bounce$hasCustomOutlineMesh = event.getDirtyFlag();
+    //     Pools.MatStack.recycle(matrixStack);
+    // }
+    // codex end
 
     // codex start
-    // @Inject(
-    //     method = "lambda$addMainPass$0",
-    //     at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Lighting;setupFor(Lcom/mojang/blaze3d/platform/Lighting$Entry;)V", shift = At.Shift.AFTER)
+    // // codex start
+    // // @Inject(
+    // //     method = "lambda$addMainPass$0",
+    // //     at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Lighting;setupFor(Lcom/mojang/blaze3d/platform/Lighting$Entry;)V", shift = At.Shift.AFTER)
+    // // )
+    // // private void prepareChamsRenderTarget(CallbackInfo ci) {
+    // //     ModuleChams.INSTANCE.prepareFrame();
+    // //     ModuleChams.INSTANCE.renderChams();
+    // // }
+    // //
+    // // @Inject(
+    // //     method = "render",
+    // //     at = @At(
+    // //         value = "INVOKE",
+    // //         target = "Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;execute(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder$Inspector;)V",
+    // //         shift = At.Shift.BEFORE
+    // //     )
+    // // )
+    // // private void scheduleChamsComposite(GraphicsResourceAllocator resourceAllocator, boolean renderOutline, CameraRenderState cameraState, GpuBufferSlice terrainFog, Vector4f fogColor, boolean shouldRenderSky, boolean consistentDepthRequired, CallbackInfo ci, @Local(name = "frame") FrameGraphBuilder frame) {
+    // //     FramePass pass = frame.addPass((LiquidBounce.CLIENT_NAME + ' ' + ModuleChams.INSTANCE.getName()).toLowerCase(Locale.ROOT));
+    // //     pass.disableCulling();
+    // //     pass.executes(() -> ModuleChams.INSTANCE.compositeIfNeeded(Minecraft.getInstance().gameRenderer.mainRenderTarget()));
+    // // }
+    // //
+    // // codex end
+    // @ModifyExpressionValue(
+    //     method = {"submitFeatures", "lambda$addMainPass$0"},
+    //     at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/LevelRenderState;shouldShowEntityOutlines:Z", opcode = Opcodes.GETFIELD)
     // )
-    // private void prepareChamsRenderTarget(CallbackInfo ci) {
-    //     ModuleChams.INSTANCE.prepareFrame();
-    //     ModuleChams.INSTANCE.renderChams();
+    // private boolean includeCustomOutlines(boolean original) {
+    //     return original || liquid_bounce$hasCustomOutlineMesh;
     // }
-    //
-    // @Inject(
-    //     method = "render",
-    //     at = @At(
-    //         value = "INVOKE",
-    //         target = "Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;execute(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder$Inspector;)V",
-    //         shift = At.Shift.BEFORE
-    //     )
-    // )
-    // private void scheduleChamsComposite(GraphicsResourceAllocator resourceAllocator, boolean renderOutline, CameraRenderState cameraState, GpuBufferSlice terrainFog, Vector4f fogColor, boolean shouldRenderSky, boolean consistentDepthRequired, CallbackInfo ci, @Local(name = "frame") FrameGraphBuilder frame) {
-    //     FramePass pass = frame.addPass((LiquidBounce.CLIENT_NAME + ' ' + ModuleChams.INSTANCE.getName()).toLowerCase(Locale.ROOT));
-    //     pass.disableCulling();
-    //     pass.executes(() -> ModuleChams.INSTANCE.compositeIfNeeded(Minecraft.getInstance().gameRenderer.mainRenderTarget()));
-    // }
-    //
     // codex end
-    @ModifyExpressionValue(
-        method = {"submitFeatures", "lambda$addMainPass$0"},
-        at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/state/level/LevelRenderState;shouldShowEntityOutlines:Z", opcode = Opcodes.GETFIELD)
-    )
-    private boolean includeCustomOutlines(boolean original) {
-        return original || liquid_bounce$hasCustomOutlineMesh;
-    }
 
-    @ModifyExpressionValue(
-        method = {"render", "addMainPass"},
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;hasAnyOutline()Z")
-    )
-    private boolean includeCustomOutlineTargetInMainPass(boolean original) {
-        return original || liquid_bounce$hasCustomOutlineMesh;
-    }
+    // codex start
+    // @ModifyExpressionValue(
+    //     method = {"render", "addMainPass"},
+    //     at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;hasAnyOutline()Z")
+    // )
+    // private boolean includeCustomOutlineTargetInMainPass(boolean original) {
+    //     return original || liquid_bounce$hasCustomOutlineMesh;
+    // }
+    // codex end
 
     // codex start
     // @Inject(method = "submitBlockOutline", at = @At("HEAD"), cancellable = true)

@@ -19,15 +19,8 @@
 
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.events.WorldEntityRemoveEvent;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
 public abstract class MixinClientLevel {
@@ -71,10 +64,12 @@ public abstract class MixinClientLevel {
     // }
     // codex end
 
-    @Inject(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onClientRemoval()V"))
-    private void injectRemoveEntity(int id, Entity.RemovalReason reason, CallbackInfo ci, @Local(name = "entity") Entity entity) {
-        EventManager.INSTANCE.callEvent(new WorldEntityRemoveEvent(entity, reason));
-    }
+    // codex start
+    // @Inject(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onClientRemoval()V"))
+    // private void injectRemoveEntity(int id, Entity.RemovalReason reason, CallbackInfo ci, @Local(name = "entity") Entity entity) {
+    //     EventManager.INSTANCE.callEvent(new WorldEntityRemoveEvent(entity, reason));
+    // }
+    // codex end
 
     // codex start
     // @Inject(method = "trackExplosionEffects", at = @At("HEAD"), cancellable = true)

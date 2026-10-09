@@ -21,8 +21,6 @@
 
 package net.ccbluex.liquidbounce.utils.client
 
-import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.event.events.NotificationEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.lang.translation
@@ -246,22 +244,23 @@ fun chat(text: String, module: ClientModule) = chat(text.asPlainText(), module)
 @AddonApi
 fun chat(text: String) = chat(text.asPlainText())
 
-@AddonApi
-fun notification(title: Component, message: String, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title.string, message, severity))
-
-@AddonApi
-fun notification(title: String, message: Component, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title, message.string, severity))
-
-@AddonApi
-fun notification(title: Component, message: Component, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title.string, message.string, severity))
-
-@AddonApi
-fun notification(title: String, message: String, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title, message, severity))
-
+// codex start
+// @AddonApi
+// fun notification(title: Component, message: String, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title.string, message, severity))
+//
+// @AddonApi
+// fun notification(title: String, message: Component, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title, message.string, severity))
+//
+// @AddonApi
+// fun notification(title: Component, message: Component, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title.string, message.string, severity))
+//
+// @AddonApi
+// fun notification(title: String, message: String, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title, message, severity))
+// codex end
 // codex start
 // val TextColor.bypassesNameProtection: Boolean
 //     @Suppress("CAST_NEVER_SUCCEEDS")

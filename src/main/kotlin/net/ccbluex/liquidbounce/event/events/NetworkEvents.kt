@@ -19,16 +19,16 @@
 
 package net.ccbluex.liquidbounce.event.events
 
-import io.netty.channel.ChannelPipeline
 import net.ccbluex.liquidbounce.annotations.Tag
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.CancellableEvent
-import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.minecraft.network.protocol.Packet
-
-@Tag("pipeline")
-class PipelineEvent(val channelPipeline: ChannelPipeline, val local: Boolean) : Event()
+// codex start
+//
+// @Tag("pipeline")
+// class PipelineEvent(val channelPipeline: ChannelPipeline, val local: Boolean) : Event()
+// codex end
 
 @AddonApi
 @Tag("packet")

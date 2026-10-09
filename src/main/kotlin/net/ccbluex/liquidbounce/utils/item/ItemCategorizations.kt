@@ -24,7 +24,6 @@ import net.minecraft.core.TypedInstance
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
 import net.minecraft.tags.ItemTags
-import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
 
@@ -39,15 +38,17 @@ import net.minecraft.world.item.Items
 //     get() = this.has(DataComponents.GLIDER)
 // codex end
 
-val DataComponentGetter.foodComponent: FoodProperties?
-    get() = this.get(DataComponents.FOOD)
-
 // codex start
-// val DataComponentGetter.toolComponent: Tool?
-//     get() = this.get(DataComponents.TOOL)
+// val DataComponentGetter.foodComponent: FoodProperties?
+//     get() = this.get(DataComponents.FOOD)
 //
-// val TypedInstance<Item>.isBundle
-//     get() = this.`is`(ItemTags.BUNDLES)
+// // codex start
+// // val DataComponentGetter.toolComponent: Tool?
+// //     get() = this.get(DataComponents.TOOL)
+// //
+// // val TypedInstance<Item>.isBundle
+// //     get() = this.`is`(ItemTags.BUNDLES)
+// // codex end
 // codex end
 
 val TypedInstance<Item>.isAnyChest: Boolean
@@ -58,51 +59,55 @@ val TypedInstance<Item>.isAnyChest: Boolean
 
 // Tools
 
-val TypedInstance<Item>.isSword
-    get() = this.`is`(ItemTags.SWORDS)
-
 // codex start
-// val TypedInstance<Item>.isSpear
-//     get() = this.`is`(ItemTags.SPEARS)
+// val TypedInstance<Item>.isSword
+//     get() = this.`is`(ItemTags.SWORDS)
+//
+// // codex start
+// // val TypedInstance<Item>.isSpear
+// //     get() = this.`is`(ItemTags.SPEARS)
+// // codex end
+//
+// val TypedInstance<Item>.isPickaxe
+//     get() = this.`is`(ItemTags.PICKAXES)
 // codex end
-
-val TypedInstance<Item>.isPickaxe
-    get() = this.`is`(ItemTags.PICKAXES)
 
 val TypedInstance<Item>.isAxe
     get() = this.`is`(ItemTags.AXES)
 
-val TypedInstance<Item>.isShovel
-    get() = this.`is`(ItemTags.SHOVELS)
-
-val TypedInstance<Item>.isHoe
-    get() = this.`is`(ItemTags.HOES)
-
-/**
- * Replacement of 1.21.4 `MiningToolItem`
- */
 // codex start
-// val TypedInstance<Item>.isMiningTool
-//     get() = isAxe || isPickaxe || isShovel || isHoe
+// val TypedInstance<Item>.isShovel
+//     get() = this.`is`(ItemTags.SHOVELS)
 //
-// // Armors
-// codex end
-
-val TypedInstance<Item>.isFootArmor
-    get() = this.`is`(ItemTags.FOOT_ARMOR)
-
-val TypedInstance<Item>.isLegArmor
-    get() = this.`is`(ItemTags.LEG_ARMOR)
-
-val TypedInstance<Item>.isChestArmor
-    get() = this.`is`(ItemTags.CHEST_ARMOR)
-
-val TypedInstance<Item>.isHeadArmor
-    get() = this.`is`(ItemTags.HEAD_ARMOR)
-
-// codex start
-// val TypedInstance<Item>.isPlayerArmor
-//     get() = isFootArmor || isLegArmor || isChestArmor || isHeadArmor
+// val TypedInstance<Item>.isHoe
+//     get() = this.`is`(ItemTags.HOES)
+//
+// /**
+//  * Replacement of 1.21.4 `MiningToolItem`
+//  */
+// // codex start
+// // val TypedInstance<Item>.isMiningTool
+// //     get() = isAxe || isPickaxe || isShovel || isHoe
+// //
+// // // Armors
+// // codex end
+//
+// val TypedInstance<Item>.isFootArmor
+//     get() = this.`is`(ItemTags.FOOT_ARMOR)
+//
+// val TypedInstance<Item>.isLegArmor
+//     get() = this.`is`(ItemTags.LEG_ARMOR)
+//
+// val TypedInstance<Item>.isChestArmor
+//     get() = this.`is`(ItemTags.CHEST_ARMOR)
+//
+// val TypedInstance<Item>.isHeadArmor
+//     get() = this.`is`(ItemTags.HEAD_ARMOR)
+//
+// // codex start
+// // val TypedInstance<Item>.isPlayerArmor
+// //     get() = isFootArmor || isLegArmor || isChestArmor || isHeadArmor
+// // codex end
 // codex end
 
 val DataComponentGetter.equippableComponent

@@ -27,8 +27,6 @@ package net.ccbluex.liquidbounce.lang
 import net.ccbluex.liquidbounce.config.gson.util.readJson
 import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.config.types.list.Tagged
-import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.event.events.ClientLanguageChangedEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.utils.client.NullableBypass
 import net.ccbluex.liquidbounce.utils.client.logger
@@ -51,7 +49,9 @@ object LanguageManager : ValueGroup("Language") {
     var clientLanguage by enumChoice("ClientLanguage", ClientLanguage.AUTO)
         .onChanged { _ ->
             loadLanguage(currentLanguageChoice())
-            EventManager.callEvent(ClientLanguageChangedEvent())
+            // codex start
+            // EventManager.callEvent(ClientLanguageChangedEvent())
+            // codex end
         }
 
     private val COMMON_UNDERSTOOD_LANGUAGE = ClientLanguage.EN_US

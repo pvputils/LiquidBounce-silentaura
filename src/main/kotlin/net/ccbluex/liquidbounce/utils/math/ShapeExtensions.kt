@@ -41,14 +41,16 @@ inline fun VoxelShape.ifEmpty(defaultValue: () -> VoxelShape): VoxelShape {
 
 inline fun VoxelShape?.orEmpty(): VoxelShape = this ?: Shapes.empty()
 
-fun Iterable<VoxelShape>.allEmpty(): Boolean = all { it.isEmpty }
-
 // codex start
-// fun Iterable<VoxelShape>.anyNotEmpty(): Boolean = any { !it.isEmpty }
+// fun Iterable<VoxelShape>.allEmpty(): Boolean = all { it.isEmpty }
 //
-// /**
-//  * @return null if shape is empty
-//  */
+// // codex start
+// // fun Iterable<VoxelShape>.anyNotEmpty(): Boolean = any { !it.isEmpty }
+// //
+// // /**
+// //  * @return null if shape is empty
+// //  */
+// // codex end
 // codex end
 
 fun VoxelShape.boundsOrNull(): AABB? = if (isEmpty) null else bounds()

@@ -25,12 +25,6 @@ import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
-import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.block.state.BlockState
 
 @AddonApi
 @Tag("worldChange")
@@ -46,21 +40,27 @@ class WorldChangeEvent(val world: ClientLevel?) : Event()
 // // class ChunkLoadEvent(val x: Int, val z: Int) : Event()
 // // codex end
 // codex end
-
-@Tag("chunkDeltaUpdate")
-class ChunkDeltaUpdateEvent(val packet: ClientboundSectionBlocksUpdatePacket) : Event()
-
-@AddonApi
-@Tag("blockChange")
-class BlockChangeEvent(val blockPos: BlockPos, val newState: BlockState) : Event()
 // codex start
 //
-// @Tag("blockShape")
-// class BlockShapeEvent(var state: BlockState, var pos: BlockPos, var shape: VoxelShape) : Event()
+// @Tag("chunkDeltaUpdate")
+// class ChunkDeltaUpdateEvent(val packet: ClientboundSectionBlocksUpdatePacket) : Event()
 // codex end
-
-@Tag("blockBreakingProgress")
-class BlockBreakingProgressEvent(val pos: BlockPos) : Event()
+// codex start
+//
+// @AddonApi
+// @Tag("blockChange")
+// class BlockChangeEvent(val blockPos: BlockPos, val newState: BlockState) : Event()
+// // codex start
+// //
+// // @Tag("blockShape")
+// // class BlockShapeEvent(var state: BlockState, var pos: BlockPos, var shape: VoxelShape) : Event()
+// // codex end
+// codex end
+// codex start
+//
+// @Tag("blockBreakingProgress")
+// class BlockBreakingProgressEvent(val pos: BlockPos) : Event()
+// codex end
 
 @Tag("blockAttack")
 class BlockAttackEvent(val pos: BlockPos) : CancellableEvent()
@@ -74,17 +74,21 @@ class BlockAttackEvent(val pos: BlockPos) : CancellableEvent()
 // @Tag("blockSlipperinessMultiplier")
 // class BlockSlipperinessMultiplierEvent(val block: Block, var slipperiness: Float) : Event()
 // codex end
-
-@Tag("entityEquipmentChange")
-class EntityEquipmentChangeEvent(
-    val entity: LivingEntity, val equipmentSlot: EquipmentSlot, val itemStack: ItemStack
-) : Event()
 // codex start
 //
-// @Tag("fluidPush")
-// class FluidPushEvent : CancellableEvent()
+// @Tag("entityEquipmentChange")
+// class EntityEquipmentChangeEvent(
+//     val entity: LivingEntity, val equipmentSlot: EquipmentSlot, val itemStack: ItemStack
+// ) : Event()
+// // codex start
+// //
+// // @Tag("fluidPush")
+// // class FluidPushEvent : CancellableEvent()
+// // codex end
 // codex end
-
-@AddonApi
-@Tag("worldEntityRemove")
-class WorldEntityRemoveEvent(val entity: Entity, val reason: Entity.RemovalReason) : Event()
+// codex start
+//
+// @AddonApi
+// @Tag("worldEntityRemove")
+// class WorldEntityRemoveEvent(val entity: Entity, val reason: Entity.RemovalReason) : Event()
+// codex end

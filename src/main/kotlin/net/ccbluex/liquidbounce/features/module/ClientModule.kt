@@ -21,21 +21,15 @@ package net.ccbluex.liquidbounce.features.module
 import kotlinx.coroutines.launch
 import net.ccbluex.liquidbounce.config.ConfigSystem
 import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig
-import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig.loadingNow
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.eventListenerScope
-import net.ccbluex.liquidbounce.event.events.ModuleActivationEvent
-import net.ccbluex.liquidbounce.event.events.ModuleToggleEvent
-import net.ccbluex.liquidbounce.event.events.NotificationEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.lang.LanguageManager
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.clientLogger
-import net.ccbluex.liquidbounce.utils.client.notification
 import net.ccbluex.liquidbounce.utils.text.plus
 import net.ccbluex.liquidbounce.utils.text.toLowerCamelCase
 import net.ccbluex.liquidbounce.utils.text.withFormat
@@ -178,23 +172,29 @@ open class ClientModule @JvmOverloads constructor(
 
         val state = super.onToggled(state)
 
-        EventManager.callEvent(ModuleActivationEvent(name))
+        // codex start
+        // EventManager.callEvent(ModuleActivationEvent(name))
+        // codex end
 
         // If the module is not activatable, we do not want to change state
         if (disableActivation) {
             return false
         }
 
-        if (!loadingNow) {
-            val (title, severity) = if (state) {
-                translation("liquidbounce.generic.enabled") to NotificationEvent.Severity.ENABLED
-            } else {
-                translation("liquidbounce.generic.disabled") to NotificationEvent.Severity.DISABLED
-            }
-            notification(title, this.name, severity)
-        }
+        // codex start
+        // if (!loadingNow) {
+        //     val (title, severity) = if (state) {
+        //         translation("liquidbounce.generic.enabled") to NotificationEvent.Severity.ENABLED
+        //     } else {
+        //         translation("liquidbounce.generic.disabled") to NotificationEvent.Severity.DISABLED
+        //     }
+        //     notification(title, this.name, severity)
+        // }
+        // codex end
 
-        EventManager.callEvent(ModuleToggleEvent(name, hidden, state))
+        // codex start
+        // EventManager.callEvent(ModuleToggleEvent(name, hidden, state))
+        // codex end
         return state
     }
 

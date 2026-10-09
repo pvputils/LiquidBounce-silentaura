@@ -44,7 +44,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.world.phys.HitResult;
 import org.jspecify.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -119,12 +118,14 @@ public abstract class MixinMinecraft {
         EventManager.INSTANCE.callEvent(ClientShutdownEvent.INSTANCE);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/client/main/GameConfig;)V", at = @At(value = "FIELD",
-        target = "Lnet/minecraft/client/Minecraft;profileKeyPairManager:Lnet/minecraft/client/multiplayer/ProfileKeyPairManager;",
-        ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
-    private void onSessionInit(CallbackInfo callback) {
-        EventManager.INSTANCE.callEvent(new SessionEvent(getUser()));
-    }
+    // codex start
+    // @Inject(method = "<init>(Lnet/minecraft/client/main/GameConfig;)V", at = @At(value = "FIELD",
+    //     target = "Lnet/minecraft/client/Minecraft;profileKeyPairManager:Lnet/minecraft/client/multiplayer/ProfileKeyPairManager;",
+    //     ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
+    // private void onSessionInit(CallbackInfo callback) {
+    //     EventManager.INSTANCE.callEvent(new SessionEvent(getUser()));
+    // }
+    // codex end
 
     /**
      * Modify window title to our client title.
@@ -172,7 +173,9 @@ public abstract class MixinMinecraft {
             titleBuilder.append(SharedConstants.getCurrentVersion().name());
         }
 
-        EventManager.INSTANCE.callEvent(new WindowTitleEvent(titleBuilder));
+        // codex start
+        // EventManager.INSTANCE.callEvent(new WindowTitleEvent(titleBuilder));
+        // codex end
 
         ClientPacketListener clientPlayNetworkHandler = this.getConnection();
         if (clientPlayNetworkHandler != null && clientPlayNetworkHandler.getConnection().isConnected()) {
@@ -221,36 +224,44 @@ public abstract class MixinMinecraft {
         CoroutineTicker.INSTANCE.endMinecraftTick();
     }
 
-    /**
-     * Hook game render task queue event
-     */
-    @Inject(method = "runTick", at = @At("HEAD"))
-    private void hookRenderTaskQueue(CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(GameRenderTaskQueueEvent.INSTANCE);
-    }
+    // codex start
+    // /**
+    //  * Hook game render task queue event
+    //  */
+    // @Inject(method = "runTick", at = @At("HEAD"))
+    // private void hookRenderTaskQueue(CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(GameRenderTaskQueueEvent.INSTANCE);
+    // }
+    // codex end
 
-    @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;runAllTasks()V", shift = At.Shift.BEFORE))
-    private void hookPacketProcess(CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(TickPacketProcessEvent.INSTANCE);
-    }
+    // codex start
+    // @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;runAllTasks()V", shift = At.Shift.BEFORE))
+    // private void hookPacketProcess(CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(TickPacketProcessEvent.INSTANCE);
+    // }
+    // codex end
 
-    /**
-     * Hook input handling
-     */
-    @Inject(method = "handleKeybinds", at = @At("RETURN"))
-    private void hookHandleInputEvent(CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(InputHandleEvent.INSTANCE);
-    }
+    // codex start
+    // /**
+    //  * Hook input handling
+    //  */
+    // @Inject(method = "handleKeybinds", at = @At("RETURN"))
+    // private void hookHandleInputEvent(CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(InputHandleEvent.INSTANCE);
+    // }
+    // codex end
 
-    /**
-     * Hook item use cooldown
-     */
-    @Inject(method = "startUseItem", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;rightClickDelay:I", shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
-    private void hookItemUseCooldown(CallbackInfo callbackInfo) {
-        UseCooldownEvent useCooldownEvent = new UseCooldownEvent(rightClickDelay);
-        EventManager.INSTANCE.callEvent(useCooldownEvent);
-        rightClickDelay = useCooldownEvent.getCooldown();
-    }
+    // codex start
+    // /**
+    //  * Hook item use cooldown
+    //  */
+    // @Inject(method = "startUseItem", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;rightClickDelay:I", shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
+    // private void hookItemUseCooldown(CallbackInfo callbackInfo) {
+    //     UseCooldownEvent useCooldownEvent = new UseCooldownEvent(rightClickDelay);
+    //     EventManager.INSTANCE.callEvent(useCooldownEvent);
+    //     rightClickDelay = useCooldownEvent.getCooldown();
+    // }
+    // codex end
 
     // codex start
     // @Inject(method = "pickBlockOrEntity", at = @At("HEAD"), cancellable = true)
@@ -320,16 +331,18 @@ public abstract class MixinMinecraft {
     }
 
     // codex start
-    // @Inject(method = "renderFrame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;fps:I",
-    //     ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTSTATIC))
-    // private void hookFpsChange(CallbackInfo ci) {
-    //     EventManager.INSTANCE.callEvent(new FpsChangeEvent(this.getFps()));
+    // // codex start
+    // // @Inject(method = "renderFrame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;fps:I",
+    // //     ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTSTATIC))
+    // // private void hookFpsChange(CallbackInfo ci) {
+    // //     EventManager.INSTANCE.callEvent(new FpsChangeEvent(this.getFps()));
+    // // }
+    // // codex end
+    // @Inject(method = "onResourceLoadFinished", at = @At("HEAD"))
+    // private void onFinishedLoading(CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(ResourceReloadEvent.INSTANCE);
     // }
     // codex end
-    @Inject(method = "onResourceLoadFinished", at = @At("HEAD"))
-    private void onFinishedLoading(CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(ResourceReloadEvent.INSTANCE);
-    }
 
     // codex start
     // @ModifyExpressionValue(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))

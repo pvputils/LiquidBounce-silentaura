@@ -21,7 +21,6 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.events.KeyEvent;
 import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
@@ -54,9 +53,11 @@ public abstract class MixinKeyboardHandler {
             keyEvent.key(), action,
             keyEvent.modifiers(), this.minecraft.gui.screen()
         ));
-        if (minecraft.gui.screen() == null) {
-            EventManager.INSTANCE.callEvent(new KeyEvent(inputKey, action));
-        }
+        // codex start
+        // if (minecraft.gui.screen() == null) {
+        //     EventManager.INSTANCE.callEvent(new KeyEvent(inputKey, action));
+        // }
+        // codex end
     }
 
     // codex start

@@ -83,22 +83,24 @@ class WorldRenderEvent(
 //  * Note: After writing to the outline framebuffer [markDirty] must be called.
 //  */
 // codex end
-@Tag("drawOutlines")
-class DrawOutlinesEvent(
-    val renderTarget: RenderTarget,
-    val pose: PoseStack,
-    val partialTicks: Float,
-) : Event() {
-    var dirtyFlag: Boolean = false
-        private set
-
-    /**
-     * Called when the framebuffer was edited.
-     */
-    fun markDirty() {
-        this.dirtyFlag = true
-    }
-}
+// codex start
+// @Tag("drawOutlines")
+// class DrawOutlinesEvent(
+//     val renderTarget: RenderTarget,
+//     val pose: PoseStack,
+//     val partialTicks: Float,
+// ) : Event() {
+//     var dirtyFlag: Boolean = false
+//         private set
+//
+//     /**
+//      * Called when the framebuffer was edited.
+//      */
+//     fun markDirty() {
+//         this.dirtyFlag = true
+//     }
+// }
+// codex end
 
 @AddonApi
 @Tag("overlayRender")

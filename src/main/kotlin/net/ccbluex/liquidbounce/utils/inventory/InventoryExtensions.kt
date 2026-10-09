@@ -20,10 +20,11 @@ package net.ccbluex.liquidbounce.utils.inventory
 
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
-import net.minecraft.world.inventory.AbstractContainerMenu
 
-val AbstractContainerMenu.isPlayerInventory: Boolean
-    get() = this.containerId == 0
+// codex start
+// val AbstractContainerMenu.isPlayerInventory: Boolean
+//     get() = this.containerId == 0
+// codex end
 
 val isInInventoryScreen
     get() = mc.gui.screen() is InventoryScreen

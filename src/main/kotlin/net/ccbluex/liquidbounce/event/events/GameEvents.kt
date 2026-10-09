@@ -19,22 +19,16 @@
 
 package net.ccbluex.liquidbounce.event.events
 
-import com.mojang.blaze3d.platform.InputConstants
 import net.ccbluex.liquidbounce.annotations.Tag
 import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.integration.interop.protocol.event.WebSocketEvent
 import net.ccbluex.liquidbounce.utils.entity.cameraDistance
 import net.ccbluex.liquidbounce.utils.movement.DirectionalInput
 import net.minecraft.client.CameraType
-import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
-import net.minecraft.client.User
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.item.ItemStack
 
 @AddonApi
 @Tag("gameTick")
@@ -45,21 +39,29 @@ object GameTickEvent : Event()
  * executed in the same frame. This is useful for more responsive task execution
  * and allows to also schedule tasks off-schedule.
  */
-@Tag("gameRenderTaskQueue")
-object GameRenderTaskQueueEvent : Event()
-
-@Tag("tickPacketProcess")
-object TickPacketProcessEvent : Event()
-
-@Tag("key")
-class KeyEvent(
-    val key: InputConstants.Key,
-    val action: Int,
-) : Event(), WebSocketEvent
-
-// Input events
-@Tag("inputHandle")
-object InputHandleEvent : Event()
+// codex start
+// @Tag("gameRenderTaskQueue")
+// object GameRenderTaskQueueEvent : Event()
+// codex end
+// codex start
+//
+// @Tag("tickPacketProcess")
+// object TickPacketProcessEvent : Event()
+// codex end
+// codex start
+//
+// @Tag("key")
+// class KeyEvent(
+//     val key: InputConstants.Key,
+//     val action: Int,
+// ) : Event(), WebSocketEvent
+//
+// // Input events
+// // codex start
+// // @Tag("inputHandle")
+// // object InputHandleEvent : Event()
+// // codex end
+// codex end
 
 @AddonApi
 @Tag("movementInput")
@@ -87,37 +89,49 @@ class MouseRotationEvent(
     var cursorDeltaX: Double,
     var cursorDeltaY: Double,
 ) : CancellableEvent()
-
-@Tag("keybindChange")
-object KeybindChangeEvent : Event(), WebSocketEvent
-
-@Tag("keybindIsPressed")
-class KeybindIsPressedEvent(
-    val keyBinding: KeyMapping,
-    var isPressed: Boolean,
-) : Event()
-
-@Tag("useCooldown")
-class UseCooldownEvent(
-    var cooldown: Int,
-) : Event()
-
-@Tag("cancelBlockBreaking")
-class CancelBlockBreakingEvent : CancellableEvent()
-
-@Tag("allowAutoJump")
-class AllowAutoJumpEvent(
-    var isAllowed: Boolean,
-) : Event()
-
-/**
- * All events which are related to the minecraft client
- */
-
-@Tag("session")
-class SessionEvent(
-    val session: User,
-) : Event(), WebSocketEvent
+// codex start
+//
+// @Tag("keybindChange")
+// object KeybindChangeEvent : Event(), WebSocketEvent
+// codex end
+// codex start
+//
+// @Tag("keybindIsPressed")
+// class KeybindIsPressedEvent(
+//     val keyBinding: KeyMapping,
+//     var isPressed: Boolean,
+// ) : Event()
+// codex end
+// codex start
+//
+// @Tag("useCooldown")
+// class UseCooldownEvent(
+//     var cooldown: Int,
+// ) : Event()
+// // codex start
+// //
+// // @Tag("cancelBlockBreaking")
+// // class CancelBlockBreakingEvent : CancellableEvent()
+// // // codex start
+// // //
+// // // @Tag("allowAutoJump")
+// // // class AllowAutoJumpEvent(
+// // //     var isAllowed: Boolean,
+// // // ) : Event()
+// // //
+// // // /**
+// // //  * All events which are related to the minecraft client
+// // //  */
+// // // codex end
+// // codex end
+// // codex start
+// //
+// // @Tag("session")
+// // class SessionEvent(
+// //     val session: User,
+// // ) : Event(), WebSocketEvent
+// // codex end
+// codex end
 
 @AddonApi
 @Tag("screen")
@@ -164,7 +178,7 @@ class ScreenEvent(
 
 @AddonApi
 @Tag("disconnect")
-object DisconnectEvent : Event(), WebSocketEvent
+object DisconnectEvent : Event() //codex (, WebSocketEvent)
 // codex start
 //
 // @Tag("overlayMessage")
@@ -192,9 +206,11 @@ object PerspectiveEvent : Event() {
         distance = entity.cameraDistance
     }
 }
-
-@Tag("itemLoreQuery")
-class ItemLoreQueryEvent(
-    val itemStack: ItemStack,
-    val lore: ArrayList<Component>,
-) : Event()
+// codex start
+//
+// @Tag("itemLoreQuery")
+// class ItemLoreQueryEvent(
+//     val itemStack: ItemStack,
+//     val lore: ArrayList<Component>,
+// ) : Event()
+// codex end

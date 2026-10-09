@@ -18,18 +18,13 @@
  */
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.network;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.ccbluex.liquidbounce.common.ChunkUpdateFlag;
-import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.entity.player.Player;
@@ -60,171 +55,175 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
     // }
     // codex end
 
-    @WrapMethod(method = "handleChunkBlocksUpdate")
-    private void onChunkDeltaUpdateStart(ClientboundSectionBlocksUpdatePacket packet, Operation<Void> original) {
-        ChunkUpdateFlag.withChunkDeltaUpdating(() -> {
-            original.call(packet);
-            EventManager.INSTANCE.callEvent(new ChunkDeltaUpdateEvent(packet));
-        });
     // codex start
+    // @WrapMethod(method = "handleChunkBlocksUpdate")
+    // private void onChunkDeltaUpdateStart(ClientboundSectionBlocksUpdatePacket packet, Operation<Void> original) {
+    //     ChunkUpdateFlag.withChunkDeltaUpdating(() -> {
+    //         original.call(packet);
+    //         EventManager.INSTANCE.callEvent(new ChunkDeltaUpdateEvent(packet));
+    //     });
+    // // codex start
+    // // }
+    // //
+    // // @Inject(method = "handleTeleportEntity", at = @At("RETURN"))
+    // // private void hookOnEntityPosition(ClientboundTeleportEntityPacket packet, CallbackInfo ci) {
+    // //     EntityMoveTrigger.INSTANCE.notify(packet);
+    // // }
+    // //
+    // // @Inject(method = "handleBlockUpdate", at = @At("RETURN"))
+    // // private void hookOnBlockUpdate(ClientboundBlockUpdatePacket packet, CallbackInfo ci) {
+    // //     BlockChangeTrigger.INSTANCE.notify(packet);
+    // // }
+    // //
+    // // @Inject(method = "handleChunkBlocksUpdate", at = @At("RETURN"))
+    // // private void hookOnChunkDeltaUpdate(ClientboundSectionBlocksUpdatePacket packet, CallbackInfo ci) {
+    // //     BlockChangeTrigger.INSTANCE.postChunkUpdateHandler(packet);
+    // // }
+    // //
+    // // @Inject(method = "handleAddEntity", at = @At("RETURN"))
+    // // private void hookOnEntitySpawn(ClientboundAddEntityPacket packet, CallbackInfo ci) {
+    // //     CrystalSpawnTrigger.INSTANCE.notify(packet);
+    // // }
+    // //
+    // // @Inject(method = "handleSoundEntityEvent", at = @At("RETURN"))
+    // // private void hookOnPlaySoundFromEntity(ClientboundSoundEntityPacket packet, CallbackInfo ci) {
+    // //     ExplodeSoundTrigger.INSTANCE.notify(packet);
+    // // }
+    // //
+    // // codex end
+    // // codex start
+    // // @Inject(method = "handleRemoveEntities", at = @At("RETURN"))
+    // // private void hookOnEntitiesDestroy(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
+    // //     CrystalDestroyTrigger.INSTANCE.notify(packet);
+    // // }
+    // // codex end
     // }
-    //
-    // @Inject(method = "handleTeleportEntity", at = @At("RETURN"))
-    // private void hookOnEntityPosition(ClientboundTeleportEntityPacket packet, CallbackInfo ci) {
-    //     EntityMoveTrigger.INSTANCE.notify(packet);
-    // }
-    //
-    // @Inject(method = "handleBlockUpdate", at = @At("RETURN"))
-    // private void hookOnBlockUpdate(ClientboundBlockUpdatePacket packet, CallbackInfo ci) {
-    //     BlockChangeTrigger.INSTANCE.notify(packet);
-    // }
-    //
-    // @Inject(method = "handleChunkBlocksUpdate", at = @At("RETURN"))
-    // private void hookOnChunkDeltaUpdate(ClientboundSectionBlocksUpdatePacket packet, CallbackInfo ci) {
-    //     BlockChangeTrigger.INSTANCE.postChunkUpdateHandler(packet);
-    // }
-    //
-    // @Inject(method = "handleAddEntity", at = @At("RETURN"))
-    // private void hookOnEntitySpawn(ClientboundAddEntityPacket packet, CallbackInfo ci) {
-    //     CrystalSpawnTrigger.INSTANCE.notify(packet);
-    // }
-    //
-    // @Inject(method = "handleSoundEntityEvent", at = @At("RETURN"))
-    // private void hookOnPlaySoundFromEntity(ClientboundSoundEntityPacket packet, CallbackInfo ci) {
-    //     ExplodeSoundTrigger.INSTANCE.notify(packet);
-    // }
-    //
     // codex end
-    // codex start
-    // @Inject(method = "handleRemoveEntities", at = @At("RETURN"))
-    // private void hookOnEntitiesDestroy(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
-    //     CrystalDestroyTrigger.INSTANCE.notify(packet);
-    // }
-    // codex end
-    }
 
     // codex start
-    // @ModifyExpressionValue(method = "setTitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetTitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
-    // private @Nullable Component hookOnTitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
-    //     var event = new TitleEvent.Title(original);
-    //     EventManager.INSTANCE.callEvent(event);
-    //     if (event.isCancelled()) {
-    //         ci.cancel();
-    //     }
-    //     return event.getText();
-    // }
-//
-    // @ModifyExpressionValue(method = "setSubtitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetSubtitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
-    // private @Nullable Component hookOnSubtitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
-    //     var event = new TitleEvent.Subtitle(original);
-    //     EventManager.INSTANCE.callEvent(event);
-    //     if (event.isCancelled()) {
-    //         ci.cancel();
-    //     }
-    //     return event.getText();
-    // }
-//
-    // @ModifyArgs(method = "setTitlesAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;setTimes(III)V"))
-    // private void hookOnTitleFade(Args args, @Cancellable CallbackInfo ci) {
-    //     var event = new TitleEvent.Fade(args.get(0), args.get(1), args.get(2));
-    //     EventManager.INSTANCE.callEvent(event);
-    //     if (event.isCancelled()) {
-    //         ci.cancel();
-    //     }
-    //     args.set(0, event.getFadeInTicks());
-    //     args.set(1, event.getStayTicks());
-    //     args.set(2, event.getFadeOutTicks());
-    // }
-//
-    // /**
-    //  * This injection rewrites the method!!!
-    //  */
-    // @Inject(method = "handleTitlesClear", at = @At(value = "HEAD"), cancellable = true)
-    // private void hookOnTitleClear(ClientboundClearTitlesPacket packet, CallbackInfo ci) {
-    //     PacketUtils.ensureRunningOnSameThread(packet, (ClientGamePacketListener) this, this.minecraft.packetProcessor());
-    //     var event = new TitleEvent.Clear(packet.shouldResetTimes());
-    //     EventManager.INSTANCE.callEvent(event);
-    //     if (event.isCancelled()) {
-    //         ci.cancel();
+    // // codex start
+    // // @ModifyExpressionValue(method = "setTitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetTitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
+    // // private @Nullable Component hookOnTitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
+    // //     var event = new TitleEvent.Title(original);
+    // //     EventManager.INSTANCE.callEvent(event);
+    // //     if (event.isCancelled()) {
+    // //         ci.cancel();
+    // //     }
+    // //     return event.getText();
+    // // }
+    // //
+    // // @ModifyExpressionValue(method = "setSubtitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetSubtitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
+    // // private @Nullable Component hookOnSubtitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
+    // //     var event = new TitleEvent.Subtitle(original);
+    // //     EventManager.INSTANCE.callEvent(event);
+    // //     if (event.isCancelled()) {
+    // //         ci.cancel();
+    // //     }
+    // //     return event.getText();
+    // // }
+    // //
+    // // @ModifyArgs(method = "setTitlesAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;setTimes(III)V"))
+    // // private void hookOnTitleFade(Args args, @Cancellable CallbackInfo ci) {
+    // //     var event = new TitleEvent.Fade(args.get(0), args.get(1), args.get(2));
+    // //     EventManager.INSTANCE.callEvent(event);
+    // //     if (event.isCancelled()) {
+    // //         ci.cancel();
+    // //     }
+    // //     args.set(0, event.getFadeInTicks());
+    // //     args.set(1, event.getStayTicks());
+    // //     args.set(2, event.getFadeOutTicks());
+    // // }
+    // //
+    // // /**
+    // //  * This injection rewrites the method!!!
+    // //  */
+    // // @Inject(method = "handleTitlesClear", at = @At(value = "HEAD"), cancellable = true)
+    // // private void hookOnTitleClear(ClientboundClearTitlesPacket packet, CallbackInfo ci) {
+    // //     PacketUtils.ensureRunningOnSameThread(packet, (ClientGamePacketListener) this, this.minecraft.packetProcessor());
+    // //     var event = new TitleEvent.Clear(packet.shouldResetTimes());
+    // //     EventManager.INSTANCE.callEvent(event);
+    // //     if (event.isCancelled()) {
+    // //         ci.cancel();
+    // //         return;
+    // //     }
+    // //     this.minecraft.gui.hud.clearTitles();
+    // //     if (event.getReset()) {
+    // //         this.minecraft.gui.hud.resetTitleTimes();
+    // //     }
+    // //     ci.cancel();
+    // // }
+    // // codex end
+    // // codex start
+    // // @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    // // @ModifyExpressionValue(method = "handleExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundExplodePacket;playerKnockback()Ljava/util/Optional;"))
+    // // private Optional<Vec3> onExplosionVelocity(Optional<Vec3> original) {
+    // //     var present = original.isPresent();
+    // //     if (present && ModuleAntiExploit.canLimit(Limit.EXPLOSION_STRENGTH)) {
+    // //         var vec = original.get();
+    // //         double fixedX = Mth.clamp(vec.x, -10.0, 10.0);
+    // //         double fixedY = Mth.clamp(vec.y, -10.0, 10.0);
+    // //         double fixedZ = Mth.clamp(vec.z, -10.0, 10.0);
+    // //
+    // //         if (fixedX != vec.x || fixedY != vec.y || fixedZ != vec.z) {
+    // //             ModuleAntiExploit.INSTANCE.notify(Limit.EXPLOSION_STRENGTH, "Limited too strong explosion", true);
+    // //             return Optional.of(new Vec3(fixedX, fixedY, fixedZ));
+    // //         }
+    // //     }
+    // //
+    // //     return original;
+    // // }
+    // //
+    // // @ModifyExpressionValue(method = "handleParticleEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;count()I", ordinal = 1))
+    // // private int onParticleAmount(int original) {
+    // //     if (ModuleAntiExploit.canLimit(Limit.PARTICLES_AMOUNT) && 500 <= original) {
+    // //         ModuleAntiExploit.INSTANCE.notify(Limit.PARTICLES_AMOUNT, "Limited too many particles", true);
+    // //         return 100;
+    // //     }
+    // //     return original;
+    // // }
+    // //
+    // // @ModifyExpressionValue(
+    // //     method = "handleParticleEvent",
+    // //     at = {
+    // //         @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;xMaxSpeed()F"),
+    // //         @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;yMaxSpeed()F"),
+    // //         @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;zMaxSpeed()F"),
+    // //     }
+    // // )
+    // // private float onParticleSpeed(float original) {
+    // //     if (ModuleAntiExploit.canLimit(Limit.PARTICLES_SPEED) && 10.0f <= original) {
+    // //         ModuleAntiExploit.INSTANCE.notify(Limit.PARTICLES_SPEED, "Limited too fast particles speed", true);
+    // //         return 10.0f;
+    // //     }
+    // //     return original;
+    // // }
+    // //
+    // // @ModifyExpressionValue(method = "handleGameEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;getEvent()Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket$Type;"))
+    // // private ClientboundGameEventPacket.Type onGameStateChange(ClientboundGameEventPacket.Type original) {
+    // //     if (ModuleAntiExploit.INSTANCE.getRunning() && original == ClientboundGameEventPacket.DEMO_EVENT && ModuleAntiExploit.INSTANCE.getCancelDemo()) {
+    // //         ModuleAntiExploit.INSTANCE.notify(null, "Cancelled demo GUI (just annoying thing)", false);
+    // //         return null;
+    // //     }
+    // //
+    // //     return original;
+    // // }
+    // //
+    // // codex end
+    // @Inject(method = "handleSetHealth", at = @At("HEAD"))
+    // private void injectHealthUpdate(ClientboundSetHealthPacket packet, CallbackInfo ci) {
+    //     LocalPlayer player = this.minecraft.player;
+    //
+    //     if (player == null) {
     //         return;
     //     }
-    //     this.minecraft.gui.hud.clearTitles();
-    //     if (event.getReset()) {
-    //         this.minecraft.gui.hud.resetTitleTimes();
+    //
+    //     EventManager.INSTANCE.callEvent(new HealthUpdateEvent(packet.getHealth(), packet.getFood(), packet.getSaturation(), player.getHealth()));
+    //
+    //     if (packet.getHealth() == 0) {
+    //         EventManager.INSTANCE.callEvent(DeathEvent.INSTANCE);
     //     }
-    //     ci.cancel();
     // }
     // codex end
-    // codex start
-    // @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    // @ModifyExpressionValue(method = "handleExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundExplodePacket;playerKnockback()Ljava/util/Optional;"))
-    // private Optional<Vec3> onExplosionVelocity(Optional<Vec3> original) {
-    //     var present = original.isPresent();
-    //     if (present && ModuleAntiExploit.canLimit(Limit.EXPLOSION_STRENGTH)) {
-    //         var vec = original.get();
-    //         double fixedX = Mth.clamp(vec.x, -10.0, 10.0);
-    //         double fixedY = Mth.clamp(vec.y, -10.0, 10.0);
-    //         double fixedZ = Mth.clamp(vec.z, -10.0, 10.0);
-    //
-    //         if (fixedX != vec.x || fixedY != vec.y || fixedZ != vec.z) {
-    //             ModuleAntiExploit.INSTANCE.notify(Limit.EXPLOSION_STRENGTH, "Limited too strong explosion", true);
-    //             return Optional.of(new Vec3(fixedX, fixedY, fixedZ));
-    //         }
-    //     }
-    //
-    //     return original;
-    // }
-    //
-    // @ModifyExpressionValue(method = "handleParticleEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;count()I", ordinal = 1))
-    // private int onParticleAmount(int original) {
-    //     if (ModuleAntiExploit.canLimit(Limit.PARTICLES_AMOUNT) && 500 <= original) {
-    //         ModuleAntiExploit.INSTANCE.notify(Limit.PARTICLES_AMOUNT, "Limited too many particles", true);
-    //         return 100;
-    //     }
-    //     return original;
-    // }
-    //
-    // @ModifyExpressionValue(
-    //     method = "handleParticleEvent",
-    //     at = {
-    //         @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;xMaxSpeed()F"),
-    //         @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;yMaxSpeed()F"),
-    //         @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;zMaxSpeed()F"),
-    //     }
-    // )
-    // private float onParticleSpeed(float original) {
-    //     if (ModuleAntiExploit.canLimit(Limit.PARTICLES_SPEED) && 10.0f <= original) {
-    //         ModuleAntiExploit.INSTANCE.notify(Limit.PARTICLES_SPEED, "Limited too fast particles speed", true);
-    //         return 10.0f;
-    //     }
-    //     return original;
-    // }
-    //
-    // @ModifyExpressionValue(method = "handleGameEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket;getEvent()Lnet/minecraft/network/protocol/game/ClientboundGameEventPacket$Type;"))
-    // private ClientboundGameEventPacket.Type onGameStateChange(ClientboundGameEventPacket.Type original) {
-    //     if (ModuleAntiExploit.INSTANCE.getRunning() && original == ClientboundGameEventPacket.DEMO_EVENT && ModuleAntiExploit.INSTANCE.getCancelDemo()) {
-    //         ModuleAntiExploit.INSTANCE.notify(null, "Cancelled demo GUI (just annoying thing)", false);
-    //         return null;
-    //     }
-    //
-    //     return original;
-    // }
-    //
-    // codex end
-    @Inject(method = "handleSetHealth", at = @At("HEAD"))
-    private void injectHealthUpdate(ClientboundSetHealthPacket packet, CallbackInfo ci) {
-        LocalPlayer player = this.minecraft.player;
-
-        if (player == null) {
-            return;
-        }
-
-        EventManager.INSTANCE.callEvent(new HealthUpdateEvent(packet.getHealth(), packet.getFood(), packet.getSaturation(), player.getHealth()));
-
-        if (packet.getHealth() == 0) {
-            EventManager.INSTANCE.callEvent(DeathEvent.INSTANCE);
-        }
-    }
 
     @Unique
     private final ThreadLocal<Rotation> rotationThreadLocal = ThreadLocal.withInitial(() -> null);

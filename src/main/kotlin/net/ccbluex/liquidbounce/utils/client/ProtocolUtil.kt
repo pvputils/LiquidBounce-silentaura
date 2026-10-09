@@ -82,8 +82,10 @@ val isEqual1_8: Boolean
         logger.error("Failed to check if the server is using old combat", it)
     }.getOrDefault(false)
 
-val isBlocksAttacksExisting: Boolean
-    get() = isOlderThanOrEqual1_8 || isNewerThanOrEquals1_21_5
+// codex start
+// val isBlocksAttacksExisting: Boolean
+//     get() = isOlderThanOrEqual1_8 || isNewerThanOrEquals1_21_5
+// codex end
 
 val isOlderThanOrEqual1_8: Boolean
     get() = runCatching {
@@ -173,49 +175,51 @@ val isEqual1_21_4: Boolean
 /**
  * Since 1.21.5 anything can be used to blocking
  */
-val isNewerThanOrEquals1_21_5: Boolean
-    get() = runCatching {
-        // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-        usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_5
-    }.onFailure {
-        logger.error("Failed to check if the server is using 1.21.5+", it)
-    }.getOrDefault(true)
-
-/**
- * Since 1.21.6 the [ServerboundPlayerCommandPacket.Action] removed 2 entries for sneaking
- */
 // codex start
-// val isNewerThanOrEquals1_21_6: Boolean
+// val isNewerThanOrEquals1_21_5: Boolean
 //     get() = runCatching {
 //         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_6
+//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_5
 //     }.onFailure {
-//         logger.error("Failed to check if the server is using 1.21.6+", it)
+//         logger.error("Failed to check if the server is using 1.21.5+", it)
 //     }.getOrDefault(true)
 //
 // /**
-//  * Since 1.21.9 the byte format of [net.minecraft.world.phys.Vec3] have been rewritten
-//  * with [net.minecraft.network.LpVec3].
+//  * Since 1.21.6 the [ServerboundPlayerCommandPacket.Action] removed 2 entries for sneaking
 //  */
-// val isNewerThanOrEquals1_21_9: Boolean
-//     get() = runCatching {
-//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_9
-//     }.onFailure {
-//         logger.error("Failed to check if the server is using 1.21.9+", it)
-//     }.getOrDefault(true)
-//
-// /**
-//  * Since 26.1 [net.minecraft.network.protocol.game.ServerboundInteractPacket] has only one mode
-//  * with entity and relative position (previous `INTERACT_AT`).
-//  */
-// val isOlderThanOrEquals1_21_11: Boolean
-//     get() = runCatching {
-//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isOlderThanOrEqual1_21_11
-//     }.onFailure {
-//         logger.error("Failed to check if the server is using 1.21.11", it)
-//     }.getOrDefault(false)
+// // codex start
+// // val isNewerThanOrEquals1_21_6: Boolean
+// //     get() = runCatching {
+// //         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+// //         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_6
+// //     }.onFailure {
+// //         logger.error("Failed to check if the server is using 1.21.6+", it)
+// //     }.getOrDefault(true)
+// //
+// // /**
+// //  * Since 1.21.9 the byte format of [net.minecraft.world.phys.Vec3] have been rewritten
+// //  * with [net.minecraft.network.LpVec3].
+// //  */
+// // val isNewerThanOrEquals1_21_9: Boolean
+// //     get() = runCatching {
+// //         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+// //         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_9
+// //     }.onFailure {
+// //         logger.error("Failed to check if the server is using 1.21.9+", it)
+// //     }.getOrDefault(true)
+// //
+// // /**
+// //  * Since 26.1 [net.minecraft.network.protocol.game.ServerboundInteractPacket] has only one mode
+// //  * with entity and relative position (previous `INTERACT_AT`).
+// //  */
+// // val isOlderThanOrEquals1_21_11: Boolean
+// //     get() = runCatching {
+// //         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+// //         usesViaFabricPlus && VfpCompatibility.INSTANCE.isOlderThanOrEqual1_21_11
+// //     }.onFailure {
+// //         logger.error("Failed to check if the server is using 1.21.11", it)
+// //     }.getOrDefault(false)
+// // codex end
 // codex end
 
 val isOlderThan26_3: Boolean

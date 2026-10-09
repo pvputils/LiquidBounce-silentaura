@@ -23,17 +23,13 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelPipeline;
 import io.netty.resolver.NoopAddressResolverGroup;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.PacketEvent;
-import net.ccbluex.liquidbounce.event.events.PipelineEvent;
 import net.ccbluex.liquidbounce.event.events.TransferOrigin;
-import net.minecraft.network.BandwidthDebugMonitor;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ClientboundBundlePacket;
 import net.minecraft.server.RunningOnDifferentThreadException;
 import org.spongepowered.asm.mixin.Mixin;
@@ -108,16 +104,18 @@ public abstract class MixinConnection {
         }
     }
 
-    /**
-     * Hook proxy
-     */
-    @Inject(method = "configureSerialization", at = @At("HEAD"))
-    private static void hookProxy(ChannelPipeline pipeline, PacketFlow side, boolean local, BandwidthDebugMonitor packetSizeLogger, CallbackInfo ci) {
-        if (side == PacketFlow.CLIENTBOUND) {
-            final PipelineEvent event = new PipelineEvent(pipeline, local);
-            EventManager.INSTANCE.callEvent(event);
-        }
-    }
+    // codex start
+    // /**
+    //  * Hook proxy
+    //  */
+    // @Inject(method = "configureSerialization", at = @At("HEAD"))
+    // private static void hookProxy(ChannelPipeline pipeline, PacketFlow side, boolean local, BandwidthDebugMonitor packetSizeLogger, CallbackInfo ci) {
+    //     if (side == PacketFlow.CLIENTBOUND) {
+    //         final PipelineEvent event = new PipelineEvent(pipeline, local);
+    //         EventManager.INSTANCE.callEvent(event);
+    //     }
+    // }
+    // codex end
 
     /**
      * Vanilla connects to {@link InetSocketAddress#getAddress()}, which is null for an address left to the proxy

@@ -24,7 +24,6 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import net.ccbluex.fastutil.enumMapOf
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.utils.input.HumanInputDeserializer
@@ -52,7 +51,7 @@ open class ListValue<T : MutableCollection<E>, E>(
      * TODO: Might replace [innerType] with a [Class] variable
      *   from the inner value type in the future.
      */
-    @Exclude @ProtocolExclude val innerType: Class<E>,
+    @Exclude val innerType: Class<E>, //codex (@ProtocolExclude)
 
     ) : Value<T>(
     name,

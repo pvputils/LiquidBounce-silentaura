@@ -46,7 +46,6 @@ import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.ItemStackSerial
 import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.StatusEffectInstanceSerializer
 import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.StringRepresentableSerializer
 import net.ccbluex.liquidbounce.config.gson.stategies.ExcludeStrategy
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExcludeStrategy
 import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.config.types.list.Tagged
@@ -100,39 +99,41 @@ val publicGson: Gson = GsonBuilder()
  * This GSON instance is used for interop communication.
  */
 
-internal val interopGson: Gson = GsonBuilder()
-    .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
-    .registerCommonTypeAdapters()
-    .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
-    .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
-    .create()
-
-/**
- * This GSON instance is used for serializing objects as accessible JSON which means it is READ-ONLY (!)
- * and often comes with an easier syntax to use in other programming languages like JavaScript.
- */
 // codex start
-// internal val accessibleInteropGson: Gson = GsonBuilder()
+// internal val interopGson: Gson = GsonBuilder()
 //     .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
 //     .registerCommonTypeAdapters()
 //     .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
 //     .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
-//     // codex start
-//     // .registerTypeHierarchyAdapter(Theme::class.javaObjectType, ReadOnlyThemeSerializer)
-//     // .registerTypeHierarchyAdapter(HudComponent::class.javaObjectType, ReadOnlyComponentSerializer)
-//     // .registerTypeHierarchyAdapter(Alignment::class.javaObjectType, AlignmentAdapter)
-//     // codex end
 //     .create()
 //
 // /**
-//  * Register common type adapters
-//  * These adapters include anything from Kotlin classes to Minecraft and LiquidBounce types
-//  * They are safe to use on any GSON instance. (clientGson, autoConfigGson, ...)
-//  * It does not include any configurable serializers, which means you need to add them yourself if needed!
-//  *
-//  * @see GsonBuilder.registerTypeHierarchyAdapter
-//  * @see GsonBuilder.registerTypeAdapter
+//  * This GSON instance is used for serializing objects as accessible JSON which means it is READ-ONLY (!)
+//  * and often comes with an easier syntax to use in other programming languages like JavaScript.
 //  */
+// // codex start
+// // internal val accessibleInteropGson: Gson = GsonBuilder()
+// //     .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
+// //     .registerCommonTypeAdapters()
+// //     .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
+// //     .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
+// //     // codex start
+// //     // .registerTypeHierarchyAdapter(Theme::class.javaObjectType, ReadOnlyThemeSerializer)
+// //     // .registerTypeHierarchyAdapter(HudComponent::class.javaObjectType, ReadOnlyComponentSerializer)
+// //     // .registerTypeHierarchyAdapter(Alignment::class.javaObjectType, AlignmentAdapter)
+// //     // codex end
+// //     .create()
+// //
+// // /**
+// //  * Register common type adapters
+// //  * These adapters include anything from Kotlin classes to Minecraft and LiquidBounce types
+// //  * They are safe to use on any GSON instance. (clientGson, autoConfigGson, ...)
+// //  * It does not include any configurable serializers, which means you need to add them yourself if needed!
+// //  *
+// //  * @see GsonBuilder.registerTypeHierarchyAdapter
+// //  * @see GsonBuilder.registerTypeAdapter
+// //  */
+// // codex end
 // codex end
 
 private fun GsonBuilder.registerCommonTypeAdapters() =

@@ -223,7 +223,7 @@ dependencies {
     jij(libs.djl.pytorch)
 
     // HTTP library
-    jij(libs.bundles.okhttp)
+    jij(libs.okhttp) //codex (jij(libs.bundles.okhttp))
 
     // SOCKS5 & HTTP Proxy Support
     // codex start

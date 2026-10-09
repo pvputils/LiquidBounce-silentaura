@@ -23,7 +23,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.EventState;
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.interfaces.LocalPlayerAddition;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
@@ -62,16 +61,18 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     @Shadow
     public abstract boolean isUnderWater();
 
-    @Unique
     // codex start
-    // private PlayerData lastKnownStatistics = null;
-    //
     // @Unique
-    // private PlayerInventoryData lastKnownInventory = null;
-    //
-    // @Unique
+    // // codex start
+    // // private PlayerData lastKnownStatistics = null;
+    // //
+    // // @Unique
+    // // private PlayerInventoryData lastKnownInventory = null;
+    // //
+    // // @Unique
+    // // codex end
+    // private PlayerNetworkMovementTickEvent eventMotion;
     // codex end
-    private PlayerNetworkMovementTickEvent eventMotion;
 
     @Unique
     private int onGroundTicks = 0;
@@ -87,102 +88,120 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
     // }
     // codex end
 
-    /**
-     * Hook entity tick event
-     */
-    @Inject(method = "tick", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
-            shift = At.Shift.BEFORE,
-            ordinal = 0),
-            cancellable = true)
-    private void hookTickEvent(CallbackInfo ci) {
-        var tickEvent = new PlayerTickEvent();
-        EventManager.INSTANCE.callEvent(tickEvent);
+    // codex start
+    // /**
+    //  * Hook entity tick event
+    //  */
+    // @Inject(method = "tick", at = @At(value = "INVOKE",
+    //         target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
+    //         shift = At.Shift.BEFORE,
+    //         ordinal = 0),
+    //         cancellable = true)
+    // private void hookTickEvent(CallbackInfo ci) {
+    //     var tickEvent = new PlayerTickEvent();
+    //     EventManager.INSTANCE.callEvent(tickEvent);
+    //
+    //     if (tickEvent.isCancelled()) {
+    //         ci.cancel();
+    //     }
+    // }
+    // codex end
 
-        if (tickEvent.isCancelled()) {
-            ci.cancel();
-        }
-    }
+    // codex start
+    // @Inject(method = "tick", at = @At(value = "INVOKE",
+    //         target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
+    //         shift = At.Shift.AFTER,
+    //         ordinal = 0))
+    // private void hookPostTickEvent(CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(PlayerPostTickEvent.INSTANCE);
+    //
+    //     // codex start
+    //     // // Call player statistics change event when statistics change
+    //     // var statistics = PlayerData.Companion.fromPlayer((LocalPlayer) (Object) this);
+    //     // if (lastKnownStatistics == null || !lastKnownStatistics.equals(statistics)) {
+    //     //     EventManager.INSTANCE.callEvent(new ClientPlayerDataEvent(statistics));
+    //     // }
+    //     // this.lastKnownStatistics = statistics;
+    //     //
+    //     // // Call player inventory event when inventory changes
+    //     // var playerInventory = PlayerInventoryData.Companion.fromPlayer((LocalPlayer) (Object) this);
+    //     // if (lastKnownInventory == null || !lastKnownInventory.equals(playerInventory)) {
+    //     //     EventManager.INSTANCE.callEvent(new ClientPlayerInventoryEvent(playerInventory));
+    //     // }
+    //     // this.lastKnownInventory = playerInventory;
+    //     // codex end
+    // }
+    // codex end
 
-    @Inject(method = "tick", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
-            shift = At.Shift.AFTER,
-            ordinal = 0))
-    private void hookPostTickEvent(CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(PlayerPostTickEvent.INSTANCE);
+    // codex start
+    // /**
+    //  * Hook entity movement tick event
+    //  */
+    // @Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
+    // private void hookMovementTickEvent(CallbackInfo callbackInfo) {
+    //     var movementTickEvent = new PlayerMovementTickEvent();
+    //     EventManager.INSTANCE.callEvent(movementTickEvent);
+    //
+    //     if (movementTickEvent.isCancelled()) {
+    //         callbackInfo.cancel();
+    //     }
+    // }
+    // codex end
 
-        // codex start
-        // // Call player statistics change event when statistics change
-        // var statistics = PlayerData.Companion.fromPlayer((LocalPlayer) (Object) this);
-        // if (lastKnownStatistics == null || !lastKnownStatistics.equals(statistics)) {
-        //     EventManager.INSTANCE.callEvent(new ClientPlayerDataEvent(statistics));
-        // }
-        // this.lastKnownStatistics = statistics;
-        //
-        // // Call player inventory event when inventory changes
-        // var playerInventory = PlayerInventoryData.Companion.fromPlayer((LocalPlayer) (Object) this);
-        // if (lastKnownInventory == null || !lastKnownInventory.equals(playerInventory)) {
-        //     EventManager.INSTANCE.callEvent(new ClientPlayerInventoryEvent(playerInventory));
-        // }
-        // this.lastKnownInventory = playerInventory;
-        // codex end
-    }
+    // codex start
+    // /**
+    //  * Hook entity movement tick event at HEAD and call out PRE tick movement event
+    //  */
+    // @Inject(method = "sendPosition", at = @At("HEAD"), cancellable = true)
+    // private void hookMovementPre(CallbackInfo callbackInfo) {
+    //     LocalPlayer player = (LocalPlayer) (Object) this;
+    //     eventMotion = new PlayerNetworkMovementTickEvent(EventState.PRE, player.getX(), player.getY(), player.getZ(), player.onGround());
+    //     EventManager.INSTANCE.callEvent(eventMotion);
+    //
+    //     if (eventMotion.isCancelled()) {
+    //         callbackInfo.cancel();
+    //     }
+    // }
+    // codex end
 
-    /**
-     * Hook entity movement tick event
-     */
-    @Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
-    private void hookMovementTickEvent(CallbackInfo callbackInfo) {
-        var movementTickEvent = new PlayerMovementTickEvent();
-        EventManager.INSTANCE.callEvent(movementTickEvent);
+    // codex start
+    // @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getX()D"))
+    // private double modifyXPosition(double original) {
+    //     return eventMotion.getX();
+    // }
+    // codex end
 
-        if (movementTickEvent.isCancelled()) {
-            callbackInfo.cancel();
-        }
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getY()D"))
+    // private double modifyYPosition(double original) {
+    //     return eventMotion.getY();
+    // }
+    // codex end
 
-    /**
-     * Hook entity movement tick event at HEAD and call out PRE tick movement event
-     */
-    @Inject(method = "sendPosition", at = @At("HEAD"), cancellable = true)
-    private void hookMovementPre(CallbackInfo callbackInfo) {
-        LocalPlayer player = (LocalPlayer) (Object) this;
-        eventMotion = new PlayerNetworkMovementTickEvent(EventState.PRE, player.getX(), player.getY(), player.getZ(), player.onGround());
-        EventManager.INSTANCE.callEvent(eventMotion);
+    // codex start
+    // @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getZ()D"))
+    // private double modifyZPosition(double original) {
+    //     return eventMotion.getZ();
+    // }
+    // codex end
 
-        if (eventMotion.isCancelled()) {
-            callbackInfo.cancel();
-        }
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;onGround()Z"))
+    // private boolean modifyOnGround(boolean original) {
+    //     return eventMotion.getGround();
+    // }
+    // codex end
 
-    @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getX()D"))
-    private double modifyXPosition(double original) {
-        return eventMotion.getX();
-    }
-
-    @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getY()D"))
-    private double modifyYPosition(double original) {
-        return eventMotion.getY();
-    }
-
-    @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getZ()D"))
-    private double modifyZPosition(double original) {
-        return eventMotion.getZ();
-    }
-
-    @ModifyExpressionValue(method = "sendPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;onGround()Z"))
-    private boolean modifyOnGround(boolean original) {
-        return eventMotion.getGround();
-    }
-
-    /**
-     * Hook entity movement tick event at RETURN and call out POST tick movement event
-     */
-    @Inject(method = "sendPosition", at = @At("RETURN"))
-    private void hookMovementPost(CallbackInfo callbackInfo) {
-        LocalPlayer player = (LocalPlayer) (Object) this;
-        EventManager.INSTANCE.callEvent(new PlayerNetworkMovementTickEvent(EventState.POST, player.getX(), player.getY(), player.getZ(), player.onGround()));
-    }
+    // codex start
+    // /**
+    //  * Hook entity movement tick event at RETURN and call out POST tick movement event
+    //  */
+    // @Inject(method = "sendPosition", at = @At("RETURN"))
+    // private void hookMovementPost(CallbackInfo callbackInfo) {
+    //     LocalPlayer player = (LocalPlayer) (Object) this;
+    //     EventManager.INSTANCE.callEvent(new PlayerNetworkMovementTickEvent(EventState.POST, player.getX(), player.getY(), player.getZ(), player.onGround()));
+    // }
+    // codex end
 
     // codex start
     //  * Hook moveTowardsClosestSpace at HEAD and call PlayerPushoutEvent
@@ -385,10 +404,12 @@ public abstract class MixinLocalPlayer extends MixinPlayer implements LocalPlaye
         return rotation.xRot();
     }
 
-    @ModifyReturnValue(method = "isAutoJumpEnabled", at = @At("RETURN"))
-    private boolean injectAutoJumpAllowed(boolean original) {
-        return EventManager.INSTANCE.callEvent(new AllowAutoJumpEvent(original)).isAllowed();
-    }
+    // codex start
+    // @ModifyReturnValue(method = "isAutoJumpEnabled", at = @At("RETURN"))
+    // private boolean injectAutoJumpAllowed(boolean original) {
+    //     return EventManager.INSTANCE.callEvent(new AllowAutoJumpEvent(original)).isAllowed();
+    // }
+    // codex end
 
     // codex start
     // @ModifyReturnValue(method = "getJumpRidingScale", at = @At("RETURN"))

@@ -20,9 +20,7 @@ package net.ccbluex.liquidbounce.utils.client
 
 import net.ccbluex.liquidbounce.additions.realSelectedSlot
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
-import net.ccbluex.liquidbounce.event.events.SelectHotbarSlotSilentlyEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.addon.AddonApi
@@ -68,10 +66,12 @@ object SilentHotbar : EventListener {
     ): Boolean {
         require(Inventory.isHotbarSlot(slot)) { "Invalid hotbar slot: $slot" }
 
-        val event = EventManager.callEvent(SelectHotbarSlotSilentlyEvent(requester, slot))
-        if (event.isCancelled) {
-            return false
-        }
+        // codex start
+        // val event = EventManager.callEvent(SelectHotbarSlotSilentlyEvent(requester, slot))
+        // if (event.isCancelled) {
+        //     return false
+        // }
+        // codex end
 
         hotbarState = SilentHotbarState(slot, requester, ticksUntilReset, clientsideSlot)
         ticksSinceLastUpdate = 0

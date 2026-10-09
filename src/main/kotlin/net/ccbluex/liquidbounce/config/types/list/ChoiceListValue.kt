@@ -24,7 +24,6 @@ import com.google.gson.JsonElement
 import it.unimi.dsi.fastutil.objects.Object2ObjectRBTreeMap
 import net.ccbluex.fastutil.mapToArray
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.list.Tagged.Companion.makeLookupTable
@@ -42,7 +41,7 @@ class ChoiceListValue<T : Tagged>(
         require(defaultValue in choices) { "default value must be in [${choices}]" }
     }
 
-    @Exclude @ProtocolExclude
+    @Exclude //codex (@ProtocolExclude)
     private val choiceByName = choices.makeLookupTable()
 
     override fun deserializeFrom(gson: Gson, element: JsonElement) {

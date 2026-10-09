@@ -191,43 +191,45 @@ fun LocalPlayer.getMovementDirectionOfInput(input: DirectionalInput = Directiona
     return getMovementDirectionOfInput(this.yRot, input)
 }
 
-val LivingEntity.usingItemOrNull: ItemStack?
-    get() = if (isUsingItem) useItem else null
 // codex start
-//
-// fun LivingEntity.isInHand(itemStack: ItemStack?, hand: InteractionHand) =
-//     this.getItemInHand(hand) === itemStack
-//
+// val LivingEntity.usingItemOrNull: ItemStack?
+//     get() = if (isUsingItem) useItem else null
 // // codex start
-// // val LivingEntity.isBlockAction: Boolean
-// //     get() = usingItemOrNull?.useAnimation === ItemUseAnimation.BLOCK
 // //
-// // val LivingEntity.isBlockingServerside: Boolean
-// //     get() {
-// //         if (this.isBlocking) return true
+// // fun LivingEntity.isInHand(itemStack: ItemStack?, hand: InteractionHand) =
+// //     this.getItemInHand(hand) === itemStack
 // //
-// //         // 1.8 server + 1.9~1.21.4 protocol
-// //         if (this.isUsingItem && !isBlocksAttacksExisting) {
-// //             val usingItem = this.useItem
-// //
-// //             // I don't know why but if you join 1.8 server with 1.21.11 client + 1.20.x protocol [useItem] will
-// be same
-// //             // as [mainHandItem]
-// //             if (isInHand(usingItem, InteractionHand.MAIN_HAND) && usingItem.isSword ||
-// //                 isInHand(usingItem, InteractionHand.OFF_HAND) && usingItem.item is ShieldItem
-// //             ) {
-// //                 return true
-// //             }
-// //         }
-// //
-// //         return false
-// //     }
-// //
-// // /**
-// //  * @see LocalPlayer.isSlowDueToUsingItem
-// //  */
-// // val Player.isSlowDueToUsingItem: Boolean
-// //     get() = isUsingItem && !(useItem[DataComponents.USE_EFFECTS] ?: UseEffects.DEFAULT).canSprint
+// // // codex start
+// // // val LivingEntity.isBlockAction: Boolean
+// // //     get() = usingItemOrNull?.useAnimation === ItemUseAnimation.BLOCK
+// // //
+// // // val LivingEntity.isBlockingServerside: Boolean
+// // //     get() {
+// // //         if (this.isBlocking) return true
+// // //
+// // //         // 1.8 server + 1.9~1.21.4 protocol
+// // //         if (this.isUsingItem && !isBlocksAttacksExisting) {
+// // //             val usingItem = this.useItem
+// // //
+// // //             // I don't know why but if you join 1.8 server with 1.21.11 client + 1.20.x protocol [useItem] will
+// // be same
+// // //             // as [mainHandItem]
+// // //             if (isInHand(usingItem, InteractionHand.MAIN_HAND) && usingItem.isSword ||
+// // //                 isInHand(usingItem, InteractionHand.OFF_HAND) && usingItem.item is ShieldItem
+// // //             ) {
+// // //                 return true
+// // //             }
+// // //         }
+// // //
+// // //         return false
+// // //     }
+// // //
+// // // /**
+// // //  * @see LocalPlayer.isSlowDueToUsingItem
+// // //  */
+// // // val Player.isSlowDueToUsingItem: Boolean
+// // //     get() = isUsingItem && !(useItem[DataComponents.USE_EFFECTS] ?: UseEffects.DEFAULT).canSprint
+// // // codex end
 // // codex end
 // codex end
 

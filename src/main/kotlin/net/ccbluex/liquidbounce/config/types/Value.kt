@@ -27,12 +27,9 @@ import kotlinx.coroutines.flow.StateFlow
 import net.ccbluex.liquidbounce.config.OptionalInclusion
 import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.config.types.list.MultiChoiceListValue
 import net.ccbluex.liquidbounce.config.types.list.Tagged
-import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.event.events.ValueChangedEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.logger
@@ -59,14 +56,14 @@ val VALUE_NAME_ORDER: Comparator<in Value<*>> = compareBy(String.CASE_INSENSITIV
 @AddonApi
 open class Value<T : Any>(
     @SerializedName("name") val name: String,
-    @Exclude @ProtocolExclude val aliases: List<String> = emptyList(),
-    @Exclude @ProtocolExclude private var defaultValue: T,
+    @Exclude val aliases: List<String> = emptyList(), //codex (@ProtocolExclude)
+    @Exclude private var defaultValue: T, //codex (@ProtocolExclude)
     @Exclude val valueType: ValueType,
 
     /**
      * If true, the description won't be bound to any [net.ccbluex.liquidbounce.config.types.group.ValueGroup].
      */
-    @Exclude @ProtocolExclude var independentDescription: Boolean = false
+    @Exclude var independentDescription: Boolean = false //codex (@ProtocolExclude)
 ) {
 
     @SerializedName("value")
@@ -76,15 +73,21 @@ open class Value<T : Any>(
         get() = name.lowercase()
 
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     private val listeners = ObjectArrayList<ValueListener<T>>()
 
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     private val changedListeners = ObjectArrayList<ValueChangedListener<T>>()
 
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     private val stateFlow = MutableStateFlow(inner)
 
     fun asStateFlow(): StateFlow<T> = stateFlow
@@ -94,7 +97,9 @@ open class Value<T : Any>(
      * Can be set using [doNotIncludeWhen] or [doNotIncludeAlways].
      */
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var doNotInclude: BooleanSupplier = { false }
         private set
 
@@ -103,7 +108,9 @@ open class Value<T : Any>(
      * Managed by [AutoConfig].
      */
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var inclusionGroup: OptionalInclusion? = null
         private set
 
@@ -111,7 +118,9 @@ open class Value<T : Any>(
      * If true, value will not be included in generated RestAPI config.
      */
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var notAnOption = false
         private set
 
@@ -119,7 +128,9 @@ open class Value<T : Any>(
      * If true, value will always keep [inner] equals [defaultValue].
      */
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var isImmutable = false
         private set
 
@@ -128,7 +139,9 @@ open class Value<T : Any>(
      * For values whose state lives elsewhere, such as another client's modules.
      */
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var isPersistent = true
         private set
 
@@ -136,12 +149,16 @@ open class Value<T : Any>(
      * Hides the value from the GUI while false. Configs keep it either way.
      */
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var visibleCondition = BooleanSupplier { true }
         private set
 
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var hasLiteralDescription = false
         private set
 
@@ -175,7 +192,9 @@ open class Value<T : Any>(
         }
 
     @Exclude
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var descriptionKey: String? = null
 
     @Exclude
@@ -243,7 +262,9 @@ open class Value<T : Any>(
             }
         }.onSuccess {
             apply.accept(currT)
-            EventManager.callEvent(ValueChangedEvent(this))
+            // codex start
+            // EventManager.callEvent(ValueChangedEvent(this))
+            // codex end
             changedListeners.forEach { it.accept(currT) }
             stateFlow.value = currT
         }.onFailure { ex ->

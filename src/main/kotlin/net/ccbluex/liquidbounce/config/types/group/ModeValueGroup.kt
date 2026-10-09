@@ -22,7 +22,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import net.ccbluex.fastutil.mapToArray
 import net.ccbluex.liquidbounce.config.OptionalInclusion
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.EventListener
@@ -34,7 +33,7 @@ import java.util.function.ToIntFunction
  * Allows configuring and manage modes
  */
 class ModeValueGroup<T : Mode>(
-    @Exclude @ProtocolExclude val eventListener: EventListener?,
+    @Exclude val eventListener: EventListener?, //codex (@ProtocolExclude)
     name: String,
     activeModeIndexCallback: ToIntFunction<List<T>>,
     modesCallback: (ModeValueGroup<T>) -> Array<T>
@@ -178,4 +177,6 @@ abstract class Mode @JvmOverloads constructor(
 /**
  * Empty mode without any functionality. Use as a disable mode.
  */
-class NoneMode(override val parent: ModeValueGroup<*>) : Mode("None")
+// codex start
+// class NoneMode(override val parent: ModeValueGroup<*>) : Mode("None")
+// codex end
