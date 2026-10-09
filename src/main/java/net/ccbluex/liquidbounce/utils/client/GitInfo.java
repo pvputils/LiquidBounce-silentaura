@@ -20,7 +20,6 @@ package net.ccbluex.liquidbounce.utils.client;
 
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;

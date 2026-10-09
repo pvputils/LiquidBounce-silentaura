@@ -21,10 +21,8 @@ package net.ccbluex.liquidbounce.utils.item
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.sorting.ComparatorChain
 import net.minecraft.core.BlockPos
-import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import java.util.Comparator.comparingDouble
@@ -33,9 +31,11 @@ import kotlin.math.absoluteValue
 
 fun Comparator<ItemStack>.asHolderComparator(): Comparator<ItemStackHolder> =
     Comparator { a, b -> this.compare(a.itemStack, b.itemStack) }
-
-fun comparingEnchantmentLevel(key: ResourceKey<Enchantment>): Comparator<ItemStack> =
-    Comparator.comparingInt { it.getEnchantment(key) }
+// codex start
+//
+// fun comparingEnchantmentLevel(key: ResourceKey<Enchantment>): Comparator<ItemStack> =
+//     Comparator.comparingInt { it.getEnchantment(key) }
+// codex end
 
 @JvmField
 val COMPARING_DESCRIPTION_ID: Comparator<ItemStack> = Comparator.comparing { it.item.descriptionId }

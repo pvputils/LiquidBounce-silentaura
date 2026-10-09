@@ -52,9 +52,6 @@ import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.input.InputBind
-import net.minecraft.client.User
-import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.network.chat.Component

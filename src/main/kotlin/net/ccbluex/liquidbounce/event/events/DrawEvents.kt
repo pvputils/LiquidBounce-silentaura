@@ -30,7 +30,6 @@ import net.ccbluex.liquidbounce.render.mesh.BatchCollector
 import net.minecraft.client.Camera
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.SubmitNodeStorage
-import org.joml.Matrix4fc
 
 @Tag("gameRender")
 object GameRenderEvent : Event()

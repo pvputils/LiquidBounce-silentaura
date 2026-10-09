@@ -30,7 +30,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -99,15 +98,19 @@ public abstract class MixinMultiPlayerGameMode {
     // }
     //
     // codex end
-    @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
-    private void setGameMode(GameType mode, CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
-    }
+    // codex start
+    // @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
+    // private void setGameMode(GameType mode, CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
+    // }
+    // codex end
 
-    @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
-    private void setGameModes(GameType mode, GameType previousMode, CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
-    }
+    // codex start
+    // @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;Lnet/minecraft/world/level/GameType;)V", at = @At("RETURN"))
+    // private void setGameModes(GameType mode, GameType previousMode, CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(new GameModeChangeEvent(mode));
+    // }
+    // codex end
 
     // codex start
     // @Inject(method = "destroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;destroy(Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", shift = At.Shift.AFTER))

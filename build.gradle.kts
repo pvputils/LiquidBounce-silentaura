@@ -131,33 +131,55 @@ dependencies {
     api(libs.fabric.kotlin)
 
     // Mod menu
-    api(libs.modmenu)
+    // codex start
+    // api(libs.modmenu)
+    // codex end
 
     // Recommended mods (on IDE)
-    api(libs.sodium)
-    api(libs.lithium)
-    runtimeOnly(libs.immediatelyFast)
-    runtimeOnly(libs.iris)
+    // codex start
+    // api(libs.sodium)
+    // codex end
+    // codex start
+    // api(libs.lithium)
+    // codex end
+    // codex start
+    // runtimeOnly(libs.immediatelyFast)
+    // codex end
+    // codex start
+    // runtimeOnly(libs.iris)
+    // codex end
 
     // ViaFabricPlus
     api(libs.vfp.api)
     runtimeOnly(libs.vfp)
 
     // Exploit Preventer
-    api(libs.exploitPreventer.api)
-    runtimeOnly(libs.exploitPreventer)
+    // codex start
+    // api(libs.exploitPreventer.api)
+    // codex end
+    // codex start
+    // runtimeOnly(libs.exploitPreventer)
+    // codex end
 
     // Minecraft account authentication (Microsoft/Xbox Live/XSTS token chain)
-    jij(libs.minecraftauth)
+    // codex start
+    // jij(libs.minecraftauth)
+    // codex end
 
     // TheAltening alt service
-    jij(libs.thealtening)
+    // codex start
+    // jij(libs.thealtening)
+    // codex end
 
     // Mojang REST APIs
-    jij(libs.bundles.retrofit)
+    // codex start
+    // jij(libs.bundles.retrofit)
+    // codex end
 
     // LWJGL EGL
-    jij(libs.lwjgl.egl)
+    // codex start
+    // jij(libs.lwjgl.egl)
+    // codex end
 
     // Chromium, through the bundled CEF add-on. It depends on the client, so it stays out of the published POM and
     // brings nothing along.
@@ -168,15 +190,33 @@ dependencies {
 
 
     // Ktor Server
-    jij(libs.ktor.server.core)
-    jij(libs.ktor.server.cio)
-    jij(libs.ktor.server.websockets)
-    jij(libs.ktor.server.sse)
-    jij(libs.ktor.server.cors)
-    jij(libs.ktor.server.compression)
-    jij(libs.ktor.server.content.negotiation)
-    jij(libs.ktor.server.status.pages)
-    jij(libs.ktor.serialization.gson)
+    // codex start
+    // jij(libs.ktor.server.core)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.cio)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.websockets)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.sse)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.cors)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.compression)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.content.negotiation)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.status.pages)
+    // codex end
+    // codex start
+    // jij(libs.ktor.serialization.gson)
+    // codex end
 
     // Machine Learning
     jij(libs.djl.api)
@@ -186,18 +226,26 @@ dependencies {
     jij(libs.bundles.okhttp)
 
     // SOCKS5 & HTTP Proxy Support
-    jij(libs.netty.handler.proxy)
+    // codex start
+    // jij(libs.netty.handler.proxy)
+    // codex end
 
     // Update Checker
-    jij(libs.semver4j)
+    // codex start
+    // jij(libs.semver4j)
+    // codex end
 
     // Name Protect
-    jij(libs.ahocorasick)
+    // codex start
+    // jij(libs.ahocorasick)
+    // codex end
 
     // External utils
     compileOnlyApi(libs.fastutil4k.extensionsOnly)
     jij(libs.fastutil4k.moreCollections)
-    jij(libs.discord.ipc)
+    // codex start
+    // jij(libs.discord.ipc)
+    // codex end
 
     // Test libraries
     testImplementation(kotlin("test"))

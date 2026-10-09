@@ -19,13 +19,7 @@
 
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.gui;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.MouseHandler;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.util.Util;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
@@ -34,11 +28,6 @@ import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class MixinAbstractContainerScreen<T extends AbstractContainerMenu> extends MixinScreen {

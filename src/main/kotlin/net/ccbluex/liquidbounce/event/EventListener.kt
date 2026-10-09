@@ -30,8 +30,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Style
 import net.minecraft.util.FormattedCharSequence
 import java.util.function.Consumer
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 class EventHook<T : Event>(
     val handlerClass: EventListener,
@@ -218,22 +216,24 @@ inline fun <reified T : Event> EventListener.repeated(
  * @author MukjepScarlet
  * @since 0.30.1
  */
-inline fun <reified E : Event, V> EventListener.computedOn(
-    initialValue: V,
-    priority: Short = 0,
-    crossinline accumulator: (event: E, prev: V) -> V,
-): ReadWriteProperty<EventListener, V> = object : ReadWriteProperty<EventListener, V> {
-    @Volatile // Make this value visible to all threads
-    private var value = initialValue
-
-    @Suppress("unused") // May be useful?
-    private val eventHook = handler<E>(priority) { event ->
-        value = accumulator(event, value)
-    }
-
-    override fun getValue(thisRef: EventListener, property: KProperty<*>): V = value
-    override fun setValue(thisRef: EventListener, property: KProperty<*>, value: V) {
-        this.value = value
-    }
-    override fun toString(): String = "ComputedProperty<${E::class.java.simpleName}>($value)"
-}
+// codex start
+// inline fun <reified E : Event, V> EventListener.computedOn(
+//     initialValue: V,
+//     priority: Short = 0,
+//     crossinline accumulator: (event: E, prev: V) -> V,
+// ): ReadWriteProperty<EventListener, V> = object : ReadWriteProperty<EventListener, V> {
+//     @Volatile // Make this value visible to all threads
+//     private var value = initialValue
+//
+//     @Suppress("unused") // May be useful?
+//     private val eventHook = handler<E>(priority) { event ->
+//         value = accumulator(event, value)
+//     }
+//
+//     override fun getValue(thisRef: EventListener, property: KProperty<*>): V = value
+//     override fun setValue(thisRef: EventListener, property: KProperty<*>, value: V) {
+//         this.value = value
+//     }
+//     override fun toString(): String = "ComputedProperty<${E::class.java.simpleName}>($value)"
+// }
+// codex end

@@ -19,34 +19,28 @@
 
 package net.ccbluex.liquidbounce.utils.network
 
-import net.ccbluex.liquidbounce.utils.client.isNewerThanOrEquals1_21_9
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.kotlin.toNullable
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket
-import net.minecraft.network.protocol.game.ClientboundExplodePacket
-import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.network.protocol.game.ServerboundAttackPacket
-import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket
-import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
-import net.minecraft.network.protocol.game.ServerboundContainerClosePacket
-import net.minecraft.network.protocol.game.ServerboundContainerSlotStateChangedPacket
 import net.minecraft.network.protocol.game.ServerboundInteractPacket
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket
-import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket
 import net.minecraft.network.protocol.game.ServerboundSpectatorActionPacket
 import net.minecraft.world.entity.EntityEvent
 import net.minecraft.world.phys.Vec3
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
-
-fun Packet<*>?.isC2SContainerPacket() =
-    this is ServerboundContainerClickPacket ||
-        this is ServerboundContainerButtonClickPacket ||
-        this is ServerboundSetCreativeModeSlotPacket ||
-        this is ServerboundContainerSlotStateChangedPacket ||
-        this is ServerboundContainerClosePacket
+// codex start
+//
+// fun Packet<*>?.isC2SContainerPacket() =
+//     this is ServerboundContainerClickPacket ||
+//         this is ServerboundContainerButtonClickPacket ||
+//         this is ServerboundSetCreativeModeSlotPacket ||
+//         this is ServerboundContainerSlotStateChangedPacket ||
+//         this is ServerboundContainerClosePacket
+// codex end
 
 @OptIn(ExperimentalContracts::class)
 fun Packet<*>?.isLocalPlayerDamage(): Boolean {
@@ -56,30 +50,34 @@ fun Packet<*>?.isLocalPlayerDamage(): Boolean {
 
     return this is ClientboundDamageEventPacket && this.entityId == mc.player?.id
 }
-
-@JvmOverloads
-fun Packet<*>?.isLocalPlayerVelocity(considerExplosion: Boolean = true): Boolean {
-    return when (this) {
-        is ClientboundSetEntityMotionPacket -> this.id == mc.player?.id
-        is ClientboundExplodePacket -> this.playerKnockback.isPresent && considerExplosion
-        else -> false
-    }
-}
+// codex start
+//
+// @JvmOverloads
+// fun Packet<*>?.isLocalPlayerVelocity(considerExplosion: Boolean = true): Boolean {
+//     return when (this) {
+//         is ClientboundSetEntityMotionPacket -> this.id == mc.player?.id
+//         is ClientboundExplodePacket -> this.playerKnockback.isPresent && considerExplosion
+//         else -> false
+//     }
+// }
+// codex end
 
 val ServerboundMovePlayerPacket.position: Vec3
     inline get() = Vec3(x, y, z)
-
-fun ClientboundSetEntityMotionPacket.isMovementYFallDamage(): Boolean {
-    // >= 1.21.9 -0.0783739241897089
-    // < 1.21.9 -0.07825184642617344
-    return this.movement.y.toRawBits() ==
-        (if (isNewerThanOrEquals1_21_9) -4633060179779189496L else -4633068976409115392L)
-}
-
-/**
- * In version <= 1.21.11 [ServerboundAttackPacket] & [ServerboundSpectatorActionPacket]
- * belong to [ServerboundInteractPacket]
- */
+// codex start
+//
+// fun ClientboundSetEntityMotionPacket.isMovementYFallDamage(): Boolean {
+//     // >= 1.21.9 -0.0783739241897089
+//     // < 1.21.9 -0.07825184642617344
+//     return this.movement.y.toRawBits() ==
+//         (if (isNewerThanOrEquals1_21_9) -4633060179779189496L else -4633068976409115392L)
+// }
+//
+// /**
+//  * In version <= 1.21.11 [ServerboundAttackPacket] & [ServerboundSpectatorActionPacket]
+//  * belong to [ServerboundInteractPacket]
+//  */
+// codex end
 val Packet<*>.entityIdC2SInteractOrAttack: Int?
     get() = when (this) {
         is ServerboundInteractPacket -> this.entityId

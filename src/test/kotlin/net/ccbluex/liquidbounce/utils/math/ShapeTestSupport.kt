@@ -89,15 +89,16 @@ fun VoxelShape.collectSideOutlineEdgesForTest(side: Direction, hitPos: Vec3): Li
     }
 }
 
-fun <K> List<PositionedVoxelShape<K>>.toShapeSpecs(): List<PositionedShapeSpec<K>> =
-    map { shape ->
-        PositionedShapeSpec(
-            blockPos = shape.blockPos,
-            key = shape.key,
-            boxes = shape.shape.toAabbs(),
-        )
-    }
-
+// codex start
+// fun <K> List<PositionedVoxelShape<K>>.toShapeSpecs(): List<PositionedShapeSpec<K>> =
+//     map { shape ->
+//         PositionedShapeSpec(
+//             blockPos = shape.blockPos,
+//             key = shape.key,
+//             boxes = shape.shape.toAabbs(),
+//         )
+//     }
+// codex end
 fun assertSameFaces(expected: Collection<FaceSpec>, actual: Collection<FaceSpec>) {
     assertEquals(expected.normalizedFaceKeys(), actual.normalizedFaceKeys())
 }

@@ -20,21 +20,15 @@
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SlimeBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;

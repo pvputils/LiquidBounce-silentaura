@@ -21,13 +21,10 @@
 
 package net.ccbluex.liquidbounce.utils.kotlin
 
-import it.unimi.dsi.fastutil.objects.ObjectArraySet
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet
 import net.minecraft.world.level.block.ColorCollection
 import net.minecraft.world.level.block.WeatheringCopperCollection
 import java.util.Collections
-import java.util.SequencedCollection
 import java.util.function.Predicate
 
 fun <T> Array<out T>?.unmodifiable(): List<T> =
@@ -36,29 +33,35 @@ fun <T> Array<out T>?.unmodifiable(): List<T> =
         size == 1 -> Collections.singletonList(this[0])
         else -> ObjectImmutableList(this)
     }
-
-fun <E> Collection<E>.toOrderedSet(): Set<E> {
-    return when (this.size) {
-        0 -> emptySet()
-        1 -> Collections.singleton(if (this is SequencedCollection) this.first else this.iterator().next())
-        in 2..4 -> ObjectArraySet(this)
-        else -> ObjectLinkedOpenHashSet(this)
-    }
-}
-
-fun <T> Iterable<Predicate<T>>.matchesAny(t: T): Boolean =
-    any { it.test(t) }
+// codex start
+//
+// fun <E> Collection<E>.toOrderedSet(): Set<E> {
+//     return when (this.size) {
+//         0 -> emptySet()
+//         1 -> Collections.singleton(if (this is SequencedCollection) this.first else this.iterator().next())
+//         in 2..4 -> ObjectArraySet(this)
+//         else -> ObjectLinkedOpenHashSet(this)
+//     }
+// }
+// codex end
+// codex start
+//
+// fun <T> Iterable<Predicate<T>>.matchesAny(t: T): Boolean =
+//     any { it.test(t) }
+// codex end
 
 fun <T> Iterable<Predicate<T>>.matchesAll(t: T): Boolean =
     all { it.test(t) }
-
-inline fun <T : Any> Array<T?>.getOrSet(index: Int, defaultValue: () -> T): T {
-    val t = get(index)
-    if (t != null) return t
-    val y = defaultValue()
-    set(index, y)
-    return y
-}
+// codex start
+//
+// inline fun <T : Any> Array<T?>.getOrSet(index: Int, defaultValue: () -> T): T {
+//     val t = get(index)
+//     if (t != null) return t
+//     val y = defaultValue()
+//     set(index, y)
+//     return y
+// }
+// codex end
 
 operator fun <T : Any> ColorCollection<T>.contains(e: T) =
     e === this.white ||

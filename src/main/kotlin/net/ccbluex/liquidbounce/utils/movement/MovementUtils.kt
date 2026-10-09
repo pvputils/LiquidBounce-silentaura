@@ -20,12 +20,10 @@ package net.ccbluex.liquidbounce.utils.movement
 
 import net.ccbluex.fastutil.mapToArray
 import net.ccbluex.fastutil.objectHashSetOf
-import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.math.yaw
-import net.ccbluex.liquidbounce.utils.math.copy
 import net.ccbluex.liquidbounce.utils.math.fma
 import net.ccbluex.liquidbounce.utils.math.iterator
 import net.ccbluex.liquidbounce.utils.math.minus
@@ -78,51 +76,53 @@ fun getDirectionalInputForDegrees(
     return DirectionalInput(forwards, backwards, left, right)
 }
 
-fun findEdgeCollision(
-    from: Vec3,
-    to: Vec3,
-    allowedDropDown: Float = 0.5F,
-): Vec3? {
-    val lineVec = to - from
-    if (lineVec.lengthSqr() <= 1.0E-12) {
-        return null
-    }
-
-    val boundingBoxes = collectCollisionBoundingBoxes(from, to, allowedDropDown)
-
-    var currentFrom = from
-
-    val extendedFrom = from.fma(-1000.0, lineVec)
-    val extendedTo = to.fma(1000.0, lineVec)
-
-    val cache = objectHashSetOf<AABB>()
-    while (true) {
-        val boxesContainingFrom = boundingBoxes.filterTo(cache) { it.contains(currentFrom) }
-
-        // If there is no bounding box containing from, we would fall off
-        if (boxesContainingFrom.isEmpty()) {
-            return currentFrom
-        }
-
-        // If there is a bounding box that contains from and to, we won't collide with an edge
-        if (boxesContainingFrom.any { it.contains(to) }) {
-            return null
-        }
-
-        currentFrom =
-            boxesContainingFrom.mapToArray {
-                val res = it.clip(extendedTo, extendedFrom)
-
-                // This ray-cast should never fail.
-                requireNotNull(res.orElse(null)) {
-                    "Raycast failed. This should be impossible. AABB=$it from=$from to=$to"
-                }
-            }.minBy { it.distanceToSqr(to) }
-
-        boundingBoxes.removeAll(boxesContainingFrom)
-        cache.clear()
-    }
-}
+// codex start
+// fun findEdgeCollision(
+//     from: Vec3,
+//     to: Vec3,
+//     allowedDropDown: Float = 0.5F,
+// ): Vec3? {
+//     val lineVec = to - from
+//     if (lineVec.lengthSqr() <= 1.0E-12) {
+//         return null
+//     }
+//
+//     val boundingBoxes = collectCollisionBoundingBoxes(from, to, allowedDropDown)
+//
+//     var currentFrom = from
+//
+//     val extendedFrom = from.fma(-1000.0, lineVec)
+//     val extendedTo = to.fma(1000.0, lineVec)
+//
+//     val cache = objectHashSetOf<AABB>()
+//     while (true) {
+//         val boxesContainingFrom = boundingBoxes.filterTo(cache) { it.contains(currentFrom) }
+//
+//         // If there is no bounding box containing from, we would fall off
+//         if (boxesContainingFrom.isEmpty()) {
+//             return currentFrom
+//         }
+//
+//         // If there is a bounding box that contains from and to, we won't collide with an edge
+//         if (boxesContainingFrom.any { it.contains(to) }) {
+//             return null
+//         }
+//
+//         currentFrom =
+//             boxesContainingFrom.mapToArray {
+//                 val res = it.clip(extendedTo, extendedFrom)
+//
+//                 // This ray-cast should never fail.
+//                 requireNotNull(res.orElse(null)) {
+//                     "Raycast failed. This should be impossible. AABB=$it from=$from to=$to"
+//                 }
+//             }.minBy { it.distanceToSqr(to) }
+//
+//         boundingBoxes.removeAll(boxesContainingFrom)
+//         cache.clear()
+//     }
+// }
+// codex end
 
 private fun collectCollisionBoundingBoxes(
     from: Vec3,
@@ -187,8 +187,10 @@ private fun collectCollisionBoundingBoxes(
 inline fun LocalPlayer.setDeltaMovement(block: (Vec3) -> Vec3) {
     this.deltaMovement = block(this.deltaMovement)
 }
-
-@AddonApi
-fun LocalPlayer.stopXZVelocity() {
-    this.deltaMovement = this.deltaMovement.copy(x = 0.0, z = 0.0)
-}
+// codex start
+//
+// @AddonApi
+// fun LocalPlayer.stopXZVelocity() {
+//     this.deltaMovement = this.deltaMovement.copy(x = 0.0, z = 0.0)
+// }
+// codex end

@@ -102,13 +102,15 @@ inline fun BoundingBox.copy(
     maxY: Int = this.maxY(),
     maxZ: Int = this.maxZ(),
 ): BoundingBox = BoundingBox(minX, minY, minZ, maxX, maxY, maxZ)
-
-@JvmSynthetic
-fun BlockPos.expandToBoundingBox(
-    offsetX: Int = 0,
-    offsetY: Int = 0,
-    offsetZ: Int = 0,
-): BoundingBox = BoundingBox(
-    this.x - offsetX, this.y - offsetY, this.z - offsetZ,
-    this.x + offsetX, this.y + offsetY, this.z + offsetZ,
-)
+// codex start
+//
+// @JvmSynthetic
+// fun BlockPos.expandToBoundingBox(
+//     offsetX: Int = 0,
+//     offsetY: Int = 0,
+//     offsetZ: Int = 0,
+// ): BoundingBox = BoundingBox(
+//     this.x - offsetX, this.y - offsetY, this.z - offsetZ,
+//     this.x + offsetX, this.y + offsetY, this.z + offsetZ,
+// )
+// codex end

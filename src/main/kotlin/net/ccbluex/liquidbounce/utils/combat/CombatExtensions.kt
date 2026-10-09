@@ -25,44 +25,22 @@ import it.unimi.dsi.fastutil.objects.ObjectDoublePair
 import net.ccbluex.fastutil.component1
 import net.ccbluex.fastutil.component2
 import net.ccbluex.liquidbounce.config.types.list.Tagged
-import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.event.events.AttackEntityEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.global.GlobalSettingsTarget
-import net.ccbluex.liquidbounce.utils.block.SwingMode
-import net.ccbluex.liquidbounce.utils.client.interaction
-import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_8
 import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.client.network
 import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.client.world
 import net.ccbluex.liquidbounce.utils.entity.isWithinWorldBorder
 import net.ccbluex.liquidbounce.utils.entity.squaredBoxedDistanceTo
 import net.ccbluex.liquidbounce.utils.world.getEntitiesInCube
 import net.minecraft.client.CameraType
 import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.core.component.DataComponents
-import net.minecraft.network.protocol.game.ServerboundAttackPacket
-import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.InteractionHand
-import net.minecraft.world.entity.AgeableMob
 import net.minecraft.world.entity.Attackable
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.ExperienceOrb
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.NeutralMob
-import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.ambient.Bat
-import net.minecraft.world.entity.animal.allay.Allay
-import net.minecraft.world.entity.animal.fish.WaterAnimal
-import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.entity.monster.Enemy
-import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
-import net.minecraft.world.level.GameType
-import net.minecraft.world.phys.Vec3
 
 /**
  * Global target configurable
@@ -207,15 +185,18 @@ fun Entity?.shouldBeAttacked(enemyConf: Set<Targets> = GlobalSettingsTarget.comb
  *
  * @see net.minecraft.server.network.ServerGamePacketListenerImpl.handleAttack
  */
-private fun Entity.canBeAttackedWithVanillaPacket() =
-    this !is ItemEntity &&
-        this !is ExperienceOrb &&
-        this !== player &&
-        (this !is AbstractArrow || this.isAttackable)
+// codex start
+// private fun Entity.canBeAttackedWithVanillaPacket() =
+//     this !is ItemEntity &&
+//         this !is ExperienceOrb &&
+//         this !== player &&
+//         (this !is AbstractArrow || this.isAttackable)
+//
+// /**
+//  * Find the best enemy in the current world in a specific range.
+//  */
+// codex end
 
-/**
- * Find the best enemy in the current world in a specific range.
- */
 @AddonApi
 // codex start
 // @JvmOverloads
@@ -263,105 +244,111 @@ fun ClientLevel.findEnemies(
 
     return result
 }
-
-inline fun ClientLevel.getEntitiesBoxInRange(
-    midPos: Vec3,
-    range: Double,
-    crossinline predicate: (Entity) -> Boolean = { true }
-): MutableList<Entity> {
-    val rangeSquared = range * range
-
-    return getEntitiesInCube(midPos, range) {
-        predicate(it) && it.squaredBoxedDistanceTo(midPos) <= rangeSquared
-    }
-}
-
-/**
- * @see net.minecraft.client.Minecraft.startAttack
- * @return attacked or pierced
- */
-@AddonApi
-@Suppress("CognitiveComplexMethod")
+// codex start
+//
+// inline fun ClientLevel.getEntitiesBoxInRange(
+//     midPos: Vec3,
+//     range: Double,
+//     crossinline predicate: (Entity) -> Boolean = { true }
+// ): MutableList<Entity> {
+//     val rangeSquared = range * range
+//
+//     return getEntitiesInCube(midPos, range) {
+//         predicate(it) && it.squaredBoxedDistanceTo(midPos) <= rangeSquared
+//     }
+// }
+//
+// /**
+//  * @see net.minecraft.client.Minecraft.startAttack
+//  * @return attacked or pierced
+//  */
+// codex end
+// codex start
+// @AddonApi
+// @Suppress("CognitiveComplexMethod")
+// codex end
 // codex start
 // @JvmOverloads
 // codex end
-fun attackEntity(entity: Entity, swing: SwingMode): Boolean { //codex (keepSprint: Boolean = false)
-    val itemStack = player.getItemInHand(InteractionHand.MAIN_HAND)
-    val piercingWeapon = itemStack.get(DataComponents.PIERCING_WEAPON)
-
-    // Minecraft introduced piercing weapons that have their own attack method.
-    // You HAVE to look at the entity before attacking it.
-    if (piercingWeapon != null && !interaction.isSpectator) {
-        interaction.piercingAttack(itemStack.attackAnimation, piercingWeapon)
-        swing.swing(InteractionHand.MAIN_HAND)
-        return true
-    }
-
-    if (!entity.canBeAttackedWithVanillaPacket()
-        || EventManager.callEvent(AttackEntityEvent(entity)).isCancelled) {
-        return false
-    }
-
-    with(player) {
-        // Swing before attacking (on 1.8)
-        if (isOlderThanOrEqual1_8) {
-            swing.swing(InteractionHand.MAIN_HAND)
-        }
-
-        interaction.ensureHasSentCarriedItem()
-        network.send(ServerboundAttackPacket(entity.id))
-
-        // codex start
-        // if (keepSprint) {
-        //     var genericAttackDamage =
-        //         if (this.isAutoSpinAttack) {
-        //             this.autoSpinAttackDmg
-        //         } else {
-        //             getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
-        //         }
-        //     val damageSource = this.damageSources().playerAttack(this)
-        //     var enchantAttackDamage = this.getEnchantedDamage(entity, genericAttackDamage,
-        //         damageSource) - genericAttackDamage
-        //
-        //     val attackCooldown = this.getAttackStrengthScale(0.5f)
-        //     genericAttackDamage *= 0.2f + attackCooldown * attackCooldown * 0.8f
-        //     enchantAttackDamage *= attackCooldown
-        //
-        //     if (genericAttackDamage > 0.0f || enchantAttackDamage > 0.0f) {
-        //         if (enchantAttackDamage > 0.0f) {
-        //             this.magicCrit(entity)
-        //         }
-        //
-        //         // codex start
-        //         // if (ModuleCriticals.wouldDoCriticalHit(true)) {
-        //         //     world.playSound(
-        //         //         null, x, y, z, SoundEvents.PLAYER_ATTACK_CRIT,
-        //         //         soundSource, 1.0f, 1.0f
-        //         //     )
-        //         //     crit(entity)
-        //         // }
-        //         // codex end
-        //     }
-        // } else {
-        //     if (interaction.playerMode != GameType.SPECTATOR) {
-        //         attack(entity)
-        //     }
-        // }
-        // codex end
-
-            if (interaction.playerMode != GameType.SPECTATOR) {
-                attack(entity)
-            }
-
-
-        // Reset cooldown
-        this.attackStrengthTicker = 0
-
-        // Swing after attacking (on 1.9+)
-        if (!isOlderThanOrEqual1_8) {
-            swing.swing(InteractionHand.MAIN_HAND)
-        }
-    }
-
-    return true
-}
+// codex start
+// fun attackEntity(entity: Entity, swing: SwingMode): Boolean { //codex (keepSprint: Boolean = false)
+//     val itemStack = player.getItemInHand(InteractionHand.MAIN_HAND)
+//     val piercingWeapon = itemStack.get(DataComponents.PIERCING_WEAPON)
+//
+//     // Minecraft introduced piercing weapons that have their own attack method.
+//     // You HAVE to look at the entity before attacking it.
+//     if (piercingWeapon != null && !interaction.isSpectator) {
+//         interaction.piercingAttack(itemStack.attackAnimation, piercingWeapon)
+//         swing.swing(InteractionHand.MAIN_HAND)
+//         return true
+//     }
+//
+//     if (!entity.canBeAttackedWithVanillaPacket()
+//         || EventManager.callEvent(AttackEntityEvent(entity)).isCancelled) {
+//         return false
+//     }
+//
+//     with(player) {
+//         // Swing before attacking (on 1.8)
+//         if (isOlderThanOrEqual1_8) {
+//             swing.swing(InteractionHand.MAIN_HAND)
+//         }
+//
+//         interaction.ensureHasSentCarriedItem()
+//         network.send(ServerboundAttackPacket(entity.id))
+//
+//         // codex start
+//         // if (keepSprint) {
+//         //     var genericAttackDamage =
+//         //         if (this.isAutoSpinAttack) {
+//         //             this.autoSpinAttackDmg
+//         //         } else {
+//         //             getAttributeValue(Attributes.ATTACK_DAMAGE).toFloat()
+//         //         }
+//         //     val damageSource = this.damageSources().playerAttack(this)
+//         //     var enchantAttackDamage = this.getEnchantedDamage(entity, genericAttackDamage,
+//         //         damageSource) - genericAttackDamage
+//         //
+//         //     val attackCooldown = this.getAttackStrengthScale(0.5f)
+//         //     genericAttackDamage *= 0.2f + attackCooldown * attackCooldown * 0.8f
+//         //     enchantAttackDamage *= attackCooldown
+//         //
+//         //     if (genericAttackDamage > 0.0f || enchantAttackDamage > 0.0f) {
+//         //         if (enchantAttackDamage > 0.0f) {
+//         //             this.magicCrit(entity)
+//         //         }
+//         //
+//         //         // codex start
+//         //         // if (ModuleCriticals.wouldDoCriticalHit(true)) {
+//         //         //     world.playSound(
+//         //         //         null, x, y, z, SoundEvents.PLAYER_ATTACK_CRIT,
+//         //         //         soundSource, 1.0f, 1.0f
+//         //         //     )
+//         //         //     crit(entity)
+//         //         // }
+//         //         // codex end
+//         //     }
+//         // } else {
+//         //     if (interaction.playerMode != GameType.SPECTATOR) {
+//         //         attack(entity)
+//         //     }
+//         // }
+//         // codex end
+//
+//             if (interaction.playerMode != GameType.SPECTATOR) {
+//                 attack(entity)
+//             }
+//
+//
+//         // Reset cooldown
+//         this.attackStrengthTicker = 0
+//
+//         // Swing after attacking (on 1.9+)
+//         if (!isOlderThanOrEqual1_8) {
+//             swing.swing(InteractionHand.MAIN_HAND)
+//         }
+//     }
+//
+//     return true
+// }
+// codex end

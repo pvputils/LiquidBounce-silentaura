@@ -25,29 +25,22 @@ import com.mojang.brigadier.StringReader
 import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_8
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.client.regular
 import net.ccbluex.liquidbounce.utils.entity.handItems
 import net.ccbluex.liquidbounce.utils.inventory.Slots
-import net.ccbluex.liquidbounce.utils.kotlin.unmodifiable
 import net.ccbluex.liquidbounce.utils.math.sq
 import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.client.player.LocalPlayer
 import net.minecraft.commands.arguments.item.ItemInput
 import net.minecraft.commands.arguments.item.ItemParser
-import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
-import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket
 import net.minecraft.resources.ResourceKey
-import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ArmorStandItem
 import net.minecraft.world.item.ArrowItem
 import net.minecraft.world.item.BlockItem
@@ -68,10 +61,8 @@ import net.minecraft.world.item.FishingRodItem
 import net.minecraft.world.item.FlintAndSteelItem
 import net.minecraft.world.item.HangingEntityItem
 import net.minecraft.world.item.InstrumentItem
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemInstance
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.item.KnowledgeBookItem
 import net.minecraft.world.item.PlaceOnWaterBlockItem
 import net.minecraft.world.item.PotionItem
@@ -82,7 +73,6 @@ import net.minecraft.world.item.TridentItem
 import net.minecraft.world.item.WindChargeItem
 import net.minecraft.world.item.WritableBookItem
 import net.minecraft.world.item.WrittenBookItem
-import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.component.UseEffects
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents
@@ -90,7 +80,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
-import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -117,48 +106,58 @@ fun createItem(stack: String, amount: Int = 1): ItemStack =
  *
  * @see net.minecraft.client.multiplayer.MultiPlayerGameMode.handleCreativeModeItemAdd
  */
-fun LocalPlayer.setInventoryItemCreative(
-    slot: Int = this.inventory.selectedSlot,
-    itemStack: ItemStack,
-    animation: Boolean = true,
-) {
-    if (animation) itemStack.popTime = 5
-
-    inventory.setItem(slot, itemStack)
-    connection.send(
-        ServerboundSetCreativeModeSlotPacket(
-            if (slot < Inventory.SELECTION_SIZE) slot + Inventory.INVENTORY_SIZE else slot,
-            itemStack,
-        )
-    )
-}
-
-fun createSplashPotion(name: String, vararg effects: MobEffectInstance): ItemStack {
-    val itemStack = ItemStack(Items.SPLASH_POTION)
-
-    itemStack.set(DataComponents.CUSTOM_NAME, regular(name))
-    itemStack.set(
-        DataComponents.POTION_CONTENTS,
-        PotionContents(Optional.empty(), Optional.empty(), effects.unmodifiable(), Optional.empty())
-    )
-
-    return itemStack
-}
-
-fun DataComponentGetter.getPotionEffects(): Iterable<MobEffectInstance> {
-    return this[DataComponents.POTION_CONTENTS]?.allEffects ?: emptyList()
-}
-
-/**
- * @see ItemStack.isSameItemSameComponents
- * @return if this item stack has same [Item] and [net.minecraft.core.component.DataComponentPatch]
- * with the other item stack
- */
-inline fun ItemStack.isMergeable(other: ItemStack): Boolean = ItemStack.isSameItemSameComponents(this, other)
-
-fun ItemStack.canMerge(other: ItemStack): Boolean {
-    return this.isMergeable(other) && this.count + other.count <= this.maxStackSize
-}
+// codex start
+// fun LocalPlayer.setInventoryItemCreative(
+//     slot: Int = this.inventory.selectedSlot,
+//     itemStack: ItemStack,
+//     animation: Boolean = true,
+// ) {
+//     if (animation) itemStack.popTime = 5
+//
+//     inventory.setItem(slot, itemStack)
+//     connection.send(
+//         ServerboundSetCreativeModeSlotPacket(
+//             if (slot < Inventory.SELECTION_SIZE) slot + Inventory.INVENTORY_SIZE else slot,
+//             itemStack,
+//         )
+//     )
+// }
+// codex end
+// codex start
+//
+// fun createSplashPotion(name: String, vararg effects: MobEffectInstance): ItemStack {
+//     val itemStack = ItemStack(Items.SPLASH_POTION)
+//
+//     itemStack.set(DataComponents.CUSTOM_NAME, regular(name))
+//     itemStack.set(
+//         DataComponents.POTION_CONTENTS,
+//         PotionContents(Optional.empty(), Optional.empty(), effects.unmodifiable(), Optional.empty())
+//     )
+//
+//     return itemStack
+// }
+// codex end
+// codex start
+//
+// fun DataComponentGetter.getPotionEffects(): Iterable<MobEffectInstance> {
+//     return this[DataComponents.POTION_CONTENTS]?.allEffects ?: emptyList()
+// }
+//
+// /**
+//  * @see ItemStack.isSameItemSameComponents
+//  * @return if this item stack has same [Item] and [net.minecraft.core.component.DataComponentPatch]
+//  * with the other item stack
+//  */
+// codex end
+// codex start
+// inline fun ItemStack.isMergeable(other: ItemStack): Boolean = ItemStack.isSameItemSameComponents(this, other)
+// // codex start
+// //
+// // fun ItemStack.canMerge(other: ItemStack): Boolean {
+// //     return this.isMergeable(other) && this.count + other.count <= this.maxStackSize
+// // }
+// // codex end
+// codex end
 
 val ItemInstance.attackDamage: Double
     get() {
@@ -249,21 +248,24 @@ fun ResourceKey<Enchantment>.toRegistryEntryOrNull(): Holder<Enchantment>? =
  * @see net.minecraft.world.entity.ai.attributes.Attributes.MINING_EFFICIENCY
  * @see net.minecraft.world.item.enchantment.LevelBasedValue.LevelsSquared
  */
-fun ItemStack.getDestroySpeedWithEnchantment(state: BlockState): Float {
-    var speed = this.getDestroySpeed(state)
+// codex start
+// fun ItemStack.getDestroySpeedWithEnchantment(state: BlockState): Float {
+//     var speed = this.getDestroySpeed(state)
+//
+//     val enchantmentLevel = this.getEnchantment(Enchantments.EFFICIENCY)
+//     if (speed > 1f && enchantmentLevel != 0) {
+//         val enchantmentAddition = enchantmentLevel.sq() + 1f
+//         speed += enchantmentAddition.coerceIn(0f, 1024f)
+//     }
+//
+//     return speed
+// }
+//
+// /**
+//  * Get [Block] of inner item if it is [BlockItem], or null if not
+//  */
+// codex end
 
-    val enchantmentLevel = this.getEnchantment(Enchantments.EFFICIENCY)
-    if (speed > 1f && enchantmentLevel != 0) {
-        val enchantmentAddition = enchantmentLevel.sq() + 1f
-        speed += enchantmentAddition.coerceIn(0f, 1024f)
-    }
-
-    return speed
-}
-
-/**
- * Get [Block] of inner item if it is [BlockItem], or null if not
- */
 fun ItemStack.getBlock(): Block? {
     val item = this.item
     if (item !is BlockItem) {
@@ -272,11 +274,13 @@ fun ItemStack.getBlock(): Block? {
 
     return item.block
 }
-
-fun ItemStack.isFullBlock(): Boolean {
-    val block = this.getBlock() ?: return false
-    return block.defaultBlockState().isCollisionShapeFullBlock(mc.level!!, BlockPos.ZERO)
-}
+// codex start
+//
+// fun ItemStack.isFullBlock(): Boolean {
+//     val block = this.getBlock() ?: return false
+//     return block.defaultBlockState().isCollisionShapeFullBlock(mc.level!!, BlockPos.ZERO)
+// }
+// codex end
 
 fun ItemStack.isInteractable(): Boolean {
     if (this.isEmpty) {

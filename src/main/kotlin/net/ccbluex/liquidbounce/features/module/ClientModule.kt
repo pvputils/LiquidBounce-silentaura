@@ -25,14 +25,12 @@ import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig.loadingNow
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
-import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.eventListenerScope
 import net.ccbluex.liquidbounce.event.events.ModuleActivationEvent
 import net.ccbluex.liquidbounce.event.events.ModuleToggleEvent
 import net.ccbluex.liquidbounce.event.events.NotificationEvent
-import net.ccbluex.liquidbounce.event.events.RefreshArrayListEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.lang.LanguageManager
 import net.ccbluex.liquidbounce.lang.translation
@@ -113,7 +111,9 @@ open class ClientModule @JvmOverloads constructor(
         .doNotIncludeWhen { !AutoConfig.includeConfiguration.includeHidden }
         .independentDescription()
         .onChange {
-            EventManager.callEvent(RefreshArrayListEvent)
+            // codex start
+            // EventManager.callEvent(RefreshArrayListEvent)
+            // codex end
             it
         }.apply {
             if (notActivatable) {
@@ -205,7 +205,9 @@ open class ClientModule @JvmOverloads constructor(
 
         // Refresh arraylist on tag change
         setting.onChanged {
-            EventManager.callEvent(RefreshArrayListEvent)
+            // codex start
+            // EventManager.callEvent(RefreshArrayListEvent)
+            // codex end
         }
     }
 

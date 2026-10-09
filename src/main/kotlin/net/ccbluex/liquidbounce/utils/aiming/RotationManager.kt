@@ -29,7 +29,6 @@ import net.ccbluex.liquidbounce.event.events.TransferOrigin
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.module.ClientModule
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection
@@ -101,8 +100,10 @@ object RotationManager : EventListener {
     var previousRotation: Rotation? = null
         private set
 
-    private val fakeLagging
-        get() = BlinkManager.isLagging //codex (|| ModuleBacktrack.isLagging())
+    // codex start
+    // private val fakeLagging
+    //     get() = BlinkManager.isLagging //codex (|| ModuleBacktrack.isLagging())
+    // codex end
 
     // codex start
     // private val freezing
@@ -111,7 +112,7 @@ object RotationManager : EventListener {
 
     @AddonApi
     val serverRotation: Rotation
-        get() = if (fakeLagging) theoreticalServerRotation else actualServerRotation //codex (|| freezing)
+        get() = actualServerRotation //codex (if (fakeLagging) theoreticalServerRotation else)
 
     /**
      * Yaw used by [net.minecraft.world.entity.Entity.moveRelative] after movement correction.
@@ -131,7 +132,9 @@ object RotationManager : EventListener {
     var actualServerRotation = Rotation.ZERO
         private set
 
-    private var theoreticalServerRotation = Rotation.ZERO
+    // codex start
+    // private var theoreticalServerRotation = Rotation.ZERO
+    // codex end
 
     fun reset(resetServerRotation: Boolean = true) { //codex (private fun reset() {)
         rotationTargetHandler.clear()
@@ -142,7 +145,9 @@ object RotationManager : EventListener {
         // codex start
         if (resetServerRotation) {
             actualServerRotation = Rotation.ZERO
-            theoreticalServerRotation = Rotation.ZERO
+            // codex start
+            // theoreticalServerRotation = Rotation.ZERO
+            // codex end
         }
         // codex end
     }
@@ -380,7 +385,9 @@ object RotationManager : EventListener {
         if (event.origin == TransferOrigin.INCOMING || !event.isCancelled) {
             actualServerRotation = rotation
         }
-        theoreticalServerRotation = rotation
+        // codex start
+        // theoreticalServerRotation = rotation
+        // codex end
     }
 
     override val running: Boolean

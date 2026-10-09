@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.minecraft.network.protocol.Packet
 
 @Tag("pipeline")
@@ -34,23 +33,25 @@ class PipelineEvent(val channelPipeline: ChannelPipeline, val local: Boolean) : 
 @AddonApi
 @Tag("packet")
 class PacketEvent(val origin: TransferOrigin, val packet: Packet<*>, val original: Boolean = true) : CancellableEvent()
-
-@Tag("queuePacket")
-class BlinkPacketEvent(
-    val packet: Packet<*>?,
-    val origin: TransferOrigin
-) : Event() {
-
-    var action: BlinkManager.Action = BlinkManager.Action.FLUSH
-        set(value) {
-            if (field == value || field.priority >= value.priority) {
-                return
-            }
-
-            field = value
-        }
-
-}
+// codex start
+//
+// @Tag("queuePacket")
+// class BlinkPacketEvent(
+//     val packet: Packet<*>?,
+//     val origin: TransferOrigin
+// ) : Event() {
+//
+//     var action: BlinkManager.Action = BlinkManager.Action.FLUSH
+//         set(value) {
+//             if (field == value || field.priority >= value.priority) {
+//                 return
+//             }
+//
+//             field = value
+//         }
+//
+// }
+// codex end
 
 @AddonApi
 enum class TransferOrigin(override val tag: String) : Tagged {

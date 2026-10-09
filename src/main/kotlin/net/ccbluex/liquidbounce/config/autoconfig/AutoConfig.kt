@@ -18,7 +18,6 @@
  */
 package net.ccbluex.liquidbounce.config.autoconfig
 
-import net.ccbluex.liquidbounce.LiquidBounce
 
 object AutoConfig {
 

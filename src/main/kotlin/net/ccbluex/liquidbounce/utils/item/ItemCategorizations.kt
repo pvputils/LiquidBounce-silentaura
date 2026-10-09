@@ -28,7 +28,6 @@ import net.minecraft.tags.ItemTags
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.Tool
 

@@ -51,10 +51,12 @@ inline fun RenderPass.setUniforms(textures: Map<String, AbstractTexture?>) =
 @JvmName("setTextureUniform")
 inline fun RenderPass.setUniform(name: String, texture: AbstractTexture?) =
     setUniform(name, texture?.textureView, texture?.sampler)
-
-@JvmName("unsetTextureUniform")
-inline fun RenderPass.unsetUniform(name: String) =
-    setUniform(name, null, null)
+// codex start
+//
+// @JvmName("unsetTextureUniform")
+// inline fun RenderPass.unsetUniform(name: String) =
+//     setUniform(name, null, null)
+// codex end
 
 @JvmName("setBufferUniforms")
 inline fun RenderPass.setUniforms(uniforms: Map<String, GpuBufferSlice>) =
@@ -62,21 +64,29 @@ inline fun RenderPass.setUniforms(uniforms: Map<String, GpuBufferSlice>) =
 
 inline fun RenderPass.bindDefaultUniforms() = RenderSystem.bindDefaultUniforms(this)
 
-inline fun RenderPass.bindProjectionUniform() {
-    RenderSystem.getProjectionMatrixBuffer()?.let { setUniform("Projection", it) }
-}
+// codex start
+// inline fun RenderPass.bindProjectionUniform() {
+//     RenderSystem.getProjectionMatrixBuffer()?.let { setUniform("Projection", it) }
+// }
+// // codex start
+// //
+// // inline fun RenderPass.bindFogUniform() {
+// //     RenderSystem.getShaderFog()?.let { setUniform("Fog", it) }
+// // }
+// // codex end
+// codex end
 
-inline fun RenderPass.bindFogUniform() {
-    RenderSystem.getShaderFog()?.let { setUniform("Fog", it) }
-}
-
-inline fun RenderPass.bindGlobalsUniform() {
-    RenderSystem.getGlobalSettingsUniform()?.let { setUniform("Globals", it) }
-}
-
-inline fun RenderPass.bindLightingUniform() {
-    RenderSystem.getShaderLights()?.let { setUniform("Lighting", it) }
-}
+// codex start
+// inline fun RenderPass.bindGlobalsUniform() {
+//     RenderSystem.getGlobalSettingsUniform()?.let { setUniform("Globals", it) }
+// }
+// // codex start
+// //
+// // inline fun RenderPass.bindLightingUniform() {
+// //     RenderSystem.getShaderLights()?.let { setUniform("Lighting", it) }
+// // }
+// // codex end
+// codex end
 
 inline fun RenderPass.bindDynamicTransformsUniform(gpuBufferSlice: GpuBufferSlice) {
     setUniform("DynamicTransforms", gpuBufferSlice)

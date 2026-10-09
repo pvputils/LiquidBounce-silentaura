@@ -19,30 +19,15 @@
 
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.WorldEntityRemoveEvent;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ExplosionParticleInfo;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.List;
 
 @Mixin(ClientLevel.class)
 public abstract class MixinClientLevel {

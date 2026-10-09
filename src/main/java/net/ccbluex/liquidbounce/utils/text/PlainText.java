@@ -30,11 +30,9 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.jspecify.annotations.Nullable;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 

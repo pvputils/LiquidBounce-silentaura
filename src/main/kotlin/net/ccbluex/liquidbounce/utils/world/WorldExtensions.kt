@@ -37,7 +37,6 @@ import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.blockscan.BlockMatcher
 import net.minecraft.world.level.chunk.ChunkAccess
-import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.chunk.LevelChunkSection
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.level.entity.LevelEntityGetter
@@ -73,65 +72,77 @@ val ChunkAccess.filledSections: List<LevelChunkSection>
  *
  * @see LevelChunk.getBlockState
  */
-inline fun LevelChunk.forEachSectionBlock(
-    sectionIndex: Int,
-    mutable: BlockPos.MutableBlockPos = BlockPos.MutableBlockPos(),
-    action: (BlockPos, BlockState) -> Unit,
-) {
-    val section = this.getSection(sectionIndex)
-    val startX = this.pos.minBlockX
-    val startY = this.sectionBottomY(sectionIndex)
-    val startZ = this.pos.minBlockZ
-    section.forEachBlock { localX, localY, localZ, state ->
-        action(mutable.set(startX or localX, startY or localY, startZ or localZ), state)
-    }
-}
+// codex start
+// inline fun LevelChunk.forEachSectionBlock(
+//     sectionIndex: Int,
+//     mutable: BlockPos.MutableBlockPos = BlockPos.MutableBlockPos(),
+//     action: (BlockPos, BlockState) -> Unit,
+// ) {
+//     val section = this.getSection(sectionIndex)
+//     val startX = this.pos.minBlockX
+//     val startY = this.sectionBottomY(sectionIndex)
+//     val startZ = this.pos.minBlockZ
+//     section.forEachBlock { localX, localY, localZ, state ->
+//         action(mutable.set(startX or localX, startY or localY, startZ or localZ), state)
+//     }
+// }
+//
+// /**
+//  * Iterates all 4096 block states in a section and provides local section coordinates (0..15).
+//  *
+//  * @see LevelChunk.getBlockState
+//  */
+// codex end
+// codex start
+// inline fun LevelChunkSection.forEachBlock(action: (localX: Int, localY: Int, localZ: Int, BlockState) -> Unit) {
+//     for (localY in 0..15) {
+//         for (localZ in 0..15) {
+//             for (localX in 0..15) {
+//                 val blockState = this.getBlockState(localX, localY, localZ)
+//                 action(localX, localY, localZ, blockState)
+//             }
+//         }
+//     }
+// }
+//
+// /**
+//  * Converts a section index to the section base world Y (multiple of 16).
+//  *
+//  * `index == (y >> 4) - (bottomY >> 4)`
+//  */
+// codex end
 
-/**
- * Iterates all 4096 block states in a section and provides local section coordinates (0..15).
- *
- * @see LevelChunk.getBlockState
- */
-inline fun LevelChunkSection.forEachBlock(action: (localX: Int, localY: Int, localZ: Int, BlockState) -> Unit) {
-    for (localY in 0..15) {
-        for (localZ in 0..15) {
-            for (localX in 0..15) {
-                val blockState = this.getBlockState(localX, localY, localZ)
-                action(localX, localY, localZ, blockState)
-            }
-        }
-    }
-}
+// codex start
+// fun ChunkAccess.sectionBottomY(index: Int): Int = (index + (this.minY shr 4)) shl 4
+//
+// /**
+//  * [LevelReader.findBlocksIn] applies [BlockPos.containing] to both [AABB.getMinPosition] and [AABB.getMaxPosition].
+//  * This function uses [floorToInt] of min position and [ceilToInt] of max position.
+//  */
+// codex end
 
-/**
- * Converts a section index to the section base world Y (multiple of 16).
- *
- * `index == (y >> 4) - (bottomY >> 4)`
- */
-fun ChunkAccess.sectionBottomY(index: Int): Int = (index + (this.minY shr 4)) shl 4
+// codex start
+// fun LevelReader.findBlocksIntersects(box: AABB): BlockMatcher =
+//     this.findBlocksIn(
+//         BlockPos(box.minX.floorToInt(), box.minY.floorToInt(), box.minZ.floorToInt()),
+//         BlockPos(box.maxX.ceilToInt(), box.maxY.ceilToInt(), box.maxZ.ceilToInt()),
+//     )
+// codex end
 
-/**
- * [LevelReader.findBlocksIn] applies [BlockPos.containing] to both [AABB.getMinPosition] and [AABB.getMaxPosition].
- * This function uses [floorToInt] of min position and [ceilToInt] of max position.
- */
-fun LevelReader.findBlocksIntersects(box: AABB): BlockMatcher =
-    this.findBlocksIn(
-        BlockPos(box.minX.floorToInt(), box.minY.floorToInt(), box.minZ.floorToInt()),
-        BlockPos(box.maxX.ceilToInt(), box.maxY.ceilToInt(), box.maxZ.ceilToInt()),
-    )
-
-fun BlockMatcher.anyMatched(predicate: BiPredicate<BlockPos, BlockState>): Boolean {
-    var flag = false
-    this.forEachUntil { pos, state ->
-        if (predicate.test(pos, state)) {
-            flag = true
-            Continuation.ABORT
-        } else {
-            Continuation.CONTINUE
-        }
-    }
-    return flag
-}
+// codex start
+// fun BlockMatcher.anyMatched(predicate: BiPredicate<BlockPos, BlockState>): Boolean {
+//     var flag = false
+//     this.forEachUntil { pos, state ->
+//         if (predicate.test(pos, state)) {
+//             flag = true
+//             Continuation.ABORT
+//         } else {
+//             Continuation.CONTINUE
+//         }
+//     }
+//     return flag
+// }
+// codex end
 
 inline fun <reified T : Entity> EntityGetter.getEntitiesInCube(
     midPos: Vec3,
@@ -213,4 +224,6 @@ private val localEntityIdGenerator = AtomicInteger(-1)
  * which [net.minecraft.client.multiplayer.ClientLevel.addEntity] rejects by throwing
  * `Tried to access entity ID before ID assignment`.
  */
-fun Level.nextLocalEntityId(): Int = localEntityIdGenerator.getAndDecrement()
+// codex start
+// fun Level.nextLocalEntityId(): Int = localEntityIdGenerator.getAndDecrement()
+// codex end

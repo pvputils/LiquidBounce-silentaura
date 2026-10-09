@@ -195,13 +195,15 @@ fun Vec3.horizontalDistanceToSqr(other: Vec3i): Double = horizontalDistanceToSqr
 fun Vec3.horizontalDistanceToSqr(other: Vec3): Double = horizontalDistanceToSqr(other.x, other.z)
 
 fun Vec3.horizontalDistanceToSqr(x: Double, z: Double): Double = Mth.lengthSquared(this.x - x, this.z - z)
-
-fun Position.distanceToCenterSqr(blockPos: Long): Double {
-    val dx = this.x() - BlockPos.getX(blockPos)
-    val dy = this.y() - BlockPos.getY(blockPos)
-    val dz = this.z() - BlockPos.getZ(blockPos)
-    return Mth.lengthSquared(dx, dy, dz)
-}
+// codex start
+//
+// fun Position.distanceToCenterSqr(blockPos: Long): Double {
+//     val dx = this.x() - BlockPos.getX(blockPos)
+//     val dy = this.y() - BlockPos.getY(blockPos)
+//     val dz = this.z() - BlockPos.getZ(blockPos)
+//     return Mth.lengthSquared(dx, dy, dz)
+// }
+// codex end
 
 inline operator fun Vec3.component1(): Double = this.x
 inline operator fun Vec3.component2(): Double = this.y
@@ -210,20 +212,22 @@ inline operator fun Vec3.component3(): Double = this.z
 operator fun ChunkPos.contains(blockPos: Long): Boolean =
     SectionPos.blockToSectionCoord(BlockPos.getX(blockPos)) == this.x
         && SectionPos.blockToSectionCoord(BlockPos.getZ(blockPos)) == this.z
-
-fun Iterable<Vec3>.average(): Vec3 {
-    var x = 0.0
-    var y = 0.0
-    var z = 0.0
-    var i = 0
-    for (vec in this) {
-        x += vec.x
-        y += vec.y
-        z += vec.z
-        i++
-    }
-    return Vec3(x / i, y / i, z / i)
-}
+// codex start
+//
+// fun Iterable<Vec3>.average(): Vec3 {
+//     var x = 0.0
+//     var y = 0.0
+//     var z = 0.0
+//     var i = 0
+//     for (vec in this) {
+//         x += vec.x
+//         y += vec.y
+//         z += vec.z
+//         i++
+//     }
+//     return Vec3(x / i, y / i, z / i)
+// }
+// codex end
 
 fun Vec3.expandToCube(halfExtents: Double): AABB {
     return AABB(
@@ -239,24 +243,28 @@ inline fun Vec3i.toVec3d(
 ): Vec3 = Vec3(x + xOffset, y + yOffset, z + zOffset)
 
 inline fun Vec3.toVec3f(): Vec3f = Vec3f(this.x, this.y, this.z)
-
-@Deprecated("use this.toBlockPos instead", replaceWith = ReplaceWith("this.toBlockPos"))
-inline fun Vec3.toVec3i(): Vec3i = toBlockPos()
+// codex start
+//
+// @Deprecated("use this.toBlockPos instead", replaceWith = ReplaceWith("this.toBlockPos"))
+// inline fun Vec3.toVec3i(): Vec3i = toBlockPos()
+// codex end
 
 inline fun Vec3.toBlockPos(
     xOffset: Double = 0.0,
     yOffset: Double = 0.0,
     zOffset: Double = 0.0,
 ): BlockPos = BlockPos.containing(x + xOffset, y + yOffset, z + zOffset)
-
-fun Vec3.preferOver(other: Vec3): Vec3 {
-    val x = if (this.x == 0.0) other.x else this.x
-    val y = if (this.y == 0.0) other.y else this.y
-    val z = if (this.z == 0.0) other.z else this.z
-    return Vec3(x, y, z)
-}
-
-// Mutable Vec3d
+// codex start
+//
+// fun Vec3.preferOver(other: Vec3): Vec3 {
+//     val x = if (this.x == 0.0) other.x else this.x
+//     val y = if (this.y == 0.0) other.y else this.y
+//     val z = if (this.z == 0.0) other.z else this.z
+//     return Vec3(x, y, z)
+// }
+//
+// // Mutable Vec3d
+// codex end
 
 fun Vec3.set(x: Double = this.x, y: Double = this.y, z: Double = this.z): Vec3 = apply {
     this.x = x

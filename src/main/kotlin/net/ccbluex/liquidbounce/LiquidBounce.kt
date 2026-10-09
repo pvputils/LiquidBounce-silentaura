@@ -40,7 +40,6 @@ import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.events.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.events.ClientStartEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.global.GlobalManager
 import net.ccbluex.liquidbounce.features.misc.FriendManager
 import net.ccbluex.liquidbounce.features.module.ModuleManager
@@ -48,21 +47,15 @@ import net.ccbluex.liquidbounce.integration.task.TaskManager
 import net.ccbluex.liquidbounce.lang.LanguageManager
 import net.ccbluex.liquidbounce.render.FontManager
 import net.ccbluex.liquidbounce.render.HAS_AMD_VEGA_APU
-import net.ccbluex.liquidbounce.utils.aiming.PostRotationExecutor
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
-import net.ccbluex.liquidbounce.utils.block.ChunkScanner
 import net.ccbluex.liquidbounce.utils.client.GitInfo
-import net.ccbluex.liquidbounce.utils.client.InteractionTracker
 import net.ccbluex.liquidbounce.utils.client.clientIdentifier
 import net.ccbluex.liquidbounce.utils.client.error.ErrorHandler
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.combat.CombatManager
 import net.ccbluex.liquidbounce.utils.entity.RenderedEntities
-import net.ccbluex.liquidbounce.utils.input.InputTracker
 import net.ccbluex.liquidbounce.utils.inventory.InventoryManager
 import net.ccbluex.liquidbounce.utils.io.readText
-import net.ccbluex.liquidbounce.utils.network.LocalPlayerFallDamageTracker
-import net.ccbluex.liquidbounce.utils.network.PositionPacketSeparator
 import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.server.packs.resources.ReloadableResourceManager
@@ -233,8 +226,12 @@ object LiquidBounce : EventListener {
 
         // Utility
         RenderedEntities
-        ChunkScanner
-        InputTracker
+        // codex start
+        // ChunkScanner
+        // codex end
+        // codex start
+        // InputTracker
+        // codex end
 
         // Feature managers
         ModuleManager
@@ -246,10 +243,18 @@ object LiquidBounce : EventListener {
 
         // Utility managers
         RotationManager
-        BlinkManager
-        LocalPlayerFallDamageTracker
-        PositionPacketSeparator
-        InteractionTracker
+        // codex start
+        // BlinkManager
+        // codex end
+        // codex start
+        // LocalPlayerFallDamageTracker
+        // codex end
+        // codex start
+        // PositionPacketSeparator
+        // codex end
+        // codex start
+        // InteractionTracker
+        // codex end
         CombatManager
         FriendManager
         InventoryManager
@@ -264,7 +269,9 @@ object LiquidBounce : EventListener {
         // ConfigSystem.root(MarketplaceManager)
         // ConfigSystem.root(ConfigTracker)
         // codex end
-        PostRotationExecutor
+        // codex start
+        // PostRotationExecutor
+        // codex end
         // codex start
         // ServerObserver
         // ItemImageAtlas
@@ -451,7 +458,9 @@ object LiquidBounce : EventListener {
         logger.info("Shutting down client...")
 
         // Unregister all event listener and stop all running tasks
-        ChunkScanner.stopThread()
+        // codex start
+        // ChunkScanner.stopThread()
+        // codex end
         FontManager.closeGlyphManager()
         EventManager.unregisterAll()
 

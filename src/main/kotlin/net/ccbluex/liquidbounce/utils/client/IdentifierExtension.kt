@@ -32,11 +32,13 @@ internal fun clientIdentifier(path: String): Identifier =
 /**
  * Converts an [Identifier] to a human-readable name without localization.
  */
-fun Identifier.toName() = toString()
-    .substringAfterLast(':')
-    .replace('.', ' ')
-    .replace('_', ' ')
-    .split(' ')
-    .joinToString(" ") { word ->
-        word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ENGLISH) else it.toString() }
-    }
+// codex start
+// fun Identifier.toName() = toString()
+//     .substringAfterLast(':')
+//     .replace('.', ' ')
+//     .replace('_', ' ')
+//     .split(' ')
+//     .joinToString(" ") { word ->
+//         word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ENGLISH) else it.toString() }
+//     }
+// codex end

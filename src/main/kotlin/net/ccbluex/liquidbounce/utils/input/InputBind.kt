@@ -290,7 +290,9 @@ fun Value<InputBind>.bind(key: InputConstants.Key, action: InputBind.BindAction,
 /**
  * Unbinds the key by setting it to UNKNOWN_KEY.
  */
-fun Value<InputBind>.unbind() = set(InputBind.UNBOUND)
+// codex start
+// fun Value<InputBind>.unbind() = set(InputBind.UNBOUND)
+// codex end
 
 fun InputBind.renderText(): Component = buildText {
     add(

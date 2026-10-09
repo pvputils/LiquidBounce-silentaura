@@ -18,9 +18,7 @@
  */
 package net.ccbluex.liquidbounce.features.command.commands.ingame.fakeplayer
 
-import net.minecraft.client.player.AbstractClientPlayer
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.entity.EntityEquipment
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Inventory
@@ -50,51 +48,55 @@ data class PosPoseSnapshot(
 
     val preferredHand: InteractionHand get() = currentSwing?.hand ?: InteractionHand.MAIN_HAND
 }
-
-fun fromPlayer(entity: AbstractClientPlayer): PosPoseSnapshot {
-    return PosPoseSnapshot(
-        entity.x,
-        entity.y,
-        entity.z,
-        entity.xo,
-        entity.yo,
-        entity.zo,
-        entity.currentSwing,
-        entity.yRot,
-        entity.yRotO,
-        entity.xRot,
-        entity.xRotO,
-        entity.yBodyRot,
-        entity.yBodyRotO,
-        entity.yHeadRot,
-        entity.yHeadRotO,
-        entity.pose,
-        entity.inventory,
-        entity.walkAnimation.position
-    )
-}
-
-fun fromPlayerMotion(entity: AbstractClientPlayer): PosPoseSnapshot {
-    val playerInventory = Inventory(entity, EntityEquipment())
-    playerInventory.replaceWith(entity.inventory)
-    return PosPoseSnapshot(
-        entity.x,
-        entity.y,
-        entity.z,
-        entity.xo,
-        entity.yo,
-        entity.zo,
-        entity.currentSwing,
-        entity.yRot,
-        entity.yRotO,
-        entity.xRot,
-        entity.xRotO,
-        entity.yBodyRot,
-        entity.yBodyRotO,
-        entity.yHeadRot,
-        entity.yHeadRotO,
-        entity.pose,
-        playerInventory,
-        entity.walkAnimation.position
-    )
-}
+// codex start
+//
+// fun fromPlayer(entity: AbstractClientPlayer): PosPoseSnapshot {
+//     return PosPoseSnapshot(
+//         entity.x,
+//         entity.y,
+//         entity.z,
+//         entity.xo,
+//         entity.yo,
+//         entity.zo,
+//         entity.currentSwing,
+//         entity.yRot,
+//         entity.yRotO,
+//         entity.xRot,
+//         entity.xRotO,
+//         entity.yBodyRot,
+//         entity.yBodyRotO,
+//         entity.yHeadRot,
+//         entity.yHeadRotO,
+//         entity.pose,
+//         entity.inventory,
+//         entity.walkAnimation.position
+//     )
+// }
+// codex end
+// codex start
+//
+// fun fromPlayerMotion(entity: AbstractClientPlayer): PosPoseSnapshot {
+//     val playerInventory = Inventory(entity, EntityEquipment())
+//     playerInventory.replaceWith(entity.inventory)
+//     return PosPoseSnapshot(
+//         entity.x,
+//         entity.y,
+//         entity.z,
+//         entity.xo,
+//         entity.yo,
+//         entity.zo,
+//         entity.currentSwing,
+//         entity.yRot,
+//         entity.yRotO,
+//         entity.xRot,
+//         entity.xRotO,
+//         entity.yBodyRot,
+//         entity.yBodyRotO,
+//         entity.yHeadRot,
+//         entity.yHeadRotO,
+//         entity.pose,
+//         playerInventory,
+//         entity.walkAnimation.position
+//     )
+// }
+// codex end

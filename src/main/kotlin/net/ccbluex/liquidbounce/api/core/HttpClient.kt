@@ -28,12 +28,9 @@ import kotlinx.coroutines.withContext
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.api.interceptors.CacheBlacklistInterceptor
 import net.ccbluex.liquidbounce.api.interceptors.DefaultHeaderInterceptor
-import net.ccbluex.liquidbounce.api.thirdparty.mojang.MojangApiClient
-import net.ccbluex.liquidbounce.config.gson.interopGson
 import net.ccbluex.liquidbounce.config.gson.util.readJson
 import net.ccbluex.liquidbounce.utils.client.error.ErrorHandler
 import net.ccbluex.liquidbounce.utils.client.logger
-import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.render.readNativeImage
 import net.minecraft.ReportedException
 import okhttp3.Cache
@@ -45,7 +42,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.coroutines.executeAsync
 import okio.BufferedSource
@@ -54,7 +50,6 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.Reader
-import java.net.HttpURLConnection
 import java.util.Locale
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
@@ -76,7 +71,9 @@ val ioScope = CoroutineScope(
     }
 )
 
-fun withScope(block: suspend CoroutineScope.() -> Unit) = ioScope.launch { block() }
+// codex start
+// fun withScope(block: suspend CoroutineScope.() -> Unit) = ioScope.launch { block() }
+// codex end
 
 object HttpClient {
 
@@ -170,13 +167,14 @@ object HttpClient {
         .addInterceptor(clientHttpApiInterceptor)
         .build()
 
-    @get:JvmStatic
-    val mojangApiClient = MojangApiClient.Builder()
-        .gson(interopGson)
-        .httpClient(this.defaultClient)
-        .tokenProvider { mc.user.accessToken }
-        .build()
-
+    // codex start
+    // @get:JvmStatic
+    // val mojangApiClient = MojangApiClient.Builder()
+    //     .gson(interopGson)
+    //     .httpClient(this.defaultClient)
+    //     .tokenProvider { mc.user.accessToken }
+    //     .build()
+    // codex end
     @Suppress("LongParameterList")
     suspend fun request(
         url: String,
@@ -245,27 +243,31 @@ inline fun <reified T> Response.parse(): T {
  *
  * When there are no more lines to read, the source is closed automatically.
  */
-fun BufferedSource.utf8Lines(): Iterator<String> =
-    object : AbstractIterator<String>() {
-        override fun computeNext() {
-            val nextLine = readUtf8Line()
-            if (nextLine != null) {
-                setNext(nextLine)
-            } else {
-                close()
-                done()
-            }
-        }
-    }
-
-/**
- * Save response body to file.
- */
+// codex start
+// fun BufferedSource.utf8Lines(): Iterator<String> =
+//     object : AbstractIterator<String>() {
+//         override fun computeNext() {
+//             val nextLine = readUtf8Line()
+//             if (nextLine != null) {
+//                 setNext(nextLine)
+//             } else {
+//                 close()
+//                 done()
+//             }
+//         }
+//     }
+//
+// /**
+//  * Save response body to file.
+//  */
+// codex end
 fun Response.toFile(file: File) = use { response ->
     file.sink().use(response.body.source()::readAll)
 }
-
-fun String.asForm() = toRequestBody(HttpClient.MediaTypes.FORM)
+// codex start
+//
+// fun String.asForm() = toRequestBody(HttpClient.MediaTypes.FORM)
+// codex end
 
 class HttpException(val method: HttpMethod, val url: String, val code: Int, val content: String)
     : Exception("${method.name} $url failed with code $code: $content")
@@ -282,8 +284,10 @@ val Throwable.httpException: HttpException?
 /**
  * [block]'s result, `null` when the server answers 404.
  */
-internal inline fun <T> orNotFound(block: () -> T): T? = try {
-    block()
-} catch (e: Exception) {
-    if (e.httpException?.code == HttpURLConnection.HTTP_NOT_FOUND) null else throw e
-}
+// codex start
+// internal inline fun <T> orNotFound(block: () -> T): T? = try {
+//     block()
+// } catch (e: Exception) {
+//     if (e.httpException?.code == HttpURLConnection.HTTP_NOT_FOUND) null else throw e
+// }
+// codex end

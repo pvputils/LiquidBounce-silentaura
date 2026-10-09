@@ -28,22 +28,26 @@ import java.util.stream.Stream
 inline infix operator fun IntRange.contains(range: IntRange): Boolean {
     return this.first <= range.first && this.last >= range.last
 }
-
-fun ClosedFloatingPointRange<Float>.valueAtProportion(proportion: Float): Float {
-    return when {
-        proportion >= 1f -> endInclusive
-        proportion <= 0f -> start
-        else -> start + (endInclusive - start) * proportion
-    }
-}
-
-fun ClosedFloatingPointRange<Float>.proportionOfValue(value: Float): Float {
-    return when {
-        value >= endInclusive -> 1f
-        value <= start -> 0f
-        else -> (value - start) / (endInclusive - start)
-    }
-}
+// codex start
+//
+// fun ClosedFloatingPointRange<Float>.valueAtProportion(proportion: Float): Float {
+//     return when {
+//         proportion >= 1f -> endInclusive
+//         proportion <= 0f -> start
+//         else -> start + (endInclusive - start) * proportion
+//     }
+// }
+// codex end
+// codex start
+//
+// fun ClosedFloatingPointRange<Float>.proportionOfValue(value: Float): Float {
+//     return when {
+//         value >= endInclusive -> 1f
+//         value <= start -> 0f
+//         else -> (value - start) / (endInclusive - start)
+//     }
+// }
+// codex end
 
 inline fun range(iterable1: DoubleIterable, iterable2: DoubleIterable, operation: (Double, Double) -> Unit) {
     iterable1.forEachDouble { d1 ->
@@ -108,17 +112,19 @@ fun <T> List<T>.subList(fromIndex: Int): List<T> {
 /**
  * Inserts a new element into a sorted list while maintaining the order.
  */
-inline fun <T, K : Comparable<K>> MutableList<T>.sortedInsert(item: T, crossinline selector: (T) -> K?) {
-    val insertIndex = binarySearchBy(selector(item), selector = selector).let {
-        if (it >= 0) it else it.inv()
-    }
-
-    add(insertIndex, item)
-}
-
-/**
- * Transform a String to another String with same length by given [transform]
- */
+// codex start
+// inline fun <T, K : Comparable<K>> MutableList<T>.sortedInsert(item: T, crossinline selector: (T) -> K?) {
+//     val insertIndex = binarySearchBy(selector(item), selector = selector).let {
+//         if (it >= 0) it else it.inv()
+//     }
+//
+//     add(insertIndex, item)
+// }
+//
+// /**
+//  * Transform a String to another String with same length by given [transform]
+//  */
+// codex end
 inline fun String.mapString(transform: (Char) -> Char) = String(CharArray(length) {
     transform(this[it])
 })

@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
 
 /**
  * A rotation manager

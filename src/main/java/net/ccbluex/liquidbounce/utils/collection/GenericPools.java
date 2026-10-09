@@ -22,7 +22,6 @@ package net.ccbluex.liquidbounce.utils.collection;
 import net.ccbluex.fastutil.Pool;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

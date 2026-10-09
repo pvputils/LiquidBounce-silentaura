@@ -33,20 +33,22 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
-
-fun rayTraceCollidingBlocks(start: Vec3, end: Vec3): BlockHitResult? {
-    val result = mc.level!!.clip(
-        ClipContext(
-            start,
-            end,
-            ClipContext.Block.COLLIDER,
-            ClipContext.Fluid.ANY,
-            mc.player!!
-        )
-    )
-
-    return result.takeIf { it.type == HitResult.Type.BLOCK }
-}
+// codex start
+//
+// fun rayTraceCollidingBlocks(start: Vec3, end: Vec3): BlockHitResult? {
+//     val result = mc.level!!.clip(
+//         ClipContext(
+//             start,
+//             end,
+//             ClipContext.Block.COLLIDER,
+//             ClipContext.Fluid.ANY,
+//             mc.player!!
+//         )
+//     )
+//
+//     return result.takeIf { it.type == HitResult.Type.BLOCK }
+// }
+// codex end
 
 fun raytraceBlock(
     range: Double,

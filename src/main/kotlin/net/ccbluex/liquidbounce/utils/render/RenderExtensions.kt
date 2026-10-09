@@ -29,24 +29,17 @@ import com.mojang.renderpearl.api.buffers.GpuBufferSlice
 import com.mojang.blaze3d.buffers.Std140Builder
 import com.mojang.blaze3d.buffers.Std140SizeCalculator
 import com.mojang.renderpearl.api.pipeline.RenderPipeline
-import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.platform.NativeImage
-import com.mojang.renderpearl.api.device.GpuDevice
-import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.renderpearl.api.textures.GpuSampler
 import com.mojang.renderpearl.api.textures.GpuTexture
-import com.mojang.renderpearl.api.textures.GpuTextureView
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.PoseStack
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.client.gpuDevice
-import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.io.ensurePngOrConvertJpeg
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.renderer.texture.AbstractTexture
 import net.minecraft.client.renderer.texture.DynamicTexture
-import net.minecraft.resources.Identifier
 import net.minecraft.util.ARGB
 import net.minecraft.util.Util
 import okio.BufferedSource
@@ -82,36 +75,42 @@ inline fun GpuTexture.clearColor(color: Color4b = Color4b.TRANSPARENT) =
 
 inline fun GpuTexture.clearDepth(depth: Double = 0.0) =
     gpuDevice.createCommandEncoder().clearDepthTexture(this, depth)
-
-fun RenderTarget.clearColorAndDepth(color: Color4b = Color4b.TRANSPARENT, depth: Double = 0.0) {
-    val colorAttachment = colorTexture
-    val depthAttachment = depthTexture.takeIf { hasDepth() }
-
-    when {
-        colorAttachment != null && depthAttachment != null ->
-            gpuDevice.createCommandEncoder().clearColorAndDepthTextures(
-                colorAttachment, color.toVector4f(), depthAttachment, depth
-            )
-        colorAttachment != null -> colorAttachment.clearColor(color)
-        depthAttachment != null -> depthAttachment.clearDepth(depth)
-    }
-}
-
-inline fun GpuTexture.asView(baseMipLevel: Int = 0, mipLevels: Int = this.mipLevels): GpuTextureView =
-    gpuDevice.createTextureView(this, baseMipLevel, mipLevels)
+// codex start
+//
+// fun RenderTarget.clearColorAndDepth(color: Color4b = Color4b.TRANSPARENT, depth: Double = 0.0) {
+//     val colorAttachment = colorTexture
+//     val depthAttachment = depthTexture.takeIf { hasDepth() }
+//
+//     when {
+//         colorAttachment != null && depthAttachment != null ->
+//             gpuDevice.createCommandEncoder().clearColorAndDepthTextures(
+//                 colorAttachment, color.toVector4f(), depthAttachment, depth
+//             )
+//         colorAttachment != null -> colorAttachment.clearColor(color)
+//         depthAttachment != null -> depthAttachment.clearDepth(depth)
+//     }
+// }
+// codex end
+// codex start
+//
+// inline fun GpuTexture.asView(baseMipLevel: Int = 0, mipLevels: Int = this.mipLevels): GpuTextureView =
+//     gpuDevice.createTextureView(this, baseMipLevel, mipLevels)
+// codex end
 
 inline fun GpuBuffer.mapBuffer(read: Boolean = false, write: Boolean = false): GpuBufferSlice.MappedView =
     this.map(read, write)
 
 inline fun GpuBufferSlice.mapBuffer(read: Boolean = false, write: Boolean = false): GpuBufferSlice.MappedView =
     this.map(read, write)
-
-fun GpuBuffer.readFully(): ByteBuffer = read(0L, this.size())
-
-/**
- * @receiver Should have flag [GpuBuffer.USAGE_MAP_READ]
- * @return A [ByteBuffer] allocated with [MemoryUtil]
- */
+// codex start
+//
+// fun GpuBuffer.readFully(): ByteBuffer = read(0L, this.size())
+//
+// /**
+//  * @receiver Should have flag [GpuBuffer.USAGE_MAP_READ]
+//  * @return A [ByteBuffer] allocated with [MemoryUtil]
+//  */
+// codex end
 fun GpuBuffer.read(offset: Long, length: Long): ByteBuffer = this.map(offset, length, true, false).use {
     val source = it.data
     val result = MemoryUtil.memAlloc(source.remaining())
@@ -170,39 +169,43 @@ inline fun GpuTexture.copyTo(
     x, y, width, height,
 )
 
-fun GpuTexture.asyncCopyTo(
-    destination: GpuBuffer,
-    offset: Long = 0L,
-    mipLevel: Int = 0,
-    x: Int = 0,
-    y: Int = 0,
-    width: Int = getWidth(mipLevel),
-    height: Int = getHeight(mipLevel),
-): CompletableFuture<*> {
-    val future = CompletableFuture<Any?>()
-    copyTo(destination, offset, mipLevel, x, y, width, height) { future.complete(null) }
-    return future
-}
-
-@JvmOverloads
-fun GpuTexture.copyFully(
-    labelGetter: Supplier<String>? = null,
-    usage: @GpuTexture.Usage Int = 0,
-): GpuTexture {
-    val dest = gpuDevice.createTexture(
-        labelGetter,
-        GpuTexture.USAGE_COPY_DST or usage,
-        format,
-        getWidth(0), getHeight(0),
-        depthOrLayers, mipLevels,
-    )
-
-    for (mipLevel in 0 until mipLevels) {
-        dest.copyFrom(this, mipLevel)
-    }
-
-    return dest
-}
+// codex start
+// fun GpuTexture.asyncCopyTo(
+//     destination: GpuBuffer,
+//     offset: Long = 0L,
+//     mipLevel: Int = 0,
+//     x: Int = 0,
+//     y: Int = 0,
+//     width: Int = getWidth(mipLevel),
+//     height: Int = getHeight(mipLevel),
+// ): CompletableFuture<*> {
+//     val future = CompletableFuture<Any?>()
+//     copyTo(destination, offset, mipLevel, x, y, width, height) { future.complete(null) }
+//     return future
+// }
+// // codex start
+// //
+// // @JvmOverloads
+// // fun GpuTexture.copyFully(
+// //     labelGetter: Supplier<String>? = null,
+// //     usage: @GpuTexture.Usage Int = 0,
+// // ): GpuTexture {
+// //     val dest = gpuDevice.createTexture(
+// //         labelGetter,
+// //         GpuTexture.USAGE_COPY_DST or usage,
+// //         format,
+// //         getWidth(0), getHeight(0),
+// //         depthOrLayers, mipLevels,
+// //     )
+// //
+// //     for (mipLevel in 0 until mipLevels) {
+// //         dest.copyFrom(this, mipLevel)
+// //     }
+// //
+// //     return dest
+// // }
+// // codex end
+// codex end
 
 @Suppress("LongParameterList")
 inline fun GpuTexture.copyFrom(
@@ -218,11 +221,13 @@ inline fun GpuTexture.copyFrom(
     source, this, mipLevel, intoX, intoY, sourceX, sourceY, width, height
 )
 
-fun GpuTexture.saveToFile(file: File): CompletableFuture<*> =
-    this.toNativeImage().thenAcceptAsync({ nativeImage ->
-        nativeImage.writeToFile(file)
-        nativeImage.close()
-    }, Util.ioPool())
+// codex start
+// fun GpuTexture.saveToFile(file: File): CompletableFuture<*> =
+//     this.toNativeImage().thenAcceptAsync({ nativeImage ->
+//         nativeImage.writeToFile(file)
+//         nativeImage.close()
+//     }, Util.ioPool())
+// codex end
 
 private fun GpuBufferSlice.readNativeImageRGBA(
     width: Int,
@@ -418,15 +423,17 @@ private fun copyArgbRows(
 /**
  * Should be called from main thread.
  */
-fun NativeImage.registerTexture(identifier: Identifier): DynamicTexture {
-    val texture = asTexture(identifier::toString)
-    mc.textureManager.register(identifier, texture)
-    return texture
-}
-
-/**
- * Read and close stream. Accepts PNG.
- */
+// codex start
+// fun NativeImage.registerTexture(identifier: Identifier): DynamicTexture {
+//     val texture = asTexture(identifier::toString)
+//     mc.textureManager.register(identifier, texture)
+//     return texture
+// }
+//
+// /**
+//  * Read and close stream. Accepts PNG.
+//  */
+// codex end
 inline fun InputStream.readNativeImage(): NativeImage = NativeImage.read(this)
 
 /**
@@ -454,14 +461,18 @@ fun NativeImage.asTexture(
 
 val AbstractTexture.textureSetup: TextureSetup
     get() = TextureSetup.singleTexture(textureView, sampler)
-
-inline fun GpuTextureView.asTextureSetup(sampler: GpuSampler): TextureSetup =
-    TextureSetup.singleTexture(this, sampler)
-
-inline fun ByteBuffer.toGpuBuffer(
-    labelGetter: Supplier<String>? = null,
-    usage: @GpuBuffer.Usage Int,
-): GpuBuffer = gpuDevice.createBuffer(labelGetter, usage, this)
+// codex start
+//
+// inline fun GpuTextureView.asTextureSetup(sampler: GpuSampler): TextureSetup =
+//     TextureSetup.singleTexture(this, sampler)
+// codex end
+// codex start
+//
+// inline fun ByteBuffer.toGpuBuffer(
+//     labelGetter: Supplier<String>? = null,
+//     usage: @GpuBuffer.Usage Int,
+// ): GpuBuffer = gpuDevice.createBuffer(labelGetter, usage, this)
+// codex end
 
 @JvmInline
 value class KStd140SizeCalculator(val j: Std140SizeCalculator) {
@@ -515,16 +526,18 @@ value class KStd140SizeCalculator(val j: Std140SizeCalculator) {
 
 inline fun std140Size(block: KStd140SizeCalculator.() -> Unit): Int =
     KStd140SizeCalculator(Std140SizeCalculator()).apply(block).get()
-
-inline fun GpuDevice.createUbo(
-    labelGetter: Supplier<String>? = null,
-    std140Size: KStd140SizeCalculator.() -> Unit,
-): GpuBuffer =
-    createBuffer(
-        labelGetter,
-        GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_MAP_WRITE,
-        std140Size(std140Size).toLong()
-    )
+// codex start
+//
+// inline fun GpuDevice.createUbo(
+//     labelGetter: Supplier<String>? = null,
+//     std140Size: KStd140SizeCalculator.() -> Unit,
+// ): GpuBuffer =
+//     createBuffer(
+//         labelGetter,
+//         GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_MAP_WRITE,
+//         std140Size(std140Size).toLong()
+//     )
+// codex end
 
 inline fun ByteBuffer.writeStd140(action: Std140Builder.() -> Unit) {
     Std140Builder.intoBuffer(this).apply(action)

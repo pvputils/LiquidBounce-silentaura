@@ -19,8 +19,6 @@
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.render;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.PerspectiveEvent;
 import net.minecraft.client.Camera;
@@ -28,7 +26,6 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -36,7 +33,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Camera.class)
 public abstract class MixinCamera {

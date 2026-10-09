@@ -19,25 +19,14 @@
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.render;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
-import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
-import com.mojang.blaze3d.framegraph.FramePass;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.DrawOutlinesEvent;
 import net.ccbluex.liquidbounce.utils.collection.Pools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
-import org.joml.Vector4f;
-import org.joml.Vector4fc;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,10 +34,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.util.List;
-import java.util.Locale;
 
 @Mixin(LevelRenderer.class)
 public abstract class MixinLevelRenderer {

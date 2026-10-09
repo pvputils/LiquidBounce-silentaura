@@ -28,7 +28,6 @@ import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
@@ -37,19 +36,15 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.game.*;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-import java.util.Optional;
 
 @Mixin(ClientPacketListener.class)
 public abstract class MixinClientPacketListener extends ClientCommonPacketListenerImpl {

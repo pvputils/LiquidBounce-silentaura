@@ -55,11 +55,13 @@ inline operator fun AABB.minus(offset: Vec3i): AABB =
     this.move(-offset.x.toDouble(), -offset.y.toDouble(), -offset.z.toDouble())
 
 data class WorldLocalBox(val origin: Vec3, val localBox: AABB)
-
-fun AABB.worldToLocal(): WorldLocalBox {
-    val origin = this.minPosition
-    return WorldLocalBox(origin, this - origin)
-}
+// codex start
+//
+// fun AABB.worldToLocal(): WorldLocalBox {
+//     val origin = this.minPosition
+//     return WorldLocalBox(origin, this - origin)
+// }
+// codex end
 
 fun AABB.centerOnSide(side: Direction): Vec3 {
     val cx = minX + xsize * 0.5
@@ -75,11 +77,13 @@ fun AABB.centerOnSide(side: Direction): Vec3 {
 fun AABB.isHitByLine(start: Vec3, p: Vec3): Boolean {
     return if (start == p) contains(start) else Line.fromPoints(start, p).intersects(this)
 }
-
-fun AABB.getCoordinate(direction: Direction): Double =
-    if (direction.axisDirection == Direction.AxisDirection.POSITIVE) max(direction.axis) else min(direction.axis)
-
-/** Ray–AABB first hit point (entry or exit). */
+// codex start
+//
+// fun AABB.getCoordinate(direction: Direction): Double =
+//     if (direction.axisDirection == Direction.AxisDirection.POSITIVE) max(direction.axis) else min(direction.axis)
+//
+// /** Ray–AABB first hit point (entry or exit). */
+// codex end
 fun AABB.firstHit(from: Vec3, to: Vec3): Vec3? =
     if (contains(from)) clip(to, from).orElse(null) else clip(from, to).orElse(null)
 
@@ -105,11 +109,13 @@ fun AABB.distanceToSqr(x: Double, y: Double, z: Double): Double {
     val dz = maxOf(minZ - z, z - maxZ, 0.0)
     return Mth.lengthSquared(dx, dy, dz)
 }
-
-fun AABB.getNearestPointOnSide(from: Vec3, side: Direction): Vec3 {
-    val nearest = getNearestPoint(from)
-    return pointOnSide(nearest.x, nearest.y, nearest.z, side)
-}
+// codex start
+//
+// fun AABB.getNearestPointOnSide(from: Vec3, side: Direction): Vec3 {
+//     val nearest = getNearestPoint(from)
+//     return pointOnSide(nearest.x, nearest.y, nearest.z, side)
+// }
+// codex end
 
 fun AABB.samplePointOnSide(side: Direction, a: Double, b: Double): Vec3 {
     val spot = when (side) {
@@ -147,33 +153,37 @@ private fun AABB.pointOnSide(x: Double, y: Double, z: Double, side: Direction): 
  * Get visible sides from [eyes] **outside** the box.
  * @return size in [0..3], 0=inside
  */
-fun AABB.visibleSidesTo(eyes: Vec3): List<Direction> = buildList(3) {
-    if (eyes.x < minX) {
-        this.add(Direction.WEST)
-    } else if (eyes.x > maxX) {
-        this.add(Direction.EAST)
-    }
-
-    if (eyes.y < minY) {
-        this.add(Direction.DOWN)
-    } else if (eyes.y > maxY) {
-        this.add(Direction.UP)
-    }
-
-    if (eyes.z < minZ) {
-        this.add(Direction.NORTH)
-    } else if (eyes.z > maxZ) {
-        this.add(Direction.SOUTH)
-    }
-}
-
-fun AABB.isSideVisible(direction: Direction, eyes: Vec3): Boolean {
-    return when (direction) {
-        Direction.WEST -> eyes.x < this.minX
-        Direction.EAST -> eyes.x > this.maxX
-        Direction.DOWN -> eyes.y < this.minY
-        Direction.UP -> eyes.y > this.maxY
-        Direction.NORTH -> eyes.z < this.minZ
-        Direction.SOUTH -> eyes.z > this.maxZ
-    }
-}
+// codex start
+// fun AABB.visibleSidesTo(eyes: Vec3): List<Direction> = buildList(3) {
+//     if (eyes.x < minX) {
+//         this.add(Direction.WEST)
+//     } else if (eyes.x > maxX) {
+//         this.add(Direction.EAST)
+//     }
+//
+//     if (eyes.y < minY) {
+//         this.add(Direction.DOWN)
+//     } else if (eyes.y > maxY) {
+//         this.add(Direction.UP)
+//     }
+//
+//     if (eyes.z < minZ) {
+//         this.add(Direction.NORTH)
+//     } else if (eyes.z > maxZ) {
+//         this.add(Direction.SOUTH)
+//     }
+// }
+// codex end
+// codex start
+//
+// fun AABB.isSideVisible(direction: Direction, eyes: Vec3): Boolean {
+//     return when (direction) {
+//         Direction.WEST -> eyes.x < this.minX
+//         Direction.EAST -> eyes.x > this.maxX
+//         Direction.DOWN -> eyes.y < this.minY
+//         Direction.UP -> eyes.y > this.maxY
+//         Direction.NORTH -> eyes.z < this.minZ
+//         Direction.SOUTH -> eyes.z > this.maxZ
+//     }
+// }
+// codex end

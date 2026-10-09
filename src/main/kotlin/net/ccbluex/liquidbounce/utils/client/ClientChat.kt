@@ -25,24 +25,19 @@ import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.events.NotificationEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.injection.mixins.minecraft.gui.MixinChatScreenAccessor
 import net.ccbluex.liquidbounce.interfaces.TextColorAddition
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
-import net.ccbluex.liquidbounce.utils.text.RunnableClickEvent
 import net.ccbluex.liquidbounce.utils.text.asPlainText
 import net.ccbluex.liquidbounce.utils.text.asText
 import net.ccbluex.liquidbounce.utils.text.plus
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.network.chat.TextColor
-import java.io.File
 
 // Chat formatting
 private val clientPrefix: Component = "".asText()
@@ -61,11 +56,13 @@ fun variable(text: MutableComponent): MutableComponent = text.withStyle(ChatForm
 
 @AddonApi
 fun variable(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.GOLD)
-
-fun clickablePath(file: File): MutableComponent =
-    variable(file.absolutePath)
-        .onClick(ClickEvent.OpenFile(file))
-        .onHover(HoverEvent.ShowText("Open".asPlainText()))
+// codex start
+//
+// fun clickablePath(file: File): MutableComponent =
+//     variable(file.absolutePath)
+//         .onClick(ClickEvent.OpenFile(file))
+//         .onHover(HoverEvent.ShowText("Open".asPlainText()))
+// codex end
 
 @AddonApi
 fun highlight(text: MutableComponent): MutableComponent = text
@@ -101,9 +98,11 @@ inline fun MutableComponent.obfuscated(value: Boolean?): MutableComponent =
 
 inline fun MutableComponent.strikethrough(value: Boolean?): MutableComponent =
     setStyle(style.withStrikethrough(value))
-
-inline fun MutableComponent.underline(value: Boolean?): MutableComponent =
-    setStyle(style.withUnderlined(value))
+// codex start
+//
+// inline fun MutableComponent.underline(value: Boolean?): MutableComponent =
+//     setStyle(style.withUnderlined(value))
+// codex end
 
 inline fun MutableComponent.italic(value: Boolean?): MutableComponent =
     setStyle(style.withItalic(value))
@@ -113,9 +112,11 @@ inline fun MutableComponent.onHover(event: HoverEvent?): MutableComponent =
 
 inline fun MutableComponent.onClick(event: ClickEvent?): MutableComponent =
     setStyle(style.withClickEvent(event))
-
-inline fun MutableComponent.onClickRun(callback: Runnable): MutableComponent =
-    setStyle(style.withClickEvent(RunnableClickEvent(callback)))
+// codex start
+//
+// inline fun MutableComponent.onClickRun(callback: Runnable): MutableComponent =
+//     setStyle(style.withClickEvent(RunnableClickEvent(callback)))
+// codex end
 
 inline operator fun MutableComponent.plusAssign(other: String) {
     this.append(other)
@@ -161,24 +162,28 @@ fun MutableComponent.copyable(
     hover?.let(::onHover)
     onClick(ClickEvent.CopyToClipboard(copyContent))
 }
-
-fun MutableComponent.bypassNameProtection(): MutableComponent = withStyle {
-    val color = it.color ?: TextColor.fromLegacyFormat(ChatFormatting.RESET)
-
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    val newColor = (color as TextColorAddition).`liquid_bounce$withNameProtectionBypass`()
-
-    it.withColor(newColor)
-}
-
-/**
- * Open a [ChatScreen] with given text,
- * or set the text of current [ChatScreen]
- */
-fun Minecraft.openChat(text: String, draft: Boolean = false, closeOnSubmit: Boolean = true) = schedule {
-    (this.gui.screen() as? MixinChatScreenAccessor)?.input?.setValue(text)
-        ?: this.gui.setScreen(ChatScreen(text, draft, closeOnSubmit))
-}
+// codex start
+//
+// fun MutableComponent.bypassNameProtection(): MutableComponent = withStyle {
+//     val color = it.color ?: TextColor.fromLegacyFormat(ChatFormatting.RESET)
+//
+//     @Suppress("CAST_NEVER_SUCCEEDS")
+//     val newColor = (color as TextColorAddition).`liquid_bounce$withNameProtectionBypass`()
+//
+//     it.withColor(newColor)
+// }
+//
+// /**
+//  * Open a [ChatScreen] with given text,
+//  * or set the text of current [ChatScreen]
+//  */
+// codex end
+// codex start
+// fun Minecraft.openChat(text: String, draft: Boolean = false, closeOnSubmit: Boolean = true) = schedule {
+//     (this.gui.screen() as? MixinChatScreenAccessor)?.input?.setValue(text)
+//         ?: this.gui.setScreen(ChatScreen(text, draft, closeOnSubmit))
+// }
+// codex end
 
 private val defaultMessageMetadata = MessageMetadata()
 

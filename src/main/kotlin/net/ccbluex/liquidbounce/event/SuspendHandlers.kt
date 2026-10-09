@@ -22,17 +22,14 @@ import kotlinx.coroutines.CompletionHandler
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withTimeoutOrNull
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
 import java.util.function.Consumer
 import java.util.function.Predicate
 import kotlin.coroutines.ContinuationInterceptor
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.time.Duration
 
 typealias SuspendableEventHandler<T> = suspend CoroutineScope.(T) -> Unit
 
@@ -152,8 +149,10 @@ suspend inline fun <reified T : Event> EventListener.waitMatches(
  * @param predicate The predicate to match the event.
  * If it throws a [Throwable], the continuation will be resumed with [Result.failure].
  */
-suspend inline fun <reified T : Event> EventListener.waitMatchesWithTimeout(
-    timeout: Duration,
-    priority: Short = 0,
-    predicate: Predicate<T>,
-): T? = withTimeoutOrNull(timeout) { waitMatches(priority, predicate) }
+// codex start
+// suspend inline fun <reified T : Event> EventListener.waitMatchesWithTimeout(
+//     timeout: Duration,
+//     priority: Short = 0,
+//     predicate: Predicate<T>,
+// ): T? = withTimeoutOrNull(timeout) { waitMatches(priority, predicate) }
+// codex end

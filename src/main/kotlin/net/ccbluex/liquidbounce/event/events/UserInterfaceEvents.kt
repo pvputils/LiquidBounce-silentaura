@@ -23,10 +23,7 @@ import net.ccbluex.liquidbounce.annotations.Tag
 import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.integration.interop.protocol.event.WebSocketEvent
-import net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game.PlayerData
-import net.ccbluex.liquidbounce.integration.interop.protocol.rest.v1.game.PlayerInventoryData
 import net.minecraft.network.chat.Component
-import net.minecraft.world.effect.MobEffectInstance
 
 @Tag("fps")
 @Suppress("unused")
@@ -35,18 +32,24 @@ class FpsChangeEvent(val fps: Int) : Event(), WebSocketEvent
 @Tag("fpsLimit")
 @Suppress("unused")
 class FpsLimitEvent(var fps: Int) : Event()
-
-@Tag("clientPlayerData")
-@Suppress("unused")
-class ClientPlayerDataEvent(val playerData: PlayerData) : Event(), WebSocketEvent
-
-@Tag("clientPlayerEffect")
-@Suppress("unused")
-class ClientPlayerEffectEvent(val effects: List<MobEffectInstance>) : Event(), WebSocketEvent
-
-@Tag("clientPlayerInventory")
-@Suppress("unused")
-class ClientPlayerInventoryEvent(val inventory: PlayerInventoryData) : Event(), WebSocketEvent
+// codex start
+//
+// @Tag("clientPlayerData")
+// @Suppress("unused")
+// class ClientPlayerDataEvent(val playerData: PlayerData) : Event(), WebSocketEvent
+// codex end
+// codex start
+//
+// @Tag("clientPlayerEffect")
+// @Suppress("unused")
+// class ClientPlayerEffectEvent(val effects: List<MobEffectInstance>) : Event(), WebSocketEvent
+// codex end
+// codex start
+//
+// @Tag("clientPlayerInventory")
+// @Suppress("unused")
+// class ClientPlayerInventoryEvent(val inventory: PlayerInventoryData) : Event(), WebSocketEvent
+// codex end
 
 sealed class TitleEvent : CancellableEvent(), WebSocketEvent {
     sealed class TextContent : TitleEvent() {

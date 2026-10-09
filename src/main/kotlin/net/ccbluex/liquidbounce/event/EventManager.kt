@@ -22,52 +22,25 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceRBTreeMap
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import net.ccbluex.liquidbounce.event.events.AccountManagerAdditionResultEvent
-import net.ccbluex.liquidbounce.event.events.AccountManagerLoginResultEvent
-import net.ccbluex.liquidbounce.event.events.AccountManagerMessageEvent
-import net.ccbluex.liquidbounce.event.events.AccountManagerRemovalResultEvent
 import net.ccbluex.liquidbounce.event.events.AllowAutoJumpEvent
 import net.ccbluex.liquidbounce.event.events.AttackEntityEvent
-import net.ccbluex.liquidbounce.event.events.BedStateChangeEvent
-import net.ccbluex.liquidbounce.event.events.BlinkPacketEvent
 import net.ccbluex.liquidbounce.event.events.BlockAttackEvent
 import net.ccbluex.liquidbounce.event.events.BlockBreakingProgressEvent
 import net.ccbluex.liquidbounce.event.events.BlockChangeEvent
-import net.ccbluex.liquidbounce.event.events.BlockCountChangeEvent
-import net.ccbluex.liquidbounce.event.events.BlockShapeEvent
-import net.ccbluex.liquidbounce.event.events.BlockSlipperinessMultiplierEvent
-import net.ccbluex.liquidbounce.event.events.BlockVelocityMultiplierEvent
-import net.ccbluex.liquidbounce.event.events.BrowserReadyEvent
-import net.ccbluex.liquidbounce.event.events.BrowserUrlChangeEvent
 import net.ccbluex.liquidbounce.event.events.CancelBlockBreakingEvent
-import net.ccbluex.liquidbounce.event.events.ChatReceiveEvent
-import net.ccbluex.liquidbounce.event.events.ChatSendEvent
 import net.ccbluex.liquidbounce.event.events.ChunkDeltaUpdateEvent
 import net.ccbluex.liquidbounce.event.events.ChunkLoadEvent
 import net.ccbluex.liquidbounce.event.events.ChunkUnloadEvent
-import net.ccbluex.liquidbounce.event.events.ClickGuiScaleChangeEvent
-import net.ccbluex.liquidbounce.event.events.ClientChatErrorEvent
-import net.ccbluex.liquidbounce.event.events.ClientChatJwtTokenEvent
-import net.ccbluex.liquidbounce.event.events.ClientChatMessageEvent
-import net.ccbluex.liquidbounce.event.events.ClientChatStateChange
 import net.ccbluex.liquidbounce.event.events.ClientLanguageChangedEvent
-import net.ccbluex.liquidbounce.event.events.ClientPlayerDataEvent
-import net.ccbluex.liquidbounce.event.events.ClientPlayerEffectEvent
-import net.ccbluex.liquidbounce.event.events.ClientPlayerInventoryEvent
 import net.ccbluex.liquidbounce.event.events.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.events.ClientStartEvent
-import net.ccbluex.liquidbounce.event.events.ClosedCaptionsEvent
 import net.ccbluex.liquidbounce.event.events.DeathEvent
 import net.ccbluex.liquidbounce.event.events.DisconnectEvent
 import net.ccbluex.liquidbounce.event.events.DrawOutlinesEvent
 import net.ccbluex.liquidbounce.event.events.EntityEquipmentChangeEvent
 import net.ccbluex.liquidbounce.event.events.EntityHealthUpdateEvent
 import net.ccbluex.liquidbounce.event.events.EntityMarginEvent
-import net.ccbluex.liquidbounce.event.events.FluidPushEvent
 import net.ccbluex.liquidbounce.event.events.FpsChangeEvent
-import net.ccbluex.liquidbounce.event.events.FpsLimitEvent
-import net.ccbluex.liquidbounce.event.events.FramebufferResizeEvent
-import net.ccbluex.liquidbounce.event.events.GameModeChangeEvent
 import net.ccbluex.liquidbounce.event.events.GameRenderEvent
 import net.ccbluex.liquidbounce.event.events.GameRenderTaskQueueEvent
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
@@ -89,7 +62,6 @@ import net.ccbluex.liquidbounce.event.events.MouseScrollEvent
 import net.ccbluex.liquidbounce.event.events.MouseScrollInHotbarEvent
 import net.ccbluex.liquidbounce.event.events.MovementInputEvent
 import net.ccbluex.liquidbounce.event.events.NotificationEvent
-import net.ccbluex.liquidbounce.event.events.OverlayMessageEvent
 import net.ccbluex.liquidbounce.event.events.OverlayRenderEvent
 import net.ccbluex.liquidbounce.event.events.PacketEvent
 import net.ccbluex.liquidbounce.event.events.PerspectiveEvent
@@ -104,41 +76,28 @@ import net.ccbluex.liquidbounce.event.events.PlayerMoveEvent
 import net.ccbluex.liquidbounce.event.events.PlayerMovementTickEvent
 import net.ccbluex.liquidbounce.event.events.PlayerNetworkMovementTickEvent
 import net.ccbluex.liquidbounce.event.events.PlayerPostTickEvent
-import net.ccbluex.liquidbounce.event.events.PlayerPushOutEvent
 import net.ccbluex.liquidbounce.event.events.PlayerSafeWalkEvent
 import net.ccbluex.liquidbounce.event.events.PlayerSneakMultiplier
 import net.ccbluex.liquidbounce.event.events.PlayerStepEvent
 import net.ccbluex.liquidbounce.event.events.PlayerStepSuccessEvent
-import net.ccbluex.liquidbounce.event.events.PlayerStrideEvent
 import net.ccbluex.liquidbounce.event.events.PlayerTickEvent
 import net.ccbluex.liquidbounce.event.events.PlayerUseMultiplier
 import net.ccbluex.liquidbounce.event.events.PlayerVelocityStrafe
-import net.ccbluex.liquidbounce.event.events.ProxyCheckResultEvent
-import net.ccbluex.liquidbounce.event.events.RefreshArrayListEvent
 import net.ccbluex.liquidbounce.event.events.ResourceReloadEvent
 import net.ccbluex.liquidbounce.event.events.RotationUpdateEvent
-import net.ccbluex.liquidbounce.event.events.ScaleFactorChangeEvent
 import net.ccbluex.liquidbounce.event.events.ScheduleInventoryActionEvent
 import net.ccbluex.liquidbounce.event.events.ScreenEvent
-import net.ccbluex.liquidbounce.event.events.ScreenRenderEvent
 import net.ccbluex.liquidbounce.event.events.SelectHotbarSlotSilentlyEvent
-import net.ccbluex.liquidbounce.event.events.ServerConnectEvent
-import net.ccbluex.liquidbounce.event.events.ServerPingedEvent
 import net.ccbluex.liquidbounce.event.events.SessionEvent
 import net.ccbluex.liquidbounce.event.events.SprintEvent
 import net.ccbluex.liquidbounce.event.events.TagEntityEvent
-import net.ccbluex.liquidbounce.event.events.TargetChangeEvent
 import net.ccbluex.liquidbounce.event.events.TickPacketProcessEvent
 import net.ccbluex.liquidbounce.event.events.TitleEvent
 import net.ccbluex.liquidbounce.event.events.UseCooldownEvent
-import net.ccbluex.liquidbounce.event.events.UserLoggedInEvent
-import net.ccbluex.liquidbounce.event.events.UserLoggedOutEvent
 import net.ccbluex.liquidbounce.event.events.ValueChangedEvent
-import net.ccbluex.liquidbounce.event.events.WindowResizeEvent
 import net.ccbluex.liquidbounce.event.events.WindowTitleEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.events.WorldEntityRemoveEvent
-import net.ccbluex.liquidbounce.event.events.WorldFeatureSubmitEvent
 import net.ccbluex.liquidbounce.event.events.WorldRenderEvent
 import net.ccbluex.liquidbounce.annotations.Tag
 import net.ccbluex.liquidbounce.features.addon.AddonApi
@@ -262,7 +221,9 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // ClientPlayerEffectEvent::class.java,
     // codex end
     RotationUpdateEvent::class.java,
-    RefreshArrayListEvent::class.java,
+    // codex start
+    // RefreshArrayListEvent::class.java,
+    // codex end
     // codex start
     // BrowserReadyEvent::class.java,
     // ServerConnectEvent::class.java,
@@ -271,7 +232,9 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // BlockCountChangeEvent::class.java,
     // BedStateChangeEvent::class.java,
     // codex end
-    GameModeChangeEvent::class.java,
+    // codex start
+    // GameModeChangeEvent::class.java,
+    // codex end
     // codex start
     // ComponentsUpdateEvent::class.java,
     // codex end
@@ -304,7 +267,9 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // ClickGuiValueChangeEvent::class.java,
     // codex end
     BlockAttackEvent::class.java,
-    BlinkPacketEvent::class.java,
+    // codex start
+    // BlinkPacketEvent::class.java,
+    // codex end
     AllowAutoJumpEvent::class.java,
     WorldEntityRemoveEvent::class.java,
     TitleEvent.Title::class.java,

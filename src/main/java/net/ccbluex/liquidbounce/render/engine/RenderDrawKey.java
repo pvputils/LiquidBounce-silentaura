@@ -20,12 +20,10 @@
 package net.ccbluex.liquidbounce.render.engine;
 
 import static java.util.Collections.emptyMap;
-
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.client.renderer.texture.AbstractTexture;
-
 import java.util.Comparator;
 import java.util.Map;
 

@@ -35,7 +35,6 @@ import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ClientboundBundlePacket;
-import net.minecraft.network.protocol.game.ServerboundPunchPacket;
 import net.minecraft.server.RunningOnDifferentThreadException;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

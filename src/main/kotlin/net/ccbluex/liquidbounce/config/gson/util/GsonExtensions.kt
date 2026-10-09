@@ -147,17 +147,19 @@ inline fun jsonObject(
 
 inline fun JsonArray.getOrNull(index: Int): JsonElement? =
     if (index in 0 until this.size()) this[index] else null
-
-inline fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement?): JsonArray {
-    val a = if (this is Collection) JsonArray(this.size) else JsonArray()
-    forEach { a.add(transform(it)) }
-    return a
-}
-
-/**
- * Unlike [JsonObject.get] followed by `asString` and friends, these return `null` for an absent key
- * instead of throwing.
- */
+// codex start
+//
+// inline fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement?): JsonArray {
+//     val a = if (this is Collection) JsonArray(this.size) else JsonArray()
+//     forEach { a.add(transform(it)) }
+//     return a
+// }
+//
+// /**
+//  * Unlike [JsonObject.get] followed by `asString` and friends, these return `null` for an absent key
+//  * instead of throwing.
+//  */
+// codex end
 fun JsonObject.string(key: String): String? = if (has(key)) get(key).asString else null
 
 fun JsonObject.int(key: String): Int? = if (has(key)) get(key).asInt else null

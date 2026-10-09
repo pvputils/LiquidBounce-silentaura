@@ -21,10 +21,6 @@
 
 package net.ccbluex.liquidbounce.utils.block
 
-import com.google.common.base.Predicates
-import net.ccbluex.fastutil.weightedFilterSortedByAtMost
-import it.unimi.dsi.fastutil.booleans.BooleanObjectPair
-import it.unimi.dsi.fastutil.ints.IntCollection
 import it.unimi.dsi.fastutil.ints.IntLongPair
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import net.ccbluex.liquidbounce.event.EventManager
@@ -46,10 +42,8 @@ import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.client.world
 import net.ccbluex.liquidbounce.utils.math.boundsOrNull
 import net.ccbluex.liquidbounce.utils.math.distanceToSqr
-import net.ccbluex.liquidbounce.utils.math.intersects
 import net.ccbluex.liquidbounce.utils.math.iterator
 import net.ccbluex.liquidbounce.utils.math.plus
-import net.ccbluex.liquidbounce.utils.math.sq
 import net.ccbluex.liquidbounce.utils.network.useItem
 import net.ccbluex.liquidbounce.utils.raytracing.traceFromPlayer
 import net.minecraft.core.BlockPos
@@ -64,7 +58,6 @@ import net.minecraft.world.InteractionResult.Success
 import net.minecraft.world.InteractionResult.SwingSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
-import net.minecraft.world.entity.boss.enderdragon.EndCrystal
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.block.AbstractBedBlock
@@ -85,7 +78,6 @@ import net.minecraft.world.level.block.CartographyTableBlock
 import net.minecraft.world.level.block.CaveVines
 import net.minecraft.world.level.block.CaveVinesBlock
 import net.minecraft.world.level.block.CaveVinesPlantBlock
-import net.minecraft.world.level.block.ChestBlock
 import net.minecraft.world.level.block.ComparatorBlock
 import net.minecraft.world.level.block.ComposterBlock
 import net.minecraft.world.level.block.CrafterBlock
@@ -114,10 +106,8 @@ import net.minecraft.world.level.block.RespawnAnchorBlock
 import net.minecraft.world.level.block.ShelfMushroomBlock
 import net.minecraft.world.level.block.ShulkerBoxBlock
 import net.minecraft.world.level.block.StonecutterBlock
-import net.minecraft.world.level.block.SupportType
 import net.minecraft.world.level.block.SweetBerryBushBlock
 import net.minecraft.world.level.block.TrapDoorBlock
-import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.level.material.Fluids
@@ -143,10 +133,14 @@ val BlockPos.stateOrEmpty: BlockState get() = state ?: Blocks.VOID_AIR.defaultBl
 
 @AddonApi
 fun BlockPos.getBlock(): Block? = state?.block
-
-fun BlockPos.getCenterDistanceSquared() = this.distToCenterSqr(player.position())
-
-fun BlockPos.getCenterDistanceSquaredEyes() = this.distToCenterSqr(player.eyePosition)
+// codex start
+//
+// fun BlockPos.getCenterDistanceSquared() = this.distToCenterSqr(player.position())
+// codex end
+// codex start
+//
+// fun BlockPos.getCenterDistanceSquaredEyes() = this.distToCenterSqr(player.eyePosition)
+// codex end
 
 val BlockState.isBed: Boolean
     get() = block is BedBlock
@@ -202,78 +196,85 @@ fun BlockState.outlineBox(blockPos: BlockPos): AABB {
  * skips whole chunk sections through the palette check and only scans loaded
  * sections within the world height.
  */
-fun Vec3.searchBlocksInCuboid(
-    radius: Float,
-    filter: BiPredicate<BlockPos, BlockState>,
-): List<Pair<BlockPos, BlockState>> {
-    val from = BlockPos(
-        floor(this.x - radius).toInt(),
-        floor(this.y - radius).toInt(),
-        floor(this.z - radius).toInt(),
-    )
-    val to = BlockPos(
-        ceil(this.x + radius).toInt(),
-        ceil(this.y + radius).toInt(),
-        ceil(this.z + radius).toInt(),
-    )
+// codex start
+// fun Vec3.searchBlocksInCuboid(
+//     radius: Float,
+//     filter: BiPredicate<BlockPos, BlockState>,
+// ): List<Pair<BlockPos, BlockState>> {
+//     val from = BlockPos(
+//         floor(this.x - radius).toInt(),
+//         floor(this.y - radius).toInt(),
+//         floor(this.z - radius).toInt(),
+//     )
+//     val to = BlockPos(
+//         ceil(this.x + radius).toInt(),
+//         ceil(this.y + radius).toInt(),
+//         ceil(this.z + radius).toInt(),
+//     )
+//
+//     return buildList {
+//         world.findBlocksIn(from, to).forEach { pos, state ->
+//             if (filter.test(pos, state)) {
+//                 this.add(pos.immutable to state)
+//             }
+//         }
+//     }
+// }
+//
+// /**
+//  * Scan blocks around the position in a cuboid, filtered and sorted by shape distance from this [Vec3].
+//  * Distance calculation is based on outline shape:
+//  * `shapeGetter.get(state, level, pos, collisionContext).move(pos).distanceToSqr(eyesPos)`.
+//  *
+//  * @return pairs of [BlockPos] and its [BlockState], sorted by distance to the center
+//  */
+// // codex start
+// // fun Vec3.searchBlocksInRangeSorted(
+// //     range: Float,
+// //     shapeGetter: ClipContext.ShapeGetter = ClipContext.Block.OUTLINE,
+// //     collisionContext: CollisionContext = CollisionContext.of(player),
+// //     filter: BiPredicate<BlockPos, BlockState>,
+// // ): List<Pair<BlockPos, BlockState>> =
+// //     searchBlocksInCuboid(range + 1, filter)
+// //         .weightedFilterSortedByAtMost(range.sq().toDouble()) { (pos, state) ->
+// //             shapeGetter.get(state, world, pos, collisionContext)
+// //                 .move(pos)
+// //                 .distanceToSqr(this)
+// //         }
+// //
+// // /**
+// //  * Scan blocks outwards from a bed
+// //  */
+// // codex end
+// // codex start
+// // fun BlockPos.searchBedLayer(state: BlockState, layers: Int): Sequence<IntLongPair> {
+// //     check(state.isBed) { "This function is only available for Beds" }
+// //
+// //     val anotherPartDirection = state.anotherBedPartDirection()!!
+// //     val bedDirection = anotherPartDirection.opposite
+// //
+// //     val left: Direction
+// //     val right: Direction
+// //     if (bedDirection.axis == Direction.Axis.X) {
+// //         left = Direction.SOUTH
+// //         right = Direction.NORTH
+// //     } else {
+// //         left = Direction.WEST
+// //         right = Direction.EAST
+// //     }
+// //
+// //     return searchLayer(layers, bedDirection, Direction.UP, left, right) +
+// //         relative(anotherPartDirection).searchLayer(layers, anotherPartDirection, Direction.UP, left, right)
+// // }
+// //
+// // /**
+// //  * Scan blocks outwards from center along given [directions], up to [layers]
+// //  *
+// //  * @return The layer to the BlockPos (long value)
+// //  */
+// // codex end
+// codex end
 
-    return buildList {
-        world.findBlocksIn(from, to).forEach { pos, state ->
-            if (filter.test(pos, state)) {
-                this.add(pos.immutable to state)
-            }
-        }
-    }
-}
-
-/**
- * Scan blocks around the position in a cuboid, filtered and sorted by shape distance from this [Vec3].
- * Distance calculation is based on outline shape:
- * `shapeGetter.get(state, level, pos, collisionContext).move(pos).distanceToSqr(eyesPos)`.
- *
- * @return pairs of [BlockPos] and its [BlockState], sorted by distance to the center
- */
-fun Vec3.searchBlocksInRangeSorted(
-    range: Float,
-    shapeGetter: ClipContext.ShapeGetter = ClipContext.Block.OUTLINE,
-    collisionContext: CollisionContext = CollisionContext.of(player),
-    filter: BiPredicate<BlockPos, BlockState>,
-): List<Pair<BlockPos, BlockState>> =
-    searchBlocksInCuboid(range + 1, filter)
-        .weightedFilterSortedByAtMost(range.sq().toDouble()) { (pos, state) ->
-            shapeGetter.get(state, world, pos, collisionContext)
-                .move(pos)
-                .distanceToSqr(this)
-        }
-
-/**
- * Scan blocks outwards from a bed
- */
-fun BlockPos.searchBedLayer(state: BlockState, layers: Int): Sequence<IntLongPair> {
-    check(state.isBed) { "This function is only available for Beds" }
-
-    val anotherPartDirection = state.anotherBedPartDirection()!!
-    val bedDirection = anotherPartDirection.opposite
-
-    val left: Direction
-    val right: Direction
-    if (bedDirection.axis == Direction.Axis.X) {
-        left = Direction.SOUTH
-        right = Direction.NORTH
-    } else {
-        left = Direction.WEST
-        right = Direction.EAST
-    }
-
-    return searchLayer(layers, bedDirection, Direction.UP, left, right) +
-        relative(anotherPartDirection).searchLayer(layers, anotherPartDirection, Direction.UP, left, right)
-}
-
-/**
- * Scan blocks outwards from center along given [directions], up to [layers]
- *
- * @return The layer to the BlockPos (long value)
- */
 @Suppress("detekt:CognitiveComplexMethod")
 fun BlockPos.searchLayer(layers: Int, vararg directions: Direction): Sequence<IntLongPair> =
     sequence {
@@ -303,19 +304,21 @@ fun BlockPos.searchLayer(layers: Int, vararg directions: Direction): Sequence<In
             }
         }
     }
-
-fun BlockPos.getSortedSphere(radius: Float): Array<BlockPos> {
-    val longs = CachedBlockPosSpheres.rangeLong(0, ceil(radius).toInt())
-    val mutable = BlockPos.MutableBlockPos()
-    return Array(longs.size) {
-        mutable.set(longs.getLong(it))
-        this.offset(mutable)
-    }
-}
-
-/**
- * Basically [BlockGetter.raycast] but this method allows us to exclude blocks using [exclude].
- */
+// codex start
+//
+// fun BlockPos.getSortedSphere(radius: Float): Array<BlockPos> {
+//     val longs = CachedBlockPosSpheres.rangeLong(0, ceil(radius).toInt())
+//     val mutable = BlockPos.MutableBlockPos()
+//     return Array(longs.size) {
+//         mutable.set(longs.getLong(it))
+//         this.offset(mutable)
+//     }
+// }
+//
+// /**
+//  * Basically [BlockGetter.raycast] but this method allows us to exclude blocks using [exclude].
+//  */
+// codex end
 @Suppress("SpellCheckingInspection", "CognitiveComplexMethod")
 fun BlockGetter.raycast(
     context: ClipContext,
@@ -381,81 +384,91 @@ fun BlockGetter.raycast(
             )
         })
 }
+// codex start
+//
+// fun BlockPos.canStandOn(): Boolean {
+//     return this.state?.isFaceSturdy(world, this, Direction.UP, SupportType.CENTER) ?: false
+// }
+// codex end
+// codex start
+//
+// fun BlockState?.anotherChestPartDirection(): Direction? {
+//     if (this?.block !is ChestBlock) return null
+//
+//     if (ChestBlock.getBlockType(this) === DoubleBlockCombiner.BlockType.SINGLE) {
+//         return null
+//     }
+//
+//     return ChestBlock.getConnectedDirection(this)
+// }
+// codex end
 
-fun BlockPos.canStandOn(): Boolean {
-    return this.state?.isFaceSturdy(world, this, Direction.UP, SupportType.CENTER) ?: false
-}
-
-fun BlockState?.anotherChestPartDirection(): Direction? {
-    if (this?.block !is ChestBlock) return null
-
-    if (ChestBlock.getBlockType(this) === DoubleBlockCombiner.BlockType.SINGLE) {
-        return null
-    }
-
-    return ChestBlock.getConnectedDirection(this)
-}
-
-fun BlockState?.anotherBedPartDirection(): Direction? {
-    if (this?.block !is AbstractBedBlock) return null
-
-    // [body|head] -> (facing)
-    val bedFacing = this.getValue(HorizontalDirectionalBlock.FACING)
-
-    return if (AbstractBedBlock.getBlockType(this) == DoubleBlockCombiner.BlockType.FIRST) {
-        bedFacing.opposite
-    } else {
-        bedFacing
-    }
-}
-
-/**
- * Check if box is reaching of specified blocks
- */
-inline fun AABB.isBlockAtPosition(
-    isCorrectBlock: (Block?) -> Boolean,
-): Boolean {
-    val blockPos = BlockPos.MutableBlockPos(0, floor(minY).toInt(), 0)
-
-    for (x in floor(minX).toInt()..ceil(maxX).toInt()) {
-        for (z in floor(minZ).toInt()..ceil(maxZ).toInt()) {
-            blockPos.x = x
-            blockPos.z = z
-
-            if (isCorrectBlock(blockPos.getBlock())) {
-                return true
-            }
-        }
-    }
-
-    return false
-}
-
-/**
- * Check if box intersects with bounding box of specified blocks
- */
-inline fun AABB.collideBlockIntersects(
-    checkCollisionShape: Boolean = true,
-    isCorrectBlock: (Block) -> Boolean
-): Boolean {
-    for (blockPos in collidingRegion) {
-        val blockState = blockPos.state
-
-        if (blockState == null || !isCorrectBlock(blockState.block)) {
-            continue
-        }
-
-        if (!checkCollisionShape) {
-            return true
-        }
-
-        if (blockState.getCollisionShape(mc.level!!, blockPos).move(blockPos) intersects this) {
-            return true
-        }
-    }
-
-    return false
-}
+// codex start
+// fun BlockState?.anotherBedPartDirection(): Direction? {
+//     if (this?.block !is AbstractBedBlock) return null
+//
+//     // [body|head] -> (facing)
+//     val bedFacing = this.getValue(HorizontalDirectionalBlock.FACING)
+//
+//     return if (AbstractBedBlock.getBlockType(this) == DoubleBlockCombiner.BlockType.FIRST) {
+//         bedFacing.opposite
+//     } else {
+//         bedFacing
+//     }
+// }
+//
+// /**
+//  * Check if box is reaching of specified blocks
+//  */
+// // codex start
+// // inline fun AABB.isBlockAtPosition(
+// //     isCorrectBlock: (Block?) -> Boolean,
+// // ): Boolean {
+// //     val blockPos = BlockPos.MutableBlockPos(0, floor(minY).toInt(), 0)
+// //
+// //     for (x in floor(minX).toInt()..ceil(maxX).toInt()) {
+// //         for (z in floor(minZ).toInt()..ceil(maxZ).toInt()) {
+// //             blockPos.x = x
+// //             blockPos.z = z
+// //
+// //             if (isCorrectBlock(blockPos.getBlock())) {
+// //                 return true
+// //             }
+// //         }
+// //     }
+// //
+// //     return false
+// // }
+// //
+// // /**
+// //  * Check if box intersects with bounding box of specified blocks
+// //  */
+// // codex end
+// // codex start
+// // inline fun AABB.collideBlockIntersects(
+// //     checkCollisionShape: Boolean = true,
+// //     isCorrectBlock: (Block) -> Boolean
+// // ): Boolean {
+// //     for (blockPos in collidingRegion) {
+// //         val blockState = blockPos.state
+// //
+// //         if (blockState == null || !isCorrectBlock(blockState.block)) {
+// //             continue
+// //         }
+// //
+// //         if (!checkCollisionShape) {
+// //             return true
+// //         }
+// //
+// //         if (blockState.getCollisionShape(mc.level!!, blockPos).move(blockPos) intersects this) {
+// //             return true
+// //         }
+// //     }
+// //
+// //     return false
+// // }
+// // codex end
+// codex end
 
 val AABB.collidingRegion: BoundingBox
     get() = BoundingBox(
@@ -627,12 +640,16 @@ fun doBreak(
         world.addBreakingBlockEffects(blockPos, direction, false)
     }
 }
+// codex start
+//
+// fun BlockState.isNotBreakable(pos: BlockPos) = !isBreakable(pos)
+// codex end
 
-fun BlockState.isNotBreakable(pos: BlockPos) = !isBreakable(pos)
-
-fun BlockState.isBreakable(pos: BlockPos): Boolean {
-    return !isAir && (player.isCreative || getDestroySpeed(world, pos) >= 0f)
-}
+// codex start
+// fun BlockState.isBreakable(pos: BlockPos): Boolean {
+//     return !isAir && (player.isCreative || getDestroySpeed(world, pos) >= 0f)
+// }
+// codex end
 
 fun BlockPos?.fallDamageMultiplier(entity: Entity): Float =
     this?.getBlock()?.fallDamageMultiplier(entity) ?: 1f
@@ -646,33 +663,41 @@ fun Block?.fallDamageMultiplier(entity: Entity): Float =
         else -> 1f
     }
 
-fun BlockPos.isBlastResistant(): Boolean {
-    return getBlock()!!.explosionResistance >= 600f
-}
+// codex start
+// fun BlockPos.isBlastResistant(): Boolean {
+//     return getBlock()!!.explosionResistance >= 600f
+// }
+// // codex start
+// //
+// // @Suppress("UnusedReceiverParameter")
+// // fun RespawnAnchorBlock.isCharged(state: BlockState): Boolean {
+// //     return state.getValue(RespawnAnchorBlock.CHARGE) > 0
+// // }
+// //
+// // /**
+// //  * Returns the second bed block position that might not exist (normally beds are two blocks long tho).
+// //  */
+// // codex end
+// // codex start
+// // @Suppress("UnusedReceiverParameter")
+// // fun AbstractBedBlock.getPotentialSecondBedBlock(state: BlockState, pos: BlockPos): BlockPos {
+// //     return pos.relative((state.getValue(HorizontalDirectionalBlock.FACING)).opposite)
+// // }
+// //
+// // // TODO replace this by an approach that automatically collects the blocks, this would create better mod
+// // compatibility
+// // /**
+// //  * Checks if the block can be interacted with, null will be returned as not interactable.
+// //  * The [blockState] is optional but can make the result more accurate, if not provided
+// //  * it will just assume the block is interactable.
+// //  *
+// //  * Note: The player is required to NOT be `null`.
+// //  *
+// //  * This data has been collected by looking at the implementations of [BlockBehaviour.useWithoutItem].
+// //  */
+// // codex end
+// codex end
 
-@Suppress("UnusedReceiverParameter")
-fun RespawnAnchorBlock.isCharged(state: BlockState): Boolean {
-    return state.getValue(RespawnAnchorBlock.CHARGE) > 0
-}
-
-/**
- * Returns the second bed block position that might not exist (normally beds are two blocks long tho).
- */
-@Suppress("UnusedReceiverParameter")
-fun AbstractBedBlock.getPotentialSecondBedBlock(state: BlockState, pos: BlockPos): BlockPos {
-    return pos.relative((state.getValue(HorizontalDirectionalBlock.FACING)).opposite)
-}
-
-// TODO replace this by an approach that automatically collects the blocks, this would create better mod compatibility
-/**
- * Checks if the block can be interacted with, null will be returned as not interactable.
- * The [blockState] is optional but can make the result more accurate, if not provided
- * it will just assume the block is interactable.
- *
- * Note: The player is required to NOT be `null`.
- *
- * This data has been collected by looking at the implementations of [BlockBehaviour.useWithoutItem].
- */
 fun Block?.isInteractable(blockState: BlockState?): Boolean {
     if (this == null) {
         return false
@@ -702,13 +727,15 @@ fun Block?.isInteractable(blockState: BlockState?): Boolean {
 
 @AddonApi
 val BlockState?.isInteractable: Boolean get() = this?.block?.isInteractable(this) ?: false
-
-fun BlockPos.hasAnySolidPlacementNeighbor(): Boolean {
-    val cache = BlockPos.MutableBlockPos()
-    return Direction.entries.any {
-        !cache.setWithOffset(this, it).stateOrEmpty.canBeReplaced()
-    }
-}
+// codex start
+//
+// fun BlockPos.hasAnySolidPlacementNeighbor(): Boolean {
+//     val cache = BlockPos.MutableBlockPos()
+//     return Direction.entries.any {
+//         !cache.setWithOffset(this, it).stateOrEmpty.canBeReplaced()
+//     }
+// }
+// codex end
 
 private val PREDICATE_UNOBSTRUCTED: Predicate<Entity> =
     EntitySelector.NO_SPECTATORS.and { entity ->
@@ -720,53 +747,59 @@ private val PREDICATE_UNOBSTRUCTED: Predicate<Entity> =
  *
  * @see net.minecraft.world.level.EntityGetter.isUnobstructed
  */
-fun BlockPos.isUnobstructed(
-    except: Entity? = null,
-    box: AABB = FULL_BOX,
-    predicate: Predicate<Entity> = Predicates.alwaysTrue(),
-): Boolean {
-    val posBox = box + this
-    return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
-        .isEmpty()
-}
-
-fun BlockPos.getBlockingEntities(
-    except: Entity? = null,
-    box: AABB = FULL_BOX,
-    predicate: Predicate<Entity> = Predicates.alwaysTrue(),
-): List<Entity> {
-    val posBox = box + this
-    return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
-}
-
-/**
- * Checks whether the position is blocked for placing a block and returns a blocking end crystal if present.
- *
- * @param buildingOnly when `true` (default) only entities that block building (`Entity.blocksBuilding`)
- *   count, matching vanilla block placement; when `false` every entity counts, matching vanilla
- *   end crystal placement.
- * @return `[blocked, crystal?]`
- */
-fun BlockPos.isBlockedByEntitiesReturnCrystal(
-    except: Entity? = null,
-    box: AABB = FULL_BOX,
-    excludeIds: IntCollection? = null,
-    buildingOnly: Boolean = true
-): BooleanObjectPair<EndCrystal?> {
-    var blocked = false
-
-    val posBox = box + this
-
-    val baseFilter = if (buildingOnly) PREDICATE_UNOBSTRUCTED else EntitySelector.NO_SPECTATORS
-    val selector = if (excludeIds.isNullOrEmpty()) baseFilter else baseFilter.and { it.id !in excludeIds }
-
-    world.getEntities(except, posBox, selector).forEach {
-        if (it is EndCrystal) {
-            return BooleanObjectPair.of(true, it)
-        }
-
-        blocked = true
-    }
-
-    return BooleanObjectPair.of(blocked, null)
-}
+// codex start
+// fun BlockPos.isUnobstructed(
+//     except: Entity? = null,
+//     box: AABB = FULL_BOX,
+//     predicate: Predicate<Entity> = Predicates.alwaysTrue(),
+// ): Boolean {
+//     val posBox = box + this
+//     return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
+//         .isEmpty()
+// }
+// codex end
+// codex start
+//
+// fun BlockPos.getBlockingEntities(
+//     except: Entity? = null,
+//     box: AABB = FULL_BOX,
+//     predicate: Predicate<Entity> = Predicates.alwaysTrue(),
+// ): List<Entity> {
+//     val posBox = box + this
+//     return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
+// }
+//
+// /**
+//  * Checks whether the position is blocked for placing a block and returns a blocking end crystal if present.
+//  *
+//  * @param buildingOnly when `true` (default) only entities that block building (`Entity.blocksBuilding`)
+//  *   count, matching vanilla block placement; when `false` every entity counts, matching vanilla
+//  *   end crystal placement.
+//  * @return `[blocked, crystal?]`
+//  */
+// codex end
+// codex start
+// fun BlockPos.isBlockedByEntitiesReturnCrystal(
+//     except: Entity? = null,
+//     box: AABB = FULL_BOX,
+//     excludeIds: IntCollection? = null,
+//     buildingOnly: Boolean = true
+// ): BooleanObjectPair<EndCrystal?> {
+//     var blocked = false
+//
+//     val posBox = box + this
+//
+//     val baseFilter = if (buildingOnly) PREDICATE_UNOBSTRUCTED else EntitySelector.NO_SPECTATORS
+//     val selector = if (excludeIds.isNullOrEmpty()) baseFilter else baseFilter.and { it.id !in excludeIds }
+//
+//     world.getEntities(except, posBox, selector).forEach {
+//         if (it is EndCrystal) {
+//             return BooleanObjectPair.of(true, it)
+//         }
+//
+//         blocked = true
+//     }
+//
+//     return BooleanObjectPair.of(blocked, null)
+// }
+// codex end

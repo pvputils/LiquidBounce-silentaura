@@ -26,13 +26,11 @@ import com.google.common.net.InetAddresses
 import it.unimi.dsi.fastutil.chars.CharOpenHashSet
 import net.ccbluex.fastutil.unmodifiable
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
-import net.ccbluex.liquidbounce.utils.collection.Pools
 import net.ccbluex.liquidbounce.utils.kotlin.unmodifiable
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentContents
-import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.chat.FontDescription
 import net.minecraft.network.chat.FormattedText
 import net.minecraft.network.chat.HoverEvent
@@ -49,9 +47,11 @@ import java.util.function.UnaryOperator
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-
-inline fun String.stripMinecraftColorCodes(): String =
-    ChatFormatting.stripFormatting(this)!!
+// codex start
+//
+// inline fun String.stripMinecraftColorCodes(): String =
+//     ChatFormatting.stripFormatting(this)!!
+// codex end
 
 inline fun String.asTextContent(): ComponentContents = PlainTextContents.create(this)
 
@@ -154,44 +154,47 @@ fun Collection<Component>.joinToText(separator: Component): Component =
 
 inline fun FormattedCharSequence.codePointsToString(): String =
     AppenderCharSink.codePointsToString(this)
-
-fun FormattedCharSequence.toText(): Component {
-    if (this is Component) return this
-
-    val parts = TextBuilder()
-
-    var currentStyle = Style.EMPTY
-    val currentText = Pools.StringBuilder.borrow()
-
-    this.accept { _, style, codePoint ->
-        if (style != currentStyle) {
-            if (currentText.isNotEmpty()) {
-                parts += currentText.toString().asPlainText(currentStyle)
-            }
-
-            currentStyle = style
-
-            currentText.setLength(0)
-        }
-
-        currentText.appendCodePoint(codePoint)
-
-        return@accept true
-    }
-
-    if (currentText.isNotEmpty()) {
-        parts += currentText.toString().asPlainText(currentStyle)
-    }
-
-    Pools.StringBuilder.recycle(currentText)
-
-    return parts.build()
-}
-
-/**
- * Returns a new component with [contentMapper] applied to the contents and [styleMapper] applied to the style of every
- * part, or the receiver itself if nothing changed.
- */
+// codex start
+//
+// fun FormattedCharSequence.toText(): Component {
+//     if (this is Component) return this
+//
+//     val parts = TextBuilder()
+//
+//     var currentStyle = Style.EMPTY
+//     val currentText = Pools.StringBuilder.borrow()
+//
+//     this.accept { _, style, codePoint ->
+//         if (style != currentStyle) {
+//             if (currentText.isNotEmpty()) {
+//                 parts += currentText.toString().asPlainText(currentStyle)
+//             }
+//
+//             currentStyle = style
+//
+//             currentText.setLength(0)
+//         }
+//
+//         currentText.appendCodePoint(codePoint)
+//
+//         return@accept true
+//     }
+//
+//     if (currentText.isNotEmpty()) {
+//         parts += currentText.toString().asPlainText(currentStyle)
+//     }
+//
+//     Pools.StringBuilder.recycle(currentText)
+//
+//     return parts.build()
+// }
+//
+// /**
+// * Returns a new component with [contentMapper] applied to the contents and [styleMapper] applied to the style of
+// every
+//  * part, or the receiver itself if nothing changed.
+//  */
+// codex end
 fun Component.mapComponent(
     contentMapper: UnaryOperator<ComponentContents> = UnaryOperator.identity(),
     styleMapper: UnaryOperator<Style> = UnaryOperator.identity(),
@@ -243,21 +246,25 @@ private val COLOR_CODE_CHARS = CharOpenHashSet("0123456789AaBbCcDdEeFfKkLlMmNnOo
 /**
  * Translate alt color codes to minecraft color codes
  */
-fun String.translateColorCodes(): String {
-    val chars = toCharArray()
-    for (i in 0 until chars.lastIndex) {
-        if (chars[i] == '&' && COLOR_CODE_CHARS.contains(chars[i + 1])) {
-            chars[i] = '§'
-            chars[i + 1] = chars[i + 1].lowercaseChar()
-        }
-    }
-
-    return String(chars)
-}
-
-fun String.capitalize(): String = replaceFirstChar {
-    if (it.isLowerCase()) it.titlecase() else it.toString()
-}
+// codex start
+// fun String.translateColorCodes(): String {
+//     val chars = toCharArray()
+//     for (i in 0 until chars.lastIndex) {
+//         if (chars[i] == '&' && COLOR_CODE_CHARS.contains(chars[i + 1])) {
+//             chars[i] = '§'
+//             chars[i + 1] = chars[i + 1].lowercaseChar()
+//         }
+//     }
+//
+//     return String(chars)
+// }
+// codex end
+// codex start
+//
+// fun String.capitalize(): String = replaceFirstChar {
+//     if (it.isLowerCase()) it.titlecase() else it.toString()
+// }
+// codex end
 
 fun String.toLowerCamelCase(): String = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, this)
 
@@ -310,19 +317,21 @@ fun String.rootDomain(): String {
 /**
  * Converts milliseconds to seconds, minutes, hours and days when present.
  */
-fun Int.formatAsTime(): String {
-    val seconds = this / 1000
-    val minutes = seconds / 60
-    val hours = minutes / 60
-    val days = hours / 24
-
-    return when {
-        days > 0 -> "${days}d ${hours % 24}h ${minutes % 60}m ${seconds % 60}s"
-        hours > 0 -> "${hours}h ${minutes % 60}m ${seconds % 60}s"
-        minutes > 0 -> "${minutes}m ${seconds % 60}s"
-        else -> "${seconds}s"
-    }
-}
+// codex start
+// fun Int.formatAsTime(): String {
+//     val seconds = this / 1000
+//     val minutes = seconds / 60
+//     val hours = minutes / 60
+//     val days = hours / 24
+//
+//     return when {
+//         days > 0 -> "${days}d ${hours % 24}h ${minutes % 60}m ${seconds % 60}s"
+//         hours > 0 -> "${hours}h ${minutes % 60}m ${seconds % 60}s"
+//         minutes > 0 -> "${minutes}m ${seconds % 60}s"
+//         else -> "${seconds}s"
+//     }
+// }
+// codex end
 
 fun Long.formatAsCapacity(): String {
     val units = arrayOf("B", "KB", "MB", "GB", "TB")
@@ -356,27 +365,31 @@ fun String.hideSensitiveAddress(): String {
 @JvmRecord
 data class ColoredChar(val char: Char, val color: TextColor)
 
-inline fun Char.colored(color: TextColor) = ColoredChar(this, color)
+// codex start
+// inline fun Char.colored(color: TextColor) = ColoredChar(this, color)
+// codex end
 
 fun Char.repeat(n: Int): String = CharArray(n) { this }.concatToString()
 
 /**
  * Generates a progress bar based on the [percent]age (range 0 to 100).
  */
-fun textLoadingBar(
-    percent: Int,
-    progress: ColoredChar = '█'.colored(TextColor.WHITE),
-    remaining: ColoredChar = '░'.colored(TextColor.DARK_GRAY),
-    length: Int = 10
-): Component {
-    val clampedPercent = percent.coerceIn(0, 100)
-    val filledBars = clampedPercent * length / 100
-
-    val progressPart = progress.char.repeat(filledBars)
-    val remainingPart = remaining.char.repeat(length - filledBars)
-
-    return textOf(
-        progressPart.asPlainText(Style.EMPTY + progress.color),
-        remainingPart.asPlainText(Style.EMPTY + remaining.color),
-    )
-}
+// codex start
+// fun textLoadingBar(
+//     percent: Int,
+//     progress: ColoredChar = '█'.colored(TextColor.WHITE),
+//     remaining: ColoredChar = '░'.colored(TextColor.DARK_GRAY),
+//     length: Int = 10
+// ): Component {
+//     val clampedPercent = percent.coerceIn(0, 100)
+//     val filledBars = clampedPercent * length / 100
+//
+//     val progressPart = progress.char.repeat(filledBars)
+//     val remainingPart = remaining.char.repeat(length - filledBars)
+//
+//     return textOf(
+//         progressPart.asPlainText(Style.EMPTY + progress.color),
+//         remainingPart.asPlainText(Style.EMPTY + remaining.color),
+//     )
+// }
+// codex end

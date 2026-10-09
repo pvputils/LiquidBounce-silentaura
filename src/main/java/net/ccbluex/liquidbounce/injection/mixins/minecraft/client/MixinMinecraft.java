@@ -18,12 +18,6 @@
  */
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReceiver;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.Window;
 import net.ccbluex.liquidbounce.LiquidBounce;
 import net.ccbluex.liquidbounce.event.CoroutineTicker;
@@ -48,14 +42,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.server.IntegratedServer;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.component.AttackRange;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -65,7 +52,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import static net.ccbluex.liquidbounce.utils.client.ProtocolUtilKt.getUsesViaFabricPlus;
 
 @Mixin(Minecraft.class)

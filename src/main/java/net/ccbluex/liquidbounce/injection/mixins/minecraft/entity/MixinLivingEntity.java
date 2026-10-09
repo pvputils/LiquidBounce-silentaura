@@ -29,32 +29,21 @@ import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection;
 import net.ccbluex.liquidbounce.utils.client.SilentHotbar;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends MixinEntity {

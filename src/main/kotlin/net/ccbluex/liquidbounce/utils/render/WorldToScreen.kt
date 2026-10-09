@@ -24,7 +24,6 @@ import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.math.vertices
 import net.ccbluex.liquidbounce.utils.math.geometry.Line
 import net.ccbluex.liquidbounce.utils.math.toVec3d
-import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
@@ -32,7 +31,6 @@ import org.joml.Matrix4f
 import org.joml.Matrix4fc
 import org.joml.Vector3f
 import org.joml.Vector4f
-import java.text.NumberFormat
 
 /**
  * This util should only be called from main thread

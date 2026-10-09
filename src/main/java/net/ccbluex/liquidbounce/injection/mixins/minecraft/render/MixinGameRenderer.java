@@ -19,12 +19,8 @@
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.render;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.GameRenderEvent;
 import net.ccbluex.liquidbounce.event.events.PerspectiveEvent;
@@ -38,17 +34,12 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Lightmap;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
-import net.minecraft.client.renderer.fog.FogRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
