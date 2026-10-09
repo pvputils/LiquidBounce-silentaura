@@ -24,11 +24,9 @@ import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.data.RotationWithVector
 import net.ccbluex.liquidbounce.utils.aiming.preference.LeastDifferencePreference
 import net.ccbluex.liquidbounce.utils.aiming.preference.RotationPreference
-import net.ccbluex.liquidbounce.utils.block.state
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.client.world
 import net.ccbluex.liquidbounce.utils.kotlin.range
-import net.ccbluex.liquidbounce.utils.math.center
 import net.ccbluex.liquidbounce.utils.math.firstHit
 import net.ccbluex.liquidbounce.utils.math.fma
 import net.ccbluex.liquidbounce.utils.math.getNearestPoint
@@ -37,17 +35,14 @@ import net.ccbluex.liquidbounce.utils.math.minus
 import net.ccbluex.liquidbounce.utils.math.plus
 import net.ccbluex.liquidbounce.utils.math.pointAtProportion
 import net.ccbluex.liquidbounce.utils.math.samplePointOnSide
-import net.ccbluex.liquidbounce.utils.math.toSortedAabbs
 import net.ccbluex.liquidbounce.utils.raytracing.clip
 import net.ccbluex.liquidbounce.utils.raytracing.isFacingBlock
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.level.ClipContext
-import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.minecraft.world.phys.shapes.CollisionContext
 
 private val ITERATION_PROPORTIONS_LOOSE = doubleArrayOf(0.1, 0.5, 0.9)
 private val ITERATION_PROPORTIONS = doubleArrayOf(0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95)

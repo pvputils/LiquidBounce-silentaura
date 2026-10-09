@@ -25,10 +25,6 @@ import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.integration.interop.protocol.event.WebSocketEvent
-import net.ccbluex.liquidbounce.utils.inventory.InventoryAction
-import net.ccbluex.liquidbounce.utils.inventory.InventoryConstraints
-import net.ccbluex.liquidbounce.utils.kotlin.Priority
-import net.ccbluex.liquidbounce.utils.kotlin.unmodifiable
 
 // codex start
 // @Tag("themeColorChange")
@@ -252,34 +248,36 @@ object ResourceReloadEvent : Event()
 
 @Tag("scaleFactorChange")
 class ScaleFactorChangeEvent(val scaleFactor: Int) : Event(), WebSocketEvent
-
-@Tag("scheduleInventoryAction")
-class ScheduleInventoryActionEvent(val schedule: MutableList<InventoryAction.Chain> = mutableListOf()) : Event() {
-
-    fun schedule(
-        constrains: InventoryConstraints,
-        action: InventoryAction,
-        priority: Priority = Priority.NORMAL
-    ) {
-        this.schedule.add(InventoryAction.Chain(constrains, listOf(action), priority))
-    }
-
-    fun schedule(
-        constrains: InventoryConstraints,
-        vararg actions: InventoryAction,
-        priority: Priority = Priority.NORMAL
-    ) {
-        this.schedule.add(InventoryAction.Chain(constrains, actions.unmodifiable(), priority))
-    }
-
-    fun schedule(
-        constrains: InventoryConstraints,
-        actions: List<InventoryAction>,
-        priority: Priority = Priority.NORMAL
-    ) {
-        this.schedule.add(InventoryAction.Chain(constrains, actions, priority))
-    }
-}
+// codex start
+//
+// @Tag("scheduleInventoryAction")
+// class ScheduleInventoryActionEvent(val schedule: MutableList<InventoryAction.Chain> = mutableListOf()) : Event() {
+//
+//     fun schedule(
+//         constrains: InventoryConstraints,
+//         action: InventoryAction,
+//         priority: Priority = Priority.NORMAL
+//     ) {
+//         this.schedule.add(InventoryAction.Chain(constrains, listOf(action), priority))
+//     }
+//
+//     fun schedule(
+//         constrains: InventoryConstraints,
+//         vararg actions: InventoryAction,
+//         priority: Priority = Priority.NORMAL
+//     ) {
+//         this.schedule.add(InventoryAction.Chain(constrains, actions.unmodifiable(), priority))
+//     }
+//
+//     fun schedule(
+//         constrains: InventoryConstraints,
+//         actions: List<InventoryAction>,
+//         priority: Priority = Priority.NORMAL
+//     ) {
+//         this.schedule.add(InventoryAction.Chain(constrains, actions, priority))
+//     }
+// }
+// codex end
 
 @Tag("selectHotbarSlotSilently")
 class SelectHotbarSlotSilentlyEvent(val requester: Any?, val slot: Int): CancellableEvent()

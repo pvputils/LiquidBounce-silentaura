@@ -22,10 +22,7 @@ package net.ccbluex.liquidbounce.utils.world
 
 import com.google.common.base.Predicates
 import net.ccbluex.liquidbounce.injection.mixins.minecraft.client.MixinLevelInvoker
-import net.ccbluex.liquidbounce.utils.math.ceilToInt
 import net.ccbluex.liquidbounce.utils.math.expandToCube
-import net.ccbluex.liquidbounce.utils.math.floorToInt
-import net.minecraft.core.BlockPos
 import net.minecraft.util.AbortableIterationConsumer
 import net.minecraft.util.Continuation
 import net.minecraft.world.attribute.BedRule
@@ -33,9 +30,6 @@ import net.minecraft.world.attribute.EnvironmentAttributes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.EntityGetter
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.LevelReader
-import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.blockscan.BlockMatcher
 import net.minecraft.world.level.chunk.ChunkAccess
 import net.minecraft.world.level.chunk.LevelChunkSection
 import net.minecraft.world.level.entity.EntityTypeTest
@@ -43,7 +37,6 @@ import net.minecraft.world.level.entity.LevelEntityGetter
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.BiPredicate
 import java.util.function.Consumer
 import java.util.function.Predicate
 

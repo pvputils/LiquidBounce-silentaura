@@ -41,7 +41,6 @@ import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.renderer.texture.AbstractTexture
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.util.ARGB
-import net.minecraft.util.Util
 import okio.BufferedSource
 import okio.buffer
 import okio.source

@@ -25,14 +25,8 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.render.engine.type.Vec3f
-import net.ccbluex.liquidbounce.utils.math.forAllFaces
-import net.ccbluex.liquidbounce.utils.math.forAllSideFaces
-import net.ccbluex.liquidbounce.utils.math.forAllSideOutlineEdges
-import net.minecraft.core.Direction
-import net.minecraft.util.Mth
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import net.minecraft.world.phys.shapes.VoxelShape
 import org.joml.Matrix4fc
 import org.joml.Vector3fc
 
@@ -160,155 +154,159 @@ fun VertexConsumer.addBoxFaces(
 //     }
 // }
 // codex end
-
-private fun VertexConsumer.addFaceVertices(
-    pose: Matrix4fc,
-    direction: Direction,
-    minX: Double,
-    minY: Double,
-    minZ: Double,
-    maxX: Double,
-    maxY: Double,
-    maxZ: Double,
-    color: Color4b?,
-) {
-    when (direction) {
-        Direction.DOWN -> {
-            addColoredVertex(pose, minX, minY, minZ, color)
-            addColoredVertex(pose, maxX, minY, minZ, color)
-            addColoredVertex(pose, maxX, minY, maxZ, color)
-            addColoredVertex(pose, minX, minY, maxZ, color)
-        }
-
-        Direction.UP -> {
-            addColoredVertex(pose, minX, maxY, minZ, color)
-            addColoredVertex(pose, minX, maxY, maxZ, color)
-            addColoredVertex(pose, maxX, maxY, maxZ, color)
-            addColoredVertex(pose, maxX, maxY, minZ, color)
-        }
-
-        Direction.NORTH -> {
-            addColoredVertex(pose, minX, minY, minZ, color)
-            addColoredVertex(pose, minX, maxY, minZ, color)
-            addColoredVertex(pose, maxX, maxY, minZ, color)
-            addColoredVertex(pose, maxX, minY, minZ, color)
-        }
-
-        Direction.EAST -> {
-            addColoredVertex(pose, maxX, minY, minZ, color)
-            addColoredVertex(pose, maxX, maxY, minZ, color)
-            addColoredVertex(pose, maxX, maxY, maxZ, color)
-            addColoredVertex(pose, maxX, minY, maxZ, color)
-        }
-
-        Direction.SOUTH -> {
-            addColoredVertex(pose, minX, minY, maxZ, color)
-            addColoredVertex(pose, maxX, minY, maxZ, color)
-            addColoredVertex(pose, maxX, maxY, maxZ, color)
-            addColoredVertex(pose, minX, maxY, maxZ, color)
-        }
-
-        Direction.WEST -> {
-            addColoredVertex(pose, minX, minY, minZ, color)
-            addColoredVertex(pose, minX, minY, maxZ, color)
-            addColoredVertex(pose, minX, maxY, maxZ, color)
-            addColoredVertex(pose, minX, maxY, minZ, color)
-        }
-    }
-}
-
-private fun VertexConsumer.addColoredVertex(
-    pose: Matrix4fc,
-    x: Double,
-    y: Double,
-    z: Double,
-    color: Color4b?,
-) {
-    addVertex(pose, x, y, z)
-    if (color != null) {
-        setColor(color.argb)
-    }
-}
-
 // codex start
-// fun segmentAngle(i: Int, segments: Int) = i * Mth.TWO_PI / segments
+//
+// private fun VertexConsumer.addFaceVertices(
+//     pose: Matrix4fc,
+//     direction: Direction,
+//     minX: Double,
+//     minY: Double,
+//     minZ: Double,
+//     maxX: Double,
+//     maxY: Double,
+//     maxZ: Double,
+//     color: Color4b?,
+// ) {
+//     when (direction) {
+//         Direction.DOWN -> {
+//             addColoredVertex(pose, minX, minY, minZ, color)
+//             addColoredVertex(pose, maxX, minY, minZ, color)
+//             addColoredVertex(pose, maxX, minY, maxZ, color)
+//             addColoredVertex(pose, minX, minY, maxZ, color)
+//         }
+//
+//         Direction.UP -> {
+//             addColoredVertex(pose, minX, maxY, minZ, color)
+//             addColoredVertex(pose, minX, maxY, maxZ, color)
+//             addColoredVertex(pose, maxX, maxY, maxZ, color)
+//             addColoredVertex(pose, maxX, maxY, minZ, color)
+//         }
+//
+//         Direction.NORTH -> {
+//             addColoredVertex(pose, minX, minY, minZ, color)
+//             addColoredVertex(pose, minX, maxY, minZ, color)
+//             addColoredVertex(pose, maxX, maxY, minZ, color)
+//             addColoredVertex(pose, maxX, minY, minZ, color)
+//         }
+//
+//         Direction.EAST -> {
+//             addColoredVertex(pose, maxX, minY, minZ, color)
+//             addColoredVertex(pose, maxX, maxY, minZ, color)
+//             addColoredVertex(pose, maxX, maxY, maxZ, color)
+//             addColoredVertex(pose, maxX, minY, maxZ, color)
+//         }
+//
+//         Direction.SOUTH -> {
+//             addColoredVertex(pose, minX, minY, maxZ, color)
+//             addColoredVertex(pose, maxX, minY, maxZ, color)
+//             addColoredVertex(pose, maxX, maxY, maxZ, color)
+//             addColoredVertex(pose, minX, maxY, maxZ, color)
+//         }
+//
+//         Direction.WEST -> {
+//             addColoredVertex(pose, minX, minY, minZ, color)
+//             addColoredVertex(pose, minX, minY, maxZ, color)
+//             addColoredVertex(pose, minX, maxY, maxZ, color)
+//             addColoredVertex(pose, minX, maxY, minZ, color)
+//         }
+//     }
+// }
+// codex end
+// codex start
+//
+// private fun VertexConsumer.addColoredVertex(
+//     pose: Matrix4fc,
+//     x: Double,
+//     y: Double,
+//     z: Double,
+//     color: Color4b?,
+// ) {
+//     addVertex(pose, x, y, z)
+//     if (color != null) {
+//         setColor(color.argb)
+//     }
+// }
+//
 // // codex start
-// //
-// // fun VertexConsumer.addTorusQuad(
-// //     pose: PoseStack.Pose,
-// //     innerSegments: Int,
-// //     outerCurAngle: Float,
-// //     outerNextAngle: Float,
-// //     outerCurRadius: Float,
-// //     outerNextRadius: Float,
-// //     innerRadius: Float,
-// //     innerI: Int,
-// //     color: Color4b,
-// // ) {
-// //     val innerCurAngle = segmentAngle(innerI, innerSegments)
-// //     val innerNextAngle = segmentAngle(innerI + 1, innerSegments)
-// //
-// //     val curMainSin = outerCurAngle.fastSin()
-// //     val curMainCos = outerCurAngle.fastCos()
-// //     val nextMainSin = outerNextAngle.fastSin()
-// //     val nextMainCos = outerNextAngle.fastCos()
-// //
-// //     val innerCurSin = innerCurAngle.fastSin()
-// //     val innerCurCos = innerCurAngle.fastCos()
-// //     val innerNextSin = innerNextAngle.fastSin()
-// //     val innerNextCos = innerNextAngle.fastCos()
-// //
-// //     val curTubeY = innerRadius * innerCurSin
-// //     val nextTubeY = innerRadius * innerNextSin
-// //     val curTubeOffset = innerRadius * innerCurCos
-// //     val nextTubeOffset = innerRadius * innerNextCos
-// //
-// //     val p1Radius = outerCurRadius + curTubeOffset
-// //     val p2Radius = outerCurRadius + nextTubeOffset
-// //     val p3Radius = outerNextRadius + curTubeOffset
-// //     val p4Radius = outerNextRadius + nextTubeOffset
-// //
-// //     val p1x = p1Radius * curMainSin
-// //     val p1z = p1Radius * curMainCos
-// //     val p2x = p2Radius * curMainSin
-// //     val p2z = p2Radius * curMainCos
-// //     val p3x = p3Radius * nextMainSin
-// //     val p3z = p3Radius * nextMainCos
-// //     val p4x = p4Radius * nextMainSin
-// //     val p4z = p4Radius * nextMainCos
-// //
-// //     addVertex(pose, p3x, curTubeY, p3z).setColor(color)
-// //     addVertex(pose, p1x, curTubeY, p1z).setColor(color)
-// //     addVertex(pose, p2x, nextTubeY, p2z).setColor(color)
-// //     addVertex(pose, p4x, nextTubeY, p4z).setColor(color)
-// // }
-// //
-// // /**
-// //  * Build new mesh data and upload it.
-// //  *
-// //  * @param origin a preferred origin; the lambda receives the resolved origin that must be used
-// //  * for relative vertex positions.
-// //  */
-// // codex end
-// // codex start
-// // inline fun CachedMeshStorage.buildMesh(
-// //     pipeline: RenderPipeline,
-// //     origin: BlockPos = BlockPos.ZERO,
-// //     block: VertexConsumer.(pose: PoseStack, origin: BlockPos) -> Unit,
-// // ) {
-// //     clearStates()
-// //     val resolvedOrigin = this.resolveBaseBlockPos(origin)
-// //
-// //     val bufferBuilder = this.byteBufferBuilder.begin(pipeline)
-// //     usePoseStack {
-// //         bufferBuilder.block(this, resolvedOrigin)
-// //     }
-// //
-// //     bufferBuilder.build()?.use { meshData ->
-// //         this.uploadAndSet(meshData, pipeline)
-// //     }
-// //
-// //     this.byteBufferBuilder.clear()
-// // }
+// // fun segmentAngle(i: Int, segments: Int) = i * Mth.TWO_PI / segments
+// // // codex start
+// // //
+// // // fun VertexConsumer.addTorusQuad(
+// // //     pose: PoseStack.Pose,
+// // //     innerSegments: Int,
+// // //     outerCurAngle: Float,
+// // //     outerNextAngle: Float,
+// // //     outerCurRadius: Float,
+// // //     outerNextRadius: Float,
+// // //     innerRadius: Float,
+// // //     innerI: Int,
+// // //     color: Color4b,
+// // // ) {
+// // //     val innerCurAngle = segmentAngle(innerI, innerSegments)
+// // //     val innerNextAngle = segmentAngle(innerI + 1, innerSegments)
+// // //
+// // //     val curMainSin = outerCurAngle.fastSin()
+// // //     val curMainCos = outerCurAngle.fastCos()
+// // //     val nextMainSin = outerNextAngle.fastSin()
+// // //     val nextMainCos = outerNextAngle.fastCos()
+// // //
+// // //     val innerCurSin = innerCurAngle.fastSin()
+// // //     val innerCurCos = innerCurAngle.fastCos()
+// // //     val innerNextSin = innerNextAngle.fastSin()
+// // //     val innerNextCos = innerNextAngle.fastCos()
+// // //
+// // //     val curTubeY = innerRadius * innerCurSin
+// // //     val nextTubeY = innerRadius * innerNextSin
+// // //     val curTubeOffset = innerRadius * innerCurCos
+// // //     val nextTubeOffset = innerRadius * innerNextCos
+// // //
+// // //     val p1Radius = outerCurRadius + curTubeOffset
+// // //     val p2Radius = outerCurRadius + nextTubeOffset
+// // //     val p3Radius = outerNextRadius + curTubeOffset
+// // //     val p4Radius = outerNextRadius + nextTubeOffset
+// // //
+// // //     val p1x = p1Radius * curMainSin
+// // //     val p1z = p1Radius * curMainCos
+// // //     val p2x = p2Radius * curMainSin
+// // //     val p2z = p2Radius * curMainCos
+// // //     val p3x = p3Radius * nextMainSin
+// // //     val p3z = p3Radius * nextMainCos
+// // //     val p4x = p4Radius * nextMainSin
+// // //     val p4z = p4Radius * nextMainCos
+// // //
+// // //     addVertex(pose, p3x, curTubeY, p3z).setColor(color)
+// // //     addVertex(pose, p1x, curTubeY, p1z).setColor(color)
+// // //     addVertex(pose, p2x, nextTubeY, p2z).setColor(color)
+// // //     addVertex(pose, p4x, nextTubeY, p4z).setColor(color)
+// // // }
+// // //
+// // // /**
+// // //  * Build new mesh data and upload it.
+// // //  *
+// // //  * @param origin a preferred origin; the lambda receives the resolved origin that must be used
+// // //  * for relative vertex positions.
+// // //  */
+// // // codex end
+// // // codex start
+// // // inline fun CachedMeshStorage.buildMesh(
+// // //     pipeline: RenderPipeline,
+// // //     origin: BlockPos = BlockPos.ZERO,
+// // //     block: VertexConsumer.(pose: PoseStack, origin: BlockPos) -> Unit,
+// // // ) {
+// // //     clearStates()
+// // //     val resolvedOrigin = this.resolveBaseBlockPos(origin)
+// // //
+// // //     val bufferBuilder = this.byteBufferBuilder.begin(pipeline)
+// // //     usePoseStack {
+// // //         bufferBuilder.block(this, resolvedOrigin)
+// // //     }
+// // //
+// // //     bufferBuilder.build()?.use { meshData ->
+// // //         this.uploadAndSet(meshData, pipeline)
+// // //     }
+// // //
+// // //     this.byteBufferBuilder.clear()
+// // // }
+// // // codex end
 // // codex end
 // codex end

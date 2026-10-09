@@ -27,7 +27,6 @@ import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.entity.handItems
 import net.ccbluex.liquidbounce.utils.inventory.Slots
-import net.ccbluex.liquidbounce.utils.math.sq
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.commands.arguments.item.ItemInput
 import net.minecraft.commands.arguments.item.ItemParser
@@ -79,7 +78,6 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.state.BlockState
 import kotlin.jvm.optionals.getOrNull
 
 /**

@@ -85,7 +85,6 @@ import net.ccbluex.liquidbounce.event.events.PlayerUseMultiplier
 import net.ccbluex.liquidbounce.event.events.PlayerVelocityStrafe
 import net.ccbluex.liquidbounce.event.events.ResourceReloadEvent
 import net.ccbluex.liquidbounce.event.events.RotationUpdateEvent
-import net.ccbluex.liquidbounce.event.events.ScheduleInventoryActionEvent
 import net.ccbluex.liquidbounce.event.events.ScreenEvent
 import net.ccbluex.liquidbounce.event.events.SelectHotbarSlotSilentlyEvent
 import net.ccbluex.liquidbounce.event.events.SessionEvent
@@ -247,7 +246,9 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // codex start
     // OverlayMessageEvent::class.java,
     // codex end
-    ScheduleInventoryActionEvent::class.java,
+    // codex start
+    // ScheduleInventoryActionEvent::class.java,
+    // codex end
     SelectHotbarSlotSilentlyEvent::class.java,
     // codex start
     // SpaceSeperatedNamesChangeEvent::class.java,

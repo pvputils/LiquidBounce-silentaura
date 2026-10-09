@@ -23,43 +23,22 @@ package net.ccbluex.liquidbounce.utils.block
 
 import it.unimi.dsi.fastutil.ints.IntLongPair
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
-import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.event.events.BlockBreakingProgressEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.FULL_BOX
-import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
-import net.ccbluex.liquidbounce.utils.block.targetfinding.BlockOffsetOptions
-import net.ccbluex.liquidbounce.utils.block.targetfinding.BlockPlacementTargetFindingOptions
-import net.ccbluex.liquidbounce.utils.block.targetfinding.CenterTargetPositionFactory
-import net.ccbluex.liquidbounce.utils.block.targetfinding.FaceHandlingOptions
-import net.ccbluex.liquidbounce.utils.block.targetfinding.PlayerLocationOnPlacement
-import net.ccbluex.liquidbounce.utils.block.targetfinding.findBestBlockPlacementTarget
-import net.ccbluex.liquidbounce.utils.block.targetfinding.verifyClick
-import net.ccbluex.liquidbounce.utils.client.interaction
 import net.ccbluex.liquidbounce.utils.client.isOlderThan1_21_2
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.client.world
 import net.ccbluex.liquidbounce.utils.math.boundsOrNull
-import net.ccbluex.liquidbounce.utils.math.distanceToSqr
 import net.ccbluex.liquidbounce.utils.math.iterator
 import net.ccbluex.liquidbounce.utils.math.plus
-import net.ccbluex.liquidbounce.utils.network.useItem
-import net.ccbluex.liquidbounce.utils.raytracing.traceFromPlayer
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.TypedInstance
 import net.minecraft.core.Vec3i
-import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
 import net.minecraft.tags.BlockTags
-import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResult
-import net.minecraft.world.InteractionResult.Success
-import net.minecraft.world.InteractionResult.SwingSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
-import net.minecraft.world.level.BlockGetter
-import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.block.AbstractBedBlock
 import net.minecraft.world.level.block.AbstractChestBlock
 import net.minecraft.world.level.block.AbstractFurnaceBlock
@@ -86,7 +65,6 @@ import net.minecraft.world.level.block.DaylightDetectorBlock
 import net.minecraft.world.level.block.DecoratedPotBlock
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.level.block.DoorBlock
-import net.minecraft.world.level.block.DoubleBlockCombiner
 import net.minecraft.world.level.block.DragonEggBlock
 import net.minecraft.world.level.block.EnchantingTableBlock
 import net.minecraft.world.level.block.FenceGateBlock
@@ -94,7 +72,6 @@ import net.minecraft.world.level.block.FlowerPotBlock
 import net.minecraft.world.level.block.GameMasterBlock
 import net.minecraft.world.level.block.GrindstoneBlock
 import net.minecraft.world.level.block.HopperBlock
-import net.minecraft.world.level.block.HorizontalDirectionalBlock
 import net.minecraft.world.level.block.JukeboxBlock
 import net.minecraft.world.level.block.LecternBlock
 import net.minecraft.world.level.block.LeverBlock
@@ -110,15 +87,11 @@ import net.minecraft.world.level.block.SweetBerryBushBlock
 import net.minecraft.world.level.block.TrapDoorBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.levelgen.structure.BoundingBox
-import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.HitResult
-import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import java.util.function.BiPredicate
 import java.util.function.Predicate
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -319,154 +292,156 @@ fun BlockPos.searchLayer(layers: Int, vararg directions: Direction): Sequence<In
 //  * Basically [BlockGetter.raycast] but this method allows us to exclude blocks using [exclude].
 //  */
 // codex end
-@Suppress("SpellCheckingInspection", "CognitiveComplexMethod")
-fun BlockGetter.raycast(
-    context: ClipContext,
-    exclude: Collection<BlockPos>?,
-    include: BlockPos?,
-    maxBlastResistance: Float?
-): BlockHitResult {
-    return BlockGetter.traverseBlocks(
-        context.from, context.to, context,
-        { raycastContext, pos ->
-            val excluded = exclude?.let { pos in it } ?: false
-
-            val blockState = if (excluded) {
-                Blocks.VOID_AIR.defaultBlockState()
-            } else if (include != null && pos == include) {
-                Blocks.OBSIDIAN.defaultBlockState()
-            } else {
-                var state = getBlockState(pos)
-                maxBlastResistance?.let {
-                    if (state.block.explosionResistance < it) {
-                        state = Blocks.VOID_AIR.defaultBlockState()
-                    }
-                }
-                state
-            }
-
-            val fluidState = if (excluded) {
-                Fluids.EMPTY.defaultFluidState()
-            } else {
-                var state = getFluidState(pos)
-                maxBlastResistance?.let {
-                    if (state.explosionResistance < it) {
-                        state = Fluids.EMPTY.defaultFluidState()
-                    }
-                }
-                state
-            }
-
-            val vec = raycastContext.from
-            val vec2 = raycastContext.to
-
-            val blockShape = raycastContext.getBlockShape(blockState, this, pos)
-            val blockHitResult = clipWithInteractionOverride(vec, vec2, pos, blockShape, blockState)
-
-            val fluidShape = raycastContext.getFluidShape(fluidState, this, pos)
-            val fluidHitResult = fluidShape.clip(vec, vec2, pos)
-
-            val blockHitDistance = blockHitResult?.let {
-                raycastContext.from.distanceToSqr(blockHitResult.location)
-            } ?: Double.MAX_VALUE
-            val fluidHitDistance = fluidHitResult?.let {
-                raycastContext.from.distanceToSqr(fluidHitResult.location)
-            } ?: Double.MAX_VALUE
-
-            if (blockHitDistance <= fluidHitDistance) blockHitResult else fluidHitResult
-        },
-        { raycastContext ->
-            val vec = raycastContext.from.subtract(raycastContext.to)
-            BlockHitResult.miss(
-                raycastContext.to,
-                Direction.getApproximateNearest(vec.x, vec.y, vec.z),
-                BlockPos.containing(raycastContext.to)
-            )
-        })
-}
 // codex start
+// @Suppress("SpellCheckingInspection", "CognitiveComplexMethod")
+// fun BlockGetter.raycast(
+//     context: ClipContext,
+//     exclude: Collection<BlockPos>?,
+//     include: BlockPos?,
+//     maxBlastResistance: Float?
+// ): BlockHitResult {
+//     return BlockGetter.traverseBlocks(
+//         context.from, context.to, context,
+//         { raycastContext, pos ->
+//             val excluded = exclude?.let { pos in it } ?: false
 //
-// fun BlockPos.canStandOn(): Boolean {
-//     return this.state?.isFaceSturdy(world, this, Direction.UP, SupportType.CENTER) ?: false
+//             val blockState = if (excluded) {
+//                 Blocks.VOID_AIR.defaultBlockState()
+//             } else if (include != null && pos == include) {
+//                 Blocks.OBSIDIAN.defaultBlockState()
+//             } else {
+//                 var state = getBlockState(pos)
+//                 maxBlastResistance?.let {
+//                     if (state.block.explosionResistance < it) {
+//                         state = Blocks.VOID_AIR.defaultBlockState()
+//                     }
+//                 }
+//                 state
+//             }
+//
+//             val fluidState = if (excluded) {
+//                 Fluids.EMPTY.defaultFluidState()
+//             } else {
+//                 var state = getFluidState(pos)
+//                 maxBlastResistance?.let {
+//                     if (state.explosionResistance < it) {
+//                         state = Fluids.EMPTY.defaultFluidState()
+//                     }
+//                 }
+//                 state
+//             }
+//
+//             val vec = raycastContext.from
+//             val vec2 = raycastContext.to
+//
+//             val blockShape = raycastContext.getBlockShape(blockState, this, pos)
+//             val blockHitResult = clipWithInteractionOverride(vec, vec2, pos, blockShape, blockState)
+//
+//             val fluidShape = raycastContext.getFluidShape(fluidState, this, pos)
+//             val fluidHitResult = fluidShape.clip(vec, vec2, pos)
+//
+//             val blockHitDistance = blockHitResult?.let {
+//                 raycastContext.from.distanceToSqr(blockHitResult.location)
+//             } ?: Double.MAX_VALUE
+//             val fluidHitDistance = fluidHitResult?.let {
+//                 raycastContext.from.distanceToSqr(fluidHitResult.location)
+//             } ?: Double.MAX_VALUE
+//
+//             if (blockHitDistance <= fluidHitDistance) blockHitResult else fluidHitResult
+//         },
+//         { raycastContext ->
+//             val vec = raycastContext.from.subtract(raycastContext.to)
+//             BlockHitResult.miss(
+//                 raycastContext.to,
+//                 Direction.getApproximateNearest(vec.x, vec.y, vec.z),
+//                 BlockPos.containing(raycastContext.to)
+//             )
+//         })
 // }
-// codex end
-// codex start
-//
-// fun BlockState?.anotherChestPartDirection(): Direction? {
-//     if (this?.block !is ChestBlock) return null
-//
-//     if (ChestBlock.getBlockType(this) === DoubleBlockCombiner.BlockType.SINGLE) {
-//         return null
-//     }
-//
-//     return ChestBlock.getConnectedDirection(this)
-// }
-// codex end
-
-// codex start
-// fun BlockState?.anotherBedPartDirection(): Direction? {
-//     if (this?.block !is AbstractBedBlock) return null
-//
-//     // [body|head] -> (facing)
-//     val bedFacing = this.getValue(HorizontalDirectionalBlock.FACING)
-//
-//     return if (AbstractBedBlock.getBlockType(this) == DoubleBlockCombiner.BlockType.FIRST) {
-//         bedFacing.opposite
-//     } else {
-//         bedFacing
-//     }
-// }
-//
-// /**
-//  * Check if box is reaching of specified blocks
-//  */
 // // codex start
-// // inline fun AABB.isBlockAtPosition(
-// //     isCorrectBlock: (Block?) -> Boolean,
-// // ): Boolean {
-// //     val blockPos = BlockPos.MutableBlockPos(0, floor(minY).toInt(), 0)
 // //
-// //     for (x in floor(minX).toInt()..ceil(maxX).toInt()) {
-// //         for (z in floor(minZ).toInt()..ceil(maxZ).toInt()) {
-// //             blockPos.x = x
-// //             blockPos.z = z
+// // fun BlockPos.canStandOn(): Boolean {
+// //     return this.state?.isFaceSturdy(world, this, Direction.UP, SupportType.CENTER) ?: false
+// // }
+// // codex end
+// // codex start
 // //
-// //             if (isCorrectBlock(blockPos.getBlock())) {
-// //                 return true
-// //             }
-// //         }
+// // fun BlockState?.anotherChestPartDirection(): Direction? {
+// //     if (this?.block !is ChestBlock) return null
+// //
+// //     if (ChestBlock.getBlockType(this) === DoubleBlockCombiner.BlockType.SINGLE) {
+// //         return null
 // //     }
 // //
-// //     return false
+// //     return ChestBlock.getConnectedDirection(this)
+// // }
+// // codex end
+//
+// // codex start
+// // fun BlockState?.anotherBedPartDirection(): Direction? {
+// //     if (this?.block !is AbstractBedBlock) return null
+// //
+// //     // [body|head] -> (facing)
+// //     val bedFacing = this.getValue(HorizontalDirectionalBlock.FACING)
+// //
+// //     return if (AbstractBedBlock.getBlockType(this) == DoubleBlockCombiner.BlockType.FIRST) {
+// //         bedFacing.opposite
+// //     } else {
+// //         bedFacing
+// //     }
 // // }
 // //
 // // /**
-// //  * Check if box intersects with bounding box of specified blocks
+// //  * Check if box is reaching of specified blocks
 // //  */
-// // codex end
-// // codex start
-// // inline fun AABB.collideBlockIntersects(
-// //     checkCollisionShape: Boolean = true,
-// //     isCorrectBlock: (Block) -> Boolean
-// // ): Boolean {
-// //     for (blockPos in collidingRegion) {
-// //         val blockState = blockPos.state
-// //
-// //         if (blockState == null || !isCorrectBlock(blockState.block)) {
-// //             continue
-// //         }
-// //
-// //         if (!checkCollisionShape) {
-// //             return true
-// //         }
-// //
-// //         if (blockState.getCollisionShape(mc.level!!, blockPos).move(blockPos) intersects this) {
-// //             return true
-// //         }
-// //     }
-// //
-// //     return false
-// // }
+// // // codex start
+// // // inline fun AABB.isBlockAtPosition(
+// // //     isCorrectBlock: (Block?) -> Boolean,
+// // // ): Boolean {
+// // //     val blockPos = BlockPos.MutableBlockPos(0, floor(minY).toInt(), 0)
+// // //
+// // //     for (x in floor(minX).toInt()..ceil(maxX).toInt()) {
+// // //         for (z in floor(minZ).toInt()..ceil(maxZ).toInt()) {
+// // //             blockPos.x = x
+// // //             blockPos.z = z
+// // //
+// // //             if (isCorrectBlock(blockPos.getBlock())) {
+// // //                 return true
+// // //             }
+// // //         }
+// // //     }
+// // //
+// // //     return false
+// // // }
+// // //
+// // // /**
+// // //  * Check if box intersects with bounding box of specified blocks
+// // //  */
+// // // codex end
+// // // codex start
+// // // inline fun AABB.collideBlockIntersects(
+// // //     checkCollisionShape: Boolean = true,
+// // //     isCorrectBlock: (Block) -> Boolean
+// // // ): Boolean {
+// // //     for (blockPos in collidingRegion) {
+// // //         val blockState = blockPos.state
+// // //
+// // //         if (blockState == null || !isCorrectBlock(blockState.block)) {
+// // //             continue
+// // //         }
+// // //
+// // //         if (!checkCollisionShape) {
+// // //             return true
+// // //         }
+// // //
+// // //         if (blockState.getCollisionShape(mc.level!!, blockPos).move(blockPos) intersects this) {
+// // //             return true
+// // //         }
+// // //     }
+// // //
+// // //     return false
+// // // }
+// // // codex end
 // // codex end
 // codex end
 
@@ -478,168 +453,170 @@ val AABB.collidingRegion: BoundingBox
 
 val BlockHitResult.targetBlockPos: BlockPos get() = this.blockPos.relative(this.direction)
 
-/**
- * Simulated [net.minecraft.world.phys.HitResult.Type.BLOCK] branch in vanilla
- *
- * This function does not perform the surrounding checks from [net.minecraft.client.Minecraft.startUseItem],
- * such as whether the game mode is destroying a block, the player's hands are busy, or the held item is enabled.
- * Callers should perform the applicable checks before calling this function.
- *
- * @param rotation rotation used to produce [hitResult]
- * @see net.minecraft.client.Minecraft.startUseItem
- */
-@AddonApi
-@JvmOverloads
-fun doPlacement(
-    hitResult: BlockHitResult,
-    rotation: Rotation,
-    hand: InteractionHand = InteractionHand.MAIN_HAND,
-    onPlacementSuccess: () -> Boolean = { true },
-    onItemUseSuccess: () -> Boolean = { true },
-    swingMode: SwingMode = SwingMode.DO_NOT_HIDE
-) {
-    val stack = player.getItemInHand(hand)
-    val count = stack.count
-
-    val useItemOnResult = interaction.useItemOn(player, hand, hitResult)
-
-    when {
-        useItemOnResult is InteractionResult.Fail -> {
-            return
-        }
-
-        useItemOnResult is InteractionResult.Pass -> {
-            // Ok, we cannot place on the block, so let's just use the item in the direction
-            // without targeting a block (for buckets, etc.)
-            if (!stack.isEmpty) {
-                val useItemResult = interaction.useItem(player, hand, rotation.yRot, rotation.xRot)
-                if (useItemResult is Success) {
-                    if (useItemResult.swingSource == SwingSource.PREDICTED && onItemUseSuccess()) {
-                        swingMode.swing(hand)
-                    }
-
-                    player.itemUsed(hand)
-                }
-            }
-        }
-
-        useItemOnResult.consumesAction() -> {
-            val wasStackUsed = !stack.isEmpty && (stack.count != count || player.hasInfiniteMaterials())
-
-            handleActionsOnAccept(hand, useItemOnResult, wasStackUsed, onPlacementSuccess, swingMode)
-        }
-    }
-}
-
-/**
- * Swings item, resets equip progress and hand swing progress
- *
- * @param wasStackUsed was an item consumed in order to place the block
- * @param shouldSwing if result of the lambda is true, swing hand with [swingMode]
- */
-private inline fun handleActionsOnAccept(
-    hand: InteractionHand,
-    interactionResult: InteractionResult,
-    wasStackUsed: Boolean,
-    shouldSwing: () -> Boolean,
-    swingMode: SwingMode,
-) {
-    if (interactionResult is Success && interactionResult.swingSource != SwingSource.PREDICTED) {
-        return
-    }
-
-    if (shouldSwing()) {
-        swingMode.swing(hand)
-    }
-
-    if (wasStackUsed) {
-        player.itemUsed(hand)
-    }
-}
-
-/**
- * Places the item in [hand] at [pos] against a neighbouring block, rotating silently towards it.
- *
- * @return false when there is nothing to place against or the spot is out of reach
- */
-@AddonApi
-@JvmOverloads
-fun doPlacement(
-    pos: BlockPos,
-    hand: InteractionHand = InteractionHand.MAIN_HAND,
-    swingMode: SwingMode = SwingMode.DO_NOT_HIDE,
-): Boolean {
-    val options = BlockPlacementTargetFindingOptions(
-        BlockOffsetOptions.Default,
-        FaceHandlingOptions(CenterTargetPositionFactory),
-        stackToPlaceWith = player.getItemInHand(hand),
-        PlayerLocationOnPlacement(),
-    )
-    val target = findBestBlockPlacementTarget(pos, options) ?: return false
-    val hit = target.verifyClick() ?: return false
-    doPlacement(hit, target.rotation, hand = hand, swingMode = swingMode)
-    return true
-}
-
-/**
- * Starts breaking [pos], rotating silently towards it. [immediate] sends start and stop at once,
- * which only works in creative or on blocks that break instantly.
- *
- * @return false when [pos] is not in reach
- */
-@AddonApi
-@JvmOverloads
-fun doBreak(pos: BlockPos, immediate: Boolean = false, swingMode: SwingMode = SwingMode.DO_NOT_HIDE): Boolean {
-    val hit = traceFromPlayer(Rotation.lookingAt(Vec3.atCenterOf(pos), player.eyePosition))
-    if (hit.type != HitResult.Type.BLOCK || hit.blockPos != pos) {
-        return false
-    }
-    doBreak(hit, immediate, swingMode)
-    return true
-}
-
-/**
- * Breaks the block
- */
-@AddonApi
-@JvmOverloads
-fun doBreak(
-    rayTraceResult: BlockHitResult,
-    immediate: Boolean = false,
-    swingMode: SwingMode = SwingMode.DO_NOT_HIDE
-) {
-    val direction = rayTraceResult.direction
-    val blockPos = rayTraceResult.blockPos
-
-    if (player.isCreative) {
-        if (interaction.startDestroyBlock(blockPos, rayTraceResult.direction)) {
-            swingMode.swing(InteractionHand.MAIN_HAND)
-            return
-        }
-    }
-
-    if (immediate) {
-        EventManager.callEvent(BlockBreakingProgressEvent(blockPos))
-
-        interaction.startPrediction(world) { sequence ->
-            ServerboundPlayerActionPacket(
-                ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, blockPos, direction, sequence
-            )
-        }
-        swingMode.swing(InteractionHand.MAIN_HAND)
-        interaction.startPrediction(world) { sequence ->
-            ServerboundPlayerActionPacket(
-                ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, blockPos, direction, sequence
-            )
-        }
-        return
-    }
-
-    if (interaction.continueDestroyBlock(blockPos, direction)) {
-        swingMode.swing(InteractionHand.MAIN_HAND)
-        world.addBreakingBlockEffects(blockPos, direction, false)
-    }
-}
+// codex start
+// /**
+//  * Simulated [net.minecraft.world.phys.HitResult.Type.BLOCK] branch in vanilla
+//  *
+//  * This function does not perform the surrounding checks from [net.minecraft.client.Minecraft.startUseItem],
+//  * such as whether the game mode is destroying a block, the player's hands are busy, or the held item is enabled.
+//  * Callers should perform the applicable checks before calling this function.
+//  *
+//  * @param rotation rotation used to produce [hitResult]
+//  * @see net.minecraft.client.Minecraft.startUseItem
+//  */
+// @AddonApi
+// @JvmOverloads
+// fun doPlacement(
+//     hitResult: BlockHitResult,
+//     rotation: Rotation,
+//     hand: InteractionHand = InteractionHand.MAIN_HAND,
+//     onPlacementSuccess: () -> Boolean = { true },
+//     onItemUseSuccess: () -> Boolean = { true },
+//     swingMode: SwingMode = SwingMode.DO_NOT_HIDE
+// ) {
+//     val stack = player.getItemInHand(hand)
+//     val count = stack.count
+//
+//     val useItemOnResult = interaction.useItemOn(player, hand, hitResult)
+//
+//     when {
+//         useItemOnResult is InteractionResult.Fail -> {
+//             return
+//         }
+//
+//         useItemOnResult is InteractionResult.Pass -> {
+//             // Ok, we cannot place on the block, so let's just use the item in the direction
+//             // without targeting a block (for buckets, etc.)
+//             if (!stack.isEmpty) {
+//                 val useItemResult = interaction.useItem(player, hand, rotation.yRot, rotation.xRot)
+//                 if (useItemResult is Success) {
+//                     if (useItemResult.swingSource == SwingSource.PREDICTED && onItemUseSuccess()) {
+//                         swingMode.swing(hand)
+//                     }
+//
+//                     player.itemUsed(hand)
+//                 }
+//             }
+//         }
+//
+//         useItemOnResult.consumesAction() -> {
+//             val wasStackUsed = !stack.isEmpty && (stack.count != count || player.hasInfiniteMaterials())
+//
+//             handleActionsOnAccept(hand, useItemOnResult, wasStackUsed, onPlacementSuccess, swingMode)
+//         }
+//     }
+// }
+//
+// /**
+//  * Swings item, resets equip progress and hand swing progress
+//  *
+//  * @param wasStackUsed was an item consumed in order to place the block
+//  * @param shouldSwing if result of the lambda is true, swing hand with [swingMode]
+//  */
+// private inline fun handleActionsOnAccept(
+//     hand: InteractionHand,
+//     interactionResult: InteractionResult,
+//     wasStackUsed: Boolean,
+//     shouldSwing: () -> Boolean,
+//     swingMode: SwingMode,
+// ) {
+//     if (interactionResult is Success && interactionResult.swingSource != SwingSource.PREDICTED) {
+//         return
+//     }
+//
+//     if (shouldSwing()) {
+//         swingMode.swing(hand)
+//     }
+//
+//     if (wasStackUsed) {
+//         player.itemUsed(hand)
+//     }
+// }
+//
+// /**
+//  * Places the item in [hand] at [pos] against a neighbouring block, rotating silently towards it.
+//  *
+//  * @return false when there is nothing to place against or the spot is out of reach
+//  */
+// @AddonApi
+// @JvmOverloads
+// fun doPlacement(
+//     pos: BlockPos,
+//     hand: InteractionHand = InteractionHand.MAIN_HAND,
+//     swingMode: SwingMode = SwingMode.DO_NOT_HIDE,
+// ): Boolean {
+//     val options = BlockPlacementTargetFindingOptions(
+//         BlockOffsetOptions.Default,
+//         FaceHandlingOptions(CenterTargetPositionFactory),
+//         stackToPlaceWith = player.getItemInHand(hand),
+//         PlayerLocationOnPlacement(),
+//     )
+//     val target = findBestBlockPlacementTarget(pos, options) ?: return false
+//     val hit = target.verifyClick() ?: return false
+//     doPlacement(hit, target.rotation, hand = hand, swingMode = swingMode)
+//     return true
+// }
+//
+// /**
+//  * Starts breaking [pos], rotating silently towards it. [immediate] sends start and stop at once,
+//  * which only works in creative or on blocks that break instantly.
+//  *
+//  * @return false when [pos] is not in reach
+//  */
+// @AddonApi
+// @JvmOverloads
+// fun doBreak(pos: BlockPos, immediate: Boolean = false, swingMode: SwingMode = SwingMode.DO_NOT_HIDE): Boolean {
+//     val hit = traceFromPlayer(Rotation.lookingAt(Vec3.atCenterOf(pos), player.eyePosition))
+//     if (hit.type != HitResult.Type.BLOCK || hit.blockPos != pos) {
+//         return false
+//     }
+//     doBreak(hit, immediate, swingMode)
+//     return true
+// }
+//
+// /**
+//  * Breaks the block
+//  */
+// @AddonApi
+// @JvmOverloads
+// fun doBreak(
+//     rayTraceResult: BlockHitResult,
+//     immediate: Boolean = false,
+//     swingMode: SwingMode = SwingMode.DO_NOT_HIDE
+// ) {
+//     val direction = rayTraceResult.direction
+//     val blockPos = rayTraceResult.blockPos
+//
+//     if (player.isCreative) {
+//         if (interaction.startDestroyBlock(blockPos, rayTraceResult.direction)) {
+//             swingMode.swing(InteractionHand.MAIN_HAND)
+//             return
+//         }
+//     }
+//
+//     if (immediate) {
+//         EventManager.callEvent(BlockBreakingProgressEvent(blockPos))
+//
+//         interaction.startPrediction(world) { sequence ->
+//             ServerboundPlayerActionPacket(
+//                 ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, blockPos, direction, sequence
+//             )
+//         }
+//         swingMode.swing(InteractionHand.MAIN_HAND)
+//         interaction.startPrediction(world) { sequence ->
+//             ServerboundPlayerActionPacket(
+//                 ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, blockPos, direction, sequence
+//             )
+//         }
+//         return
+//     }
+//
+//     if (interaction.continueDestroyBlock(blockPos, direction)) {
+//         swingMode.swing(InteractionHand.MAIN_HAND)
+//         world.addBreakingBlockEffects(blockPos, direction, false)
+//     }
+// }
+// codex end
 // codex start
 //
 // fun BlockState.isNotBreakable(pos: BlockPos) = !isBreakable(pos)

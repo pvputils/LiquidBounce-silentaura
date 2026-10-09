@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.interfaces.ClientInputAddition
 import net.ccbluex.liquidbounce.interfaces.LocalPlayerAddition
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
-import net.ccbluex.liquidbounce.utils.block.raycast
 import net.ccbluex.liquidbounce.utils.client.isBlocksAttacksExisting
 import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_8
 import net.ccbluex.liquidbounce.utils.client.mc
@@ -38,14 +37,9 @@ import net.ccbluex.liquidbounce.utils.math.minus
 import net.ccbluex.liquidbounce.utils.movement.DirectionalInput
 import net.minecraft.client.player.ClientInput
 import net.minecraft.client.player.LocalPlayer
-import net.minecraft.core.BlockPos
 import net.minecraft.core.Position
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.tags.DamageTypeTags
-import net.minecraft.util.Mth
-import net.minecraft.world.Difficulty
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffects
@@ -56,25 +50,19 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Input
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
-import net.minecraft.world.entity.vehicle.minecart.MinecartTNT
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.item.ShieldItem
 import net.minecraft.world.item.component.UseEffects
 import net.minecraft.world.item.enchantment.Enchantments
-import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.ServerExplosion
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
-import net.minecraft.world.phys.shapes.EntityCollisionContext
 import net.minecraft.world.scores.DisplaySlot
 import java.lang.Math.fma
 import kotlin.math.acos
-import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -464,280 +452,284 @@ fun Entity.interpolateCurrentPosition(tickDelta: Float): Vec3 {
 //  * @see net.minecraft.world.entity.LivingEntity#actuallyHurt
 //  */
 // codex end
-@Suppress("detekt:all")
-@JvmOverloads
-fun LivingEntity.getEffectiveDamage(
-    source: DamageSource,
-    damage: Float,
-    ignoreShield: Boolean = false,
-    includeAbsorption: Boolean = false
-): Float {
-    val level = this.level()
-    val serverLevel = level as? ServerLevel
-
-    if ((serverLevel != null && this.isInvulnerableTo(serverLevel, source)) ||
-        (serverLevel == null && this.isInvulnerableToBase(source))
-    ) {
-        return 0.0F
-    }
-
-    if (this.isDeadOrDying) {
-        return 0.0F
-    }
-
-    var amount = damage
-
-    if (this is Player) {
-        if (this.abilities.invulnerable && !source.`is`(DamageTypeTags.BYPASSES_INVULNERABILITY))
-            return 0.0F
-
-        if (source.scalesWithDifficulty()) {
-            when (level.difficulty) {
-                Difficulty.PEACEFUL -> {
-                    amount = 0.0f
-                }
-
-                Difficulty.EASY -> {
-                    amount = (amount / 2.0f + 1.0f).coerceAtMost(amount)
-                }
-
-                Difficulty.HARD -> {
-                    amount = amount * 3.0f / 2.0f
-                }
-
-                else -> {}
-            }
-        }
-    }
-
-    if (amount == 0.0F)
-        return 0.0F
-
-    if (source.`is`(DamageTypeTags.IS_FIRE) && this.hasEffect(MobEffects.FIRE_RESISTANCE))
-        return 0.0F
-
-    if (!ignoreShield) {
-        amount -= getBlockedDamage(source, amount)
-        if (amount == 0.0F) {
-            return 0.0F
-        }
-    }
-
-    // Do we need to take the timeUntilRegen mechanic into account?
-
-    amount = this.getDamageAfterArmorAbsorb(source, amount)
-    amount = this.getDamageAfterMagicAbsorb(source, amount)
-
-    if (includeAbsorption) {
-        amount = (amount - this.absorptionAmount).coerceAtLeast(0.0F)
-    }
-
-    return amount
-}
-
 // codex start
-// /**
-//  * Mirrors the vanilla blast-power setup of explosive entities.
-//  *
-//  * TNT minecarts use the current speed to reproduce vanilla's upper-bound radius because
-//  * `net.minecraft.world.entity.vehicle.minecart.MinecartTNT#explode` multiplies the speed
-//  * term by server-side randomness.
-//  *
-//  * @see net.minecraft.world.entity.boss.enderdragon.EndCrystal.hurtServer
-//  * @see net.minecraft.world.entity.item.PrimedTnt
-//  * @see net.minecraft.world.entity.vehicle.minecart.MinecartTNT.explode
-//  * @see net.minecraft.world.entity.monster.Creeper
-//  */
+// @Suppress("detekt:all")
+// @JvmOverloads
+// fun LivingEntity.getEffectiveDamage(
+//     source: DamageSource,
+//     damage: Float,
+//     ignoreShield: Boolean = false,
+//     includeAbsorption: Boolean = false
+// ): Float {
+//     val level = this.level()
+//     val serverLevel = level as? ServerLevel
+//
+//     if ((serverLevel != null && this.isInvulnerableTo(serverLevel, source)) ||
+//         (serverLevel == null && this.isInvulnerableToBase(source))
+//     ) {
+//         return 0.0F
+//     }
+//
+//     if (this.isDeadOrDying) {
+//         return 0.0F
+//     }
+//
+//     var amount = damage
+//
+//     if (this is Player) {
+//         if (this.abilities.invulnerable && !source.`is`(DamageTypeTags.BYPASSES_INVULNERABILITY))
+//             return 0.0F
+//
+//         if (source.scalesWithDifficulty()) {
+//             when (level.difficulty) {
+//                 Difficulty.PEACEFUL -> {
+//                     amount = 0.0f
+//                 }
+//
+//                 Difficulty.EASY -> {
+//                     amount = (amount / 2.0f + 1.0f).coerceAtMost(amount)
+//                 }
+//
+//                 Difficulty.HARD -> {
+//                     amount = amount * 3.0f / 2.0f
+//                 }
+//
+//                 else -> {}
+//             }
+//         }
+//     }
+//
+//     if (amount == 0.0F)
+//         return 0.0F
+//
+//     if (source.`is`(DamageTypeTags.IS_FIRE) && this.hasEffect(MobEffects.FIRE_RESISTANCE))
+//         return 0.0F
+//
+//     if (!ignoreShield) {
+//         amount -= getBlockedDamage(source, amount)
+//         if (amount == 0.0F) {
+//             return 0.0F
+//         }
+//     }
+//
+//     // Do we need to take the timeUntilRegen mechanic into account?
+//
+//     amount = this.getDamageAfterArmorAbsorb(source, amount)
+//     amount = this.getDamageAfterMagicAbsorb(source, amount)
+//
+//     if (includeAbsorption) {
+//         amount = (amount - this.absorptionAmount).coerceAtLeast(0.0F)
+//     }
+//
+//     return amount
+// }
+//
 // // codex start
-// // fun LivingEntity.getExplosionDamageFromEntity(entity: Entity): Float {
-// //     return when (entity) {
-// //         is EndCrystal -> getDamageFromExplosion(
-// //             pos = entity.position(),
-// //             power = 6f,
-// //             explosionRange = 12f,
-// //             damageDistance = 144f,
-// //             damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
-// //         )
+// // /**
+// //  * Mirrors the vanilla blast-power setup of explosive entities.
+// //  *
+// //  * TNT minecarts use the current speed to reproduce vanilla's upper-bound radius because
+// //  * `net.minecraft.world.entity.vehicle.minecart.MinecartTNT#explode` multiplies the speed
+// //  * term by server-side randomness.
+// //  *
+// //  * @see net.minecraft.world.entity.boss.enderdragon.EndCrystal.hurtServer
+// //  * @see net.minecraft.world.entity.item.PrimedTnt
+// //  * @see net.minecraft.world.entity.vehicle.minecart.MinecartTNT.explode
+// //  * @see net.minecraft.world.entity.monster.Creeper
+// //  */
+// // // codex start
+// // // fun LivingEntity.getExplosionDamageFromEntity(entity: Entity): Float {
+// // //     return when (entity) {
+// // //         is EndCrystal -> getDamageFromExplosion(
+// // //             pos = entity.position(),
+// // //             power = 6f,
+// // //             explosionRange = 12f,
+// // //             damageDistance = 144f,
+// // //             damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
+// // //         )
+// // //
+// // //         is PrimedTnt -> getDamageFromExplosion(
+// // //             pos = entity.position().add(0.0, 0.0625, 0.0),
+// // //             power = 4f,
+// // //             explosionRange = 8f,
+// // //             damageDistance = 64f,
+// // //             damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
+// // //         )
+// // //
+// // //         is MinecartTNT -> getDamageFromExplosion(
+// // //             pos = entity.position(),
+// // //             power = entity.getMaximumPotentialExplosionPower(),
+// // //             damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
+// // //         )
+// // //
+// // //         is Creeper -> {
+// // //             val f = if (entity.isPowered) 2f else 1f
+// // //             getDamageFromExplosion(
+// // //                 pos = entity.position(),
+// // //                 power = entity.explosionRadius * f,
+// // //                 damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
+// // //             )
+// // //         }
+// // //
+// // //         else -> 0f
+// // //     }
+// // // }
+// // //
+// // // /**
+// // //  * Mirrors the vanilla entity damage formula for explosions.
+// // //  *
+// // //  * Pass [damageSource] when the original explosion type is known so shield checks and
+// // //  * source-sensitive tags stay aligned with vanilla.
+// // //  *
+// // //  * @see net.minecraft.world.level.ExplosionDamageCalculator#getEntityDamageAmount
+// // //  * @see net.minecraft.world.level.ServerExplosion#getSeenPercent
+// // //  */
+// // // codex end
+// // @Suppress("LongParameterList")
+// // fun LivingEntity.getDamageFromExplosion(
+// //     pos: Vec3,
+// //     power: Float = 6f,
+// //     explosionRange: Float = power * 2f, // allows setting precomputed values
+// //     damageDistance: Float = explosionRange * explosionRange,
+// //     exclude: Collection<BlockPos>? = null,
+// //     include: BlockPos? = null,
+// //     maxBlastResistance: Float? = null,
+// //     entityBoundingBox: AABB? = null,
+// //     damageSource: DamageSource? = null,
+// // ): Float {
+// //     if (this.distanceToSqr(pos) > damageDistance) {
+// //         return 0f
+// //     }
 // //
-// //         is PrimedTnt -> getDamageFromExplosion(
-// //             pos = entity.position().add(0.0, 0.0625, 0.0),
-// //             power = 4f,
-// //             explosionRange = 8f,
-// //             damageDistance = 64f,
-// //             damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
-// //         )
+// //     try {
+// //         ShapeFlag.noShapeChange = true
 // //
-// //         is MinecartTNT -> getDamageFromExplosion(
-// //             pos = entity.position(),
-// //             power = entity.getMaximumPotentialExplosionPower(),
-// //             damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
-// //         )
+// //         val useTweakedMethod = exclude != null ||
+// //             maxBlastResistance != null ||
+// //             include != null ||
+// //             entityBoundingBox != null
 // //
-// //         is Creeper -> {
-// //             val f = if (entity.isPowered) 2f else 1f
-// //             getDamageFromExplosion(
-// //                 pos = entity.position(),
-// //                 power = entity.explosionRadius * f,
-// //                 damageSource = Explosion.getDefaultDamageSource(this.level(), entity)
-// //             )
+// //         val exposure = if (useTweakedMethod) {
+// //             getExposureToExplosion(pos, exclude, include, maxBlastResistance, entityBoundingBox)
+// //         } else {
+// //             ServerExplosion.getSeenPercent(pos, this)
 // //         }
 // //
-// //         else -> 0f
+// //         val distanceDecay = 1.0 - (sqrt(this.distanceToSqr(pos)) / explosionRange.toDouble())
+// //         val pre1 = exposure.toDouble() * distanceDecay
+// //
+// //         val preprocessedDamage = (pre1 * pre1 + pre1) / 2.0 * 7.0 * explosionRange.toDouble() + 1.0
+// //         if (preprocessedDamage == 0.0) {
+// //             return 0f
+// //         }
+// //
+// //         val actualDamageSource = damageSource
+// //             ?: DamageSource(this.level().damageSources().explosion(null).typeHolder(), pos)
+// //         return getEffectiveDamage(actualDamageSource, preprocessedDamage.toFloat())
+// //     } finally {
+// //         ShapeFlag.noShapeChange = false
 // //     }
 // // }
 // //
 // // /**
-// //  * Mirrors the vanilla entity damage formula for explosions.
+// //  * Basically [ServerExplosion.getSeenPercent] but this method allows us to exclude blocks using [exclude].
 // //  *
-// //  * Pass [damageSource] when the original explosion type is known so shield checks and
-// //  * source-sensitive tags stay aligned with vanilla.
-// //  *
-// //  * @see net.minecraft.world.level.ExplosionDamageCalculator#getEntityDamageAmount
-// //  * @see net.minecraft.world.level.ServerExplosion#getSeenPercent
+// //  * @see net.minecraft.world.level.ServerExplosion.getSeenPercent
 // //  */
 // // codex end
-// @Suppress("LongParameterList")
-// fun LivingEntity.getDamageFromExplosion(
-//     pos: Vec3,
-//     power: Float = 6f,
-//     explosionRange: Float = power * 2f, // allows setting precomputed values
-//     damageDistance: Float = explosionRange * explosionRange,
-//     exclude: Collection<BlockPos>? = null,
-//     include: BlockPos? = null,
-//     maxBlastResistance: Float? = null,
-//     entityBoundingBox: AABB? = null,
-//     damageSource: DamageSource? = null,
+// codex end
+// codex start
+//
+// @Suppress("NestedBlockDepth")
+// fun LivingEntity.getExposureToExplosion(
+//     source: Vec3,
+//     exclude: Collection<BlockPos>?,
+//     include: BlockPos?,
+//     maxBlastResistance: Float?,
+//     entityBoundingBox: AABB?
 // ): Float {
-//     if (this.distanceToSqr(pos) > damageDistance) {
+//     val entityBoundingBox1 = entityBoundingBox ?: boundingBox
+//     val shapeContext = EntityCollisionContext(
+//         isDescending,
+//         false,
+//         entityBoundingBox1.minY,
+//         mainHandItem,
+//         false,
+//         this
+//     )
+//
+//     val stepX = 1.0 / ((entityBoundingBox1.maxX - entityBoundingBox1.minX) * 2.0 + 1.0)
+//     val stepY = 1.0 / ((entityBoundingBox1.maxY - entityBoundingBox1.minY) * 2.0 + 1.0)
+//     val stepZ = 1.0 / ((entityBoundingBox1.maxZ - entityBoundingBox1.minZ) * 2.0 + 1.0)
+//
+//     val offsetX = (1.0 - floor(1.0 / stepX) * stepX) / 2.0
+//     val offsetZ = (1.0 - floor(1.0 / stepZ) * stepZ) / 2.0
+//
+//     if (stepX < 0.0 || stepY < 0.0 || stepZ < 0.0) {
 //         return 0f
 //     }
 //
-//     try {
-//         ShapeFlag.noShapeChange = true
+//     var hits = 0
+//     var totalRays = 0
 //
-//         val useTweakedMethod = exclude != null ||
-//             maxBlastResistance != null ||
-//             include != null ||
-//             entityBoundingBox != null
+//     var currentXStep = 0.0
+//     while (currentXStep <= 1.0) {
+//         var currentYStep = 0.0
+//         while (currentYStep <= 1.0) {
+//             var currentZStep = 0.0
+//             while (currentZStep <= 1.0) {
+//                 val sampleX = Mth.lerp(currentXStep, entityBoundingBox1.minX, entityBoundingBox1.maxX)
+//                 val sampleY = Mth.lerp(currentYStep, entityBoundingBox1.minY, entityBoundingBox1.maxY)
+//                 val sampleZ = Mth.lerp(currentZStep, entityBoundingBox1.minZ, entityBoundingBox1.maxZ)
 //
-//         val exposure = if (useTweakedMethod) {
-//             getExposureToExplosion(pos, exclude, include, maxBlastResistance, entityBoundingBox)
-//         } else {
-//             ServerExplosion.getSeenPercent(pos, this)
+//                 val samplePoint = Vec3(sampleX + offsetX, sampleY, sampleZ + offsetZ)
+//                 val hitResult = this.level().raycast(
+//                     ClipContext(
+//                         samplePoint,
+//                         source,
+//                         ClipContext.Block.COLLIDER,
+//                         ClipContext.Fluid.NONE,
+//                         shapeContext
+//                     ),
+//                     exclude,
+//                     include,
+//                     maxBlastResistance
+//                 )
+//
+//                 if (hitResult.type == HitResult.Type.MISS) {
+//                     hits++
+//                 }
+//
+//                 totalRays++
+//                 currentZStep += stepZ
+//             }
+//             currentYStep += stepY
 //         }
-//
-//         val distanceDecay = 1.0 - (sqrt(this.distanceToSqr(pos)) / explosionRange.toDouble())
-//         val pre1 = exposure.toDouble() * distanceDecay
-//
-//         val preprocessedDamage = (pre1 * pre1 + pre1) / 2.0 * 7.0 * explosionRange.toDouble() + 1.0
-//         if (preprocessedDamage == 0.0) {
-//             return 0f
-//         }
-//
-//         val actualDamageSource = damageSource
-//             ?: DamageSource(this.level().damageSources().explosion(null).typeHolder(), pos)
-//         return getEffectiveDamage(actualDamageSource, preprocessedDamage.toFloat())
-//     } finally {
-//         ShapeFlag.noShapeChange = false
+//         currentXStep += stepX
 //     }
+//
+//     return hits.toFloat() / totalRays.toFloat()
 // }
 //
 // /**
-//  * Basically [ServerExplosion.getSeenPercent] but this method allows us to exclude blocks using [exclude].
+//  * Uses the current horizontal speed to reproduce the vanilla TNT minecart blast upper bound.
 //  *
-//  * @see net.minecraft.world.level.ServerExplosion.getSeenPercent
+//  * @see net.minecraft.world.entity.vehicle.minecart.MinecartTNT.explode
 //  */
-// codex end
-
-@Suppress("NestedBlockDepth")
-fun LivingEntity.getExposureToExplosion(
-    source: Vec3,
-    exclude: Collection<BlockPos>?,
-    include: BlockPos?,
-    maxBlastResistance: Float?,
-    entityBoundingBox: AABB?
-): Float {
-    val entityBoundingBox1 = entityBoundingBox ?: boundingBox
-    val shapeContext = EntityCollisionContext(
-        isDescending,
-        false,
-        entityBoundingBox1.minY,
-        mainHandItem,
-        false,
-        this
-    )
-
-    val stepX = 1.0 / ((entityBoundingBox1.maxX - entityBoundingBox1.minX) * 2.0 + 1.0)
-    val stepY = 1.0 / ((entityBoundingBox1.maxY - entityBoundingBox1.minY) * 2.0 + 1.0)
-    val stepZ = 1.0 / ((entityBoundingBox1.maxZ - entityBoundingBox1.minZ) * 2.0 + 1.0)
-
-    val offsetX = (1.0 - floor(1.0 / stepX) * stepX) / 2.0
-    val offsetZ = (1.0 - floor(1.0 / stepZ) * stepZ) / 2.0
-
-    if (stepX < 0.0 || stepY < 0.0 || stepZ < 0.0) {
-        return 0f
-    }
-
-    var hits = 0
-    var totalRays = 0
-
-    var currentXStep = 0.0
-    while (currentXStep <= 1.0) {
-        var currentYStep = 0.0
-        while (currentYStep <= 1.0) {
-            var currentZStep = 0.0
-            while (currentZStep <= 1.0) {
-                val sampleX = Mth.lerp(currentXStep, entityBoundingBox1.minX, entityBoundingBox1.maxX)
-                val sampleY = Mth.lerp(currentYStep, entityBoundingBox1.minY, entityBoundingBox1.maxY)
-                val sampleZ = Mth.lerp(currentZStep, entityBoundingBox1.minZ, entityBoundingBox1.maxZ)
-
-                val samplePoint = Vec3(sampleX + offsetX, sampleY, sampleZ + offsetZ)
-                val hitResult = this.level().raycast(
-                    ClipContext(
-                        samplePoint,
-                        source,
-                        ClipContext.Block.COLLIDER,
-                        ClipContext.Fluid.NONE,
-                        shapeContext
-                    ),
-                    exclude,
-                    include,
-                    maxBlastResistance
-                )
-
-                if (hitResult.type == HitResult.Type.MISS) {
-                    hits++
-                }
-
-                totalRays++
-                currentZStep += stepZ
-            }
-            currentYStep += stepY
-        }
-        currentXStep += stepX
-    }
-
-    return hits.toFloat() / totalRays.toFloat()
-}
-
-/**
- * Uses the current horizontal speed to reproduce the vanilla TNT minecart blast upper bound.
- *
- * @see net.minecraft.world.entity.vehicle.minecart.MinecartTNT.explode
- */
-// codex start
-// private fun MinecartTNT.getMaximumPotentialExplosionPower(): Float {
-//     val currentHorizontalSpeed = sqrt(this.deltaMovement.horizontalDistanceSqr()).coerceAtMost(5.0).toFloat()
-//     return 4f + currentHorizontalSpeed * 1.5f
-// }
-//
-// /**
-//  * Sometimes the server does not publish the actual entity health with its metadata.
-//  * This function incorporates other sources to get the actual value.
-//  *
-//  * Currently, uses the following sources:
-//  * 1. Scoreboard
-//  */
+// // codex start
+// // private fun MinecartTNT.getMaximumPotentialExplosionPower(): Float {
+// //     val currentHorizontalSpeed = sqrt(this.deltaMovement.horizontalDistanceSqr()).coerceAtMost(5.0).toFloat()
+// //     return 4f + currentHorizontalSpeed * 1.5f
+// // }
+// //
+// // /**
+// //  * Sometimes the server does not publish the actual entity health with its metadata.
+// //  * This function incorporates other sources to get the actual value.
+// //  *
+// //  * Currently, uses the following sources:
+// //  * 1. Scoreboard
+// //  */
+// // codex end
 // codex end
 
 fun LivingEntity.getActualHealth(fromScoreboard: Boolean = true): Float {

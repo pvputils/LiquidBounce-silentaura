@@ -18,21 +18,13 @@
  */
 package net.ccbluex.liquidbounce.utils.movement
 
-import net.ccbluex.fastutil.mapToArray
-import net.ccbluex.fastutil.objectHashSetOf
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager
-import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.math.yaw
-import net.ccbluex.liquidbounce.utils.math.fma
 import net.ccbluex.liquidbounce.utils.math.iterator
 import net.ccbluex.liquidbounce.utils.math.minus
-import net.ccbluex.liquidbounce.utils.math.rangeTo
 import net.minecraft.client.player.LocalPlayer
-import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
-import net.minecraft.world.entity.Pose
-import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
 
@@ -123,66 +115,68 @@ fun getDirectionalInputForDegrees(
 //     }
 // }
 // codex end
-
-private fun collectCollisionBoundingBoxes(
-    from: Vec3,
-    to: Vec3,
-    allowedDropDown: Float,
-): ArrayList<AABB> {
-    val playerDims = mc.player!!.getDimensions(Pose.STANDING)
-
-    val fromBox: AABB = playerDims.makeBoundingBox(from)
-    val toBox: AABB = playerDims.makeBoundingBox(to)
-
-    val unionBox = fromBox.minmax(toBox)
-
-    val fromBlockPos =
-        BlockPos.containing(
-            unionBox.minX - 0.3 - 1.0E-7,
-            unionBox.minY - allowedDropDown - 1.0E-7,
-            unionBox.minZ - 0.3 - 1.0E-7,
-        )
-    val toBlockPos =
-        BlockPos.containing(
-            unionBox.maxX + 0.3 + 1.0E-7,
-            unionBox.minY + 1.0E-7,
-            unionBox.maxZ + 0.3 + 1.0E-7,
-        )
-
-    val lineVec = to.subtract(from)
-    val extendedFrom = from.fma(-1000.0, lineVec)
-    val extendedTo = to.fma(1000.0, lineVec)
-
-    val foundBoxes = ArrayList<AABB>()
-
-    val world = mc.level!!
-
-    for (pos in fromBlockPos..toBlockPos) {
-        val state = world.getBlockState(pos)
-
-        val collisionShape = state.getCollisionShape(world, pos)
-
-        collisionShape.forAllBoxes { minX, minY, minZ, maxX, maxY, maxZ ->
-            val adjustedBox =
-                AABB(
-                    minX - 0.3,
-                    minY - 1.0,
-                    minZ - 0.3,
-                    maxX + 0.3,
-                    maxY + allowedDropDown + 0.05,
-                    maxZ + 0.3,
-                ).move(pos)
-
-            if (adjustedBox.clip(extendedFrom, extendedTo).isEmpty) {
-                return@forAllBoxes
-            }
-
-            foundBoxes.add(adjustedBox)
-        }
-    }
-
-    return foundBoxes
-}
+// codex start
+//
+// private fun collectCollisionBoundingBoxes(
+//     from: Vec3,
+//     to: Vec3,
+//     allowedDropDown: Float,
+// ): ArrayList<AABB> {
+//     val playerDims = mc.player!!.getDimensions(Pose.STANDING)
+//
+//     val fromBox: AABB = playerDims.makeBoundingBox(from)
+//     val toBox: AABB = playerDims.makeBoundingBox(to)
+//
+//     val unionBox = fromBox.minmax(toBox)
+//
+//     val fromBlockPos =
+//         BlockPos.containing(
+//             unionBox.minX - 0.3 - 1.0E-7,
+//             unionBox.minY - allowedDropDown - 1.0E-7,
+//             unionBox.minZ - 0.3 - 1.0E-7,
+//         )
+//     val toBlockPos =
+//         BlockPos.containing(
+//             unionBox.maxX + 0.3 + 1.0E-7,
+//             unionBox.minY + 1.0E-7,
+//             unionBox.maxZ + 0.3 + 1.0E-7,
+//         )
+//
+//     val lineVec = to.subtract(from)
+//     val extendedFrom = from.fma(-1000.0, lineVec)
+//     val extendedTo = to.fma(1000.0, lineVec)
+//
+//     val foundBoxes = ArrayList<AABB>()
+//
+//     val world = mc.level!!
+//
+//     for (pos in fromBlockPos..toBlockPos) {
+//         val state = world.getBlockState(pos)
+//
+//         val collisionShape = state.getCollisionShape(world, pos)
+//
+//         collisionShape.forAllBoxes { minX, minY, minZ, maxX, maxY, maxZ ->
+//             val adjustedBox =
+//                 AABB(
+//                     minX - 0.3,
+//                     minY - 1.0,
+//                     minZ - 0.3,
+//                     maxX + 0.3,
+//                     maxY + allowedDropDown + 0.05,
+//                     maxZ + 0.3,
+//                 ).move(pos)
+//
+//             if (adjustedBox.clip(extendedFrom, extendedTo).isEmpty) {
+//                 return@forAllBoxes
+//             }
+//
+//             foundBoxes.add(adjustedBox)
+//         }
+//     }
+//
+//     return foundBoxes
+// }
+// codex end
 
 inline fun LocalPlayer.setDeltaMovement(block: (Vec3) -> Vec3) {
     this.deltaMovement = block(this.deltaMovement)

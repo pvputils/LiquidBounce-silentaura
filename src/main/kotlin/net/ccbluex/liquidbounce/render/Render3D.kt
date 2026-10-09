@@ -29,7 +29,6 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.RenderDrawKey
 import net.ccbluex.liquidbounce.render.mesh.BatchCollector
 import net.ccbluex.liquidbounce.render.mesh.MeshBuildScope
-import net.ccbluex.liquidbounce.utils.collection.Pools
 import net.minecraft.client.Camera
 import net.minecraft.client.renderer.texture.AbstractTexture
 import net.minecraft.core.BlockPos

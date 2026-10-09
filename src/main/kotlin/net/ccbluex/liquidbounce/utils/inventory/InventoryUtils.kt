@@ -20,8 +20,6 @@
 
 package net.ccbluex.liquidbounce.utils.inventory
 
-import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.utils.client.player
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.AbstractContainerMenu

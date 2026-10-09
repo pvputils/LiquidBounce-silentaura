@@ -36,11 +36,8 @@ import net.minecraft.client.CameraType
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.world.entity.Attackable
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.ExperienceOrb
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 
 /**
  * Global target configurable
