@@ -31,7 +31,6 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAura
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.KillAuraRotationsValueGroup.KillAuraRotationTiming.SNAP
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ALL
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_NONE
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura.RaycastMode.TRACE_ONLYENEMY
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRange
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraRangeIndicator
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.modes.GenericDebugRecorder
@@ -228,11 +227,14 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         val crosshairTarget = when {
             raycast != TRACE_NONE -> {
                 findEntityInCrosshair(range.interactionRange.toDouble(), rotation, predicate = {
-                    when (raycast) {
-                        TRACE_ONLYENEMY -> it.shouldBeAttacked()
-                        TRACE_ALL -> true
-                        else -> false
-                    }
+                    // codex start
+                    // when (raycast) {
+                    //     TRACE_ONLYENEMY -> it.shouldBeAttacked()
+                    //     TRACE_ALL -> true
+                    //     else -> false
+                    // }
+                    // codex end
+                    it.shouldBeAttacked() //codex (TRACE_ONLYENEMY -> it.shouldBeAttacked())
                 })?.entity ?: target
             }
             else -> target

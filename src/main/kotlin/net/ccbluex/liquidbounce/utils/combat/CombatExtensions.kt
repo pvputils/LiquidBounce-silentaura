@@ -93,11 +93,21 @@ enum class EntityTargetClassification {
 enum class Targets(override val tag: String) : Tagged {
     SELF("Self"),
     PLAYERS("Players"),
-    HOSTILE("Hostile"),
-    ANGERABLE("Angerable"),
-    WATER_CREATURE("WaterCreature"),
-    PASSIVE("Passive"),
-    ARMOR_STAND("ArmorStand"),
+    // codex start
+    // HOSTILE("Hostile"),
+    // codex end
+    // codex start
+    // ANGERABLE("Angerable"),
+    // codex end
+    // codex start
+    // WATER_CREATURE("WaterCreature"),
+    // codex end
+    // codex start
+    // PASSIVE("Passive"),
+    // codex end
+    // codex start
+    // ARMOR_STAND("ArmorStand"),
+    // codex end
     INVISIBLE("Invisible"),
     DEAD("Dead"),
     SLEEPING("Sleeping"),
@@ -157,11 +167,21 @@ private fun Set<Targets>.isInteresting(suspect: Entity, info: EntityTargetingInf
             // Allow targeting friends even when Players is disabled, as long as Friends is enabled
             else -> Targets.PLAYERS in this || (info.isFriend && Targets.FRIENDS in this)
         }
-        is WaterAnimal -> Targets.WATER_CREATURE in this
-        is AgeableMob, is Bat, is Allay -> Targets.PASSIVE in this
-        is ArmorStand -> Targets.ARMOR_STAND in this
-        is Monster, is Enemy -> Targets.HOSTILE in this
-        is NeutralMob -> Targets.ANGERABLE in this
+        // codex start
+        // is WaterAnimal -> Targets.WATER_CREATURE in this
+        // codex end
+        // codex start
+        // is AgeableMob, is Bat, is Allay -> Targets.PASSIVE in this
+        // codex end
+        // codex start
+        // is ArmorStand -> Targets.ARMOR_STAND in this
+        // codex end
+        // codex start
+        // is Monster, is Enemy -> Targets.HOSTILE in this
+        // codex end
+        // codex start
+        // is NeutralMob -> Targets.ANGERABLE in this
+        // codex end
 
         else -> false
     }
