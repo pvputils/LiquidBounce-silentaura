@@ -31,7 +31,6 @@ import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.sequenceHandler
 import net.ccbluex.liquidbounce.event.tickUntil
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
 import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.ModuleDebugRecorder
@@ -232,7 +231,9 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // codex start
             // ModuleAutoBow,
             // codex end
-            ModuleAutoClicker,
+            // codex start
+            // ModuleAutoClicker,
+            // codex end
             // codex start
             // ModuleAutoLeave,
             // codex end
