@@ -18,12 +18,13 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.combat.killaura
 
-import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.utils.aiming.RotationsValueGroup
 
 object KillAuraRotationsValueGroup : RotationsValueGroup(ModuleKillAura, combatSpecific = true) {
 
-    val rotationTiming by enumChoice("RotationTiming", KillAuraRotationTiming.NORMAL)
+    // codex start
+    // val rotationTiming by enumChoice("RotationTiming", KillAuraRotationTiming.NORMAL)
+    // codex end
     val aimThroughWalls by boolean("ThroughWalls", false)
 
     /**
@@ -31,10 +32,13 @@ object KillAuraRotationsValueGroup : RotationsValueGroup(ModuleKillAura, combatS
      */
     val lazyRotation by boolean("LazyRotation", false)
 
-    enum class KillAuraRotationTiming(override val tag: String) : Tagged {
-        NORMAL("Normal"),
-        SNAP("Snap"),
-        ON_TICK("OnTick")
-    }
+    // codex start
+    // enum class KillAuraRotationTiming(override val tag: String) : Tagged {
+    //     NORMAL("Normal"),
+    //     SNAP("Snap"),
+    //     ON_TICK("OnTick")
+    // }
+    // codex end
+
 
 }
