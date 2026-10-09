@@ -66,10 +66,12 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
     private val rotations = tree(KillAuraRotationsValueGroup)
     private val pointTracker = tree(PointTracker(this))
 
-    private val requires by multiEnumChoice<KillAuraRequirements>("Requires")
-
-    private val requirementsMet
-        get() = requires.all { it.asBoolean }
+    // codex start
+    // private val requires by multiEnumChoice<KillAuraRequirements>("Requires")
+    //
+    // private val requirementsMet
+    //     get() = requires.all { it.asBoolean }
+    // codex end
 
     // Bypass techniques
     // codex start
@@ -145,7 +147,7 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
 
         // Make sure killaura-logic is not running while inventory is open
         val isInInventoryScreen = isInventoryOpen || mc.gui.screen() is ContainerScreen
-        val shouldResetTarget = player.isSpectator || player.isDeadOrDying || !requirementsMet
+        val shouldResetTarget = player.isSpectator || player.isDeadOrDying //codex (|| !requirementsMet)
 
         if (isInInventoryScreen || shouldResetTarget) { //codex (&& !ignoreOpenInventory)
             // Reset current target
