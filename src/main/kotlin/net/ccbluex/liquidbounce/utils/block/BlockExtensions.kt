@@ -38,14 +38,12 @@ import net.minecraft.core.TypedInstance
 import net.minecraft.core.Vec3i
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntitySelector
 import net.minecraft.world.level.block.AbstractBedBlock
 import net.minecraft.world.level.block.AbstractChestBlock
 import net.minecraft.world.level.block.AbstractFurnaceBlock
 import net.minecraft.world.level.block.AnvilBlock
 import net.minecraft.world.level.block.BarrelBlock
 import net.minecraft.world.level.block.BeaconBlock
-import net.minecraft.world.level.block.BedBlock
 import net.minecraft.world.level.block.BellBlock
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
@@ -86,15 +84,10 @@ import net.minecraft.world.level.block.StonecutterBlock
 import net.minecraft.world.level.block.SweetBerryBushBlock
 import net.minecraft.world.level.block.TrapDoorBlock
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import java.util.function.Predicate
-import kotlin.math.ceil
-import kotlin.math.floor
 
 fun Vec3i.toBlockPos() = BlockPos(this.x, this.y, this.z)
 
@@ -115,8 +108,10 @@ fun BlockPos.getBlock(): Block? = state?.block
 // fun BlockPos.getCenterDistanceSquaredEyes() = this.distToCenterSqr(player.eyePosition)
 // codex end
 
-val BlockState.isBed: Boolean
-    get() = block is BedBlock
+// codex start
+// val BlockState.isBed: Boolean
+//     get() = block is BedBlock
+// codex end
 
 val TypedInstance<Block>.isAnyChest: Boolean
     get() = this.`is`(Blocks.CHEST)
@@ -147,8 +142,10 @@ val BlockPos.outlineBox: AABB
         return outlineShape.boundsOrNull() ?: FULL_BOX
     }
 
-val BlockPos.collisionShape: VoxelShape
-    get() = state?.getCollisionShape(world, this) ?: Shapes.empty()
+// codex start
+// val BlockPos.collisionShape: VoxelShape
+//     get() = state?.getCollisionShape(world, this) ?: Shapes.empty()
+// codex end
 
 val BlockPos.outlineShape: VoxelShape
     get() = state?.getShape(world, this) ?: Shapes.empty()
@@ -445,187 +442,189 @@ fun BlockPos.searchLayer(layers: Int, vararg directions: Direction): Sequence<In
 // // codex end
 // codex end
 
-val AABB.collidingRegion: BoundingBox
-    get() = BoundingBox(
-        floor(this.minX).toInt(), floor(this.minY).toInt(), floor(this.minZ).toInt(),
-        ceil(this.maxX).toInt(), ceil(this.maxY).toInt(), ceil(this.maxZ).toInt(),
-    )
-
-val BlockHitResult.targetBlockPos: BlockPos get() = this.blockPos.relative(this.direction)
-
 // codex start
-// /**
-//  * Simulated [net.minecraft.world.phys.HitResult.Type.BLOCK] branch in vanilla
-//  *
-//  * This function does not perform the surrounding checks from [net.minecraft.client.Minecraft.startUseItem],
-//  * such as whether the game mode is destroying a block, the player's hands are busy, or the held item is enabled.
-//  * Callers should perform the applicable checks before calling this function.
-//  *
-//  * @param rotation rotation used to produce [hitResult]
-//  * @see net.minecraft.client.Minecraft.startUseItem
-//  */
-// @AddonApi
-// @JvmOverloads
-// fun doPlacement(
-//     hitResult: BlockHitResult,
-//     rotation: Rotation,
-//     hand: InteractionHand = InteractionHand.MAIN_HAND,
-//     onPlacementSuccess: () -> Boolean = { true },
-//     onItemUseSuccess: () -> Boolean = { true },
-//     swingMode: SwingMode = SwingMode.DO_NOT_HIDE
-// ) {
-//     val stack = player.getItemInHand(hand)
-//     val count = stack.count
-//
-//     val useItemOnResult = interaction.useItemOn(player, hand, hitResult)
-//
-//     when {
-//         useItemOnResult is InteractionResult.Fail -> {
-//             return
-//         }
-//
-//         useItemOnResult is InteractionResult.Pass -> {
-//             // Ok, we cannot place on the block, so let's just use the item in the direction
-//             // without targeting a block (for buckets, etc.)
-//             if (!stack.isEmpty) {
-//                 val useItemResult = interaction.useItem(player, hand, rotation.yRot, rotation.xRot)
-//                 if (useItemResult is Success) {
-//                     if (useItemResult.swingSource == SwingSource.PREDICTED && onItemUseSuccess()) {
-//                         swingMode.swing(hand)
-//                     }
-//
-//                     player.itemUsed(hand)
-//                 }
-//             }
-//         }
-//
-//         useItemOnResult.consumesAction() -> {
-//             val wasStackUsed = !stack.isEmpty && (stack.count != count || player.hasInfiniteMaterials())
-//
-//             handleActionsOnAccept(hand, useItemOnResult, wasStackUsed, onPlacementSuccess, swingMode)
-//         }
-//     }
-// }
-//
-// /**
-//  * Swings item, resets equip progress and hand swing progress
-//  *
-//  * @param wasStackUsed was an item consumed in order to place the block
-//  * @param shouldSwing if result of the lambda is true, swing hand with [swingMode]
-//  */
-// private inline fun handleActionsOnAccept(
-//     hand: InteractionHand,
-//     interactionResult: InteractionResult,
-//     wasStackUsed: Boolean,
-//     shouldSwing: () -> Boolean,
-//     swingMode: SwingMode,
-// ) {
-//     if (interactionResult is Success && interactionResult.swingSource != SwingSource.PREDICTED) {
-//         return
-//     }
-//
-//     if (shouldSwing()) {
-//         swingMode.swing(hand)
-//     }
-//
-//     if (wasStackUsed) {
-//         player.itemUsed(hand)
-//     }
-// }
-//
-// /**
-//  * Places the item in [hand] at [pos] against a neighbouring block, rotating silently towards it.
-//  *
-//  * @return false when there is nothing to place against or the spot is out of reach
-//  */
-// @AddonApi
-// @JvmOverloads
-// fun doPlacement(
-//     pos: BlockPos,
-//     hand: InteractionHand = InteractionHand.MAIN_HAND,
-//     swingMode: SwingMode = SwingMode.DO_NOT_HIDE,
-// ): Boolean {
-//     val options = BlockPlacementTargetFindingOptions(
-//         BlockOffsetOptions.Default,
-//         FaceHandlingOptions(CenterTargetPositionFactory),
-//         stackToPlaceWith = player.getItemInHand(hand),
-//         PlayerLocationOnPlacement(),
+// val AABB.collidingRegion: BoundingBox
+//     get() = BoundingBox(
+//         floor(this.minX).toInt(), floor(this.minY).toInt(), floor(this.minZ).toInt(),
+//         ceil(this.maxX).toInt(), ceil(this.maxY).toInt(), ceil(this.maxZ).toInt(),
 //     )
-//     val target = findBestBlockPlacementTarget(pos, options) ?: return false
-//     val hit = target.verifyClick() ?: return false
-//     doPlacement(hit, target.rotation, hand = hand, swingMode = swingMode)
-//     return true
-// }
 //
-// /**
-//  * Starts breaking [pos], rotating silently towards it. [immediate] sends start and stop at once,
-//  * which only works in creative or on blocks that break instantly.
-//  *
-//  * @return false when [pos] is not in reach
-//  */
-// @AddonApi
-// @JvmOverloads
-// fun doBreak(pos: BlockPos, immediate: Boolean = false, swingMode: SwingMode = SwingMode.DO_NOT_HIDE): Boolean {
-//     val hit = traceFromPlayer(Rotation.lookingAt(Vec3.atCenterOf(pos), player.eyePosition))
-//     if (hit.type != HitResult.Type.BLOCK || hit.blockPos != pos) {
-//         return false
-//     }
-//     doBreak(hit, immediate, swingMode)
-//     return true
-// }
+// val BlockHitResult.targetBlockPos: BlockPos get() = this.blockPos.relative(this.direction)
 //
-// /**
-//  * Breaks the block
-//  */
-// @AddonApi
-// @JvmOverloads
-// fun doBreak(
-//     rayTraceResult: BlockHitResult,
-//     immediate: Boolean = false,
-//     swingMode: SwingMode = SwingMode.DO_NOT_HIDE
-// ) {
-//     val direction = rayTraceResult.direction
-//     val blockPos = rayTraceResult.blockPos
+// // codex start
+// // /**
+// //  * Simulated [net.minecraft.world.phys.HitResult.Type.BLOCK] branch in vanilla
+// //  *
+// //  * This function does not perform the surrounding checks from [net.minecraft.client.Minecraft.startUseItem],
+// //  * such as whether the game mode is destroying a block, the player's hands are busy, or the held item is enabled.
+// //  * Callers should perform the applicable checks before calling this function.
+// //  *
+// //  * @param rotation rotation used to produce [hitResult]
+// //  * @see net.minecraft.client.Minecraft.startUseItem
+// //  */
+// // @AddonApi
+// // @JvmOverloads
+// // fun doPlacement(
+// //     hitResult: BlockHitResult,
+// //     rotation: Rotation,
+// //     hand: InteractionHand = InteractionHand.MAIN_HAND,
+// //     onPlacementSuccess: () -> Boolean = { true },
+// //     onItemUseSuccess: () -> Boolean = { true },
+// //     swingMode: SwingMode = SwingMode.DO_NOT_HIDE
+// // ) {
+// //     val stack = player.getItemInHand(hand)
+// //     val count = stack.count
+// //
+// //     val useItemOnResult = interaction.useItemOn(player, hand, hitResult)
+// //
+// //     when {
+// //         useItemOnResult is InteractionResult.Fail -> {
+// //             return
+// //         }
+// //
+// //         useItemOnResult is InteractionResult.Pass -> {
+// //             // Ok, we cannot place on the block, so let's just use the item in the direction
+// //             // without targeting a block (for buckets, etc.)
+// //             if (!stack.isEmpty) {
+// //                 val useItemResult = interaction.useItem(player, hand, rotation.yRot, rotation.xRot)
+// //                 if (useItemResult is Success) {
+// //                     if (useItemResult.swingSource == SwingSource.PREDICTED && onItemUseSuccess()) {
+// //                         swingMode.swing(hand)
+// //                     }
+// //
+// //                     player.itemUsed(hand)
+// //                 }
+// //             }
+// //         }
+// //
+// //         useItemOnResult.consumesAction() -> {
+// //             val wasStackUsed = !stack.isEmpty && (stack.count != count || player.hasInfiniteMaterials())
+// //
+// //             handleActionsOnAccept(hand, useItemOnResult, wasStackUsed, onPlacementSuccess, swingMode)
+// //         }
+// //     }
+// // }
+// //
+// // /**
+// //  * Swings item, resets equip progress and hand swing progress
+// //  *
+// //  * @param wasStackUsed was an item consumed in order to place the block
+// //  * @param shouldSwing if result of the lambda is true, swing hand with [swingMode]
+// //  */
+// // private inline fun handleActionsOnAccept(
+// //     hand: InteractionHand,
+// //     interactionResult: InteractionResult,
+// //     wasStackUsed: Boolean,
+// //     shouldSwing: () -> Boolean,
+// //     swingMode: SwingMode,
+// // ) {
+// //     if (interactionResult is Success && interactionResult.swingSource != SwingSource.PREDICTED) {
+// //         return
+// //     }
+// //
+// //     if (shouldSwing()) {
+// //         swingMode.swing(hand)
+// //     }
+// //
+// //     if (wasStackUsed) {
+// //         player.itemUsed(hand)
+// //     }
+// // }
+// //
+// // /**
+// //  * Places the item in [hand] at [pos] against a neighbouring block, rotating silently towards it.
+// //  *
+// //  * @return false when there is nothing to place against or the spot is out of reach
+// //  */
+// // @AddonApi
+// // @JvmOverloads
+// // fun doPlacement(
+// //     pos: BlockPos,
+// //     hand: InteractionHand = InteractionHand.MAIN_HAND,
+// //     swingMode: SwingMode = SwingMode.DO_NOT_HIDE,
+// // ): Boolean {
+// //     val options = BlockPlacementTargetFindingOptions(
+// //         BlockOffsetOptions.Default,
+// //         FaceHandlingOptions(CenterTargetPositionFactory),
+// //         stackToPlaceWith = player.getItemInHand(hand),
+// //         PlayerLocationOnPlacement(),
+// //     )
+// //     val target = findBestBlockPlacementTarget(pos, options) ?: return false
+// //     val hit = target.verifyClick() ?: return false
+// //     doPlacement(hit, target.rotation, hand = hand, swingMode = swingMode)
+// //     return true
+// // }
+// //
+// // /**
+// //  * Starts breaking [pos], rotating silently towards it. [immediate] sends start and stop at once,
+// //  * which only works in creative or on blocks that break instantly.
+// //  *
+// //  * @return false when [pos] is not in reach
+// //  */
+// // @AddonApi
+// // @JvmOverloads
+// // fun doBreak(pos: BlockPos, immediate: Boolean = false, swingMode: SwingMode = SwingMode.DO_NOT_HIDE): Boolean {
+// //     val hit = traceFromPlayer(Rotation.lookingAt(Vec3.atCenterOf(pos), player.eyePosition))
+// //     if (hit.type != HitResult.Type.BLOCK || hit.blockPos != pos) {
+// //         return false
+// //     }
+// //     doBreak(hit, immediate, swingMode)
+// //     return true
+// // }
+// //
+// // /**
+// //  * Breaks the block
+// //  */
+// // @AddonApi
+// // @JvmOverloads
+// // fun doBreak(
+// //     rayTraceResult: BlockHitResult,
+// //     immediate: Boolean = false,
+// //     swingMode: SwingMode = SwingMode.DO_NOT_HIDE
+// // ) {
+// //     val direction = rayTraceResult.direction
+// //     val blockPos = rayTraceResult.blockPos
+// //
+// //     if (player.isCreative) {
+// //         if (interaction.startDestroyBlock(blockPos, rayTraceResult.direction)) {
+// //             swingMode.swing(InteractionHand.MAIN_HAND)
+// //             return
+// //         }
+// //     }
+// //
+// //     if (immediate) {
+// //         EventManager.callEvent(BlockBreakingProgressEvent(blockPos))
+// //
+// //         interaction.startPrediction(world) { sequence ->
+// //             ServerboundPlayerActionPacket(
+// //                 ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, blockPos, direction, sequence
+// //             )
+// //         }
+// //         swingMode.swing(InteractionHand.MAIN_HAND)
+// //         interaction.startPrediction(world) { sequence ->
+// //             ServerboundPlayerActionPacket(
+// //                 ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, blockPos, direction, sequence
+// //             )
+// //         }
+// //         return
+// //     }
+// //
+// //     if (interaction.continueDestroyBlock(blockPos, direction)) {
+// //         swingMode.swing(InteractionHand.MAIN_HAND)
+// //         world.addBreakingBlockEffects(blockPos, direction, false)
+// //     }
+// // }
+// // codex end
+// // codex start
+// //
+// // fun BlockState.isNotBreakable(pos: BlockPos) = !isBreakable(pos)
+// // codex end
 //
-//     if (player.isCreative) {
-//         if (interaction.startDestroyBlock(blockPos, rayTraceResult.direction)) {
-//             swingMode.swing(InteractionHand.MAIN_HAND)
-//             return
-//         }
-//     }
-//
-//     if (immediate) {
-//         EventManager.callEvent(BlockBreakingProgressEvent(blockPos))
-//
-//         interaction.startPrediction(world) { sequence ->
-//             ServerboundPlayerActionPacket(
-//                 ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, blockPos, direction, sequence
-//             )
-//         }
-//         swingMode.swing(InteractionHand.MAIN_HAND)
-//         interaction.startPrediction(world) { sequence ->
-//             ServerboundPlayerActionPacket(
-//                 ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, blockPos, direction, sequence
-//             )
-//         }
-//         return
-//     }
-//
-//     if (interaction.continueDestroyBlock(blockPos, direction)) {
-//         swingMode.swing(InteractionHand.MAIN_HAND)
-//         world.addBreakingBlockEffects(blockPos, direction, false)
-//     }
-// }
-// codex end
-// codex start
-//
-// fun BlockState.isNotBreakable(pos: BlockPos) = !isBreakable(pos)
-// codex end
-
-// codex start
-// fun BlockState.isBreakable(pos: BlockPos): Boolean {
-//     return !isAir && (player.isCreative || getDestroySpeed(world, pos) >= 0f)
-// }
+// // codex start
+// // fun BlockState.isBreakable(pos: BlockPos): Boolean {
+// //     return !isAir && (player.isCreative || getDestroySpeed(world, pos) >= 0f)
+// // }
+// // codex end
 // codex end
 
 fun BlockPos?.fallDamageMultiplier(entity: Entity): Float =
@@ -714,69 +713,71 @@ val BlockState?.isInteractable: Boolean get() = this?.block?.isInteractable(this
 // }
 // codex end
 
-private val PREDICATE_UNOBSTRUCTED: Predicate<Entity> =
-    EntitySelector.NO_SPECTATORS.and { entity ->
-        !entity.isRemoved && entity.blocksBuilding
-    }
-
-/**
- * Checks whether the position is unobstructed for placing a block.
- *
- * @see net.minecraft.world.level.EntityGetter.isUnobstructed
- */
 // codex start
-// fun BlockPos.isUnobstructed(
-//     except: Entity? = null,
-//     box: AABB = FULL_BOX,
-//     predicate: Predicate<Entity> = Predicates.alwaysTrue(),
-// ): Boolean {
-//     val posBox = box + this
-//     return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
-//         .isEmpty()
-// }
-// codex end
-// codex start
-//
-// fun BlockPos.getBlockingEntities(
-//     except: Entity? = null,
-//     box: AABB = FULL_BOX,
-//     predicate: Predicate<Entity> = Predicates.alwaysTrue(),
-// ): List<Entity> {
-//     val posBox = box + this
-//     return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
-// }
-//
-// /**
-//  * Checks whether the position is blocked for placing a block and returns a blocking end crystal if present.
-//  *
-//  * @param buildingOnly when `true` (default) only entities that block building (`Entity.blocksBuilding`)
-//  *   count, matching vanilla block placement; when `false` every entity counts, matching vanilla
-//  *   end crystal placement.
-//  * @return `[blocked, crystal?]`
-//  */
-// codex end
-// codex start
-// fun BlockPos.isBlockedByEntitiesReturnCrystal(
-//     except: Entity? = null,
-//     box: AABB = FULL_BOX,
-//     excludeIds: IntCollection? = null,
-//     buildingOnly: Boolean = true
-// ): BooleanObjectPair<EndCrystal?> {
-//     var blocked = false
-//
-//     val posBox = box + this
-//
-//     val baseFilter = if (buildingOnly) PREDICATE_UNOBSTRUCTED else EntitySelector.NO_SPECTATORS
-//     val selector = if (excludeIds.isNullOrEmpty()) baseFilter else baseFilter.and { it.id !in excludeIds }
-//
-//     world.getEntities(except, posBox, selector).forEach {
-//         if (it is EndCrystal) {
-//             return BooleanObjectPair.of(true, it)
-//         }
-//
-//         blocked = true
+// private val PREDICATE_UNOBSTRUCTED: Predicate<Entity> =
+//     EntitySelector.NO_SPECTATORS.and { entity ->
+//         !entity.isRemoved && entity.blocksBuilding
 //     }
 //
-//     return BooleanObjectPair.of(blocked, null)
-// }
+// /**
+//  * Checks whether the position is unobstructed for placing a block.
+//  *
+//  * @see net.minecraft.world.level.EntityGetter.isUnobstructed
+//  */
+// // codex start
+// // fun BlockPos.isUnobstructed(
+// //     except: Entity? = null,
+// //     box: AABB = FULL_BOX,
+// //     predicate: Predicate<Entity> = Predicates.alwaysTrue(),
+// // ): Boolean {
+// //     val posBox = box + this
+// //     return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
+// //         .isEmpty()
+// // }
+// // codex end
+// // codex start
+// //
+// // fun BlockPos.getBlockingEntities(
+// //     except: Entity? = null,
+// //     box: AABB = FULL_BOX,
+// //     predicate: Predicate<Entity> = Predicates.alwaysTrue(),
+// // ): List<Entity> {
+// //     val posBox = box + this
+// //     return world.getEntities(except, posBox, PREDICATE_UNOBSTRUCTED.and(predicate))
+// // }
+// //
+// // /**
+// //  * Checks whether the position is blocked for placing a block and returns a blocking end crystal if present.
+// //  *
+// //  * @param buildingOnly when `true` (default) only entities that block building (`Entity.blocksBuilding`)
+// //  *   count, matching vanilla block placement; when `false` every entity counts, matching vanilla
+// //  *   end crystal placement.
+// //  * @return `[blocked, crystal?]`
+// //  */
+// // codex end
+// // codex start
+// // fun BlockPos.isBlockedByEntitiesReturnCrystal(
+// //     except: Entity? = null,
+// //     box: AABB = FULL_BOX,
+// //     excludeIds: IntCollection? = null,
+// //     buildingOnly: Boolean = true
+// // ): BooleanObjectPair<EndCrystal?> {
+// //     var blocked = false
+// //
+// //     val posBox = box + this
+// //
+// //     val baseFilter = if (buildingOnly) PREDICATE_UNOBSTRUCTED else EntitySelector.NO_SPECTATORS
+// //     val selector = if (excludeIds.isNullOrEmpty()) baseFilter else baseFilter.and { it.id !in excludeIds }
+// //
+// //     world.getEntities(except, posBox, selector).forEach {
+// //         if (it is EndCrystal) {
+// //             return BooleanObjectPair.of(true, it)
+// //         }
+// //
+// //         blocked = true
+// //     }
+// //
+// //     return BooleanObjectPair.of(blocked, null)
+// // }
+// // codex end
 // codex end

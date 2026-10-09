@@ -22,7 +22,6 @@
 package net.ccbluex.liquidbounce.utils.item
 
 import com.mojang.brigadier.StringReader
-import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_8
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.entity.handItems
@@ -39,7 +38,6 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
-import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.ArmorStandItem
 import net.minecraft.world.item.ArrowItem
 import net.minecraft.world.item.BlockItem
@@ -60,7 +58,6 @@ import net.minecraft.world.item.FishingRodItem
 import net.minecraft.world.item.FlintAndSteelItem
 import net.minecraft.world.item.HangingEntityItem
 import net.minecraft.world.item.InstrumentItem
-import net.minecraft.world.item.ItemInstance
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.KnowledgeBookItem
 import net.minecraft.world.item.PlaceOnWaterBlockItem
@@ -76,7 +73,6 @@ import net.minecraft.world.item.component.UseEffects
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents
 import net.minecraft.world.item.enchantment.EnchantmentHelper
-import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.block.Block
 import kotlin.jvm.optionals.getOrNull
 
@@ -157,53 +153,61 @@ fun createItem(stack: String, amount: Int = 1): ItemStack =
 // // codex end
 // codex end
 
-val ItemInstance.attackDamage: Double
-    get() {
-        val baseDamage = getAttributeValue(
-            Attributes.ATTACK_DAMAGE,
-            EquipmentSlot.MAINHAND,
-            player.getAttributeBaseValue(Attributes.ATTACK_DAMAGE)
-        )
+// codex start
+// val ItemInstance.attackDamage: Double
+//     get() {
+//         val baseDamage = getAttributeValue(
+//             Attributes.ATTACK_DAMAGE,
+//             EquipmentSlot.MAINHAND,
+//             player.getAttributeBaseValue(Attributes.ATTACK_DAMAGE)
+//         )
+//
+//         /*
+//          * Client-side damage calculation for enchantments does not exist anymore
+//          * see https://bugs.mojang.com/browse/MC-196250
+//          *
+//          * We now use the following formula to calculate the damage:
+//          * https://minecraft.wiki/w/Sharpness
+//          * >= 1.9 -> 0.5 * level + 0.5
+//          * else -> 1.25 * level
+//          */
+//         return baseDamage + getSharpnessDamage()
+//     }
+// codex end
+// codex start
+//
+// @JvmOverloads
+// fun ItemInstance.getSharpnessDamage(level: Int = getEnchantment(Enchantments.SHARPNESS)): Double =
+//     if (!isOlderThanOrEqual1_8) {
+//         when (level) {
+//             0 -> 0.0
+//             else -> 0.5 * level + 0.5
+//         }
+//     } else {
+//         level * 1.25
+//     }
+//
+// // codex start
+// // val DataComponentGetter.attackSpeed: Double
+// //     get() = getAttributeValue(
+// //         Attributes.ATTACK_SPEED,
+// //         EquipmentSlot.MAINHAND,
+// //         player.getAttributeBaseValue(Attributes.ATTACK_SPEED)
+// //     )
+// //
+// // val ItemStack.durability
+// //     get() = this.maxDamage - this.damageValue
+// //
+// // /**
+// //  * @param slot if null, all modifiers for the attribute will be applied, otherwise only modifiers for the
+// specified slot
+// //  *
+// //  * @see net.minecraft.world.item.component.ItemAttributeModifiers
+// //  * @see net.minecraft.world.entity.ai.attributes.AttributeInstance
+// //  */
+// // codex end
+// codex end
 
-        /*
-         * Client-side damage calculation for enchantments does not exist anymore
-         * see https://bugs.mojang.com/browse/MC-196250
-         *
-         * We now use the following formula to calculate the damage:
-         * https://minecraft.wiki/w/Sharpness
-         * >= 1.9 -> 0.5 * level + 0.5
-         * else -> 1.25 * level
-         */
-        return baseDamage + getSharpnessDamage()
-    }
-
-@JvmOverloads
-fun ItemInstance.getSharpnessDamage(level: Int = getEnchantment(Enchantments.SHARPNESS)): Double =
-    if (!isOlderThanOrEqual1_8) {
-        when (level) {
-            0 -> 0.0
-            else -> 0.5 * level + 0.5
-        }
-    } else {
-        level * 1.25
-    }
-
-val DataComponentGetter.attackSpeed: Double
-    get() = getAttributeValue(
-        Attributes.ATTACK_SPEED,
-        EquipmentSlot.MAINHAND,
-        player.getAttributeBaseValue(Attributes.ATTACK_SPEED)
-    )
-
-val ItemStack.durability
-    get() = this.maxDamage - this.damageValue
-
-/**
- * @param slot if null, all modifiers for the attribute will be applied, otherwise only modifiers for the specified slot
- *
- * @see net.minecraft.world.item.component.ItemAttributeModifiers
- * @see net.minecraft.world.entity.ai.attributes.AttributeInstance
- */
 @JvmOverloads
 fun DataComponentGetter.getAttributeValue(
     attribute: Holder<Attribute>,

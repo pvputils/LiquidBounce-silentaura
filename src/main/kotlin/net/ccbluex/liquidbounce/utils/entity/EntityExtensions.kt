@@ -25,12 +25,9 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.interfaces.ClientInputAddition
 import net.ccbluex.liquidbounce.interfaces.LocalPlayerAddition
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
-import net.ccbluex.liquidbounce.utils.client.isBlocksAttacksExisting
 import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_8
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.item.getEnchantment
-import net.ccbluex.liquidbounce.utils.item.isSword
 import net.ccbluex.liquidbounce.utils.math.copy
 import net.ccbluex.liquidbounce.utils.math.fma
 import net.ccbluex.liquidbounce.utils.math.minus
@@ -40,25 +37,14 @@ import net.minecraft.client.player.LocalPlayer
 import net.minecraft.core.Position
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponents
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Input
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.ItemUseAnimation
-import net.minecraft.world.item.ShieldItem
-import net.minecraft.world.item.component.UseEffects
-import net.minecraft.world.item.enchantment.Enchantments
-import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.scores.DisplaySlot
 import java.lang.Math.fma
@@ -67,8 +53,10 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 // Copied from 1.21.4
-val Entity.isInsideWaterOrBubbleColumn: Boolean
-    get() = this.isInWater || this.inBlockState.`is`(Blocks.BUBBLE_COLUMN)
+// codex start
+// val Entity.isInsideWaterOrBubbleColumn: Boolean
+//     get() = this.isInWater || this.inBlockState.`is`(Blocks.BUBBLE_COLUMN)
+// codex end
 
 inline var ClientInput.movementForward: Float
     get() = moveVector.y
@@ -85,22 +73,25 @@ inline var ClientInput.movementSideways: Float
 val LivingEntity.handItems: Array<ItemStack>
     get() = arrayOf(mainHandItem, offhandItem)
 
-val LivingEntity.armorItems: Array<ItemStack>
-    get() = arrayOf(
-        getItemBySlot(EquipmentSlot.FEET),
-        getItemBySlot(EquipmentSlot.LEGS),
-        getItemBySlot(EquipmentSlot.CHEST),
-        getItemBySlot(EquipmentSlot.HEAD),
-    )
+// codex start
+// val LivingEntity.armorItems: Array<ItemStack>
+//     get() = arrayOf(
+//         getItemBySlot(EquipmentSlot.FEET),
+//         getItemBySlot(EquipmentSlot.LEGS),
+//         getItemBySlot(EquipmentSlot.CHEST),
+//         getItemBySlot(EquipmentSlot.HEAD),
+//     )
+//
+// // Copied from 1.21.4 END
+//
+// /**
+//  * Mirrors the blocking-angle and bypass checks from
+//  * `net.minecraft.world.entity.LivingEntity#applyItemBlocking`.
+//  *
+//  * @see net.minecraft.world.entity.LivingEntity#applyItemBlocking
+//  */
+// codex end
 
-// Copied from 1.21.4 END
-
-/**
- * Mirrors the blocking-angle and bypass checks from
- * `net.minecraft.world.entity.LivingEntity#applyItemBlocking`.
- *
- * @see net.minecraft.world.entity.LivingEntity#applyItemBlocking
- */
 @JvmOverloads
 fun LivingEntity.blockedByShield(source: DamageSource, damageAmount: Float = 1.0F): Boolean =
     getBlockedDamage(source, damageAmount) > 0.0F
@@ -139,16 +130,18 @@ private fun LivingEntity.getBlockedDamage(source: DamageSource, damageAmount: Fl
     return blocksAttacks.resolveBlockedDamage(source, damageAmount, horizontalAngle)
 }
 
-val Entity.netherPosition: Vec3
-    get() = if (this.level().dimension() == Level.NETHER) {
-        Vec3(x, y, z)
-    } else {
-        Vec3(x / 8.0, y, z / 8.0)
-    }
-
-@AddonApi
-val LocalPlayer.moving
-    get() = input.moveVector != Vec2.ZERO
+// codex start
+// val Entity.netherPosition: Vec3
+//     get() = if (this.level().dimension() == Level.NETHER) {
+//         Vec3(x, y, z)
+//     } else {
+//         Vec3(x / 8.0, y, z / 8.0)
+//     }
+//
+// @AddonApi
+// val LocalPlayer.moving
+//     get() = input.moveVector != Vec2.ZERO
+// codex end
 
 val ClientInput.untransformed: Input
     get() = (this as ClientInputAddition).`liquid_bounce$getUntransformed`()
@@ -156,25 +149,27 @@ val ClientInput.untransformed: Input
 val ClientInput.initial: Input
     get() = (this as ClientInputAddition).`liquid_bounce$getInitial`()
 
-val Player.ping: Int
-    get() = mc.connection?.getPlayerInfo(uuid)?.latency ?: 0
-
-/**
- * @see Entity.getDisplayName
- */
-val Entity.simpleDisplayName
-    get() = this.team?.getFormattedName(this.name) ?: this.name
-
-val InteractionHand.opposite: InteractionHand
-    get() = if (this === InteractionHand.MAIN_HAND) InteractionHand.OFF_HAND else InteractionHand.MAIN_HAND
 // codex start
+// val Player.ping: Int
+//     get() = mc.connection?.getPlayerInfo(uuid)?.latency ?: 0
 //
-// fun GameType.shortName(): String = when (this) {
-//     GameType.SURVIVAL -> "S"
-//     GameType.CREATIVE -> "C"
-//     GameType.ADVENTURE -> "A"
-//     GameType.SPECTATOR -> "S"
-// }
+// /**
+//  * @see Entity.getDisplayName
+//  */
+// val Entity.simpleDisplayName
+//     get() = this.team?.getFormattedName(this.name) ?: this.name
+//
+// val InteractionHand.opposite: InteractionHand
+//     get() = if (this === InteractionHand.MAIN_HAND) InteractionHand.OFF_HAND else InteractionHand.MAIN_HAND
+// // codex start
+// //
+// // fun GameType.shortName(): String = when (this) {
+// //     GameType.SURVIVAL -> "S"
+// //     GameType.CREATIVE -> "C"
+// //     GameType.ADVENTURE -> "A"
+// //     GameType.SPECTATOR -> "S"
+// // }
+// // codex end
 // codex end
 
 val LocalPlayer.airTicks: Int
@@ -186,8 +181,10 @@ val LocalPlayer.onGroundTicks: Int
 /**
  * Check if the attack speed is below 1 tick. If so, we have a cooldown.
  */
-val LocalPlayer.hasCooldown: Boolean
-    get() = !isOlderThanOrEqual1_8 && this.getAttributeValue(Attributes.ATTACK_SPEED) < 20.0
+// codex start
+// val LocalPlayer.hasCooldown: Boolean
+//     get() = !isOlderThanOrEqual1_8 && this.getAttributeValue(Attributes.ATTACK_SPEED) < 20.0
+// codex end
 
 @JvmOverloads
 fun LocalPlayer.getMovementDirectionOfInput(input: DirectionalInput = DirectionalInput(this.input)): Float {
@@ -196,38 +193,43 @@ fun LocalPlayer.getMovementDirectionOfInput(input: DirectionalInput = Directiona
 
 val LivingEntity.usingItemOrNull: ItemStack?
     get() = if (isUsingItem) useItem else null
-
-fun LivingEntity.isInHand(itemStack: ItemStack?, hand: InteractionHand) =
-    this.getItemInHand(hand) === itemStack
-
-val LivingEntity.isBlockAction: Boolean
-    get() = usingItemOrNull?.useAnimation === ItemUseAnimation.BLOCK
-
-val LivingEntity.isBlockingServerside: Boolean
-    get() {
-        if (this.isBlocking) return true
-
-        // 1.8 server + 1.9~1.21.4 protocol
-        if (this.isUsingItem && !isBlocksAttacksExisting) {
-            val usingItem = this.useItem
-
-            // I don't know why but if you join 1.8 server with 1.21.11 client + 1.20.x protocol [useItem] will be same
-            // as [mainHandItem]
-            if (isInHand(usingItem, InteractionHand.MAIN_HAND) && usingItem.isSword ||
-                isInHand(usingItem, InteractionHand.OFF_HAND) && usingItem.item is ShieldItem
-            ) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-/**
- * @see LocalPlayer.isSlowDueToUsingItem
- */
-val Player.isSlowDueToUsingItem: Boolean
-    get() = isUsingItem && !(useItem[DataComponents.USE_EFFECTS] ?: UseEffects.DEFAULT).canSprint
+// codex start
+//
+// fun LivingEntity.isInHand(itemStack: ItemStack?, hand: InteractionHand) =
+//     this.getItemInHand(hand) === itemStack
+//
+// // codex start
+// // val LivingEntity.isBlockAction: Boolean
+// //     get() = usingItemOrNull?.useAnimation === ItemUseAnimation.BLOCK
+// //
+// // val LivingEntity.isBlockingServerside: Boolean
+// //     get() {
+// //         if (this.isBlocking) return true
+// //
+// //         // 1.8 server + 1.9~1.21.4 protocol
+// //         if (this.isUsingItem && !isBlocksAttacksExisting) {
+// //             val usingItem = this.useItem
+// //
+// //             // I don't know why but if you join 1.8 server with 1.21.11 client + 1.20.x protocol [useItem] will
+// be same
+// //             // as [mainHandItem]
+// //             if (isInHand(usingItem, InteractionHand.MAIN_HAND) && usingItem.isSword ||
+// //                 isInHand(usingItem, InteractionHand.OFF_HAND) && usingItem.item is ShieldItem
+// //             ) {
+// //                 return true
+// //             }
+// //         }
+// //
+// //         return false
+// //     }
+// //
+// // /**
+// //  * @see LocalPlayer.isSlowDueToUsingItem
+// //  */
+// // val Player.isSlowDueToUsingItem: Boolean
+// //     get() = isUsingItem && !(useItem[DataComponents.USE_EFFECTS] ?: UseEffects.DEFAULT).canSprint
+// // codex end
+// codex end
 
 fun Entity.lastRenderPos() = Vec3(this.xOld, this.yOld, this.zOld)
 
@@ -863,34 +865,36 @@ val LivingEntity.wouldBlockHit
 /**
  * @see <a href="https://minecraft.fandom.com/wiki/Magma_Block#Damage">Magma Block — Damage</a>
  */
-val LocalPlayer.immuneToMagmaBlocks
-    get() = this.hasEffect(MobEffects.FIRE_RESISTANCE)
-        || (this.getEffect(MobEffects.RESISTANCE)?.amplifier ?: -1) >= 4
-        || this.isCreative
-        || this.isSpectator
-        || this.getItemBySlot(EquipmentSlot.FEET).getEnchantment(Enchantments.FROST_WALKER) > 0
-
-/**
- * @receiver the specific bounding box of a player, mob or even another block.
- */
 // codex start
-// fun AABB.isOnMagmaBlock(): Boolean {
-//     // Blocks that are the height of a trapdoor or lower
-//     // (such as snow layers, carpets, repeaters, or comparators)
-//     // do not prevent a magma block from damaging mobs and players above it.
-//     // Therefore, we expand the box downward by 0.2 blocks.
-//     val expandedBox = inflate(0.0, 0.1, 0.0)
-//         .move(0.0, -0.1, 0.0)
+// val LocalPlayer.immuneToMagmaBlocks
+//     get() = this.hasEffect(MobEffects.FIRE_RESISTANCE)
+//         || (this.getEffect(MobEffects.RESISTANCE)?.amplifier ?: -1) >= 4
+//         || this.isCreative
+//         || this.isSpectator
+//         || this.getItemBySlot(EquipmentSlot.FEET).getEnchantment(Enchantments.FROST_WALKER) > 0
 //
-//     // Scan the blocks in the bottom layer of the expanded box with the vanilla block scan API,
-//     // keeping the per-block collision shape check from the original implementation.
-//     return world.findBlocksIntersects(expandedBox.setMaxY(expandedBox.minY))
-//         .filterState { it.block is MagmaBlock }
-//         .anyMatched { pos, state ->
-//             val shape = state.getCollisionShape(world, pos)
-//             shape intersects expandedBox
-//         }
-// }
+// /**
+//  * @receiver the specific bounding box of a player, mob or even another block.
+//  */
+// // codex start
+// // fun AABB.isOnMagmaBlock(): Boolean {
+// //     // Blocks that are the height of a trapdoor or lower
+// //     // (such as snow layers, carpets, repeaters, or comparators)
+// //     // do not prevent a magma block from damaging mobs and players above it.
+// //     // Therefore, we expand the box downward by 0.2 blocks.
+// //     val expandedBox = inflate(0.0, 0.1, 0.0)
+// //         .move(0.0, -0.1, 0.0)
+// //
+// //     // Scan the blocks in the bottom layer of the expanded box with the vanilla block scan API,
+// //     // keeping the per-block collision shape check from the original implementation.
+// //     return world.findBlocksIntersects(expandedBox.setMaxY(expandedBox.minY))
+// //         .filterState { it.block is MagmaBlock }
+// //         .anyMatched { pos, state ->
+// //             val shape = state.getCollisionShape(world, pos)
+// //             shape intersects expandedBox
+// //         }
+// // }
+// // codex end
 // codex end
 
 val Entity?.cameraDistance: Float

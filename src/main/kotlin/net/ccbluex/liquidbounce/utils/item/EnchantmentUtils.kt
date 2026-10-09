@@ -20,27 +20,28 @@ package net.ccbluex.liquidbounce.utils.item
 
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.ItemInstance
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 
-private val ItemStack.componentTypeForEnchantment
-    inline get() = EnchantmentHelper.getComponentType(this)
 // codex start
-//
-// fun ItemStack.removeEnchantment(enchantment: Holder<Enchantment>) {
-//     EnchantmentHelper.updateEnchantments(this) { it.set(enchantment, 0) }
-// }
-// codex end
-// codex start
-//
-// fun ItemStack.clearEnchantments() =
-//     EnchantmentHelper.setEnchantments(this, ItemEnchantments.EMPTY)
-// codex end
-// codex start
-//
-// fun ItemStack?.getEnchantmentCount(): Int =
-//     this?.get(componentTypeForEnchantment)?.size() ?: 0
+// private val ItemStack.componentTypeForEnchantment
+//     inline get() = EnchantmentHelper.getComponentType(this)
+// // codex start
+// //
+// // fun ItemStack.removeEnchantment(enchantment: Holder<Enchantment>) {
+// //     EnchantmentHelper.updateEnchantments(this) { it.set(enchantment, 0) }
+// // }
+// // codex end
+// // codex start
+// //
+// // fun ItemStack.clearEnchantments() =
+// //     EnchantmentHelper.setEnchantments(this, ItemEnchantments.EMPTY)
+// // codex end
+// // codex start
+// //
+// // fun ItemStack?.getEnchantmentCount(): Int =
+// //     this?.get(componentTypeForEnchantment)?.size() ?: 0
+// // codex end
 // codex end
 
 fun ItemInstance?.getEnchantment(enchantment: ResourceKey<Enchantment>): Int {

@@ -69,51 +69,53 @@ public abstract class MixinEntity {
     }
 
     // codex start
-    // @ModifyExpressionValue(method = "isSuppressingBounce", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isShiftKeyDown()Z"))
-    // private boolean hookAntiBounce(boolean original) {
-    //     return ModuleAntiBounce.INSTANCE.getRunning() || original;
-    // }
-    //
-    // @ModifyExpressionValue(method = "restituteMovementAfterCollisions", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(DD)D", remap = false))
-    // private double hookSlimeBounce(double original, @Local(argsOnly = true, name = "effectState") BlockState effectState) {
-    //     // TODO(26.2): Re-check the old exact Y-velocity conditions after vanilla moved slime bounce into Entity restitution.
-    //     if (NoSlowSlime.INSTANCE.getRunning() && effectState.getBlock() instanceof SlimeBlock) {
-    //         return 0.0;
-    //     }
-    //
-    //     return original;
-    // }
-    //
-    // codex end
-    /**
-     * Hook entity margin modification event
-     */
-    @Inject(method = "getPickRadius", at = @At("RETURN"), cancellable = true)
-    private void hookMargin(CallbackInfoReturnable<Float> callback) {
-        EntityMarginEvent marginEvent = new EntityMarginEvent((Entity) (Object) this, callback.getReturnValue());
-        EventManager.INSTANCE.callEvent(marginEvent);
-        callback.setReturnValue(marginEvent.getMargin());
-    // codex start
-    // }
-    //
+    // // codex start
+    // // @ModifyExpressionValue(method = "isSuppressingBounce", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isShiftKeyDown()Z"))
+    // // private boolean hookAntiBounce(boolean original) {
+    // //     return ModuleAntiBounce.INSTANCE.getRunning() || original;
+    // // }
+    // //
+    // // @ModifyExpressionValue(method = "restituteMovementAfterCollisions", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(DD)D", remap = false))
+    // // private double hookSlimeBounce(double original, @Local(argsOnly = true, name = "effectState") BlockState effectState) {
+    // //     // TODO(26.2): Re-check the old exact Y-velocity conditions after vanilla moved slime bounce into Entity restitution.
+    // //     if (NoSlowSlime.INSTANCE.getRunning() && effectState.getBlock() instanceof SlimeBlock) {
+    // //         return 0.0;
+    // //     }
+    // //
+    // //     return original;
+    // // }
+    // //
+    // // codex end
     // /**
-    //  * Hook no pitch limit exploit
+    //  * Hook entity margin modification event
     //  */
-    // @WrapOperation(method = {"turn", "absSnapRotationTo"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
-    // public float hookNoPitchLimit1(float value, float min, float max, Operation<Float> original) {
-    //     boolean noLimit = ModuleNoPitchLimit.INSTANCE.getRunning();
-    //     return noLimit ? value : original.call(value, min, max);
+    // @Inject(method = "getPickRadius", at = @At("RETURN"), cancellable = true)
+    // private void hookMargin(CallbackInfoReturnable<Float> callback) {
+    //     EntityMarginEvent marginEvent = new EntityMarginEvent((Entity) (Object) this, callback.getReturnValue());
+    //     EventManager.INSTANCE.callEvent(marginEvent);
+    //     callback.setReturnValue(marginEvent.getMargin());
+    // // codex start
+    // // }
+    // //
+    // // /**
+    // //  * Hook no pitch limit exploit
+    // //  */
+    // // @WrapOperation(method = {"turn", "absSnapRotationTo"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
+    // // public float hookNoPitchLimit1(float value, float min, float max, Operation<Float> original) {
+    // //     boolean noLimit = ModuleNoPitchLimit.INSTANCE.getRunning();
+    // //     return noLimit ? value : original.call(value, min, max);
+    // // }
+    // //
+    // // codex end
+    // // codex start
+    // // @WrapOperation(method = "setXRot", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;xRot:F", opcode = Opcodes.PUTFIELD))
+    // // public void hookNoPitchLimit2(Entity instance, float clamped, Operation<Void> original, @Local(argsOnly = true, name = "xRot") float xRot) {
+    // //     boolean noLimit = ModuleNoPitchLimit.INSTANCE.getRunning();
+    // //     original.call(instance, noLimit ? xRot : clamped);
+    // // }
+    // // codex end
     // }
-    //
     // codex end
-    // codex start
-    // @WrapOperation(method = "setXRot", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;xRot:F", opcode = Opcodes.PUTFIELD))
-    // public void hookNoPitchLimit2(Entity instance, float clamped, Operation<Void> original, @Local(argsOnly = true, name = "xRot") float xRot) {
-    //     boolean noLimit = ModuleNoPitchLimit.INSTANCE.getRunning();
-    //     original.call(instance, noLimit ? xRot : clamped);
-    // }
-    // codex end
-    }
 
     @ModifyExpressionValue(method = "moveRelative", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getInputVector(Lnet/minecraft/world/phys/Vec3;FF)Lnet/minecraft/world/phys/Vec3;"))
     public Vec3 hookVelocity(Vec3 original, @Local(argsOnly = true, name = "input") Vec3 input, @Local(argsOnly = true, name = "speed") float speed) {

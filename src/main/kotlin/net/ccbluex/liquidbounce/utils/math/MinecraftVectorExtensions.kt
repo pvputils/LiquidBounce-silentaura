@@ -20,7 +20,6 @@
 
 package net.ccbluex.liquidbounce.utils.math
 
-import it.unimi.dsi.fastutil.longs.LongComparator
 import net.ccbluex.liquidbounce.render.engine.type.Vec3f
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Position
@@ -28,7 +27,6 @@ import net.minecraft.core.SectionPos
 import net.minecraft.core.Vec3i
 import net.minecraft.util.Mth
 import net.minecraft.world.level.ChunkPos
-import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
@@ -46,25 +44,27 @@ inline fun Vec2.copy(x: Float = this.x, y: Float = this.y) = Vec2(x, y)
 /**
  * @see Vec3i.compareTo
  */
-object BlockPosAsLongComparator : LongComparator {
-    override fun compare(k1: Long, k2: Long): Int {
-        val y1 = BlockPos.getY(k1)
-        val y2 = BlockPos.getY(k2)
-        if (y1 == y2) {
-            val z1 = BlockPos.getZ(k1)
-            val z2 = BlockPos.getZ(k2)
-            return if (z1 == z2) {
-                BlockPos.getX(k1) - BlockPos.getX(k2)
-            } else {
-                z1 - z2
-            }
-        } else {
-            return y1 - y2
-        }
-    }
-}
-
-inline operator fun BlockPos.rangeTo(other: BlockPos): BoundingBox = BoundingBox.fromCorners(this, other)
+// codex start
+// object BlockPosAsLongComparator : LongComparator {
+//     override fun compare(k1: Long, k2: Long): Int {
+//         val y1 = BlockPos.getY(k1)
+//         val y2 = BlockPos.getY(k2)
+//         if (y1 == y2) {
+//             val z1 = BlockPos.getZ(k1)
+//             val z2 = BlockPos.getZ(k2)
+//             return if (z1 == z2) {
+//                 BlockPos.getX(k1) - BlockPos.getX(k2)
+//             } else {
+//                 z1 - z2
+//             }
+//         } else {
+//             return y1 - y2
+//         }
+//     }
+// }
+//
+// inline operator fun BlockPos.rangeTo(other: BlockPos): BoundingBox = BoundingBox.fromCorners(this, other)
+// codex end
 
 inline fun BlockPos.MutableBlockPos.set(pos: Position): BlockPos.MutableBlockPos = set(pos.x(), pos.y(), pos.z())
 
@@ -74,8 +74,10 @@ inline val Vec3i.center: Vec3
 inline val Vec3i.bottomCenter: Vec3
     get() = Vec3.atBottomCenterOf(this)
 
-inline val Vec3i.topCenter: Vec3
-    get() = Vec3.upFromBottomCenterOf(this, 1.0)
+// codex start
+// inline val Vec3i.topCenter: Vec3
+//     get() = Vec3.upFromBottomCenterOf(this, 1.0)
+// codex end
 
 inline fun Vec3i.bottomCenter(yOffset: Double): Vec3 = Vec3.upFromBottomCenterOf(this, yOffset)
 

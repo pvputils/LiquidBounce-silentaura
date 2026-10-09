@@ -22,13 +22,11 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.KeyEvent;
-import net.ccbluex.liquidbounce.event.events.KeyboardCharEvent;
 import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.CharacterEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -61,14 +59,16 @@ public abstract class MixinKeyboardHandler {
         }
     }
 
-    /**
-     * Hook char event
-     */
-    @Inject(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;", shift = At.Shift.BEFORE))
-    private void hookKeyboardChar(long window, CharacterEvent input, CallbackInfo ci) {
-        // does if (window == this.client.getWindow().getHandle())
-        EventManager.INSTANCE.callEvent(new KeyboardCharEvent(input.codepoint()));
-    }
+    // codex start
+    // /**
+    //  * Hook char event
+    //  */
+    // @Inject(method = "charTyped", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;", shift = At.Shift.BEFORE))
+    // private void hookKeyboardChar(long window, CharacterEvent input, CallbackInfo ci) {
+    //     // does if (window == this.client.getWindow().getHandle())
+    //     EventManager.INSTANCE.callEvent(new KeyboardCharEvent(input.codepoint()));
+    // }
+    // codex end
 
     // codex start
     // @WrapOperation(method = "keyPress", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;",  ordinal = 2))

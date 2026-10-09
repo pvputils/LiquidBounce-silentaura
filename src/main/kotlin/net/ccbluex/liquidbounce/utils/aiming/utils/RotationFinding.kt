@@ -44,121 +44,126 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 
-private val ITERATION_PROPORTIONS_LOOSE = doubleArrayOf(0.1, 0.5, 0.9)
-private val ITERATION_PROPORTIONS = doubleArrayOf(0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95)
-private val ITERATION_PROPORTIONS_PRECISE = doubleArrayOf(
-    0.05, 0.1, 0.15, 0.2, 0.25, 0.30, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95
-)
-
 // codex start
-// fun raytraceBlockRotation(
-//     eyes: Vec3,
-//     pos: BlockPos,
-//     state: BlockState,
-//     range: Double,
-//     wallsRange: Double,
-// ): RotationWithVector? {
-//     val outlineShape = state.getShape(world, pos, CollisionContext.of(player))
-//     if (outlineShape.isEmpty) {
-//         return null
-//     }
+// private val ITERATION_PROPORTIONS_LOOSE = doubleArrayOf(0.1, 0.5, 0.9)
+// codex end
+
+private val ITERATION_PROPORTIONS = doubleArrayOf(0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95)
+// codex start
+// private val ITERATION_PROPORTIONS_PRECISE = doubleArrayOf(
+//     0.05, 0.1, 0.15, 0.2, 0.25, 0.30, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95
+// )
 //
-//     return raytraceBoxes(
-//         eyes = eyes,
-//         boxes = outlineShape.move(pos).toSortedAabbs(),
-//         range = range,
-//         wallsRange = wallsRange,
-//         visibilityPredicate = VisibilityPredicate.Block(pos, null),
-//         rotationPreference = LeastDifferencePreference(
-//             Rotation.lookingAt(point = pos.center, from = eyes)
-//         ),
-//     )
-// }
-//
-// /**
-//  * Aims at the first block from [candidates] whose face is reachable within the given ranges and
-//  * returns its position, or null if none is reachable. Skips setting the rotation target when
-//  * [rotate] is false, e.g. when another module owns the rotation.
-//  */
 // // codex start
-// // fun selectBlockTarget(
-// //     eyePosition: Vec3,
-// //     range: Float,
-// //     wallsRange: Float,
-// //     candidates: Iterable<Pair<BlockPos, BlockState>>,
-// //     valueGroup: RotationsValueGroup,
-// //     provider: ClientModule,
-// //     considerInventory: Boolean = true,
-// //     rotate: Boolean = true,
-// // ): BlockPos? {
-// //     for ((blockPos, state) in candidates) {
-// //         val (rotation, _) = raytraceBlockRotation(
-// //             eyePosition,
-// //             blockPos,
-// //             state,
-// //             range = range.toDouble(),
-// //             wallsRange = wallsRange.toDouble()
-// //         ) ?: continue
-// //
-// //         if (rotate) {
-// //             RotationManager.setRotationTarget(
-// //                 rotation,
-// //                 considerInventory = considerInventory,
-// //                 valueGroup = valueGroup,
-// //                 priority = Priority.IMPORTANT_FOR_USAGE_1,
-// //                 provider
-// //             )
-// //         }
-// //
-// //         return blockPos
+// // fun raytraceBlockRotation(
+// //     eyes: Vec3,
+// //     pos: BlockPos,
+// //     state: BlockState,
+// //     range: Double,
+// //     wallsRange: Double,
+// // ): RotationWithVector? {
+// //     val outlineShape = state.getShape(world, pos, CollisionContext.of(player))
+// //     if (outlineShape.isEmpty) {
+// //         return null
 // //     }
 // //
-// //     return null
+// //     return raytraceBoxes(
+// //         eyes = eyes,
+// //         boxes = outlineShape.move(pos).toSortedAabbs(),
+// //         range = range,
+// //         wallsRange = wallsRange,
+// //         visibilityPredicate = VisibilityPredicate.Block(pos, null),
+// //         rotationPreference = LeastDifferencePreference(
+// //             Rotation.lookingAt(point = pos.center, from = eyes)
+// //         ),
+// //     )
 // // }
 // //
 // // /**
-// //  * Find the best spot of the upper side of the block
+// //  * Aims at the first block from [candidates] whose face is reachable within the given ranges and
+// //  * returns its position, or null if none is reachable. Skips setting the rotation target when
+// //  * [rotate] is false, e.g. when another module owns the rotation.
 // //  */
-// // codex end
-// // codex start
-// // fun canSeeUpperBlockSide(
-// //     eyes: Vec3,
-// //     pos: BlockPos,
-// //     range: Double,
-// //     wallsRange: Double,
-// // ): Boolean {
-// //     val rangeSquared = range * range
-// //     val wallsRangeSquared = wallsRange * wallsRange
-// //
-// //     val minX = pos.x.toDouble()
-// //     val y = pos.y + 0.99
-// //     val minZ = pos.z.toDouble()
-// //
-// //     for (x in ITERATION_PROPORTIONS_LOOSE) {
-// //         for (z in ITERATION_PROPORTIONS_LOOSE) {
-// //             // skip because of out of range
-// //             val distanceSq = eyes.distanceToSqr(minX + x, y, minZ + z)
-// //
-// //             if (distanceSq > rangeSquared) {
-// //                 continue
-// //             }
-// //
-// //             val vec3 = Vec3(minX + x, y, minZ + z)
-// //
-// //             // check if target is visible to eyes
-// //             val visible = player.isFacingBlock(eyes, vec3, pos, Direction.UP)
-// //
-// //             // skip because not visible in range
-// //             if (!visible && distanceSq > wallsRangeSquared) {
-// //                 continue
-// //             }
-// //
-// //             return true
-// //         }
-// //     }
-// //
-// //     return false
-// // }
+// // // codex start
+// // // fun selectBlockTarget(
+// // //     eyePosition: Vec3,
+// // //     range: Float,
+// // //     wallsRange: Float,
+// // //     candidates: Iterable<Pair<BlockPos, BlockState>>,
+// // //     valueGroup: RotationsValueGroup,
+// // //     provider: ClientModule,
+// // //     considerInventory: Boolean = true,
+// // //     rotate: Boolean = true,
+// // // ): BlockPos? {
+// // //     for ((blockPos, state) in candidates) {
+// // //         val (rotation, _) = raytraceBlockRotation(
+// // //             eyePosition,
+// // //             blockPos,
+// // //             state,
+// // //             range = range.toDouble(),
+// // //             wallsRange = wallsRange.toDouble()
+// // //         ) ?: continue
+// // //
+// // //         if (rotate) {
+// // //             RotationManager.setRotationTarget(
+// // //                 rotation,
+// // //                 considerInventory = considerInventory,
+// // //                 valueGroup = valueGroup,
+// // //                 priority = Priority.IMPORTANT_FOR_USAGE_1,
+// // //                 provider
+// // //             )
+// // //         }
+// // //
+// // //         return blockPos
+// // //     }
+// // //
+// // //     return null
+// // // }
+// // //
+// // // /**
+// // //  * Find the best spot of the upper side of the block
+// // //  */
+// // // codex end
+// // // codex start
+// // // fun canSeeUpperBlockSide(
+// // //     eyes: Vec3,
+// // //     pos: BlockPos,
+// // //     range: Double,
+// // //     wallsRange: Double,
+// // // ): Boolean {
+// // //     val rangeSquared = range * range
+// // //     val wallsRangeSquared = wallsRange * wallsRange
+// // //
+// // //     val minX = pos.x.toDouble()
+// // //     val y = pos.y + 0.99
+// // //     val minZ = pos.z.toDouble()
+// // //
+// // //     for (x in ITERATION_PROPORTIONS_LOOSE) {
+// // //         for (z in ITERATION_PROPORTIONS_LOOSE) {
+// // //             // skip because of out of range
+// // //             val distanceSq = eyes.distanceToSqr(minX + x, y, minZ + z)
+// // //
+// // //             if (distanceSq > rangeSquared) {
+// // //                 continue
+// // //             }
+// // //
+// // //             val vec3 = Vec3(minX + x, y, minZ + z)
+// // //
+// // //             // check if target is visible to eyes
+// // //             val visible = player.isFacingBlock(eyes, vec3, pos, Direction.UP)
+// // //
+// // //             // skip because not visible in range
+// // //             if (!visible && distanceSq > wallsRangeSquared) {
+// // //                 continue
+// // //             }
+// // //
+// // //             return true
+// // //         }
+// // //     }
+// // //
+// // //     return false
+// // // }
+// // // codex end
 // // codex end
 // codex end
 

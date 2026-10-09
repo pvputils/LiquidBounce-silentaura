@@ -57,17 +57,19 @@ val protocolVersion: ClientProtocolVersion
         logger.error("Failed to get protocol version", it)
     }.getOrDefault(defaultProtocolVersion)
 
-val protocolVersions: Array<ClientProtocolVersion>
-    get() = runCatching {
-        // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-        if (usesViaFabricPlus) {
-            return@runCatching VfpCompatibility.INSTANCE.unsafeGetProtocolVersions()
-        } else {
-            return@runCatching arrayOf(defaultProtocolVersion)
-        }
-    }.onFailure {
-        logger.error("Failed to get protocol version", it)
-    }.getOrDefault(arrayOf(defaultProtocolVersion))
+// codex start
+// val protocolVersions: Array<ClientProtocolVersion>
+//     get() = runCatching {
+//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+//         if (usesViaFabricPlus) {
+//             return@runCatching VfpCompatibility.INSTANCE.unsafeGetProtocolVersions()
+//         } else {
+//             return@runCatching arrayOf(defaultProtocolVersion)
+//         }
+//     }.onFailure {
+//         logger.error("Failed to get protocol version", it)
+//     }.getOrDefault(arrayOf(defaultProtocolVersion))
+// codex end
 
 @JvmRecord
 data class ClientProtocolVersion(val name: String, val version: Int)
@@ -91,27 +93,31 @@ val isOlderThanOrEqual1_8: Boolean
         logger.error("Failed to check if the server is using old combat", it)
     }.getOrDefault(false)
 
-val isOlderThanOrEquals1_7_10: Boolean
-    get() = runCatching {
-        // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-        usesViaFabricPlus && VfpCompatibility.INSTANCE.isOlderThanOrEqual1_7_10
-    }.onFailure {
-        logger.error("Failed to check if the server is using 1.7.10-", it)
-    }.getOrDefault(false)
+// codex start
+// val isOlderThanOrEquals1_7_10: Boolean
+//     get() = runCatching {
+//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isOlderThanOrEqual1_7_10
+//     }.onFailure {
+//         logger.error("Failed to check if the server is using 1.7.10-", it)
+//     }.getOrDefault(false)
+//
+// val isNewerThanOrEquals1_16: Boolean
+//     get() = runCatching {
+//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_16
+//     }.onFailure {
+//         logger.error("Failed to check if the server is using 1.16+", it)
+//     }.getOrDefault(true)
+//
+// /**
+//  * Offhand cannot be used as a SWAP target in any container on 1.15.2 and below.
+//  *
+//  *
+// https://github.com/ViaVersion/ViaFabricPlus/blob/8f96c699edc97db8a3fc58c1533e8cf41dd46aaf/src/main/java/com/viaversion/viafabricplus/injection/mixin/features/v1_15_2/MixinMultiPlayerGameMode.java#L67
+//  */
+// codex end
 
-val isNewerThanOrEquals1_16: Boolean
-    get() = runCatching {
-        // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-        usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_16
-    }.onFailure {
-        logger.error("Failed to check if the server is using 1.16+", it)
-    }.getOrDefault(true)
-
-/**
- * Offhand cannot be used as a SWAP target in any container on 1.15.2 and below.
- *
- * https://github.com/ViaVersion/ViaFabricPlus/blob/8f96c699edc97db8a3fc58c1533e8cf41dd46aaf/src/main/java/com/viaversion/viafabricplus/injection/mixin/features/v1_15_2/MixinMultiPlayerGameMode.java#L67
- */
 val isOlderThanOrEqual1_15_2: Boolean
     get() = runCatching {
         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
@@ -178,37 +184,39 @@ val isNewerThanOrEquals1_21_5: Boolean
 /**
  * Since 1.21.6 the [ServerboundPlayerCommandPacket.Action] removed 2 entries for sneaking
  */
-val isNewerThanOrEquals1_21_6: Boolean
-    get() = runCatching {
-        // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-        usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_6
-    }.onFailure {
-        logger.error("Failed to check if the server is using 1.21.6+", it)
-    }.getOrDefault(true)
-
-/**
- * Since 1.21.9 the byte format of [net.minecraft.world.phys.Vec3] have been rewritten
- * with [net.minecraft.network.LpVec3].
- */
-val isNewerThanOrEquals1_21_9: Boolean
-    get() = runCatching {
-        // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-        usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_9
-    }.onFailure {
-        logger.error("Failed to check if the server is using 1.21.9+", it)
-    }.getOrDefault(true)
-
-/**
- * Since 26.1 [net.minecraft.network.protocol.game.ServerboundInteractPacket] has only one mode
- * with entity and relative position (previous `INTERACT_AT`).
- */
-val isOlderThanOrEquals1_21_11: Boolean
-    get() = runCatching {
-        // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
-        usesViaFabricPlus && VfpCompatibility.INSTANCE.isOlderThanOrEqual1_21_11
-    }.onFailure {
-        logger.error("Failed to check if the server is using 1.21.11", it)
-    }.getOrDefault(false)
+// codex start
+// val isNewerThanOrEquals1_21_6: Boolean
+//     get() = runCatching {
+//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_6
+//     }.onFailure {
+//         logger.error("Failed to check if the server is using 1.21.6+", it)
+//     }.getOrDefault(true)
+//
+// /**
+//  * Since 1.21.9 the byte format of [net.minecraft.world.phys.Vec3] have been rewritten
+//  * with [net.minecraft.network.LpVec3].
+//  */
+// val isNewerThanOrEquals1_21_9: Boolean
+//     get() = runCatching {
+//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isNewerThanOrEqual1_21_9
+//     }.onFailure {
+//         logger.error("Failed to check if the server is using 1.21.9+", it)
+//     }.getOrDefault(true)
+//
+// /**
+//  * Since 26.1 [net.minecraft.network.protocol.game.ServerboundInteractPacket] has only one mode
+//  * with entity and relative position (previous `INTERACT_AT`).
+//  */
+// val isOlderThanOrEquals1_21_11: Boolean
+//     get() = runCatching {
+//         // Check if the ViaFabricPlus mod is loaded - prevents from causing too many exceptions
+//         usesViaFabricPlus && VfpCompatibility.INSTANCE.isOlderThanOrEqual1_21_11
+//     }.onFailure {
+//         logger.error("Failed to check if the server is using 1.21.11", it)
+//     }.getOrDefault(false)
+// codex end
 
 val isOlderThan26_3: Boolean
     get() = runCatching {

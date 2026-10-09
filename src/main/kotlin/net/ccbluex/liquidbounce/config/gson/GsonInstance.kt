@@ -111,27 +111,30 @@ internal val interopGson: Gson = GsonBuilder()
  * This GSON instance is used for serializing objects as accessible JSON which means it is READ-ONLY (!)
  * and often comes with an easier syntax to use in other programming languages like JavaScript.
  */
-internal val accessibleInteropGson: Gson = GsonBuilder()
-    .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
-    .registerCommonTypeAdapters()
-    .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
-    .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
-    // codex start
-    // .registerTypeHierarchyAdapter(Theme::class.javaObjectType, ReadOnlyThemeSerializer)
-    // .registerTypeHierarchyAdapter(HudComponent::class.javaObjectType, ReadOnlyComponentSerializer)
-    // .registerTypeHierarchyAdapter(Alignment::class.javaObjectType, AlignmentAdapter)
-    // codex end
-    .create()
+// codex start
+// internal val accessibleInteropGson: Gson = GsonBuilder()
+//     .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
+//     .registerCommonTypeAdapters()
+//     .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
+//     .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
+//     // codex start
+//     // .registerTypeHierarchyAdapter(Theme::class.javaObjectType, ReadOnlyThemeSerializer)
+//     // .registerTypeHierarchyAdapter(HudComponent::class.javaObjectType, ReadOnlyComponentSerializer)
+//     // .registerTypeHierarchyAdapter(Alignment::class.javaObjectType, AlignmentAdapter)
+//     // codex end
+//     .create()
+//
+// /**
+//  * Register common type adapters
+//  * These adapters include anything from Kotlin classes to Minecraft and LiquidBounce types
+//  * They are safe to use on any GSON instance. (clientGson, autoConfigGson, ...)
+//  * It does not include any configurable serializers, which means you need to add them yourself if needed!
+//  *
+//  * @see GsonBuilder.registerTypeHierarchyAdapter
+//  * @see GsonBuilder.registerTypeAdapter
+//  */
+// codex end
 
-/**
- * Register common type adapters
- * These adapters include anything from Kotlin classes to Minecraft and LiquidBounce types
- * They are safe to use on any GSON instance. (clientGson, autoConfigGson, ...)
- * It does not include any configurable serializers, which means you need to add them yourself if needed!
- *
- * @see GsonBuilder.registerTypeHierarchyAdapter
- * @see GsonBuilder.registerTypeAdapter
- */
 private fun GsonBuilder.registerCommonTypeAdapters() =
     registerTypeAdapter(LocalDate::class.java, LocalDateAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter)

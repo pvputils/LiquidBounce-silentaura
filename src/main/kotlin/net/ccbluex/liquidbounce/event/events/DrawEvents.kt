@@ -29,13 +29,14 @@ import net.ccbluex.liquidbounce.render.getDynamicTransformsUniform
 import net.ccbluex.liquidbounce.render.mesh.BatchCollector
 import net.minecraft.client.Camera
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.renderer.SubmitNodeStorage
 
 @Tag("gameRender")
 object GameRenderEvent : Event()
-
-@Tag("screenRender")
-class ScreenRenderEvent(val context: GuiGraphicsExtractor, val partialTicks: Float) : Event()
+// codex start
+//
+// @Tag("screenRender")
+// class ScreenRenderEvent(val context: GuiGraphicsExtractor, val partialTicks: Float) : Event()
+// codex end
 
 @AddonApi
 @Tag("worldRender")
@@ -67,19 +68,21 @@ class WorldRenderEvent(
 /**
  * Fired before vanilla collects level features into its [SubmitNodeStorage].
  */
-@Tag("worldFeatureSubmit")
-class WorldFeatureSubmitEvent(
-    val poseStack: PoseStack,
-    val camera: Camera,
-    val submitNodeStorage: SubmitNodeStorage,
-) : Event()
-
-/**
- * Sometimes, modules might want to contribute something to the glow framebuffer. They can hook this event
- * in order to do so.
- *
- * Note: After writing to the outline framebuffer [markDirty] must be called.
- */
+// codex start
+// @Tag("worldFeatureSubmit")
+// class WorldFeatureSubmitEvent(
+//     val poseStack: PoseStack,
+//     val camera: Camera,
+//     val submitNodeStorage: SubmitNodeStorage,
+// ) : Event()
+//
+// /**
+//  * Sometimes, modules might want to contribute something to the glow framebuffer. They can hook this event
+//  * in order to do so.
+//  *
+//  * Note: After writing to the outline framebuffer [markDirty] must be called.
+//  */
+// codex end
 @Tag("drawOutlines")
 class DrawOutlinesEvent(
     val renderTarget: RenderTarget,

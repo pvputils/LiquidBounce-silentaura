@@ -19,23 +19,25 @@
 package net.ccbluex.liquidbounce.render.utils
 
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
-
-object ColorUtils {
-    @JvmField
-    val hexColors = IntArray(16)
-
-    init {
-        repeat(16) { i ->
-            val baseColor = (i shr 3 and 1) * 85
-
-            val red = (i shr 2 and 1) * 170 + baseColor + if (i == 6) 85 else 0
-            val green = (i shr 1 and 1) * 170 + baseColor
-            val blue = (i and 1) * 170 + baseColor
-
-            hexColors[i] = red and 255 shl 16 or (green and 255 shl 8) or (blue and 255)
-        }
-    }
-}
+// codex start
+//
+// object ColorUtils {
+//     @JvmField
+//     val hexColors = IntArray(16)
+//
+//     init {
+//         repeat(16) { i ->
+//             val baseColor = (i shr 3 and 1) * 85
+//
+//             val red = (i shr 2 and 1) * 170 + baseColor + if (i == 6) 85 else 0
+//             val green = (i shr 1 and 1) * 170 + baseColor
+//             val blue = (i and 1) * 170 + baseColor
+//
+//             hexColors[i] = red and 255 shl 16 or (green and 255 shl 8) or (blue and 255)
+//         }
+//     }
+// }
+// codex end
 
 @JvmOverloads
 fun rainbow(alpha: Float = 1f): Color4b {

@@ -37,8 +37,10 @@ import net.minecraft.server.players.UserNameToIdResolver
 val Window.dimensions
     get() = IntIntValuePair(screenWidth, screenHeight)
 
-val Window.scaledDimension
-    get() = IntIntValuePair(guiScaledWidth, guiScaledHeight)
+// codex start
+// val Window.scaledDimension
+//     get() = IntIntValuePair(guiScaledWidth, guiScaledHeight)
+// codex end
 
 val mc: Minecraft
     inline get() = Minecraft.getInstance()

@@ -19,7 +19,6 @@
 
 package net.ccbluex.liquidbounce.utils.io
 
-import it.unimi.dsi.fastutil.objects.ObjectArraySet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -81,5 +80,7 @@ suspend fun InputStream.createFont(fontFormat: Int = Font.TRUETYPE_FONT): Font =
         }
     }
 
-@JvmField
-internal val PNG_AND_JPG: Set<String> = ObjectArraySet(arrayOf("png", "jpg", "jpeg"))
+// codex start
+// @JvmField
+// internal val PNG_AND_JPG: Set<String> = ObjectArraySet(arrayOf("png", "jpg", "jpeg"))
+// codex end

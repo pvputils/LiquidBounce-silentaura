@@ -29,19 +29,22 @@ import net.ccbluex.liquidbounce.utils.combat.EntityTargetingInfo
 import net.ccbluex.liquidbounce.utils.kotlin.Priority
 import net.ccbluex.liquidbounce.utils.kotlin.PriorityField
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.LivingEntity
 
 @AddonApi
 @Tag("attack")
 class AttackEntityEvent(
     val entity: Entity
 ) : CancellableEvent()
-
-@Tag("entityMargin")
-class EntityMarginEvent(val entity: Entity, var margin: Float) : Event()
-
-@Tag("entityHealthUpdate")
-class EntityHealthUpdateEvent(val entity: LivingEntity, val old: Float, val new: Float, val max: Float) : Event()
+// codex start
+//
+// @Tag("entityMargin")
+// class EntityMarginEvent(val entity: Entity, var margin: Float) : Event()
+// // codex start
+// //
+// // @Tag("entityHealthUpdate")
+// // class EntityHealthUpdateEvent(val entity: LivingEntity, val old: Float, val new: Float, val max: Float) : Event()
+// // codex end
+// codex end
 
 @AddonApi
 @Tag("tagEntityEvent")

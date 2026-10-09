@@ -25,7 +25,6 @@ import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.events.NotificationEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.interfaces.TextColorAddition
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.text.asPlainText
@@ -263,6 +262,8 @@ fun notification(title: Component, message: Component, severity: NotificationEve
 fun notification(title: String, message: String, severity: NotificationEvent.Severity) =
     EventManager.callEvent(NotificationEvent(title, message, severity))
 
-val TextColor.bypassesNameProtection: Boolean
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    get() = (this as TextColorAddition).`liquid_bounce$doesBypassingNameProtect`()
+// codex start
+// val TextColor.bypassesNameProtection: Boolean
+//     @Suppress("CAST_NEVER_SUCCEEDS")
+//     get() = (this as TextColorAddition).`liquid_bounce$doesBypassingNameProtect`()
+// codex end

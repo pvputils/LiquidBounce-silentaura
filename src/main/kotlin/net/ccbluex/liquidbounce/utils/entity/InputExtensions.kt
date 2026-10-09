@@ -23,8 +23,10 @@ package net.ccbluex.liquidbounce.utils.entity
 import net.minecraft.client.player.ClientInput
 import net.minecraft.world.entity.player.Input
 
-inline val Input.anyHorizontal: Boolean
-    get() = forward || backward || left || right
+// codex start
+// inline val Input.anyHorizontal: Boolean
+//     get() = forward || backward || left || right
+// codex end
 
 inline fun Input.copy(
     forward: Boolean = this.forward,

@@ -57,15 +57,17 @@ data object NoneRangedValueProvider : RangedValueProvider {
 /**
  * [ValueGroup.float] registered to the submodule directly.
  */
-class FloatValueProvider(
-    val name: String,
-    val default: Float,
-    val range: ClosedFloatingPointRange<Float>,
-    val suffix: String = ""
-) : RangedValueProvider {
-
-    override fun register(offeredValueGroup: ValueGroup) : RangedValue<*> {
-        return offeredValueGroup.float(name, default, range, suffix)
-    }
-
-}
+// codex start
+// class FloatValueProvider(
+//     val name: String,
+//     val default: Float,
+//     val range: ClosedFloatingPointRange<Float>,
+//     val suffix: String = ""
+// ) : RangedValueProvider {
+//
+//     override fun register(offeredValueGroup: ValueGroup) : RangedValue<*> {
+//         return offeredValueGroup.float(name, default, range, suffix)
+//     }
+//
+// }
+// codex end

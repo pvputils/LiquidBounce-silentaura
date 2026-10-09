@@ -23,7 +23,6 @@ package net.ccbluex.liquidbounce.utils.text
 import com.google.common.base.CaseFormat
 import com.google.common.net.HostAndPort
 import com.google.common.net.InetAddresses
-import it.unimi.dsi.fastutil.chars.CharOpenHashSet
 import net.ccbluex.fastutil.unmodifiable
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.kotlin.unmodifiable
@@ -241,29 +240,31 @@ fun FormattedText.asFormattedCharSequence() = FormattedCharSequence { output ->
     StringDecomposer.iterateFormatted(this, Style.EMPTY, output)
 }
 
-private val COLOR_CODE_CHARS = CharOpenHashSet("0123456789AaBbCcDdEeFfKkLlMmNnOoRr".toCharArray()).unmodifiable()
-
-/**
- * Translate alt color codes to minecraft color codes
- */
 // codex start
-// fun String.translateColorCodes(): String {
-//     val chars = toCharArray()
-//     for (i in 0 until chars.lastIndex) {
-//         if (chars[i] == '&' && COLOR_CODE_CHARS.contains(chars[i + 1])) {
-//             chars[i] = '§'
-//             chars[i + 1] = chars[i + 1].lowercaseChar()
-//         }
-//     }
+// private val COLOR_CODE_CHARS = CharOpenHashSet("0123456789AaBbCcDdEeFfKkLlMmNnOoRr".toCharArray()).unmodifiable()
 //
-//     return String(chars)
-// }
-// codex end
-// codex start
-//
-// fun String.capitalize(): String = replaceFirstChar {
-//     if (it.isLowerCase()) it.titlecase() else it.toString()
-// }
+// /**
+//  * Translate alt color codes to minecraft color codes
+//  */
+// // codex start
+// // fun String.translateColorCodes(): String {
+// //     val chars = toCharArray()
+// //     for (i in 0 until chars.lastIndex) {
+// //         if (chars[i] == '&' && COLOR_CODE_CHARS.contains(chars[i + 1])) {
+// //             chars[i] = '§'
+// //             chars[i + 1] = chars[i + 1].lowercaseChar()
+// //         }
+// //     }
+// //
+// //     return String(chars)
+// // }
+// // codex end
+// // codex start
+// //
+// // fun String.capitalize(): String = replaceFirstChar {
+// //     if (it.isLowerCase()) it.titlecase() else it.toString()
+// // }
+// // codex end
 // codex end
 
 fun String.toLowerCamelCase(): String = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, this)
@@ -361,12 +362,14 @@ fun String.hideSensitiveAddress(): String {
 
     return if (idx == -1) newHost else newHost + substring(idx)
 }
-
-@JvmRecord
-data class ColoredChar(val char: Char, val color: TextColor)
-
 // codex start
-// inline fun Char.colored(color: TextColor) = ColoredChar(this, color)
+//
+// @JvmRecord
+// data class ColoredChar(val char: Char, val color: TextColor)
+//
+// // codex start
+// // inline fun Char.colored(color: TextColor) = ColoredChar(this, color)
+// // codex end
 // codex end
 
 fun Char.repeat(n: Int): String = CharArray(n) { this }.concatToString()

@@ -21,120 +21,116 @@
 package net.ccbluex.liquidbounce.utils.world
 
 import com.google.common.base.Predicates
-import net.ccbluex.liquidbounce.injection.mixins.minecraft.client.MixinLevelInvoker
 import net.ccbluex.liquidbounce.utils.math.expandToCube
 import net.minecraft.util.AbortableIterationConsumer
 import net.minecraft.util.Continuation
-import net.minecraft.world.attribute.BedRule
-import net.minecraft.world.attribute.EnvironmentAttributes
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.EntityGetter
-import net.minecraft.world.level.Level
-import net.minecraft.world.level.chunk.ChunkAccess
-import net.minecraft.world.level.chunk.LevelChunkSection
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.level.entity.LevelEntityGetter
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
 import java.util.function.Predicate
 
 /**
  * @return if water and ice evaporates in this world (e.g. nether)
  */
-val Level.waterEvaporates: Boolean
-    get() = this.environmentAttributes().getDimensionValue(EnvironmentAttributes.WATER_EVAPORATES)
-
-val Level.bedRule: BedRule
-    get() = this.environmentAttributes().getDimensionValue(EnvironmentAttributes.BED_RULE)
-
-val Level.respawnAnchorWorks: Boolean
-    get() = this.environmentAttributes().getDimensionValue(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS)
-
-/**
- * Returns the loaded section slice from section 0 through [ChunkAccess.highestFilledSectionIndex].
- */
-val ChunkAccess.filledSections: List<LevelChunkSection>
-    get() = this.sections.slice(0..this.highestFilledSectionIndex)
-
-/**
- * Iterates all blocks in a specific section index and exposes world-space block positions.
- *
- * The [mutable] instance is reused across callbacks for allocation-free chunk scanning.
- *
- * @see LevelChunk.getBlockState
- */
 // codex start
-// inline fun LevelChunk.forEachSectionBlock(
-//     sectionIndex: Int,
-//     mutable: BlockPos.MutableBlockPos = BlockPos.MutableBlockPos(),
-//     action: (BlockPos, BlockState) -> Unit,
-// ) {
-//     val section = this.getSection(sectionIndex)
-//     val startX = this.pos.minBlockX
-//     val startY = this.sectionBottomY(sectionIndex)
-//     val startZ = this.pos.minBlockZ
-//     section.forEachBlock { localX, localY, localZ, state ->
-//         action(mutable.set(startX or localX, startY or localY, startZ or localZ), state)
-//     }
-// }
+// val Level.waterEvaporates: Boolean
+//     get() = this.environmentAttributes().getDimensionValue(EnvironmentAttributes.WATER_EVAPORATES)
+//
+// val Level.bedRule: BedRule
+//     get() = this.environmentAttributes().getDimensionValue(EnvironmentAttributes.BED_RULE)
+//
+// val Level.respawnAnchorWorks: Boolean
+//     get() = this.environmentAttributes().getDimensionValue(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS)
 //
 // /**
-//  * Iterates all 4096 block states in a section and provides local section coordinates (0..15).
+//  * Returns the loaded section slice from section 0 through [ChunkAccess.highestFilledSectionIndex].
+//  */
+// val ChunkAccess.filledSections: List<LevelChunkSection>
+//     get() = this.sections.slice(0..this.highestFilledSectionIndex)
+//
+// /**
+//  * Iterates all blocks in a specific section index and exposes world-space block positions.
+//  *
+//  * The [mutable] instance is reused across callbacks for allocation-free chunk scanning.
 //  *
 //  * @see LevelChunk.getBlockState
 //  */
-// codex end
-// codex start
-// inline fun LevelChunkSection.forEachBlock(action: (localX: Int, localY: Int, localZ: Int, BlockState) -> Unit) {
-//     for (localY in 0..15) {
-//         for (localZ in 0..15) {
-//             for (localX in 0..15) {
-//                 val blockState = this.getBlockState(localX, localY, localZ)
-//                 action(localX, localY, localZ, blockState)
-//             }
-//         }
-//     }
-// }
+// // codex start
+// // inline fun LevelChunk.forEachSectionBlock(
+// //     sectionIndex: Int,
+// //     mutable: BlockPos.MutableBlockPos = BlockPos.MutableBlockPos(),
+// //     action: (BlockPos, BlockState) -> Unit,
+// // ) {
+// //     val section = this.getSection(sectionIndex)
+// //     val startX = this.pos.minBlockX
+// //     val startY = this.sectionBottomY(sectionIndex)
+// //     val startZ = this.pos.minBlockZ
+// //     section.forEachBlock { localX, localY, localZ, state ->
+// //         action(mutable.set(startX or localX, startY or localY, startZ or localZ), state)
+// //     }
+// // }
+// //
+// // /**
+// //  * Iterates all 4096 block states in a section and provides local section coordinates (0..15).
+// //  *
+// //  * @see LevelChunk.getBlockState
+// //  */
+// // codex end
+// // codex start
+// // inline fun LevelChunkSection.forEachBlock(action: (localX: Int, localY: Int, localZ: Int, BlockState) -> Unit) {
+// //     for (localY in 0..15) {
+// //         for (localZ in 0..15) {
+// //             for (localX in 0..15) {
+// //                 val blockState = this.getBlockState(localX, localY, localZ)
+// //                 action(localX, localY, localZ, blockState)
+// //             }
+// //         }
+// //     }
+// // }
+// //
+// // /**
+// //  * Converts a section index to the section base world Y (multiple of 16).
+// //  *
+// //  * `index == (y >> 4) - (bottomY >> 4)`
+// //  */
+// // codex end
 //
-// /**
-//  * Converts a section index to the section base world Y (multiple of 16).
-//  *
-//  * `index == (y >> 4) - (bottomY >> 4)`
-//  */
-// codex end
-
-// codex start
-// fun ChunkAccess.sectionBottomY(index: Int): Int = (index + (this.minY shr 4)) shl 4
+// // codex start
+// // fun ChunkAccess.sectionBottomY(index: Int): Int = (index + (this.minY shr 4)) shl 4
+// //
+// // /**
+// //  * [LevelReader.findBlocksIn] applies [BlockPos.containing] to both [AABB.getMinPosition] and
+// [AABB.getMaxPosition].
+// //  * This function uses [floorToInt] of min position and [ceilToInt] of max position.
+// //  */
+// // codex end
 //
-// /**
-//  * [LevelReader.findBlocksIn] applies [BlockPos.containing] to both [AABB.getMinPosition] and [AABB.getMaxPosition].
-//  * This function uses [floorToInt] of min position and [ceilToInt] of max position.
-//  */
-// codex end
-
-// codex start
-// fun LevelReader.findBlocksIntersects(box: AABB): BlockMatcher =
-//     this.findBlocksIn(
-//         BlockPos(box.minX.floorToInt(), box.minY.floorToInt(), box.minZ.floorToInt()),
-//         BlockPos(box.maxX.ceilToInt(), box.maxY.ceilToInt(), box.maxZ.ceilToInt()),
-//     )
-// codex end
-
-// codex start
-// fun BlockMatcher.anyMatched(predicate: BiPredicate<BlockPos, BlockState>): Boolean {
-//     var flag = false
-//     this.forEachUntil { pos, state ->
-//         if (predicate.test(pos, state)) {
-//             flag = true
-//             Continuation.ABORT
-//         } else {
-//             Continuation.CONTINUE
-//         }
-//     }
-//     return flag
-// }
+// // codex start
+// // fun LevelReader.findBlocksIntersects(box: AABB): BlockMatcher =
+// //     this.findBlocksIn(
+// //         BlockPos(box.minX.floorToInt(), box.minY.floorToInt(), box.minZ.floorToInt()),
+// //         BlockPos(box.maxX.ceilToInt(), box.maxY.ceilToInt(), box.maxZ.ceilToInt()),
+// //     )
+// // codex end
+//
+// // codex start
+// // fun BlockMatcher.anyMatched(predicate: BiPredicate<BlockPos, BlockState>): Boolean {
+// //     var flag = false
+// //     this.forEachUntil { pos, state ->
+// //         if (predicate.test(pos, state)) {
+// //             flag = true
+// //             Continuation.ABORT
+// //         } else {
+// //             Continuation.CONTINUE
+// //         }
+// //     }
+// //     return flag
+// // }
+// // codex end
 // codex end
 
 inline fun <reified T : Entity> EntityGetter.getEntitiesInCube(
@@ -160,8 +156,10 @@ fun EntityGetter.getEntitiesInCube(
     return getEntities(exclusion, box, predicate) // -> ArrayList
 }
 
-val Level.entityGetter: LevelEntityGetter<Entity>
-    inline get() = (this as MixinLevelInvoker).invokeGetEntities()
+// codex start
+// val Level.entityGetter: LevelEntityGetter<Entity>
+//     inline get() = (this as MixinLevelInvoker).invokeGetEntities()
+// codex end
 
 fun <B : Entity, T : B> LevelEntityGetter<B>.forEach(
     type: EntityTypeTest<B, T>,
@@ -208,15 +206,17 @@ fun <B : Entity, T : B> LevelEntityGetter<B>.any(
     predicate: Predicate<T>,
 ): Boolean = firstOrNull(type, predicate) != null
 
-private val localEntityIdGenerator = AtomicInteger(-1)
-
-/**
- * Allocates a unique negative entity ID for a locally spawned entity.
- *
- * Server entity IDs are always positive, and [Level.getNextEntityId] returns 0 on the client,
- * which [net.minecraft.client.multiplayer.ClientLevel.addEntity] rejects by throwing
- * `Tried to access entity ID before ID assignment`.
- */
 // codex start
-// fun Level.nextLocalEntityId(): Int = localEntityIdGenerator.getAndDecrement()
+// private val localEntityIdGenerator = AtomicInteger(-1)
+//
+// /**
+//  * Allocates a unique negative entity ID for a locally spawned entity.
+//  *
+//  * Server entity IDs are always positive, and [Level.getNextEntityId] returns 0 on the client,
+//  * which [net.minecraft.client.multiplayer.ClientLevel.addEntity] rejects by throwing
+//  * `Tried to access entity ID before ID assignment`.
+//  */
+// // codex start
+// // fun Level.nextLocalEntityId(): Int = localEntityIdGenerator.getAndDecrement()
+// // codex end
 // codex end

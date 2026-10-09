@@ -56,7 +56,9 @@ fun VoxelShape.boundsOrNull(): AABB? = if (isEmpty) null else bounds()
 fun VoxelShape.distanceToSqr(position: Vec3): Double =
     this.closestPointTo(position).orElse(null)?.distanceToSqr(position) ?: Double.POSITIVE_INFINITY
 
-private val AABB_BIGGER_FIRST = Comparator.comparingDouble(AABB::getSize).reversed()
+// codex start
+// private val AABB_BIGGER_FIRST = Comparator.comparingDouble(AABB::getSize).reversed()
+// codex end
 
 private const val SHAPE_EPSILON = 1.0E-7
 

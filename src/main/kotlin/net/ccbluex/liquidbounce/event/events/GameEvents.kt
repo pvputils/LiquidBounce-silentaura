@@ -21,8 +21,6 @@ package net.ccbluex.liquidbounce.event.events
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.ccbluex.liquidbounce.annotations.Tag
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
-import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
@@ -33,15 +31,10 @@ import net.minecraft.client.CameraType
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import net.minecraft.client.User
-import net.minecraft.client.gui.screens.ConnectScreen
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.multiplayer.ServerData
-import net.minecraft.client.multiplayer.TransferState
-import net.minecraft.client.multiplayer.resolver.ServerAddress
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
-import java.util.function.UnaryOperator
 
 @AddonApi
 @Tag("gameTick")
@@ -131,47 +124,55 @@ class SessionEvent(
 class ScreenEvent(
     val screen: Screen?,
 ) : CancellableEvent()
-
-@AddonApi
-@Tag("chatSend")
-class ChatSendEvent(
-    val message: String,
-) : CancellableEvent(), WebSocketEvent
-
-@AddonApi
-@Tag("chatReceive")
-class ChatReceiveEvent(
-    val message: String,
-    val textData: Component,
-    val type: ChatType,
-    @ProtocolExclude
-    val applyChatDecoration: UnaryOperator<Component>,
-) : CancellableEvent(), WebSocketEvent {
-    @AddonApi
-    enum class ChatType(override val tag: String) : Tagged {
-        CHAT_MESSAGE("ChatMessage"),
-        DISGUISED_CHAT_MESSAGE("DisguisedChatMessage"),
-        GAME_MESSAGE("GameMessage"),
-    }
-}
-
-@Tag("serverConnect")
-class ServerConnectEvent(
-    val connectScreen: ConnectScreen,
-    val address: ServerAddress,
-    val serverInfo: ServerData,
-    val cookieStorage: TransferState?,
-) : CancellableEvent()
+// codex start
+//
+// @AddonApi
+// @Tag("chatSend")
+// class ChatSendEvent(
+//     val message: String,
+// ) : CancellableEvent(), WebSocketEvent
+// codex end
+// codex start
+//
+// @AddonApi
+// @Tag("chatReceive")
+// class ChatReceiveEvent(
+//     val message: String,
+//     val textData: Component,
+//     val type: ChatType,
+//     @ProtocolExclude
+//     val applyChatDecoration: UnaryOperator<Component>,
+// ) : CancellableEvent(), WebSocketEvent {
+//     @AddonApi
+//     enum class ChatType(override val tag: String) : Tagged {
+//         CHAT_MESSAGE("ChatMessage"),
+//         DISGUISED_CHAT_MESSAGE("DisguisedChatMessage"),
+//         GAME_MESSAGE("GameMessage"),
+//     }
+// }
+// codex end
+// codex start
+//
+// @Tag("serverConnect")
+// class ServerConnectEvent(
+//     val connectScreen: ConnectScreen,
+//     val address: ServerAddress,
+//     val serverInfo: ServerData,
+//     val cookieStorage: TransferState?,
+// ) : CancellableEvent()
+// codex end
 
 @AddonApi
 @Tag("disconnect")
 object DisconnectEvent : Event(), WebSocketEvent
-
-@Tag("overlayMessage")
-class OverlayMessageEvent(
-    val text: Component,
-    val tinted: Boolean,
-) : Event(), WebSocketEvent
+// codex start
+//
+// @Tag("overlayMessage")
+// class OverlayMessageEvent(
+//     val text: Component,
+//     val tinted: Boolean,
+// ) : Event(), WebSocketEvent
+// codex end
 
 @Tag("perspective")
 object PerspectiveEvent : Event() {

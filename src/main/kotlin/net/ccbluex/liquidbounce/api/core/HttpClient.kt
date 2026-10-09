@@ -54,13 +54,15 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-val renderScope = CoroutineScope(
-    Dispatchers.Main + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
-        if (throwable is ReportedException) {
-            ErrorHandler.fatal(throwable, additionalMessage = "Render scope")
-        }
-    }
-)
+// codex start
+// val renderScope = CoroutineScope(
+//     Dispatchers.Main + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
+//         if (throwable is ReportedException) {
+//             ErrorHandler.fatal(throwable, additionalMessage = "Render scope")
+//         }
+//     }
+// )
+// codex end
 
 val ioScope = CoroutineScope(
     Dispatchers.IO + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
@@ -275,18 +277,20 @@ class HttpException(val method: HttpMethod, val url: String, val code: Int, val 
  * The [HttpException] behind this. OkHttp hands one thrown by an interceptor of an async call on
  * wrapped in an [IOException].
  */
-val Throwable.httpException: HttpException?
-    get() = this as? HttpException
-        ?: cause as? HttpException
-        ?: suppressed.firstNotNullOfOrNull { it as? HttpException }
-
-/**
- * [block]'s result, `null` when the server answers 404.
- */
 // codex start
-// internal inline fun <T> orNotFound(block: () -> T): T? = try {
-//     block()
-// } catch (e: Exception) {
-//     if (e.httpException?.code == HttpURLConnection.HTTP_NOT_FOUND) null else throw e
-// }
+// val Throwable.httpException: HttpException?
+//     get() = this as? HttpException
+//         ?: cause as? HttpException
+//         ?: suppressed.firstNotNullOfOrNull { it as? HttpException }
+//
+// /**
+//  * [block]'s result, `null` when the server answers 404.
+//  */
+// // codex start
+// // internal inline fun <T> orNotFound(block: () -> T): T? = try {
+// //     block()
+// // } catch (e: Exception) {
+// //     if (e.httpException?.code == HttpURLConnection.HTTP_NOT_FOUND) null else throw e
+// // }
+// // codex end
 // codex end

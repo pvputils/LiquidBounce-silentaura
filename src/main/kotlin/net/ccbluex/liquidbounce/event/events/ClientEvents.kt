@@ -245,38 +245,40 @@ object RotationUpdateEvent : Event()
 
 @Tag("resourceReload")
 object ResourceReloadEvent : Event()
-
-@Tag("scaleFactorChange")
-class ScaleFactorChangeEvent(val scaleFactor: Int) : Event(), WebSocketEvent
 // codex start
 //
-// @Tag("scheduleInventoryAction")
-// class ScheduleInventoryActionEvent(val schedule: MutableList<InventoryAction.Chain> = mutableListOf()) : Event() {
-//
-//     fun schedule(
-//         constrains: InventoryConstraints,
-//         action: InventoryAction,
-//         priority: Priority = Priority.NORMAL
-//     ) {
-//         this.schedule.add(InventoryAction.Chain(constrains, listOf(action), priority))
-//     }
-//
-//     fun schedule(
-//         constrains: InventoryConstraints,
-//         vararg actions: InventoryAction,
-//         priority: Priority = Priority.NORMAL
-//     ) {
-//         this.schedule.add(InventoryAction.Chain(constrains, actions.unmodifiable(), priority))
-//     }
-//
-//     fun schedule(
-//         constrains: InventoryConstraints,
-//         actions: List<InventoryAction>,
-//         priority: Priority = Priority.NORMAL
-//     ) {
-//         this.schedule.add(InventoryAction.Chain(constrains, actions, priority))
-//     }
-// }
+// @Tag("scaleFactorChange")
+// class ScaleFactorChangeEvent(val scaleFactor: Int) : Event(), WebSocketEvent
+// // codex start
+// //
+// // @Tag("scheduleInventoryAction")
+// // class ScheduleInventoryActionEvent(val schedule: MutableList<InventoryAction.Chain> = mutableListOf()) : Event() {
+// //
+// //     fun schedule(
+// //         constrains: InventoryConstraints,
+// //         action: InventoryAction,
+// //         priority: Priority = Priority.NORMAL
+// //     ) {
+// //         this.schedule.add(InventoryAction.Chain(constrains, listOf(action), priority))
+// //     }
+// //
+// //     fun schedule(
+// //         constrains: InventoryConstraints,
+// //         vararg actions: InventoryAction,
+// //         priority: Priority = Priority.NORMAL
+// //     ) {
+// //         this.schedule.add(InventoryAction.Chain(constrains, actions.unmodifiable(), priority))
+// //     }
+// //
+// //     fun schedule(
+// //         constrains: InventoryConstraints,
+// //         actions: List<InventoryAction>,
+// //         priority: Priority = Priority.NORMAL
+// //     ) {
+// //         this.schedule.add(InventoryAction.Chain(constrains, actions, priority))
+// //     }
+// // }
+// // codex end
 // codex end
 
 @Tag("selectHotbarSlotSilently")

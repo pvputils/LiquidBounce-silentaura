@@ -22,7 +22,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.EntityEquipmentChangeEvent;
-import net.ccbluex.liquidbounce.event.events.EntityHealthUpdateEvent;
 import net.ccbluex.liquidbounce.event.events.PlayerAfterJumpEvent;
 import net.ccbluex.liquidbounce.event.events.PlayerJumpEvent;
 import net.ccbluex.liquidbounce.utils.aiming.RotationManager;
@@ -338,16 +337,18 @@ public abstract class MixinLivingEntity extends MixinEntity {
     // }
     // codex end
 
-    @Inject(method = "setHealth", at = @At("HEAD"))
-    private void hookSetHealth(float health, CallbackInfo callbackInfo) {
-        var oldHealth = this.getHealth();
-        var maxHealth = this.getMaxHealth();
-        var newHealth = Math.clamp(health, 0.0F, maxHealth);
-
-        if (oldHealth != newHealth) {
-            EventManager.INSTANCE.callEvent(new EntityHealthUpdateEvent((LivingEntity) (Object) this, oldHealth, newHealth, maxHealth));
-        }
-    }
+    // codex start
+    // @Inject(method = "setHealth", at = @At("HEAD"))
+    // private void hookSetHealth(float health, CallbackInfo callbackInfo) {
+    //     var oldHealth = this.getHealth();
+    //     var maxHealth = this.getMaxHealth();
+    //     var newHealth = Math.clamp(health, 0.0F, maxHealth);
+    //
+    //     if (oldHealth != newHealth) {
+    //         EventManager.INSTANCE.callEvent(new EntityHealthUpdateEvent((LivingEntity) (Object) this, oldHealth, newHealth, maxHealth));
+    //     }
+    // }
+    // codex end
 
     @Inject(method = "setItemSlot", at = @At("HEAD"))
     private void hookEquipmentChange(EquipmentSlot slot, ItemStack itemStack, CallbackInfo ci) {

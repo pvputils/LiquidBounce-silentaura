@@ -61,9 +61,11 @@ class PlayerNetworkMovementTickEvent(
     var z: Double,
     var ground: Boolean
 ) : CancellableEvent()
-
-@Tag("playerPushOut")
-class PlayerPushOutEvent : CancellableEvent()
+// codex start
+//
+// @Tag("playerPushOut")
+// class PlayerPushOutEvent : CancellableEvent()
+// codex end
 
 @AddonApi
 @Tag("playerMove")
@@ -97,9 +99,11 @@ class PlayerInteractedItemEvent(
 
 @Tag("playerStrafe")
 class PlayerVelocityStrafe(val movementInput: Vec3, val speed: Float, val yaw: Float, var velocity: Vec3) : Event()
-
-@Tag("playerStride")
-class PlayerStrideEvent(var strideForce: Float) : Event()
+// codex start
+//
+// @Tag("playerStride")
+// class PlayerStrideEvent(var strideForce: Float) : Event()
+// codex end
 
 @Tag("playerSafeWalk")
 class PlayerSafeWalkEvent(var isSafeWalk: Boolean = false) : Event()

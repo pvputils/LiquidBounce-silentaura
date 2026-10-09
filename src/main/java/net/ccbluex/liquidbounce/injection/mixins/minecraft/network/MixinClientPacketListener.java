@@ -18,10 +18,8 @@
  */
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.network;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.sugar.Cancellable;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.ccbluex.liquidbounce.common.ChunkUpdateFlag;
 import net.ccbluex.liquidbounce.event.EventManager;
@@ -33,18 +31,13 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.Connection;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.entity.player.Player;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ClientPacketListener.class)
 public abstract class MixinClientPacketListener extends ClientCommonPacketListenerImpl {
@@ -53,15 +46,19 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
         super(client, connection, connectionState);
     }
 
-    @Inject(method = "handleLevelChunkWithLight", at = @At("RETURN"))
-    private void injectChunkLoadEvent(ClientboundLevelChunkWithLightPacket packet, CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(new ChunkLoadEvent(packet.x(), packet.z()));
-    }
+    // codex start
+    // @Inject(method = "handleLevelChunkWithLight", at = @At("RETURN"))
+    // private void injectChunkLoadEvent(ClientboundLevelChunkWithLightPacket packet, CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(new ChunkLoadEvent(packet.x(), packet.z()));
+    // }
+    // codex end
 
-    @Inject(method = "handleForgetLevelChunk", at = @At("RETURN"))
-    private void injectUnloadEvent(ClientboundForgetLevelChunkPacket packet, CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(new ChunkUnloadEvent(packet.pos()));
-    }
+    // codex start
+    // @Inject(method = "handleForgetLevelChunk", at = @At("RETURN"))
+    // private void injectUnloadEvent(ClientboundForgetLevelChunkPacket packet, CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(new ChunkUnloadEvent(packet.pos()));
+    // }
+    // codex end
 
     @WrapMethod(method = "handleChunkBlocksUpdate")
     private void onChunkDeltaUpdateStart(ClientboundSectionBlocksUpdatePacket packet, Operation<Void> original) {

@@ -29,8 +29,6 @@ import net.ccbluex.liquidbounce.event.events.BlockBreakingProgressEvent
 import net.ccbluex.liquidbounce.event.events.BlockChangeEvent
 import net.ccbluex.liquidbounce.event.events.CancelBlockBreakingEvent
 import net.ccbluex.liquidbounce.event.events.ChunkDeltaUpdateEvent
-import net.ccbluex.liquidbounce.event.events.ChunkLoadEvent
-import net.ccbluex.liquidbounce.event.events.ChunkUnloadEvent
 import net.ccbluex.liquidbounce.event.events.ClientLanguageChangedEvent
 import net.ccbluex.liquidbounce.event.events.ClientShutdownEvent
 import net.ccbluex.liquidbounce.event.events.ClientStartEvent
@@ -38,8 +36,6 @@ import net.ccbluex.liquidbounce.event.events.DeathEvent
 import net.ccbluex.liquidbounce.event.events.DisconnectEvent
 import net.ccbluex.liquidbounce.event.events.DrawOutlinesEvent
 import net.ccbluex.liquidbounce.event.events.EntityEquipmentChangeEvent
-import net.ccbluex.liquidbounce.event.events.EntityHealthUpdateEvent
-import net.ccbluex.liquidbounce.event.events.EntityMarginEvent
 import net.ccbluex.liquidbounce.event.events.GameRenderEvent
 import net.ccbluex.liquidbounce.event.events.GameRenderTaskQueueEvent
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
@@ -49,16 +45,12 @@ import net.ccbluex.liquidbounce.event.events.ItemLoreQueryEvent
 import net.ccbluex.liquidbounce.event.events.KeyEvent
 import net.ccbluex.liquidbounce.event.events.KeybindChangeEvent
 import net.ccbluex.liquidbounce.event.events.KeybindIsPressedEvent
-import net.ccbluex.liquidbounce.event.events.KeyboardCharEvent
 import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent
 import net.ccbluex.liquidbounce.event.events.ModuleActivationEvent
 import net.ccbluex.liquidbounce.event.events.FriendChangeEvent
 import net.ccbluex.liquidbounce.event.events.ModuleToggleEvent
 import net.ccbluex.liquidbounce.event.events.MouseButtonEvent
-import net.ccbluex.liquidbounce.event.events.MouseCursorEvent
 import net.ccbluex.liquidbounce.event.events.MouseRotationEvent
-import net.ccbluex.liquidbounce.event.events.MouseScrollEvent
-import net.ccbluex.liquidbounce.event.events.MouseScrollInHotbarEvent
 import net.ccbluex.liquidbounce.event.events.MovementInputEvent
 import net.ccbluex.liquidbounce.event.events.NotificationEvent
 import net.ccbluex.liquidbounce.event.events.OverlayRenderEvent
@@ -112,9 +104,13 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     GameRenderTaskQueueEvent::class.java,
     TickPacketProcessEvent::class.java,
     BlockChangeEvent::class.java,
-    ChunkLoadEvent::class.java,
+    // codex start
+    // ChunkLoadEvent::class.java,
+    // codex end
     ChunkDeltaUpdateEvent::class.java,
-    ChunkUnloadEvent::class.java,
+    // codex start
+    // ChunkUnloadEvent::class.java,
+    // codex end
     DisconnectEvent::class.java,
     GameRenderEvent::class.java,
     // codex start
@@ -129,10 +125,16 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // codex end
     WindowTitleEvent::class.java,
     MouseButtonEvent::class.java,
-    MouseScrollEvent::class.java,
-    MouseCursorEvent::class.java,
+    // codex start
+    // MouseScrollEvent::class.java,
+    // codex end
+    // codex start
+    // MouseCursorEvent::class.java,
+    // codex end
     KeyboardKeyEvent::class.java,
-    KeyboardCharEvent::class.java,
+    // codex start
+    // KeyboardCharEvent::class.java,
+    // codex end
     InputHandleEvent::class.java,
     MovementInputEvent::class.java,
     SprintEvent::class.java,
@@ -156,8 +158,12 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // BlockVelocityMultiplierEvent::class.java,
     // BlockSlipperinessMultiplierEvent::class.java,
     // codex end
-    EntityMarginEvent::class.java,
-    EntityHealthUpdateEvent::class.java,
+    // codex start
+    // EntityMarginEvent::class.java,
+    // codex end
+    // codex start
+    // EntityHealthUpdateEvent::class.java,
+    // codex end
     HealthUpdateEvent::class.java,
     DeathEvent::class.java,
     PlayerTickEvent::class.java,
@@ -257,7 +263,9 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // BrowserUrlChangeEvent::class.java,
     // codex end
     TagEntityEvent::class.java,
-    MouseScrollInHotbarEvent::class.java,
+    // codex start
+    // MouseScrollInHotbarEvent::class.java,
+    // codex end
     PlayerFluidCollisionCheckEvent::class.java,
     PlayerContainerInputEvent::class.java,
     PlayerSneakMultiplier::class.java,
