@@ -44,6 +44,7 @@ import net.ccbluex.liquidbounce.utils.raytracing.isLookingAtEntity
 import net.ccbluex.liquidbounce.utils.render.TargetRenderer
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.entity.LivingEntity
 
 /**
@@ -405,6 +406,13 @@ object ModuleKillAura : ClientModule("KillAura", ModuleCategories.COMBAT) {
         range: Float,
         wallsRange: Float
     ): Boolean {
+        // codex start
+        if ((mc.hitResult as? EntityHitResult)?.entity === entity) {
+            RotationManager.reset(resetServerRotation = false)
+            return true
+        }
+        // codex end
+
         val (rotation, _) = findRotation(entity, range, wallsRange) ?: return false
         // codex start
         // val ticks = rotations.calculateTicks(rotation)

@@ -133,14 +133,18 @@ object RotationManager : EventListener {
 
     private var theoreticalServerRotation = Rotation.ZERO
 
-    private fun reset() {
+    fun reset(resetServerRotation: Boolean = true) { //codex (private fun reset() {)
         rotationTargetHandler.clear()
         previousRotationTarget = null
         currentRotation = null
         playerRotation = null
         previousRotation = null
-        actualServerRotation = Rotation.ZERO
-        theoreticalServerRotation = Rotation.ZERO
+        // codex start
+        if (resetServerRotation) {
+            actualServerRotation = Rotation.ZERO
+            theoreticalServerRotation = Rotation.ZERO
+        }
+        // codex end
     }
 
     /**

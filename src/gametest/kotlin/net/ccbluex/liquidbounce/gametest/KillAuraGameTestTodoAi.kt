@@ -17,6 +17,7 @@ import net.ccbluex.liquidbounce.integration.screen.KillAuraConfigScreenTodoAi
 import net.ccbluex.liquidbounce.utils.combat.shouldBeAttacked
 import net.ccbluex.liquidbounce.utils.combat.Targets
 import net.ccbluex.liquidbounce.features.global.GlobalSettingsTarget
+import net.ccbluex.liquidbounce.utils.aiming.RotationManager
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext
@@ -24,6 +25,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.world.entity.monster.zombie.Zombie
 import net.minecraft.client.player.RemotePlayer
+import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.network.protocol.game.ServerboundAttackPacket
 import com.mojang.authlib.GameProfile
 import java.util.UUID
@@ -104,8 +106,40 @@ class KillAuraGameTestTodoAi : FabricClientGameTest {
             check(kotlin.math.abs(mc.player!!.yRot - initialYaw) > 5f) { "Visible aiming did not turn the player" }
             check(AimOnlyProbeTodoAi.attackPackets == 0) { "Aim-only KillAura sent an automatic attack" }
             check(!mc.options.keyAttack.isDown) { "Aim-only KillAura simulated attack input" }
+        }
+        checkCrosshairPause(context)
+        context.runOnClient<RuntimeException> {
             ModuleKillAura.enabled = false
             ConfigSystem.store(ModuleManager.modulesConfig)
+        }
+    }
+
+    private fun checkCrosshairPause(context: ClientGameTestContext) {
+        context.waitFor({
+            (it.hitResult as? EntityHitResult)?.entity === ModuleKillAura.targetTracker.target &&
+                RotationManager.activeRotationTarget == null && RotationManager.currentRotation == null
+        }, 200)
+        var pausedYaw = 0f
+        var pausedPitch = 0f
+        context.runOnClient<RuntimeException> {
+            pausedYaw = mc.player!!.yRot
+            pausedPitch = mc.player!!.xRot
+        }
+        context.waitTicks(10)
+        context.runOnClient<RuntimeException> {
+            check(RotationManager.activeRotationTarget == null) { "Aiming continued while crosshair was on target" }
+            check(kotlin.math.abs(mc.player!!.yRot - pausedYaw) < 0.01f)
+            check(kotlin.math.abs(mc.player!!.xRot - pausedPitch) < 0.01f)
+            mc.player!!.yRot = 90f
+            mc.player!!.xRot = 0f
+        }
+        context.waitFor({ RotationManager.activeRotationTarget != null }, 200)
+        context.waitFor({
+            (it.hitResult as? EntityHitResult)?.entity === ModuleKillAura.targetTracker.target &&
+                RotationManager.activeRotationTarget == null
+        }, 200)
+        context.runOnClient<RuntimeException> {
+            check(AimOnlyProbeTodoAi.attackPackets == 0) { "Pausing or resuming aiming sent an attack" }
         }
     }
 }
