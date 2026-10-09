@@ -25,7 +25,6 @@ import it.unimi.dsi.fastutil.objects.ObjectImmutableList
 import net.minecraft.world.level.block.ColorCollection
 import net.minecraft.world.level.block.WeatheringCopperCollection
 import java.util.Collections
-import java.util.function.Predicate
 
 fun <T> Array<out T>?.unmodifiable(): List<T> =
     when {
@@ -49,37 +48,39 @@ fun <T> Array<out T>?.unmodifiable(): List<T> =
 // fun <T> Iterable<Predicate<T>>.matchesAny(t: T): Boolean =
 //     any { it.test(t) }
 // codex end
-
-fun <T> Iterable<Predicate<T>>.matchesAll(t: T): Boolean =
-    all { it.test(t) }
 // codex start
 //
-// inline fun <T : Any> Array<T?>.getOrSet(index: Int, defaultValue: () -> T): T {
-//     val t = get(index)
-//     if (t != null) return t
-//     val y = defaultValue()
-//     set(index, y)
-//     return y
-// }
+// fun <T> Iterable<Predicate<T>>.matchesAll(t: T): Boolean =
+//     all { it.test(t) }
+// // codex start
+// //
+// // inline fun <T : Any> Array<T?>.getOrSet(index: Int, defaultValue: () -> T): T {
+// //     val t = get(index)
+// //     if (t != null) return t
+// //     val y = defaultValue()
+// //     set(index, y)
+// //     return y
+// // }
+// // codex end
+//
+// operator fun <T : Any> ColorCollection<T>.contains(e: T) =
+//     e === this.white ||
+//         e === this.orange ||
+//         e === this.magenta ||
+//         e === this.lightBlue ||
+//         e === this.yellow ||
+//         e === this.lime ||
+//         e === this.pink ||
+//         e === this.gray ||
+//         e === this.lightGray ||
+//         e === this.cyan ||
+//         e === this.purple ||
+//         e === this.blue ||
+//         e === this.brown ||
+//         e === this.green ||
+//         e === this.red ||
+//         e === this.black
 // codex end
-
-operator fun <T : Any> ColorCollection<T>.contains(e: T) =
-    e === this.white ||
-        e === this.orange ||
-        e === this.magenta ||
-        e === this.lightBlue ||
-        e === this.yellow ||
-        e === this.lime ||
-        e === this.pink ||
-        e === this.gray ||
-        e === this.lightGray ||
-        e === this.cyan ||
-        e === this.purple ||
-        e === this.blue ||
-        e === this.brown ||
-        e === this.green ||
-        e === this.red ||
-        e === this.black
 
 fun <T : Any> MutableCollection<T>.addAll(other: ColorCollection<T>) =
     other.forEach(this::add)

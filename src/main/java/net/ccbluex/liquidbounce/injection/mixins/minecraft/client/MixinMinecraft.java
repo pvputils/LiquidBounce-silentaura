@@ -319,12 +319,13 @@ public abstract class MixinMinecraft {
         EventManager.INSTANCE.callEvent(new WorldChangeEvent(world));
     }
 
-    @Inject(method = "renderFrame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;fps:I",
-        ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTSTATIC))
-    private void hookFpsChange(CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(new FpsChangeEvent(this.getFps()));
-    }
-
+    // codex start
+    // @Inject(method = "renderFrame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;fps:I",
+    //     ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTSTATIC))
+    // private void hookFpsChange(CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(new FpsChangeEvent(this.getFps()));
+    // }
+    // codex end
     @Inject(method = "onResourceLoadFinished", at = @At("HEAD"))
     private void onFinishedLoading(CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(ResourceReloadEvent.INSTANCE);

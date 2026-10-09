@@ -18,21 +18,14 @@
  */
 package net.ccbluex.liquidbounce.utils.raytracing
 
-import net.ccbluex.liquidbounce.utils.aiming.RotationManager
-import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.entity.rotation
 import net.ccbluex.liquidbounce.utils.math.withLength
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
-import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.minecraft.world.phys.shapes.CollisionContext
 // codex start
 //
 // fun rayTraceCollidingBlocks(start: Vec3, end: Vec3): BlockHitResult? {
@@ -49,32 +42,34 @@ import net.minecraft.world.phys.shapes.CollisionContext
 //     return result.takeIf { it.type == HitResult.Type.BLOCK }
 // }
 // codex end
-
-fun raytraceBlock(
-    range: Double,
-    rotation: Rotation = RotationManager.currentRotation ?: player.rotation,
-    pos: BlockPos,
-    state: BlockState,
-): BlockHitResult? {
-    val entity: Entity = mc.cameraEntity ?: return null
-
-    val start = entity.eyePosition
-    val rotationVec = rotation.viewVector
-
-    val end = start.add(rotationVec.x * range, rotationVec.y * range, rotationVec.z * range)
-
-    return mc.level?.clipWithInteractionOverride(
-        start,
-        end,
-        pos,
-        state.getShape(mc.level!!, pos, CollisionContext.of(mc.player!!)),
-        state,
-    )
-}
-
-/**
- * Allows you to check if a point is behind a wall
- */
+// codex start
+//
+// fun raytraceBlock(
+//     range: Double,
+//     rotation: Rotation = RotationManager.currentRotation ?: player.rotation,
+//     pos: BlockPos,
+//     state: BlockState,
+// ): BlockHitResult? {
+//     val entity: Entity = mc.cameraEntity ?: return null
+//
+//     val start = entity.eyePosition
+//     val rotationVec = rotation.viewVector
+//
+//     val end = start.add(rotationVec.x * range, rotationVec.y * range, rotationVec.z * range)
+//
+//     return mc.level?.clipWithInteractionOverride(
+//         start,
+//         end,
+//         pos,
+//         state.getShape(mc.level!!, pos, CollisionContext.of(mc.player!!)),
+//         state,
+//     )
+// }
+//
+// /**
+//  * Allows you to check if a point is behind a wall
+//  */
+// codex end
 fun Entity.isFacingBlock(
     eyes: Vec3 = this.eyePosition,
     targetPoint: Vec3,

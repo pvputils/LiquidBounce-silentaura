@@ -20,8 +20,6 @@
 
 package net.ccbluex.liquidbounce.utils.inventory
 
-import net.ccbluex.liquidbounce.utils.client.player
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 // codex start
@@ -67,42 +65,44 @@ import net.minecraft.world.inventory.MenuType
 //         }
 //     }
 // codex end
-
-fun AbstractContainerScreen<*>.getSlotsInContainer(): List<ContainerItemSlot> =
-    this.menu.slots
-        .filter { it.container !== player.inventory }
-        .map { ContainerItemSlot(it.index) }
 // codex start
 //
-// fun AbstractContainerScreen<*>.findItemsInContainer(): List<ContainerItemSlot> =
+// fun AbstractContainerScreen<*>.getSlotsInContainer(): List<ContainerItemSlot> =
 //     this.menu.slots
-//         .filter { !it.item.isEmpty && it.container !== player.inventory }
+//         .filter { it.container !== player.inventory }
 //         .map { ContainerItemSlot(it.index) }
-// codex end
-
-// codex start
-// @AddonApi
-// @JvmOverloads
-// context(requester: EventListener)
-// codex end
-// codex start
-// fun useHotbarSlotOrOffhand(
-//     slot: HotbarItemSlot,
-//     ticksUntilReset: Int = 1,
-//     yRot: Float = RotationManager.currentRotation?.yRot ?: player.yRot,
-//     xRot: Float = RotationManager.currentRotation?.xRot ?: player.xRot,
-//     swingMode: SwingMode = SwingMode.DO_NOT_HIDE,
-// ): InteractionResult {
-//     SilentHotbar.selectSlotSilently(requester, slot, ticksUntilReset)
-//     return net.ccbluex.liquidbounce.utils.entity.useItem(slot.useHand, yRot, xRot, swingMode)
-// }
-// codex end
-// codex start
+// // codex start
+// //
+// // fun AbstractContainerScreen<*>.findItemsInContainer(): List<ContainerItemSlot> =
+// //     this.menu.slots
+// //         .filter { !it.item.isEmpty && it.container !== player.inventory }
+// //         .map { ContainerItemSlot(it.index) }
+// // codex end
 //
-// internal fun findBlocksEndingWith(vararg targets: String): SortedSet<Block> =
-//     BuiltInRegistries.BLOCK.filterTo(blockSortedSetOf()) { block ->
-//         targets.any { BuiltInRegistries.BLOCK.getKey(block).path.endsWith(it.lowercase()) }
-//     }
+// // codex start
+// // @AddonApi
+// // @JvmOverloads
+// // context(requester: EventListener)
+// // codex end
+// // codex start
+// // fun useHotbarSlotOrOffhand(
+// //     slot: HotbarItemSlot,
+// //     ticksUntilReset: Int = 1,
+// //     yRot: Float = RotationManager.currentRotation?.yRot ?: player.yRot,
+// //     xRot: Float = RotationManager.currentRotation?.xRot ?: player.xRot,
+// //     swingMode: SwingMode = SwingMode.DO_NOT_HIDE,
+// // ): InteractionResult {
+// //     SilentHotbar.selectSlotSilently(requester, slot, ticksUntilReset)
+// //     return net.ccbluex.liquidbounce.utils.entity.useItem(slot.useHand, yRot, xRot, swingMode)
+// // }
+// // codex end
+// // codex start
+// //
+// // internal fun findBlocksEndingWith(vararg targets: String): SortedSet<Block> =
+// //     BuiltInRegistries.BLOCK.filterTo(blockSortedSetOf()) { block ->
+// //         targets.any { BuiltInRegistries.BLOCK.getKey(block).path.endsWith(it.lowercase()) }
+// //     }
+// // codex end
 // codex end
 
 val AbstractContainerMenu.typeOrNull: MenuType<*>?

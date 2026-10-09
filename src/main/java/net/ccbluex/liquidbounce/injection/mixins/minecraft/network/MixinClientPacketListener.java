@@ -106,57 +106,58 @@ public abstract class MixinClientPacketListener extends ClientCommonPacketListen
     // codex end
     }
 
-    @ModifyExpressionValue(method = "setTitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetTitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
-    private @Nullable Component hookOnTitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
-        var event = new TitleEvent.Title(original);
-        EventManager.INSTANCE.callEvent(event);
-        if (event.isCancelled()) {
-            ci.cancel();
-        }
-        return event.getText();
-    }
-
-    @ModifyExpressionValue(method = "setSubtitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetSubtitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
-    private @Nullable Component hookOnSubtitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
-        var event = new TitleEvent.Subtitle(original);
-        EventManager.INSTANCE.callEvent(event);
-        if (event.isCancelled()) {
-            ci.cancel();
-        }
-        return event.getText();
-    }
-
-    @ModifyArgs(method = "setTitlesAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;setTimes(III)V"))
-    private void hookOnTitleFade(Args args, @Cancellable CallbackInfo ci) {
-        var event = new TitleEvent.Fade(args.get(0), args.get(1), args.get(2));
-        EventManager.INSTANCE.callEvent(event);
-        if (event.isCancelled()) {
-            ci.cancel();
-        }
-        args.set(0, event.getFadeInTicks());
-        args.set(1, event.getStayTicks());
-        args.set(2, event.getFadeOutTicks());
-    }
-
-    /**
-     * This injection rewrites the method!!!
-     */
-    @Inject(method = "handleTitlesClear", at = @At(value = "HEAD"), cancellable = true)
-    private void hookOnTitleClear(ClientboundClearTitlesPacket packet, CallbackInfo ci) {
-        PacketUtils.ensureRunningOnSameThread(packet, (ClientGamePacketListener) this, this.minecraft.packetProcessor());
-        var event = new TitleEvent.Clear(packet.shouldResetTimes());
-        EventManager.INSTANCE.callEvent(event);
-        if (event.isCancelled()) {
-            ci.cancel();
-            return;
-        }
-        this.minecraft.gui.hud.clearTitles();
-        if (event.getReset()) {
-            this.minecraft.gui.hud.resetTitleTimes();
-        }
-        ci.cancel();
-    }
-
+    // codex start
+    // @ModifyExpressionValue(method = "setTitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetTitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
+    // private @Nullable Component hookOnTitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
+    //     var event = new TitleEvent.Title(original);
+    //     EventManager.INSTANCE.callEvent(event);
+    //     if (event.isCancelled()) {
+    //         ci.cancel();
+    //     }
+    //     return event.getText();
+    // }
+//
+    // @ModifyExpressionValue(method = "setSubtitleText", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundSetSubtitleTextPacket;text()Lnet/minecraft/network/chat/Component;"))
+    // private @Nullable Component hookOnSubtitle(@Nullable Component original, @Cancellable CallbackInfo ci) {
+    //     var event = new TitleEvent.Subtitle(original);
+    //     EventManager.INSTANCE.callEvent(event);
+    //     if (event.isCancelled()) {
+    //         ci.cancel();
+    //     }
+    //     return event.getText();
+    // }
+//
+    // @ModifyArgs(method = "setTitlesAnimation", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;setTimes(III)V"))
+    // private void hookOnTitleFade(Args args, @Cancellable CallbackInfo ci) {
+    //     var event = new TitleEvent.Fade(args.get(0), args.get(1), args.get(2));
+    //     EventManager.INSTANCE.callEvent(event);
+    //     if (event.isCancelled()) {
+    //         ci.cancel();
+    //     }
+    //     args.set(0, event.getFadeInTicks());
+    //     args.set(1, event.getStayTicks());
+    //     args.set(2, event.getFadeOutTicks());
+    // }
+//
+    // /**
+    //  * This injection rewrites the method!!!
+    //  */
+    // @Inject(method = "handleTitlesClear", at = @At(value = "HEAD"), cancellable = true)
+    // private void hookOnTitleClear(ClientboundClearTitlesPacket packet, CallbackInfo ci) {
+    //     PacketUtils.ensureRunningOnSameThread(packet, (ClientGamePacketListener) this, this.minecraft.packetProcessor());
+    //     var event = new TitleEvent.Clear(packet.shouldResetTimes());
+    //     EventManager.INSTANCE.callEvent(event);
+    //     if (event.isCancelled()) {
+    //         ci.cancel();
+    //         return;
+    //     }
+    //     this.minecraft.gui.hud.clearTitles();
+    //     if (event.getReset()) {
+    //         this.minecraft.gui.hud.resetTitleTimes();
+    //     }
+    //     ci.cancel();
+    // }
+    // codex end
     // codex start
     // @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     // @ModifyExpressionValue(method = "handleExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundExplodePacket;playerKnockback()Ljava/util/Optional;"))

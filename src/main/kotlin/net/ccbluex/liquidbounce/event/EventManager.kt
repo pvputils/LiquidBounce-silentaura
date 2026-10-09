@@ -40,7 +40,6 @@ import net.ccbluex.liquidbounce.event.events.DrawOutlinesEvent
 import net.ccbluex.liquidbounce.event.events.EntityEquipmentChangeEvent
 import net.ccbluex.liquidbounce.event.events.EntityHealthUpdateEvent
 import net.ccbluex.liquidbounce.event.events.EntityMarginEvent
-import net.ccbluex.liquidbounce.event.events.FpsChangeEvent
 import net.ccbluex.liquidbounce.event.events.GameRenderEvent
 import net.ccbluex.liquidbounce.event.events.GameRenderTaskQueueEvent
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
@@ -91,7 +90,6 @@ import net.ccbluex.liquidbounce.event.events.SessionEvent
 import net.ccbluex.liquidbounce.event.events.SprintEvent
 import net.ccbluex.liquidbounce.event.events.TagEntityEvent
 import net.ccbluex.liquidbounce.event.events.TickPacketProcessEvent
-import net.ccbluex.liquidbounce.event.events.TitleEvent
 import net.ccbluex.liquidbounce.event.events.UseCooldownEvent
 import net.ccbluex.liquidbounce.event.events.ValueChangedEvent
 import net.ccbluex.liquidbounce.event.events.WindowTitleEvent
@@ -213,7 +211,9 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // AccountManagerLoginResultEvent::class.java,
     // VirtualScreenEvent::class.java,
     // codex end
-    FpsChangeEvent::class.java,
+    // codex start
+    // FpsChangeEvent::class.java,
+    // codex end
     // codex start
     // FpsLimitEvent::class.java,
     // ClientPlayerDataEvent::class.java,
@@ -273,10 +273,12 @@ internal val ALL_EVENT_CLASSES: Array<Class<out Event>> = arrayOf(
     // codex end
     AllowAutoJumpEvent::class.java,
     WorldEntityRemoveEvent::class.java,
-    TitleEvent.Title::class.java,
-    TitleEvent.Subtitle::class.java,
-    TitleEvent.Fade::class.java,
-    TitleEvent.Clear::class.java,
+    // codex start
+    // TitleEvent.Title::class.java,
+    // TitleEvent.Subtitle::class.java,
+    // TitleEvent.Fade::class.java,
+    // TitleEvent.Clear::class.java,
+    // codex end
     // codex start
     // ClosedCaptionsEvent::class.java,
     // UserLoggedInEvent::class.java,
