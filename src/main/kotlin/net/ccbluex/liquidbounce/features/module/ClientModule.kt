@@ -18,7 +18,6 @@
  */
 package net.ccbluex.liquidbounce.features.module
 
-import com.mojang.blaze3d.platform.InputConstants
 import kotlinx.coroutines.launch
 import net.ccbluex.liquidbounce.config.ConfigSystem
 import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig
@@ -39,7 +38,6 @@ import net.ccbluex.liquidbounce.lang.LanguageManager
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.clientLogger
 import net.ccbluex.liquidbounce.utils.client.notification
-import net.ccbluex.liquidbounce.utils.input.InputBind
 import net.ccbluex.liquidbounce.utils.text.plus
 import net.ccbluex.liquidbounce.utils.text.toLowerCamelCase
 import net.ccbluex.liquidbounce.utils.text.withFormat
@@ -55,8 +53,12 @@ import net.minecraft.util.FormattedCharSequence
 open class ClientModule @JvmOverloads constructor(
     name: String, // name parameter in configurable
     @Exclude val category: ModuleCategory, // module category
-    bind: Int = InputConstants.UNKNOWN.value, // default bind
-    bindAction: InputBind.BindAction = InputBind.BindAction.TOGGLE, // default action
+    // codex start
+    // bind: Int = InputConstants.UNKNOWN.value, // default bind
+    // codex end
+    // codex start
+    // bindAction: InputBind.BindAction = InputBind.BindAction.TOGGLE, // default action
+    // codex end
     state: Boolean = false, // default state
     @Exclude val notActivatable: Boolean = false, // disable settings that are not needed if the module can't be enabled
     @Exclude val disableActivation: Boolean = notActivatable, // disable activation
@@ -88,22 +90,24 @@ open class ClientModule @JvmOverloads constructor(
     override val running: Boolean
         get() = super<EventListener>.running && inGame && (enabled || notActivatable)
 
-    @AddonApi
-    val bindValue = bind("Bind", InputBind(InputConstants.Type.KEYBOARD, bind, bindAction))
-        .doNotIncludeWhen { !AutoConfig.includeConfiguration.includeBinds }
-        .independentDescription().apply {
-            if (notActivatable) {
-                notAnOption()
-            }
-        }
-    val bind get() = bindValue.get()
-
-    /**
-     * True when something outside LiquidBounce acts on [bind], so the module manager leaves it alone.
-     */
-    @AddonApi
-    open val externalBind: Boolean
-        get() = false
+    // codex start
+    // @AddonApi
+    // val bindValue = bind("Bind", InputBind(InputConstants.Type.KEYBOARD, bind, bindAction))
+    //     .doNotIncludeWhen { !AutoConfig.includeConfiguration.includeBinds }
+    //     .independentDescription().apply {
+    //         if (notActivatable) {
+    //             notAnOption()
+    //         }
+    //     }
+    // val bind get() = bindValue.get()
+    //
+    // /**
+    //  * True when something outside LiquidBounce acts on [bind], so the module manager leaves it alone.
+    //  */
+    // @AddonApi
+    // open val externalBind: Boolean
+    //     get() = false
+    // codex end
 
     var hidden by boolean("Hidden", hide)
         .doNotIncludeWhen { !AutoConfig.includeConfiguration.includeHidden }

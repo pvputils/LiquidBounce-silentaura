@@ -26,7 +26,6 @@ import com.mojang.blaze3d.platform.InputConstants
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.config.ConfigSystem
 import net.ccbluex.liquidbounce.config.gson.fileGson
-import net.ccbluex.liquidbounce.config.types.BindValue
 import net.ccbluex.liquidbounce.config.types.CurveValue
 import net.ccbluex.liquidbounce.config.types.RangedValue
 import net.ccbluex.liquidbounce.config.types.Value
@@ -44,7 +43,6 @@ import net.ccbluex.liquidbounce.features.module.ModuleManager
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.input.InputBind
 import net.fabricmc.api.ClientModInitializer
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
@@ -52,7 +50,6 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.input.KeyEvent
-import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import org.joml.Vector2f
 
@@ -125,7 +122,9 @@ class KillAuraConfigScreenTodoAi(
                 value.setByString(choices[(choices.indexOf(value.get()) + 1) % choices.size].tag)
                 rebuildWidgets()
             }
-            is BindValue -> mc.gui.setScreen(KillAuraBindScreenTodoAi(this, value))
+            // codex start
+            // is BindValue -> mc.gui.setScreen(KillAuraBindScreenTodoAi(this, value))
+            // codex end
             else -> if (value.get() is Boolean) {
                 value.setByString((value.get() != true).toString())
                 rebuildWidgets()
@@ -155,7 +154,9 @@ private fun displayValue(value: Value<*>): String = when (val current = value.ge
     is Tagged -> current.tag
     is ClosedRange<*> -> "${current.start}..${current.endInclusive}"
     is Color4b -> "#%08X".format(current.argb)
-    is InputBind -> "${current.boundKey.displayName.string} (${current.action.tag})"
+    // codex start
+    // is InputBind -> "${current.boundKey.displayName.string} (${current.action.tag})"
+    // codex end
     is java.io.File -> current.path
     is String, is Number -> current.toString()
     else -> fileGson.toJson(current)
@@ -261,67 +262,69 @@ private class KillAuraValueScreenTodoAi(
     }
 }
 
-private class KillAuraBindScreenTodoAi(
-    private val parentScreen: Screen,
-    private val value: BindValue,
-) : Screen(Component.literal("KillAura key binding")) {
-    private var capturing = false
-
-    override fun init() {
-        addRenderableWidget(Button.builder(Component.literal("Key: ${value.get().boundKey.displayName.string}")) {
-            capturing = true
-            it.message = Component.literal("Press a key (Esc cancels)")
-        }.bounds(width / 2 - 140, 40, 280, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Action: ${value.get().action.tag}")) {
-            val actions = InputBind.BindAction.entries
-            value.set(value.get().copy(action = actions[(actions.indexOf(value.get().action) + 1) % actions.size]))
-            rebuildWidgets()
-        }.bounds(width / 2 - 140, 64, 280, 20).build())
-        InputBind.Modifier.entries.forEachIndexed { index, modifier ->
-            val label = "${modifier.tag}: ${modifier in value.get().modifiers}"
-            addRenderableWidget(Button.builder(Component.literal(label)) {
-                val modifiers = value.get().modifiers.toMutableSet()
-                if (!modifiers.remove(modifier)) modifiers.add(modifier)
-                value.set(value.get().copy(modifiers = modifiers))
-                rebuildWidgets()
-            }.bounds(width / 2 - 140, 88 + index * ROW_HEIGHT, 280, 20).build())
-        }
-        addRenderableWidget(Button.builder(Component.literal("Unbind")) {
-            value.set(InputBind.UNBOUND)
-            rebuildWidgets()
-        }.bounds(width / 2 - 140, height - 52, 280, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Done")) { onClose() }
-            .bounds(width / 2 - 140, height - 28, 280, 20).build())
-    }
-
-    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
-        if (!capturing) return super.mouseClicked(event, doubleClick)
-        capturing = false
-        value.set(value.get().copy(boundKey = InputConstants.Type.MOUSE.getOrCreate(event.button())))
-        rebuildWidgets()
-        return true
-    }
-
-    override fun keyPressed(event: KeyEvent): Boolean {
-        if (!capturing) return super.keyPressed(event)
-        capturing = false
-        if (event.key() != InputConstants.KEY_ESCAPE) {
-            value.set(value.get().copy(boundKey = InputConstants.Type.KEYBOARD.getOrCreate(event.key())))
-        }
-        rebuildWidgets()
-        return true
-    }
-
-    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
-        super.extractRenderState(context, mouseX, mouseY, partialTick)
-        context.centeredText(font, title, width / 2, 12, -1)
-    }
-
-    override fun onClose() {
-        persistKillAuraSettingsTodoAi()
-        mc.gui.setScreen(parentScreen)
-    }
-}
+// codex start
+// private class KillAuraBindScreenTodoAi(
+//     private val parentScreen: Screen,
+//     private val value: BindValue,
+// ) : Screen(Component.literal("KillAura key binding")) {
+//     private var capturing = false
+//
+//     override fun init() {
+//         addRenderableWidget(Button.builder(Component.literal("Key: ${value.get().boundKey.displayName.string}")) {
+//             capturing = true
+//             it.message = Component.literal("Press a key (Esc cancels)")
+//         }.bounds(width / 2 - 140, 40, 280, 20).build())
+//         addRenderableWidget(Button.builder(Component.literal("Action: ${value.get().action.tag}")) {
+//             val actions = InputBind.BindAction.entries
+//             value.set(value.get().copy(action = actions[(actions.indexOf(value.get().action) + 1) % actions.size]))
+//             rebuildWidgets()
+//         }.bounds(width / 2 - 140, 64, 280, 20).build())
+//         InputBind.Modifier.entries.forEachIndexed { index, modifier ->
+//             val label = "${modifier.tag}: ${modifier in value.get().modifiers}"
+//             addRenderableWidget(Button.builder(Component.literal(label)) {
+//                 val modifiers = value.get().modifiers.toMutableSet()
+//                 if (!modifiers.remove(modifier)) modifiers.add(modifier)
+//                 value.set(value.get().copy(modifiers = modifiers))
+//                 rebuildWidgets()
+//             }.bounds(width / 2 - 140, 88 + index * ROW_HEIGHT, 280, 20).build())
+//         }
+//         addRenderableWidget(Button.builder(Component.literal("Unbind")) {
+//             value.set(InputBind.UNBOUND)
+//             rebuildWidgets()
+//         }.bounds(width / 2 - 140, height - 52, 280, 20).build())
+//         addRenderableWidget(Button.builder(Component.literal("Done")) { onClose() }
+//             .bounds(width / 2 - 140, height - 28, 280, 20).build())
+//     }
+//
+//     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
+//         if (!capturing) return super.mouseClicked(event, doubleClick)
+//         capturing = false
+//         value.set(value.get().copy(boundKey = InputConstants.Type.MOUSE.getOrCreate(event.button())))
+//         rebuildWidgets()
+//         return true
+//     }
+//
+//     override fun keyPressed(event: KeyEvent): Boolean {
+//         if (!capturing) return super.keyPressed(event)
+//         capturing = false
+//         if (event.key() != InputConstants.KEY_ESCAPE) {
+//             value.set(value.get().copy(boundKey = InputConstants.Type.KEYBOARD.getOrCreate(event.key())))
+//         }
+//         rebuildWidgets()
+//         return true
+//     }
+//
+//     override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+//         super.extractRenderState(context, mouseX, mouseY, partialTick)
+//         context.centeredText(font, title, width / 2, 12, -1)
+//     }
+//
+//     override fun onClose() {
+//         persistKillAuraSettingsTodoAi()
+//         mc.gui.setScreen(parentScreen)
+//     }
+// }
+// codex end
 
 private fun persistKillAuraSettingsTodoAi() {
     ConfigSystem.store(ModuleManager.modulesConfig)

@@ -19,28 +19,20 @@
 package net.ccbluex.liquidbounce.features.module
 
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet
-import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap
 import net.ccbluex.liquidbounce.config.ConfigSystem
 import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig
 import net.ccbluex.liquidbounce.config.types.VALUE_NAME_ORDER
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.event.events.DisconnectEvent
-import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent
-import net.ccbluex.liquidbounce.event.events.MouseButtonEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.sequenceHandler
 import net.ccbluex.liquidbounce.event.tickUntil
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
-import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.ModuleDebugRecorder
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.utils.client.clientStartDurationMs
 import net.ccbluex.liquidbounce.utils.client.inGame
 import net.ccbluex.liquidbounce.utils.client.logger
-import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.input.InputBind
 
 private val modules = ObjectRBTreeSet<ClientModule>(VALUE_NAME_ORDER)
 
@@ -51,128 +43,130 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
 
     val modulesConfig = ConfigSystem.root("modules", modules)
 
-    private const val SMART_MOUSE_HOLD_THRESHOLD_MS = 200L
-
-    private enum class SmartBindKeyboardState {
-        PENDING_ENABLED, PENDING_DISABLED, HOLDING,
-    }
-    private class SmartBindMouseState(val pendingEnabled: Boolean, val pressTimestamp: Long)
-
-    private val smartKeyboardStates = Reference2ObjectArrayMap<ClientModule, SmartBindKeyboardState>()
-    private val smartMouseStates = Reference2ObjectArrayMap<ClientModule, SmartBindMouseState>()
-
-    private fun modulesWithOwnBinds() = modules.filterNot(ClientModule::externalBind)
-
-    /**
-     * Handles keystrokes for module binds.
-     * This also runs in GUIs, so that if a GUI is opened while a key is pressed,
-     * any modules that need to be disabled on key release will be properly disabled.
-     */
-    @Suppress("unused")
-    private val keyboardKeyHandler = handler<KeyboardKeyEvent> { event ->
-        if (event.isPressed) {
-            if (mc.gui.screen() == null) {
-                // Usually nobody actually wants a module to activate when they press the Minecraft debug key combo.
-                if (mc.options.keyDebugModifier.isDown) return@handler
-                for (m in modulesWithOwnBinds()) {
-                    if (!m.bind.matchesKeyPress(event)) {
-                        continue
-                    }
-
-                    when (m.bind.action) {
-                        InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
-                        InputBind.BindAction.HOLD -> m.enabled = true
-                        InputBind.BindAction.SMART -> {
-                            smartKeyboardStates[m] = if (m.enabled) {
-                                SmartBindKeyboardState.PENDING_ENABLED
-                            } else {
-                                SmartBindKeyboardState.PENDING_DISABLED
-                            }
-                            m.enabled = true
-                        }
-                    }
-                }
-            }
-        } else if (event.isRepeat) {
-            for (m in modulesWithOwnBinds()) {
-                if (m.bind.action != InputBind.BindAction.SMART ||
-                    !m.bind.matchesKey(event.scanCode) ||
-                    m !in smartKeyboardStates
-                ) {
-                    continue
-                }
-
-                smartKeyboardStates[m] = SmartBindKeyboardState.HOLDING
-            }
-        } else if (event.isReleased) {
-            for (m in modulesWithOwnBinds()) {
-                if (!m.bind.matchesKeyRelease(event)) {
-                    continue
-                }
-
-                when (m.bind.action) {
-                    InputBind.BindAction.HOLD -> m.enabled = false
-
-                    InputBind.BindAction.SMART -> {
-                        val stateBeforePress = smartKeyboardStates.remove(m) ?: continue
-                        m.enabled = stateBeforePress == SmartBindKeyboardState.PENDING_DISABLED
-                    }
-
-                    InputBind.BindAction.TOGGLE -> {}
-                }
-            }
-        }
-    }
-
-    @Suppress("unused")
-    private val mouseButtonHandler = handler<MouseButtonEvent> { event ->
-        if (event.isPressed) {
-            if (mc.gui.screen() == null) {
-                for (m in modulesWithOwnBinds()) {
-                    if (!m.bind.matchesMousePress(event)) {
-                        continue
-                    }
-
-                    when (m.bind.action) {
-                        InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
-                        InputBind.BindAction.HOLD -> m.enabled = true
-                        InputBind.BindAction.SMART -> {
-                            smartMouseStates[m] = SmartBindMouseState(m.enabled, clientStartDurationMs)
-                            m.enabled = true
-                        }
-                    }
-                }
-            }
-        } else if (event.isReleased) {
-            for (m in modulesWithOwnBinds()) {
-                if (!m.bind.matchesMouseRelease(event)) {
-                    continue
-                }
-
-                when (m.bind.action) {
-                    InputBind.BindAction.HOLD -> m.enabled = false
-
-                    InputBind.BindAction.SMART -> {
-                        val state = smartMouseStates.remove(m) ?: continue
-
-                        // Mouse button events do not emit SDL repeat, so SMART falls back to:
-                        // - hold if the press was long enough
-                        // - toggle otherwise
-                        val shouldFallbackToHold =
-                            clientStartDurationMs - state.pressTimestamp >= SMART_MOUSE_HOLD_THRESHOLD_MS
-
-                        if (shouldFallbackToHold) {
-                            m.enabled = false
-                        } else {
-                            m.enabled = !state.pendingEnabled
-                        }
-                    }
-
-                    InputBind.BindAction.TOGGLE -> {}
-                }
-            }
-        }
-    }
+    // codex start
+    // private const val SMART_MOUSE_HOLD_THRESHOLD_MS = 200L
+    //
+    // private enum class SmartBindKeyboardState {
+    //     PENDING_ENABLED, PENDING_DISABLED, HOLDING,
+    // }
+    // private class SmartBindMouseState(val pendingEnabled: Boolean, val pressTimestamp: Long)
+    //
+    // private val smartKeyboardStates = Reference2ObjectArrayMap<ClientModule, SmartBindKeyboardState>()
+    // private val smartMouseStates = Reference2ObjectArrayMap<ClientModule, SmartBindMouseState>()
+    //
+    // private fun modulesWithOwnBinds() = modules.filterNot(ClientModule::externalBind)
+    //
+    // /**
+    //  * Handles keystrokes for module binds.
+    //  * This also runs in GUIs, so that if a GUI is opened while a key is pressed,
+    //  * any modules that need to be disabled on key release will be properly disabled.
+    //  */
+    // @Suppress("unused")
+    // private val keyboardKeyHandler = handler<KeyboardKeyEvent> { event ->
+    //     if (event.isPressed) {
+    //         if (mc.gui.screen() == null) {
+    //             // Usually nobody actually wants a module to activate when they press the Minecraft debug key combo.
+    //             if (mc.options.keyDebugModifier.isDown) return@handler
+    //             for (m in modulesWithOwnBinds()) {
+    //                 if (!m.bind.matchesKeyPress(event)) {
+    //                     continue
+    //                 }
+    //
+    //                 when (m.bind.action) {
+    //                     InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
+    //                     InputBind.BindAction.HOLD -> m.enabled = true
+    //                     InputBind.BindAction.SMART -> {
+    //                         smartKeyboardStates[m] = if (m.enabled) {
+    //                             SmartBindKeyboardState.PENDING_ENABLED
+    //                         } else {
+    //                             SmartBindKeyboardState.PENDING_DISABLED
+    //                         }
+    //                         m.enabled = true
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } else if (event.isRepeat) {
+    //         for (m in modulesWithOwnBinds()) {
+    //             if (m.bind.action != InputBind.BindAction.SMART ||
+    //                 !m.bind.matchesKey(event.scanCode) ||
+    //                 m !in smartKeyboardStates
+    //             ) {
+    //                 continue
+    //             }
+    //
+    //             smartKeyboardStates[m] = SmartBindKeyboardState.HOLDING
+    //         }
+    //     } else if (event.isReleased) {
+    //         for (m in modulesWithOwnBinds()) {
+    //             if (!m.bind.matchesKeyRelease(event)) {
+    //                 continue
+    //             }
+    //
+    //             when (m.bind.action) {
+    //                 InputBind.BindAction.HOLD -> m.enabled = false
+    //
+    //                 InputBind.BindAction.SMART -> {
+    //                     val stateBeforePress = smartKeyboardStates.remove(m) ?: continue
+    //                     m.enabled = stateBeforePress == SmartBindKeyboardState.PENDING_DISABLED
+    //                 }
+    //
+    //                 InputBind.BindAction.TOGGLE -> {}
+    //             }
+    //         }
+    //     }
+    // }
+    //
+    // @Suppress("unused")
+    // private val mouseButtonHandler = handler<MouseButtonEvent> { event ->
+    //     if (event.isPressed) {
+    //         if (mc.gui.screen() == null) {
+    //             for (m in modulesWithOwnBinds()) {
+    //                 if (!m.bind.matchesMousePress(event)) {
+    //                     continue
+    //                 }
+    //
+    //                 when (m.bind.action) {
+    //                     InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
+    //                     InputBind.BindAction.HOLD -> m.enabled = true
+    //                     InputBind.BindAction.SMART -> {
+    //                         smartMouseStates[m] = SmartBindMouseState(m.enabled, clientStartDurationMs)
+    //                         m.enabled = true
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } else if (event.isReleased) {
+    //         for (m in modulesWithOwnBinds()) {
+    //             if (!m.bind.matchesMouseRelease(event)) {
+    //                 continue
+    //             }
+    //
+    //             when (m.bind.action) {
+    //                 InputBind.BindAction.HOLD -> m.enabled = false
+    //
+    //                 InputBind.BindAction.SMART -> {
+    //                     val state = smartMouseStates.remove(m) ?: continue
+    //
+    //                     // Mouse button events do not emit SDL repeat, so SMART falls back to:
+    //                     // - hold if the press was long enough
+    //                     // - toggle otherwise
+    //                     val shouldFallbackToHold =
+    //                         clientStartDurationMs - state.pressTimestamp >= SMART_MOUSE_HOLD_THRESHOLD_MS
+    //
+    //                     if (shouldFallbackToHold) {
+    //                         m.enabled = false
+    //                     } else {
+    //                         m.enabled = !state.pendingEnabled
+    //                     }
+    //                 }
+    //
+    //                 InputBind.BindAction.TOGGLE -> {}
+    //             }
+    //         }
+    //     }
+    // }
+    // codex end
 
     /**
      * Handles world change and enables modules that are not enabled yet
@@ -380,8 +374,12 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
             // ModuleAntiStaff,
             // ModuleFlagCheck,
             // codex end
-            ModulePacketLogger,
-            ModuleDebugRecorder,
+            // codex start
+            // ModulePacketLogger,
+            // codex end
+            // codex start
+            // ModuleDebugRecorder,
+            // codex end
             // codex start
             // ModuleAntiCheatDetect,
             // codex end
