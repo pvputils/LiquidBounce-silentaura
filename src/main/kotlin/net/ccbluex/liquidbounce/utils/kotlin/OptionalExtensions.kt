@@ -21,21 +21,25 @@
 package net.ccbluex.liquidbounce.utils.kotlin
 
 import java.util.Optional
-import java.util.OptionalDouble
-import java.util.OptionalInt
-import java.util.OptionalLong
+// codex start
+// import java.util.OptionalDouble
+// import java.util.OptionalInt
+// import java.util.OptionalLong
+// codex end
 
 inline fun <T : Any> optional() = Optional.empty<T>()
 
 inline fun <T : Any> optional(value: T?) = Optional.ofNullable(value)
 
-inline fun <T : Any> optional(block: () -> T?) = Optional.ofNullable(block())
-
-inline fun optional(value: Int): OptionalInt = OptionalInt.of(value)
-
-inline fun optional(value: Long): OptionalLong = OptionalLong.of(value)
-
-inline fun optional(value: Double): OptionalDouble = OptionalDouble.of(value)
+// codex start
+// inline fun <T : Any> optional(block: () -> T?) = Optional.ofNullable(block())
+//
+// inline fun optional(value: Int): OptionalInt = OptionalInt.of(value)
+//
+// inline fun optional(value: Long): OptionalLong = OptionalLong.of(value)
+//
+// inline fun optional(value: Double): OptionalDouble = OptionalDouble.of(value)
+// codex end
 
 // codex start
 // inline fun OptionalInt.toNullable(): Int? = if (isPresent) asInt else null

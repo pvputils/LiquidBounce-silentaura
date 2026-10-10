@@ -36,20 +36,32 @@ import net.ccbluex.liquidbounce.features.module.ModuleCategories
 import net.ccbluex.liquidbounce.render.FontManager
 import net.ccbluex.liquidbounce.render.WorldRenderEnvironment
 import net.ccbluex.liquidbounce.render.drawBox
-import net.ccbluex.liquidbounce.render.drawLine
+// codex start
+// import net.ccbluex.liquidbounce.render.drawLine
+// codex end
 import net.ccbluex.liquidbounce.render.drawLineStrip
 import net.ccbluex.liquidbounce.render.drawQuad
-import net.ccbluex.liquidbounce.render.drawTriangle
+// codex start
+// import net.ccbluex.liquidbounce.render.drawTriangle
+// codex end
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.render.renderEnvironment
 import net.ccbluex.liquidbounce.render.utils.MutableVertexList
-import net.ccbluex.liquidbounce.render.withPositionRelativeToCamera
+// codex start
+// import net.ccbluex.liquidbounce.render.withPositionRelativeToCamera
+// codex end
 import net.ccbluex.liquidbounce.utils.math.vector2f
 import net.ccbluex.liquidbounce.utils.entity.PlayerSimulationCache
 import net.ccbluex.liquidbounce.utils.kotlin.EventPriorityConvention.FIRST_PRIORITY
-import net.ccbluex.liquidbounce.utils.math.fma
-import net.ccbluex.liquidbounce.utils.math.geometry.Line
-import net.ccbluex.liquidbounce.utils.math.toVec3f
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.fma
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.geometry.Line
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.toVec3f
+// codex end
 import net.ccbluex.liquidbounce.utils.text.codePointsToString
 import net.ccbluex.liquidbounce.utils.text.withFormat
 import net.minecraft.ChatFormatting
@@ -331,60 +343,62 @@ object ModuleDebug : ClientModule("Debug", ModuleCategories.RENDER) {
         fun render()
     }
 
-    class DebuggedLine(private val line: Line, val color: Color4b) : DebuggedGeometry {
-        val from: Vec3
-        val to: Vec3
-
-        init {
-            val normalizedDirection = line.direction.normalize()
-
-            this.from = line.position.fma(-100.0, normalizedDirection)
-            this.to = line.position.fma(100.0, normalizedDirection)
-        }
-
-        context(env: WorldRenderEnvironment)
-        override fun render() {
-            env.withPositionRelativeToCamera {
-                env.drawLine(
-                    from,
-                    to,
-                    color.argb,
-                )
-            }
-        }
-    }
-
-    class DebuggedTriangle(
-        val p1: Vec3,
-        val p2: Vec3,
-        val p3: Vec3,
-        val color: Color4b,
-    ) : DebuggedGeometry {
-        context(env: WorldRenderEnvironment)
-        override fun render() {
-            env.withPositionRelativeToCamera {
-                env.drawTriangle(
-                    p1 = p1.toVec3f(),
-                    p2 = p2.toVec3f(),
-                    p3 = p3.toVec3f(),
-                    argb = color.argb,
-                )
-            }
-        }
-    }
-
-    class DebuggedLineSegment(val from: Vec3, val to: Vec3, val color: Color4b) : DebuggedGeometry {
-        context(env: WorldRenderEnvironment)
-        override fun render() {
-            env.withPositionRelativeToCamera {
-                env.drawLine(
-                    from,
-                    to,
-                    color.argb,
-                )
-            }
-        }
-    }
+    // codex start
+    // class DebuggedLine(private val line: Line, val color: Color4b) : DebuggedGeometry {
+    //     val from: Vec3
+    //     val to: Vec3
+    //
+    //     init {
+    //         val normalizedDirection = line.direction.normalize()
+    //
+    //         this.from = line.position.fma(-100.0, normalizedDirection)
+    //         this.to = line.position.fma(100.0, normalizedDirection)
+    //     }
+    //
+    //     context(env: WorldRenderEnvironment)
+    //     override fun render() {
+    //         env.withPositionRelativeToCamera {
+    //             env.drawLine(
+    //                 from,
+    //                 to,
+    //                 color.argb,
+    //             )
+    //         }
+    //     }
+    // }
+    //
+    // class DebuggedTriangle(
+    //     val p1: Vec3,
+    //     val p2: Vec3,
+    //     val p3: Vec3,
+    //     val color: Color4b,
+    // ) : DebuggedGeometry {
+    //     context(env: WorldRenderEnvironment)
+    //     override fun render() {
+    //         env.withPositionRelativeToCamera {
+    //             env.drawTriangle(
+    //                 p1 = p1.toVec3f(),
+    //                 p2 = p2.toVec3f(),
+    //                 p3 = p3.toVec3f(),
+    //                 argb = color.argb,
+    //             )
+    //         }
+    //     }
+    // }
+    //
+    // class DebuggedLineSegment(val from: Vec3, val to: Vec3, val color: Color4b) : DebuggedGeometry {
+    //     context(env: WorldRenderEnvironment)
+    //     override fun render() {
+    //         env.withPositionRelativeToCamera {
+    //             env.drawLine(
+    //                 from,
+    //                 to,
+    //                 color.argb,
+    //             )
+    //         }
+    //     }
+    // }
+    // codex end
 
     open class DebuggedBox(val box: AABB, val color: Color4b) : DebuggedGeometry {
         context(env: WorldRenderEnvironment)

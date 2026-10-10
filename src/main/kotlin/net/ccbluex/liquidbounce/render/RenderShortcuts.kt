@@ -202,21 +202,25 @@ inline fun WorldRenderEnvironment.drawCustomMesh(
 /**
  * Draws a line with endpoint [p1] and [p2] and color [argb].
  */
-fun WorldRenderEnvironment.drawLine(p1: Vec3f, p2: Vec3f, argb: Int) =
-    drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        addVertex(pose, p1).setColor(argb)
-        addVertex(pose, p2).setColor(argb)
-    }
+// codex start
+// fun WorldRenderEnvironment.drawLine(p1: Vec3f, p2: Vec3f, argb: Int) =
+//     drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         addVertex(pose, p1).setColor(argb)
+//         addVertex(pose, p2).setColor(argb)
+//     }
+// codex end
 
 /**
  * Draws a line with endpoint [p1] and [p2] and color [argb].
  */
-@AddonApi
-fun WorldRenderEnvironment.drawLine(p1: Vec3, p2: Vec3, argb: Int) =
-    drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        addVertex(pose, p1).setColor(argb)
-        addVertex(pose, p2).setColor(argb)
-    }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.drawLine(p1: Vec3, p2: Vec3, argb: Int) =
+//     drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         addVertex(pose, p1).setColor(argb)
+//         addVertex(pose, p2).setColor(argb)
+//     }
+// codex end
 
 // codex start
 // /**
