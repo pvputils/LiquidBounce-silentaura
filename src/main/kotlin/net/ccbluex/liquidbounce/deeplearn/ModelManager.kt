@@ -142,9 +142,11 @@ object ModelManager : EventListener, ValueGroup("AI") {
         return loadedModels
     }
 
-    /**
-     * Clear out all models and load-in the models again.
-     */
-    suspend fun reload() = load()
+    // codex start
+    // /**
+    //  * Clear out all models and load-in the models again.
+    //  */
+    // suspend fun reload() = load()
+    // codex end
 
 }

@@ -82,8 +82,10 @@ fun <T> Array<out T>?.unmodifiable(): List<T> =
 //         e === this.black
 // codex end
 
-fun <T : Any> MutableCollection<T>.addAll(other: ColorCollection<T>) =
-    other.forEach(this::add)
+// codex start
+// fun <T : Any> MutableCollection<T>.addAll(other: ColorCollection<T>) =
+//     other.forEach(this::add)
+// codex end
 
 operator fun <T : Any> WeatheringCopperCollection<T>.contains(e: T) =
     this.weathering.contains(e) || this.waxed.contains(e)
@@ -91,5 +93,7 @@ operator fun <T : Any> WeatheringCopperCollection<T>.contains(e: T) =
 operator fun <T : Any> WeatheringCopperCollection.ByState<T>.contains(e: T) =
     e === this.unaffected || e === this.exposed || e === this.weathered || e === this.oxidized
 
-fun <T : Any> MutableCollection<T>.addAll(other: WeatheringCopperCollection<T>) =
-    other.forEach(this::add)
+// codex start
+// fun <T : Any> MutableCollection<T>.addAll(other: WeatheringCopperCollection<T>) =
+//     other.forEach(this::add)
+// codex end

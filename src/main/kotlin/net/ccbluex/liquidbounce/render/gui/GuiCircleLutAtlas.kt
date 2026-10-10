@@ -63,25 +63,27 @@ object GuiCircleLutAtlas {
         val textureSetup: TextureSetup,
     )
 
-    /**
-     * Allocates one LUT row and uploads colors produced by [colorGetter].
-     *
-     * [colorGetter] receives angle in radians in range `[0, 2π)`.
-     */
-    fun allocate(colorGetter: Float2IntFunction): Allocation {
-        if (nextRow >= rows) {
-            growRows(nextRow + 1)
-        }
-
-        val row = nextRow++
-        for (x in 0 until LUT_WIDTH) {
-            val angle = x.toFloat() / LUT_WIDTH.toFloat() * Mth.TWO_PI
-            pixels.setPixel(x, row, colorGetter.get(angle))
-        }
-        texture.uploadRect(0, 0, row, LUT_WIDTH, 1)
-
-        return Allocation(row, textureSetup)
-    }
+    // codex start
+    // /**
+    //  * Allocates one LUT row and uploads colors produced by [colorGetter].
+    //  *
+    //  * [colorGetter] receives angle in radians in range `[0, 2π)`.
+    //  */
+    // fun allocate(colorGetter: Float2IntFunction): Allocation {
+    //     if (nextRow >= rows) {
+    //         growRows(nextRow + 1)
+    //     }
+    //
+    //     val row = nextRow++
+    //     for (x in 0 until LUT_WIDTH) {
+    //         val angle = x.toFloat() / LUT_WIDTH.toFloat() * Mth.TWO_PI
+    //         pixels.setPixel(x, row, colorGetter.get(angle))
+    //     }
+    //     texture.uploadRect(0, 0, row, LUT_WIDTH, 1)
+    //
+    //     return Allocation(row, textureSetup)
+    // }
+    // codex end
 
     /**
      * Resets row allocation cursor for the next GUI draw pass.

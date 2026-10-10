@@ -64,30 +64,34 @@ open class TargetTracker(
     // }
     // codex end
 
-    fun <R> select(evaluator: (LivingEntity) -> R): R? {
-        for (enemy in targets()) {
-            val value = evaluator(enemy)
-            if (value != null) {
-                target = enemy
-                return value
-            }
-        }
-
-        reset()
-        return null
-    }
+    // codex start
+    // fun <R> select(evaluator: (LivingEntity) -> R): R? {
+    //     for (enemy in targets()) {
+    //         val value = evaluator(enemy)
+    //         if (value != null) {
+    //             target = enemy
+    //             return value
+    //         }
+    //     }
+    //
+    //     reset()
+    //     return null
+    // }
+    // codex end
 
     fun reset() {
         target = null
     }
 
-    fun validate(predicate: Predicate<LivingEntity>? = null) {
-        val target = target ?: return
-
-        if (!validate(target) || predicate != null && !predicate.test(target)) {
-            reset()
-        }
-    }
+    // codex start
+    // fun validate(predicate: Predicate<LivingEntity>? = null) {
+    //     val target = target ?: return
+    //
+    //     if (!validate(target) || predicate != null && !predicate.test(target)) {
+    //         reset()
+    //     }
+    // }
+    // codex end
 }
 
 open class TargetSelector(

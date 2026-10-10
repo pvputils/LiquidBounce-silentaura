@@ -136,12 +136,14 @@ abstract class GlyphPage {
                 )
         }
 
-        /**
-         * Initializes the static values for glyph pages. Has to be called from a thread with an OpenGL context.
-         */
-        fun init() {
-            maxTextureSize.value
-        }
+        // codex start
+        // /**
+        //  * Initializes the static values for glyph pages. Has to be called from a thread with an OpenGL context.
+        //  */
+        // fun init() {
+        //     maxTextureSize.value
+        // }
+        // codex end
 
         @JvmStatic
         protected fun createBufferedImageWithDimensions(atlasDimensions: Dimension) =

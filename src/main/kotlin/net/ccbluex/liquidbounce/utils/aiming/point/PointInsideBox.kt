@@ -30,13 +30,19 @@ import net.minecraft.world.phys.Vec3
 @JvmRecord
 data class PointInsideBox private constructor(val pos: Vec3, val box: AABB) : Position {
 
-    fun distanceTo(point: PointInsideBox) = pos.distanceTo(point.pos)
+    // codex start
+    // fun distanceTo(point: PointInsideBox) = pos.distanceTo(point.pos)
+    // codex end
 
-    fun distanceTo(point: Vec3) = pos.distanceTo(point)
+    // codex start
+    // fun distanceTo(point: Vec3) = pos.distanceTo(point)
+    // codex end
 
     fun distanceToSqr(point: PointInsideBox) = pos.distanceToSqr(point.pos)
 
-    fun distanceToSqr(point: Vec3) = pos.distanceToSqr(point)
+    // codex start
+    // fun distanceToSqr(point: Vec3) = pos.distanceToSqr(point)
+    // codex end
 
     operator fun plus(other: Position) = invoke(pos + other, box + other)
 

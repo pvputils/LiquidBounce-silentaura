@@ -46,9 +46,11 @@ object KillAuraRange : RangeValueGroup("Range", 1f, 3f), MinecraftShortcuts {
     }
     private var currentScanRangeAddition: Float = scanRangeIncrease.random()
 
-    fun update() {
-        currentScanRangeAddition = scanRangeIncrease.random()
-    }
+    // codex start
+    // fun update() {
+    //     currentScanRangeAddition = scanRangeIncrease.random()
+    // }
+    // codex end
 
     /**
      * Migrates the old values from the config.

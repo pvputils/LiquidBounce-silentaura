@@ -566,7 +566,9 @@ class SimulatedPlayer(
 
     }
 
-    fun jump() = jumpFromGround()
+    // codex start
+    // fun jump() = jumpFromGround()
+    // codex end
 
     /**
      * @see net.minecraft.world.entity.LivingEntity.handleOnClimbable(Vec3)

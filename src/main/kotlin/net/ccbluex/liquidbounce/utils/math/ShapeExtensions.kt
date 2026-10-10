@@ -63,8 +63,10 @@ inline fun VoxelShape?.orEmpty(): VoxelShape = this ?: Shapes.empty()
 
 fun VoxelShape.boundsOrNull(): AABB? = if (isEmpty) null else bounds()
 
-fun VoxelShape.distanceToSqr(position: Vec3): Double =
-    this.closestPointTo(position).orElse(null)?.distanceToSqr(position) ?: Double.POSITIVE_INFINITY
+// codex start
+// fun VoxelShape.distanceToSqr(position: Vec3): Double =
+//     this.closestPointTo(position).orElse(null)?.distanceToSqr(position) ?: Double.POSITIVE_INFINITY
+// codex end
 
 // codex start
 // private val AABB_BIGGER_FIRST = Comparator.comparingDouble(AABB::getSize).reversed()
@@ -102,14 +104,16 @@ fun interface DoubleFaceConsumer {
 // }
 // codex end
 
-infix fun VoxelShape.intersects(aabb: AABB): Boolean {
-    if (this.isEmpty) return false
-    var any = false
-    this.forAllBoxes { x1, y1, z1, x2, y2, z2 ->
-        any = any || aabb.intersects(x1, y1, z1, x2, y2, z2)
-    }
-    return any
-}
+// codex start
+// infix fun VoxelShape.intersects(aabb: AABB): Boolean {
+//     if (this.isEmpty) return false
+//     var any = false
+//     this.forAllBoxes { x1, y1, z1, x2, y2, z2 ->
+//         any = any || aabb.intersects(x1, y1, z1, x2, y2, z2)
+//     }
+//     return any
+// }
+// codex end
 
 /**
  * @see AABB.contains

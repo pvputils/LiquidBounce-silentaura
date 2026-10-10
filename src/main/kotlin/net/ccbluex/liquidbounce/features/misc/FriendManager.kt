@@ -80,31 +80,37 @@ object FriendManager : Config("Friends"), EventListener {
     fun isFriend(name: String): Boolean = friends.contains(Friend(name, null))
     fun isFriend(entity: Entity): Boolean = entity is Player && isFriend(entity.gameProfile.name)
 
-    @AddonApi
-    fun add(friend: Friend): Boolean = friends.add(friend).also { added ->
-        if (added) {
-            // codex start
-            // EventManager.callEvent(FriendChangeEvent(friend.name, true))
-            // codex end
-        }
-    }
+    // codex start
+    // @AddonApi
+    // fun add(friend: Friend): Boolean = friends.add(friend).also { added ->
+    //     if (added) {
+    //         // codex start
+    //         // EventManager.callEvent(FriendChangeEvent(friend.name, true))
+    //         // codex end
+    //     }
+    // }
+    // codex end
 
-    @AddonApi
-    fun remove(name: String): Boolean = friends.remove(Friend(name, null)).also { removed ->
-        if (removed) {
-            // codex start
-            // EventManager.callEvent(FriendChangeEvent(name, false))
-            // codex end
-        }
-    }
+    // codex start
+    // @AddonApi
+    // fun remove(name: String): Boolean = friends.remove(Friend(name, null)).also { removed ->
+    //     if (removed) {
+    //         // codex start
+    //         // EventManager.callEvent(FriendChangeEvent(name, false))
+    //         // codex end
+    //     }
+    // }
+    // codex end
 
-    @AddonApi
-    fun clear() {
-        val names = friends.map(Friend::name)
-        friends.clear()
-        // codex start
-        // names.forEach { EventManager.callEvent(FriendChangeEvent(it, false)) }
-        // codex end
-    }
+    // codex start
+    // @AddonApi
+    // fun clear() {
+    //     val names = friends.map(Friend::name)
+    //     friends.clear()
+    //     // codex start
+    //     // names.forEach { EventManager.callEvent(FriendChangeEvent(it, false)) }
+    //     // codex end
+    // }
+    // codex end
 
 }

@@ -238,10 +238,12 @@ data class InputBind(
         ALT("Alt", InputConstants.MOD_ALT, InputConstants.KEY_LALT, InputConstants.KEY_RALT),
         SUPER("Super", InputConstants.MOD_SUPER, InputConstants.KEY_LGUI, InputConstants.KEY_RGUI);
 
-        /**
-         * Check if self is active in [modifiers] value.
-         */
-        fun isActive(modifiers: Int) = modifiers and this.bitMask != 0
+        // codex start
+        // /**
+        //  * Check if self is active in [modifiers] value.
+        //  */
+        // fun isActive(modifiers: Int) = modifiers and this.bitMask != 0
+        // codex end
 
         /**
          * Check if any one modifier key is pressed.
@@ -282,7 +284,9 @@ data class InputBind(
 
             fun of(string: String?): Modifier? = byName[string]
 
-            fun of(keyCode: Int): Modifier? = byKeyCode[keyCode]
+            // codex start
+            // fun of(keyCode: Int): Modifier? = byKeyCode[keyCode]
+            // codex end
 
             // codex start
             // fun fromRawValue(modifiers: Int) = entries.filterTo(enumSetOf()) {
@@ -305,11 +309,13 @@ data class InputBind(
  */
 fun Value<InputBind>.bind(name: String) = set(get().copy(boundKey = inputByName(name)))
 
-/**
- * Binds to the given input type and code.
- */
-fun Value<InputBind>.bind(key: InputConstants.Key, action: InputBind.BindAction, modifiers: Set<InputBind.Modifier>) =
-    set(get().copy(boundKey = key, action = action, modifiers = modifiers))
+// codex start
+// /**
+//  * Binds to the given input type and code.
+//  */
+// fun Value<InputBind>.bind(key: InputConstants.Key, action: InputBind.BindAction, modifiers: Set<InputBind.Modifier>) =
+//     set(get().copy(boundKey = key, action = action, modifiers = modifiers))
+// codex end
 
 /**
  * Unbinds the key by setting it to UNKNOWN_KEY.

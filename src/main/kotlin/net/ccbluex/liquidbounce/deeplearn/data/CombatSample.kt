@@ -128,13 +128,17 @@ data class CombatSample(
         private const val T_DIFF = "h"
         private const val DISTANCE = "i"
 
-        private fun parse(file: File): List<CombatSample> = when {
-            file.isDirectory -> file.listFiles()?.flatMap(::parse).orEmpty()
-            file.extension == "json" -> file.readJson<List<CombatSample>>()
-            else -> emptyList()
-        }
+        // codex start
+        // private fun parse(file: File): List<CombatSample> = when {
+        //     file.isDirectory -> file.listFiles()?.flatMap(::parse).orEmpty()
+        //     file.extension == "json" -> file.readJson<List<CombatSample>>()
+        //     else -> emptyList()
+        // }
+        // codex end
 
-        fun parse(vararg files: File): List<CombatSample> = files.flatMap(::parse)
+        // codex start
+        // fun parse(vararg files: File): List<CombatSample> = files.flatMap(::parse)
+        // codex end
 
     }
 }

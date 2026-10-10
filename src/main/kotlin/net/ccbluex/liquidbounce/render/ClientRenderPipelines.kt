@@ -200,8 +200,10 @@ object ClientRenderPipelines {
         @JvmStatic
         fun triangles(cull: Boolean) = if (cull) Triangles else TrianglesNoCull
 
-        @JvmStatic
-        fun circleLut() = CircleLut
+        // codex start
+        // @JvmStatic
+        // fun circleLut() = CircleLut
+        // codex end
 
         @JvmStatic
         fun roundedRect() = RoundedRect

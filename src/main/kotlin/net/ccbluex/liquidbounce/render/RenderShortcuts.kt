@@ -123,23 +123,31 @@ inline fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3i, draw:
 
 // The same for Java, which cannot pass the receiver lambdas above.
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(draw: Consumer<WorldRenderEnvironment>) =
-    withPositionRelativeToCamera { draw.accept(this) }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(draw: Consumer<WorldRenderEnvironment>) =
+//     withPositionRelativeToCamera { draw.accept(this) }
+// codex end
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(
-    x: Double, y: Double, z: Double, draw: Consumer<WorldRenderEnvironment>
-) =
-    withPositionRelativeToCamera(x, y, z) { draw.accept(this) }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(
+//     x: Double, y: Double, z: Double, draw: Consumer<WorldRenderEnvironment>
+// ) =
+//     withPositionRelativeToCamera(x, y, z) { draw.accept(this) }
+// codex end
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3, draw: Consumer<WorldRenderEnvironment>) =
-    withPositionRelativeToCamera(pos) { draw.accept(this) }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3, draw: Consumer<WorldRenderEnvironment>) =
+//     withPositionRelativeToCamera(pos) { draw.accept(this) }
+// codex end
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3i, draw: Consumer<WorldRenderEnvironment>) =
-    withPositionRelativeToCamera(pos) { draw.accept(this) }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3i, draw: Consumer<WorldRenderEnvironment>) =
+//     withPositionRelativeToCamera(pos) { draw.accept(this) }
+// codex end
 // codex start
 //
 // internal inline fun RenderTarget.drawGenericBlockESP(
@@ -276,47 +284,53 @@ inline fun WorldRenderEnvironment.drawCustomMesh(
 // }
 // codex end
 
-/**
- * Function to draw lines using the specified [positions] vectors.
- *
- * @param positions The vectors representing the lines.
- */
-fun WorldRenderEnvironment.drawLines(argb: Int, vararg positions: Vec3f) {
-    if (positions.isEmpty()) return
-    require(positions.size and 1 == 0)
+// codex start
+// /**
+//  * Function to draw lines using the specified [positions] vectors.
+//  *
+//  * @param positions The vectors representing the lines.
+//  */
+// fun WorldRenderEnvironment.drawLines(argb: Int, vararg positions: Vec3f) {
+//     if (positions.isEmpty()) return
+//     require(positions.size and 1 == 0)
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         for (pos in positions) {
+//             addVertex(pose, pos).setColor(argb)
+//         }
+//     }
+// }
+// codex end
 
-    drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        for (pos in positions) {
-            addVertex(pose, pos).setColor(argb)
-        }
-    }
-}
+// codex start
+// fun WorldRenderEnvironment.drawLines(argb: Int, positions: VertexList) {
+//     if (positions.size == 0) return
+//     require(positions.size and 1 == 0)
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         positions.forEachVertex { x, y, z ->
+//             addVertex(pose, x, y, z).setColor(argb)
+//         }
+//     }
+// }
+// codex end
 
-fun WorldRenderEnvironment.drawLines(argb: Int, positions: VertexList) {
-    if (positions.size == 0) return
-    require(positions.size and 1 == 0)
-
-    drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        positions.forEachVertex { x, y, z ->
-            addVertex(pose, x, y, z).setColor(argb)
-        }
-    }
-}
-
-/**
- * Function to draw a line strip using the specified [positions] vectors.
- *
- * @param positions The vectors representing the line strip.
- */
-fun WorldRenderEnvironment.drawLineStrip(argb: Int, vararg positions: Vec3f) {
-    if (positions.isEmpty()) return
-
-    drawCustomMesh(pipeline = ClientRenderPipelines.LineStrip) { pose ->
-        for (pos in positions) {
-            addVertex(pose, pos).setColor(argb)
-        }
-    }
-}
+// codex start
+// /**
+//  * Function to draw a line strip using the specified [positions] vectors.
+//  *
+//  * @param positions The vectors representing the line strip.
+//  */
+// fun WorldRenderEnvironment.drawLineStrip(argb: Int, vararg positions: Vec3f) {
+//     if (positions.isEmpty()) return
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.LineStrip) { pose ->
+//         for (pos in positions) {
+//             addVertex(pose, pos).setColor(argb)
+//         }
+//     }
+// }
+// codex end
 
 fun WorldRenderEnvironment.drawLineStrip(argb: Int, positions: VertexList) {
     if (positions.size == 0) return

@@ -395,11 +395,17 @@ val Entity.box: AABB
 
 private val cameraPos: Vec3 get() = mc.gameRenderer.mainCamera().position()
 
-fun Position.cameraDistanceSq() = cameraPos.distanceToSqr(x(), y(), z())
+// codex start
+// fun Position.cameraDistanceSq() = cameraPos.distanceToSqr(x(), y(), z())
+// codex end
 
-fun Position.cameraDistance() = sqrt(cameraDistanceSq())
+// codex start
+// fun Position.cameraDistance() = sqrt(cameraDistanceSq())
+// codex end
 
-fun Vec3i.cameraDistanceSq() = cameraPos.distanceToSqr(x.toDouble(), y.toDouble(), z.toDouble())
+// codex start
+// fun Vec3i.cameraDistanceSq() = cameraPos.distanceToSqr(x.toDouble(), y.toDouble(), z.toDouble())
+// codex end
 
 /**
  * Allows to calculate the distance between the current entity and [entity] from the nearest corner of the bounding box

@@ -29,11 +29,13 @@ class PriorityField<T>(
     var value: T = value
         private set
 
-    fun trySet(value: T, priority: Priority) {
-        if (currentPriority < priority) {
-            this.currentPriority = priority
-            this.value = value
-        }
-    }
+    // codex start
+    // fun trySet(value: T, priority: Priority) {
+    //     if (currentPriority < priority) {
+    //         this.currentPriority = priority
+    //         this.value = value
+    //     }
+    // }
+    // codex end
 
 }

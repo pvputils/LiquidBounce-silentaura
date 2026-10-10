@@ -42,8 +42,10 @@ private val clientPrefix: Component = "".asText()
     .append(gradientText("LiquidBounce", Color4b.fromHex("#4677ff"), Color4b.fromHex("#24AA7F")))
     .append(" ▸ ".asText().withStyle(ChatFormatting.RESET, ChatFormatting.GRAY))
 
-@AddonApi
-fun regular(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.GRAY)
+// codex start
+// @AddonApi
+// fun regular(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.GRAY)
+// codex end
 
 @AddonApi
 fun regular(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.GRAY)
@@ -83,8 +85,10 @@ fun variable(text: String): MutableComponent = text.asText().withStyle(ChatForma
 // fun warning(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.YELLOW)
 // codex end
 
-@AddonApi
-fun markAsError(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.RED)
+// codex start
+// @AddonApi
+// fun markAsError(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.RED)
+// codex end
 
 @AddonApi
 fun markAsError(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.RED)
@@ -235,22 +239,30 @@ fun chat(text: Component, metadata: MessageMetadata = defaultMessageMetadata) {
     chatHud.addMessage(realText, metadata.id, metadata.count)
 }
 
-/**
- * Adds a new chat message.
- */
-@AddonApi
-fun chat(vararg texts: Component, metadata: MessageMetadata = defaultMessageMetadata) {
-    chat(texts.asText(), metadata)
-}
+// codex start
+// /**
+//  * Adds a new chat message.
+//  */
+// @AddonApi
+// fun chat(vararg texts: Component, metadata: MessageMetadata = defaultMessageMetadata) {
+//     chat(texts.asText(), metadata)
+// }
+// codex end
 
-@AddonApi
-fun chat(text: Component, module: ClientModule) = chat(text, metadata = MessageMetadata.byModule(module))
+// codex start
+// @AddonApi
+// fun chat(text: Component, module: ClientModule) = chat(text, metadata = MessageMetadata.byModule(module))
+// codex end
 
-@AddonApi
-fun chat(text: String, module: ClientModule) = chat(text.asPlainText(), module)
+// codex start
+// @AddonApi
+// fun chat(text: String, module: ClientModule) = chat(text.asPlainText(), module)
+// codex end
 
-@AddonApi
-fun chat(text: String) = chat(text.asPlainText())
+// codex start
+// @AddonApi
+// fun chat(text: String) = chat(text.asPlainText())
+// codex end
 
 // codex start
 // @AddonApi

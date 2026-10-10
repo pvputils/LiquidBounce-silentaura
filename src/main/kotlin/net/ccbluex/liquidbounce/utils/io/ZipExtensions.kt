@@ -106,10 +106,12 @@ private fun ArchiveInputStream<*>.extractTo(folder: Path) = use { ais ->
     }
 }
 
-/**
- * Extracts a ZIP archive from an [InputStream] to a specified [folder] and close it
- */
-fun extractZip(zipStream: InputStream, folder: File) = extractZip(zipStream, folder.toPath())
+// codex start
+// /**
+//  * Extracts a ZIP archive from an [InputStream] to a specified [folder] and close it
+//  */
+// fun extractZip(zipStream: InputStream, folder: File) = extractZip(zipStream, folder.toPath())
+// codex end
 
 /**
  * Extracts a ZIP archive from an [InputStream] to a specified [folder] and close it
@@ -117,15 +119,19 @@ fun extractZip(zipStream: InputStream, folder: File) = extractZip(zipStream, fol
 fun extractZip(zipStream: InputStream, folder: Path) =
     ZipArchiveInputStream(zipStream).extractTo(folder)
 
-/**
- * Extracts a ZIP file to a specified [folder]
- */
-fun extractZip(zipFile: File, folder: File) = extractZip(zipFile, folder.toPath())
+// codex start
+// /**
+//  * Extracts a ZIP file to a specified [folder]
+//  */
+// fun extractZip(zipFile: File, folder: File) = extractZip(zipFile, folder.toPath())
+// codex end
 
-/**
- * Extracts a ZIP file to a specified [folder]
- */
-fun extractZip(zipFile: File, folder: Path) = extractZip(FastBufferedInputStream(zipFile.inputStream()), folder)
+// codex start
+// /**
+//  * Extracts a ZIP file to a specified [folder]
+//  */
+// fun extractZip(zipFile: File, folder: Path) = extractZip(FastBufferedInputStream(zipFile.inputStream()), folder)
+// codex end
 
 /**
  * Creates a ZIP file from multiple files (flatten)

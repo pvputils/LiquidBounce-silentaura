@@ -639,9 +639,11 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
     // }
     // codex end
 
-    fun clear() {
-        modules.clear()
-    }
+    // codex start
+    // fun clear() {
+    //     modules.clear()
+    // }
+    // codex end
 
     @AddonApi
     operator fun get(moduleName: String) = modules.find { it.name.equals(moduleName, true) }

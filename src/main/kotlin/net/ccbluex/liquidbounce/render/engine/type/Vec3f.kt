@@ -54,43 +54,55 @@ data class Vec3f(val x: Float, val y: Float, val z: Float) {
     operator fun minus(other: Vec3f): Vec3f = sub(other)
     operator fun times(scale: Float): Vec3f = Vec3f(this.x * scale, this.y * scale, this.z * scale)
 
-    fun rotateX(angle: Float): Vec3f {
-        val cos = angle.fastCos()
-        val sin = angle.fastSin()
+    // codex start
+    // fun rotateX(angle: Float): Vec3f {
+    //     val cos = angle.fastCos()
+    //     val sin = angle.fastSin()
+    //
+    //     return Vec3f(
+    //         this.x,
+    //         this.y * cos + this.z * sin,
+    //         this.z * cos - this.y * sin,
+    //     )
+    // }
+    // codex end
 
-        return Vec3f(
-            this.x,
-            this.y * cos + this.z * sin,
-            this.z * cos - this.y * sin,
-        )
-    }
-
-    fun rotateY(angle: Float): Vec3f {
-        val cos = angle.fastCos()
-        val sin = angle.fastSin()
-
-        return Vec3f(
-            this.x * cos + this.z * sin,
-            this.y,
-            this.z * cos - this.x * sin,
-        )
-    }
+    // codex start
+    // fun rotateY(angle: Float): Vec3f {
+    //     val cos = angle.fastCos()
+    //     val sin = angle.fastSin()
+    //
+    //     return Vec3f(
+    //         this.x * cos + this.z * sin,
+    //         this.y,
+    //         this.z * cos - this.x * sin,
+    //     )
+    // }
+    // codex end
 
     fun lengthSqr(): Float = x * x + y * y + z * z
 
-    fun length(): Float = sqrt(lengthSqr())
+    // codex start
+    // fun length(): Float = sqrt(lengthSqr())
+    // codex end
 
-    fun normalized(): Vec3f = this * (1f / length())
+    // codex start
+    // fun normalized(): Vec3f = this * (1f / length())
+    // codex end
 
     operator fun unaryMinus(): Vec3f = Vec3f(-this.x, -this.y, -this.z)
 
-    fun fma(scale: Float, other: Vec3f): Vec3f = Vec3f(
-        Math.fma(scale, other.x, this.x),
-        Math.fma(scale, other.y, this.y),
-        Math.fma(scale, other.z, this.z),
-    )
+    // codex start
+    // fun fma(scale: Float, other: Vec3f): Vec3f = Vec3f(
+    //     Math.fma(scale, other.x, this.x),
+    //     Math.fma(scale, other.y, this.y),
+    //     Math.fma(scale, other.z, this.z),
+    // )
+    // codex end
 
-    fun toVec3d() = Vec3(this.x.toDouble(), this.y.toDouble(), this.z.toDouble())
+    // codex start
+    // fun toVec3d() = Vec3(this.x.toDouble(), this.y.toDouble(), this.z.toDouble())
+    // codex end
 
     companion object {
         @JvmField val ZERO = Vec3f(0f, 0f, 0f)

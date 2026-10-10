@@ -108,29 +108,31 @@ inline fun GpuBuffer.mapBuffer(read: Boolean = false, write: Boolean = false): G
 inline fun GpuBufferSlice.mapBuffer(read: Boolean = false, write: Boolean = false): GpuBufferSlice.MappedView =
     this.map(read, write)
 // codex start
-//
-// fun GpuBuffer.readFully(): ByteBuffer = read(0L, this.size())
-//
-// /**
-//  * @receiver Should have flag [GpuBuffer.USAGE_MAP_READ]
-//  * @return A [ByteBuffer] allocated with [MemoryUtil]
-//  */
+// // codex start
+// //
+// // fun GpuBuffer.readFully(): ByteBuffer = read(0L, this.size())
+// //
+// // /**
+// //  * @receiver Should have flag [GpuBuffer.USAGE_MAP_READ]
+// //  * @return A [ByteBuffer] allocated with [MemoryUtil]
+// //  */
+// // codex end
+// fun GpuBuffer.read(offset: Long, length: Long): ByteBuffer = this.map(offset, length, true, false).use {
+//     val source = it.data
+//     val result = MemoryUtil.memAlloc(source.remaining())
+//     try {
+//         MemoryUtil.memCopy(
+//             MemoryUtil.memAddress(source),
+//             MemoryUtil.memAddress(result),
+//             result.remaining().toLong(),
+//         )
+//         result
+//     } catch (t: Throwable) {
+//         MemoryUtil.memFree(result)
+//         throw t
+//     }
+// }
 // codex end
-fun GpuBuffer.read(offset: Long, length: Long): ByteBuffer = this.map(offset, length, true, false).use {
-    val source = it.data
-    val result = MemoryUtil.memAlloc(source.remaining())
-    try {
-        MemoryUtil.memCopy(
-            MemoryUtil.memAddress(source),
-            MemoryUtil.memAddress(result),
-            result.remaining().toLong(),
-        )
-        result
-    } catch (t: Throwable) {
-        MemoryUtil.memFree(result)
-        throw t
-    }
-}
 
 inline fun GpuBufferSlice.write(byteBuffer: ByteBuffer) =
     gpuDevice.createCommandEncoder().writeToBuffer(this, byteBuffer)

@@ -77,7 +77,9 @@ class TagEntityEvent(val entity: Entity, var targetingInfo: EntityTargetingInfo)
         this.targetingInfo = targetingInfo.copy(isFriend = true)
     }
 
-    fun color(col: Color4b, priority: Priority) {
-        this.color.trySet(col, priority)
-    }
+    // codex start
+    // fun color(col: Color4b, priority: Priority) {
+    //     this.color.trySet(col, priority)
+    // }
+    // codex end
 }

@@ -40,9 +40,11 @@ data class BoundingBox2f(val xMin: Float, val yMin: Float, val xMax: Float, val 
         }
     }
 
-    fun contains(x: Float, y: Float): Boolean {
-        return x in xMin..xMax && y in yMin..yMax
-    }
+    // codex start
+    // fun contains(x: Float, y: Float): Boolean {
+    //     return x in xMin..xMax && y in yMin..yMax
+    // }
+    // codex end
 
     val width: Float
         get() = xMax - xMin
@@ -59,13 +61,17 @@ data class BoundingBox2f(val xMin: Float, val yMin: Float, val xMax: Float, val 
     val centerVec: Vec2
         get() = Vec2(xCenter, yCenter)
 
-    infix fun intersects(other: BoundingBox2f): Boolean {
-        return xMin < other.xMax && xMax > other.xMin && yMin < other.yMax && yMax > other.yMin
-    }
+    // codex start
+    // infix fun intersects(other: BoundingBox2f): Boolean {
+    //     return xMin < other.xMax && xMax > other.xMin && yMin < other.yMax && yMax > other.yMin
+    // }
+    // codex end
 
-    fun offset(xOffset: Float, yOffset: Float): BoundingBox2f {
-        return BoundingBox2f(xMin + xOffset, yMin + yOffset, xMax + xOffset, yMax + yOffset)
-    }
+    // codex start
+    // fun offset(xOffset: Float, yOffset: Float): BoundingBox2f {
+    //     return BoundingBox2f(xMin + xOffset, yMin + yOffset, xMax + xOffset, yMax + yOffset)
+    // }
+    // codex end
 
     companion object {
         @JvmField

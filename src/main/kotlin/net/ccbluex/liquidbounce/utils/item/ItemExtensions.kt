@@ -263,37 +263,39 @@ fun <E : Any> ResourceKey<Registry<E>>.getOrNull(): Registry<E>? =
 //     Registries.ENCHANTMENT.getOrNull()?.get(this)?.getOrNull()
 // codex end
 
-/**
- * @see net.minecraft.world.entity.player.Player.getDestroySpeed
- * @see net.minecraft.world.entity.ai.attributes.Attributes.MINING_EFFICIENCY
- * @see net.minecraft.world.item.enchantment.LevelBasedValue.LevelsSquared
- */
 // codex start
-// fun ItemStack.getDestroySpeedWithEnchantment(state: BlockState): Float {
-//     var speed = this.getDestroySpeed(state)
+// /**
+//  * @see net.minecraft.world.entity.player.Player.getDestroySpeed
+//  * @see net.minecraft.world.entity.ai.attributes.Attributes.MINING_EFFICIENCY
+//  * @see net.minecraft.world.item.enchantment.LevelBasedValue.LevelsSquared
+//  */
+// // codex start
+// // fun ItemStack.getDestroySpeedWithEnchantment(state: BlockState): Float {
+// //     var speed = this.getDestroySpeed(state)
+// //
+// //     val enchantmentLevel = this.getEnchantment(Enchantments.EFFICIENCY)
+// //     if (speed > 1f && enchantmentLevel != 0) {
+// //         val enchantmentAddition = enchantmentLevel.sq() + 1f
+// //         speed += enchantmentAddition.coerceIn(0f, 1024f)
+// //     }
+// //
+// //     return speed
+// // }
+// //
+// // /**
+// //  * Get [Block] of inner item if it is [BlockItem], or null if not
+// //  */
+// // codex end
 //
-//     val enchantmentLevel = this.getEnchantment(Enchantments.EFFICIENCY)
-//     if (speed > 1f && enchantmentLevel != 0) {
-//         val enchantmentAddition = enchantmentLevel.sq() + 1f
-//         speed += enchantmentAddition.coerceIn(0f, 1024f)
+// fun ItemStack.getBlock(): Block? {
+//     val item = this.item
+//     if (item !is BlockItem) {
+//         return null
 //     }
 //
-//     return speed
+//     return item.block
 // }
-//
-// /**
-//  * Get [Block] of inner item if it is [BlockItem], or null if not
-//  */
 // codex end
-
-fun ItemStack.getBlock(): Block? {
-    val item = this.item
-    if (item !is BlockItem) {
-        return null
-    }
-
-    return item.block
-}
 // codex start
 //
 // fun ItemStack.isFullBlock(): Boolean {
@@ -302,59 +304,61 @@ fun ItemStack.getBlock(): Block? {
 // }
 // codex end
 
-fun ItemStack.isInteractable(): Boolean {
-    if (this.isEmpty) {
-        return false
-    }
-
-    return this.get(DataComponents.EQUIPPABLE)
-        ?.let { equippable ->
-            val equippedItem = player.getItemBySlot(equippable.slot)
-
-            equippable.swappable
-                && player.canUseSlot(equippable.slot)
-                && equippable.canBeEquippedBy(player.typeHolder())
-                && !ItemStack.isSameItemSameComponents(this, equippedItem)
-                && (!EnchantmentHelper.has(equippedItem, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)
-                    || player.isCreative)
-        } ?: false
-        || this.has(DataComponents.CONSUMABLE)
-        || this.has(DataComponents.BLOCKS_ATTACKS) // Shield, 1.8 Sword
-        || this.has(DataComponents.KINETIC_WEAPON) // Spear
-        || this.get(DataComponents.USE_EFFECTS).let { it != null && it != UseEffects.DEFAULT }
-
-        // from the use() method:
-        || item is BoatItem
-        || (item is BowItem && Slots.All.any { it.itemStack.item is ArrowItem })
-        || item is BucketItem // TODO: water/lava between an interactable block and the player (for empty buckets)
-        || (item is CrossbowItem &&
-        (Slots.All.any { it.itemStack.item is ArrowItem }
-            || player.handItems.any { it.item is FireworkRocketItem }))
-        || item is EggItem
-        || item is EmptyMapItem
-        || item is EnderEyeItem
-        || item is EnderpearlItem
-        || item is ExperienceBottleItem
-        || item is FireworkRocketItem
-        || item is FishingRodItem
-        || item is BottleItem // TODO: water between an interactable block and the player
-        || item is InstrumentItem // TODO: item delay?
-        || item is KnowledgeBookItem
-        || item is PlaceOnWaterBlockItem // TODO: water between an interactable block and the player
-        || item is SnowballItem
-        || item is SpawnEggItem
-        || item is SpyglassItem
-        || item is TridentItem
-        || item is WindChargeItem
-        || item is WritableBookItem
-        || item is WrittenBookItem
-
-        // from the useOnBlock() method:
-        || item is ArmorStandItem
-        || item is BlockItem
-        || item is BrushItem
-        || item is HangingEntityItem // TODO: presence of other item frames and paintings on target blocks
-        || item is FireChargeItem
-        || item is FlintAndSteelItem
-        || item is PotionItem
-}
+// codex start
+// fun ItemStack.isInteractable(): Boolean {
+//     if (this.isEmpty) {
+//         return false
+//     }
+//
+//     return this.get(DataComponents.EQUIPPABLE)
+//         ?.let { equippable ->
+//             val equippedItem = player.getItemBySlot(equippable.slot)
+//
+//             equippable.swappable
+//                 && player.canUseSlot(equippable.slot)
+//                 && equippable.canBeEquippedBy(player.typeHolder())
+//                 && !ItemStack.isSameItemSameComponents(this, equippedItem)
+//                 && (!EnchantmentHelper.has(equippedItem, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)
+//                     || player.isCreative)
+//         } ?: false
+//         || this.has(DataComponents.CONSUMABLE)
+//         || this.has(DataComponents.BLOCKS_ATTACKS) // Shield, 1.8 Sword
+//         || this.has(DataComponents.KINETIC_WEAPON) // Spear
+//         || this.get(DataComponents.USE_EFFECTS).let { it != null && it != UseEffects.DEFAULT }
+//
+//         // from the use() method:
+//         || item is BoatItem
+//         || (item is BowItem && Slots.All.any { it.itemStack.item is ArrowItem })
+//         || item is BucketItem // TODO: water/lava between an interactable block and the player (for empty buckets)
+//         || (item is CrossbowItem &&
+//         (Slots.All.any { it.itemStack.item is ArrowItem }
+//             || player.handItems.any { it.item is FireworkRocketItem }))
+//         || item is EggItem
+//         || item is EmptyMapItem
+//         || item is EnderEyeItem
+//         || item is EnderpearlItem
+//         || item is ExperienceBottleItem
+//         || item is FireworkRocketItem
+//         || item is FishingRodItem
+//         || item is BottleItem // TODO: water between an interactable block and the player
+//         || item is InstrumentItem // TODO: item delay?
+//         || item is KnowledgeBookItem
+//         || item is PlaceOnWaterBlockItem // TODO: water between an interactable block and the player
+//         || item is SnowballItem
+//         || item is SpawnEggItem
+//         || item is SpyglassItem
+//         || item is TridentItem
+//         || item is WindChargeItem
+//         || item is WritableBookItem
+//         || item is WrittenBookItem
+//
+//         // from the useOnBlock() method:
+//         || item is ArmorStandItem
+//         || item is BlockItem
+//         || item is BrushItem
+//         || item is HangingEntityItem // TODO: presence of other item frames and paintings on target blocks
+//         || item is FireChargeItem
+//         || item is FlintAndSteelItem
+//         || item is PotionItem
+// }
+// codex end

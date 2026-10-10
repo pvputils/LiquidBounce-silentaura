@@ -279,7 +279,9 @@ open class Value<T : Any>(
         set(defaultValue)
     }
 
-    fun type() = valueType
+    // codex start
+    // fun type() = valueType
+    // codex end
 
     fun immutable() = apply {
         isImmutable = true

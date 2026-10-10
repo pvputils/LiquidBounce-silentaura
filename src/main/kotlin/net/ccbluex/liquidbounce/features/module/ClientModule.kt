@@ -228,7 +228,9 @@ open class ClientModule @JvmOverloads constructor(
         }
     }
 
-    fun message(key: String, vararg args: Any) = translation("$baseKey.messages.$key", args = args)
+    // codex start
+    // fun message(key: String, vararg args: Any) = translation("$baseKey.messages.$key", args = args)
+    // codex end
 
     override fun toString(): String = "Module$name"
 

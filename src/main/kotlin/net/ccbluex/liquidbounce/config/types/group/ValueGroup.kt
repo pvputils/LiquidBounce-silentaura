@@ -271,15 +271,17 @@ open class ValueGroup @JvmOverloads constructor(
     // }
     // codex end
 
-    fun <T : ValueGroup> drop(valueGroup: T): T {
-        require(valueGroup.base === this) {
-            "ValueGroup '${valueGroup.name}' is not a child of '${this.name}'."
-        }
-
-        inner.remove(valueGroup)
-        valueGroup.base = null
-        return valueGroup
-    }
+    // codex start
+    // fun <T : ValueGroup> drop(valueGroup: T): T {
+    //     require(valueGroup.base === this) {
+    //         "ValueGroup '${valueGroup.name}' is not a child of '${this.name}'."
+    //     }
+    //
+    //     inner.remove(valueGroup)
+    //     valueGroup.base = null
+    //     return valueGroup
+    // }
+    // codex end
 
     fun <T : Any> value(
         name: String,
@@ -451,7 +453,9 @@ open class ValueGroup @JvmOverloads constructor(
 
     fun bind(name: String, default: InputBind) = value(BindValue(name, defaultValue = default))
 
-    fun key(name: String, default: Int) = key(name, InputConstants.Type.KEYBOARD.getOrCreate(default))
+    // codex start
+    // fun key(name: String, default: Int) = key(name, InputConstants.Type.KEYBOARD.getOrCreate(default))
+    // codex end
 
     @JvmOverloads
     fun key(name: String, default: InputConstants.Key = InputConstants.UNKNOWN) =
@@ -475,7 +479,9 @@ open class ValueGroup @JvmOverloads constructor(
 
     fun color(name: String, default: Color4b) = value(name, default, ValueType.COLOR)
 
-    fun block(name: String, default: Block) = value(name, default, ValueType.BLOCK)
+    // codex start
+    // fun block(name: String, default: Block) = value(name, default, ValueType.BLOCK)
+    // codex end
 
     fun vec2f(name: String, default: Vector2fc) = value(name, default, ValueType.VECTOR2_F)
 
@@ -498,7 +504,9 @@ open class ValueGroup @JvmOverloads constructor(
     fun <C : SequencedSet<Block>> blocks(name: String, default: C) =
         registryList(name, default, ValueType.BLOCK)
 
-    fun item(name: String, default: Item) = value(name, default, ValueType.ITEM)
+    // codex start
+    // fun item(name: String, default: Item) = value(name, default, ValueType.ITEM)
+    // codex end
 
     fun <C : SequencedSet<Item>> items(name: String, default: C) =
         registryList(name, default, ValueType.ITEM)
@@ -508,16 +516,20 @@ open class ValueGroup @JvmOverloads constructor(
     //     registryMutableList(name, default, ValueType.ITEM)
     // codex end
 
-    fun <C : SequencedSet<SoundEvent>> sounds(name: String, default: C) =
-        registryList(name, default, ValueType.SOUND_EVENT)
+    // codex start
+    // fun <C : SequencedSet<SoundEvent>> sounds(name: String, default: C) =
+    //     registryList(name, default, ValueType.SOUND_EVENT)
+    // codex end
 
     // codex start
     // fun <C : SequencedSet<MobEffect>> mobEffects(name: String, default: C) =
     //     registryList(name, default, ValueType.MOB_EFFECT)
     // codex end
 
-    fun <C : SequencedSet<Identifier>> enchantments(name: String, default: C) =
-        registryList(name, default, ValueType.ENCHANTMENT)
+    // codex start
+    // fun <C : SequencedSet<Identifier>> enchantments(name: String, default: C) =
+    //     registryList(name, default, ValueType.ENCHANTMENT)
+    // codex end
 
     // codex start
     // fun <C : SequencedSet<Identifier>> c2sPackets(name: String, default: C) =
@@ -630,23 +642,25 @@ open class ValueGroup @JvmOverloads constructor(
         fun ValueGroup.build()
     }
 
-    protected fun <T : Mode> modes(
-        eventListener: EventListener?,
-        name: String,
-        active: T,
-        modes: Array<T>,
-    ): ModeValueGroup<T> {
-        return modes(eventListener, name, { modes ->
-            val idx = modes.indexOf(active)
-
-            check(idx != -1) {
-                "The active choice $active is not contained within the choice array" +
-                    " (${modes.joinToString { it.name }})"
-            }
-
-            idx
-        }) { modes }
-    }
+    // codex start
+    // protected fun <T : Mode> modes(
+    //     eventListener: EventListener?,
+    //     name: String,
+    //     active: T,
+    //     modes: Array<T>,
+    // ): ModeValueGroup<T> {
+    //     return modes(eventListener, name, { modes ->
+    //         val idx = modes.indexOf(active)
+    //
+    //         check(idx != -1) {
+    //             "The active choice $active is not contained within the choice array" +
+    //                 " (${modes.joinToString { it.name }})"
+    //         }
+    //
+    //         idx
+    //     }) { modes }
+    // }
+    // codex end
 
     fun <T : Mode> modes(
         eventListener: EventListener?,

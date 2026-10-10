@@ -174,8 +174,10 @@ abstract class Mode @JvmOverloads constructor(
 
     override fun parent() = this.parent.eventListener
 
-    protected fun <T: Mode> modes(name: String, active: T, choices: Array<T>) =
-        modes(this, name, active, choices)
+    // codex start
+    // protected fun <T: Mode> modes(name: String, active: T, choices: Array<T>) =
+    //     modes(this, name, active, choices)
+    // codex end
 
     protected fun <T: Mode> modes(
         name: String,

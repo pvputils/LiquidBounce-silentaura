@@ -98,12 +98,14 @@ inline operator fun Vec3i.minus(other: Vec3i): Vec3i = subtract(other)
 
 inline operator fun Vec3i.times(scalar: Int): Vec3i = multiply(scalar)
 
-fun Vec3i.lengthSqr(): Long {
-    val x1 = x.toLong()
-    val y1 = y.toLong()
-    val z1 = z.toLong()
-    return x1 * x1 + y1 * y1 + z1 * z1
-}
+// codex start
+// fun Vec3i.lengthSqr(): Long {
+//     val x1 = x.toLong()
+//     val y1 = y.toLong()
+//     val z1 = z.toLong()
+//     return x1 * x1 + y1 * y1 + z1 * z1
+// }
+// codex end
 
 inline operator fun Vec3.unaryMinus(): Vec3 = this.reverse()
 
@@ -283,21 +285,29 @@ inline fun Vec3.toBlockPos(
 // // Mutable Vec3d
 // codex end
 
-fun Vec3.set(x: Double = this.x, y: Double = this.y, z: Double = this.z): Vec3 = apply {
-    this.x = x
-    this.y = y
-    this.z = z
-}
+// codex start
+// fun Vec3.set(x: Double = this.x, y: Double = this.y, z: Double = this.z): Vec3 = apply {
+//     this.x = x
+//     this.y = y
+//     this.z = z
+// }
+// codex end
 
-fun Vec3.set(other: Vec3): Vec3 = set(other.x, other.y, other.z)
+// codex start
+// fun Vec3.set(other: Vec3): Vec3 = set(other.x, other.y, other.z)
+// codex end
 
-fun Vec3.move(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Vec3 = apply {
-    this.x += x
-    this.y += y
-    this.z += z
-}
+// codex start
+// fun Vec3.move(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Vec3 = apply {
+//     this.x += x
+//     this.y += y
+//     this.z += z
+// }
+// codex end
 
-fun Vec3.move(other: Vec3): Vec3 = move(other.x, other.y, other.z)
+// codex start
+// fun Vec3.move(other: Vec3): Vec3 = move(other.x, other.y, other.z)
+// codex end
 
 // codex start
 // fun Vec3.scaleMut(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Vec3 = apply {

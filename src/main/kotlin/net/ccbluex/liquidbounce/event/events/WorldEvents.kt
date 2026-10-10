@@ -62,8 +62,10 @@ class WorldChangeEvent(val world: ClientLevel?) : Event()
 // class BlockBreakingProgressEvent(val pos: BlockPos) : Event()
 // codex end
 
-@Tag("blockAttack")
-class BlockAttackEvent(val pos: BlockPos) : CancellableEvent()
+// codex start
+// @Tag("blockAttack")
+// class BlockAttackEvent(val pos: BlockPos) : CancellableEvent()
+// codex end
 // codex start
 //
 // @Tag("blockVelocityMultiplier")

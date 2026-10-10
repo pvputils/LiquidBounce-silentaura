@@ -95,19 +95,25 @@ inline operator fun ClosedFloatingPointRange<Float>.unaryMinus(): ClosedFloating
     return -endInclusive..-start
 }
 
-fun ClosedFloatingPointRange<Double>.random(): Double {
-    return if (start >= endInclusive) start else ThreadLocalRandom.current().nextDouble(start, endInclusive)
-}
+// codex start
+// fun ClosedFloatingPointRange<Double>.random(): Double {
+//     return if (start >= endInclusive) start else ThreadLocalRandom.current().nextDouble(start, endInclusive)
+// }
+// codex end
 
-fun ClosedFloatingPointRange<Float>.toDouble(): ClosedFloatingPointRange<Double> {
-    require(start.isFinite())
-    require(endInclusive.isFinite())
-    return start.toDouble()..endInclusive.toDouble()
-}
+// codex start
+// fun ClosedFloatingPointRange<Float>.toDouble(): ClosedFloatingPointRange<Double> {
+//     require(start.isFinite())
+//     require(endInclusive.isFinite())
+//     return start.toDouble()..endInclusive.toDouble()
+// }
+// codex end
 
-fun <T> List<T>.subList(fromIndex: Int): List<T> {
-    return this.subList(fromIndex, this.size)
-}
+// codex start
+// fun <T> List<T>.subList(fromIndex: Int): List<T> {
+//     return this.subList(fromIndex, this.size)
+// }
+// codex end
 
 // codex start
 // /**

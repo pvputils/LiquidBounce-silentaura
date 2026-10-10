@@ -101,7 +101,9 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-fun Vec3i.toBlockPos() = BlockPos(this.x, this.y, this.z)
+// codex start
+// fun Vec3i.toBlockPos() = BlockPos(this.x, this.y, this.z)
+// codex end
 
 @AddonApi
 val BlockPos.state: BlockState? get() = mc.level?.getBlockState(this)
@@ -162,14 +164,18 @@ val BlockPos.outlineBox: AABB
 val BlockPos.outlineShape: VoxelShape
     get() = state?.getShape(world, this) ?: Shapes.empty()
 
-fun BlockPos.outlineShape(collisionContext: CollisionContext): VoxelShape =
-    state?.getShape(world, this, collisionContext) ?: Shapes.empty()
+// codex start
+// fun BlockPos.outlineShape(collisionContext: CollisionContext): VoxelShape =
+//     state?.getShape(world, this, collisionContext) ?: Shapes.empty()
+// codex end
 
-fun BlockState.outlineBox(blockPos: BlockPos): AABB {
-    val outlineShape = this.getShape(world, blockPos)
-
-    return outlineShape.boundsOrNull() ?: FULL_BOX
-}
+// codex start
+// fun BlockState.outlineBox(blockPos: BlockPos): AABB {
+//     val outlineShape = this.getShape(world, blockPos)
+//
+//     return outlineShape.boundsOrNull() ?: FULL_BOX
+// }
+// codex end
 
 // codex start
 // /**

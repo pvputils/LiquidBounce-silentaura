@@ -33,8 +33,10 @@ data class Ray(
         get() = origin
 
     companion {
-        fun fromPoints(begin: Vec3, end: Vec3): Ray {
-            return Ray(begin, end.subtract(begin))
-        }
+        // codex start
+        // fun fromPoints(begin: Vec3, end: Vec3): Ray {
+        //     return Ray(begin, end.subtract(begin))
+        // }
+        // codex end
     }
 }

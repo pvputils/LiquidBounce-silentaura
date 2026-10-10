@@ -104,27 +104,29 @@ inline fun RenderPass.setupRenderTypeScissor() {
     }
 }
 
-/**
- * Set vertex and index buffers for [RenderPass] and call [RenderPass.drawIndexed].
- *
- * This function assumes the [GpuBufferSlice]s are correctly aligned with corresponding vertex/index byte count.
- */
-fun RenderPass.bindAndDraw(
-    vertexSlice: GpuBufferSlice,
-    indexSlice: GpuBufferSlice,
-    indexType: IndexType,
-    indexCount: Int,
-) {
-    setVertexBuffer(0, vertexSlice)
-    setIndexBuffer(indexSlice.buffer, indexType)
-    drawIndexed(
-        indexCount,
-        1,
-        (indexSlice.offset / indexType.bytes).toInt(),
-        0,
-        0,
-    )
-}
+// codex start
+// /**
+//  * Set vertex and index buffers for [RenderPass] and call [RenderPass.drawIndexed].
+//  *
+//  * This function assumes the [GpuBufferSlice]s are correctly aligned with corresponding vertex/index byte count.
+//  */
+// fun RenderPass.bindAndDraw(
+//     vertexSlice: GpuBufferSlice,
+//     indexSlice: GpuBufferSlice,
+//     indexType: IndexType,
+//     indexCount: Int,
+// ) {
+//     setVertexBuffer(0, vertexSlice)
+//     setIndexBuffer(indexSlice.buffer, indexType)
+//     drawIndexed(
+//         indexCount,
+//         1,
+//         (indexSlice.offset / indexType.bytes).toInt(),
+//         0,
+//         0,
+//     )
+// }
+// codex end
 
 private val COLOR_MODULATOR = Vector4f(1f)
 private val VECTOR3F_0 = Vector3f()

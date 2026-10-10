@@ -172,25 +172,31 @@ abstract class ModelWrapper<I, O>(
         }
     }
 
-    fun save(path: Path) {
-        model.save(path, "tf")
-    }
+    // codex start
+    // fun save(path: Path) {
+    //     model.save(path, "tf")
+    // }
+    // codex end
 
-    fun save(name: String = this.name) {
-        save(modelsFolder.resolve(name).toPath())
-    }
+    // codex start
+    // fun save(name: String = this.name) {
+    //     save(modelsFolder.resolve(name).toPath())
+    // }
+    // codex end
 
-    fun delete() {
-        val folder = modelsFolder.resolve(name)
-        check(folder.isDirectory) { "Model '$name' is not a user model" }
-
-        if (!folder.deleteRecursively()) {
-            // The model may still hold file handles (e.g. on Windows), so close it
-            // and retry once before reporting the deletion as failed.
-            close()
-            check(folder.deleteRecursively()) { "Failed to delete model '$name'" }
-        }
-    }
+    // codex start
+    // fun delete() {
+    //     val folder = modelsFolder.resolve(name)
+    //     check(folder.isDirectory) { "Model '$name' is not a user model" }
+    //
+    //     if (!folder.deleteRecursively()) {
+    //         // The model may still hold file handles (e.g. on Windows), so close it
+    //         // and retry once before reporting the deletion as failed.
+    //         close()
+    //         check(folder.deleteRecursively()) { "Failed to delete model '$name'" }
+    //     }
+    // }
+    // codex end
 
     override fun close() {
         lock.write {

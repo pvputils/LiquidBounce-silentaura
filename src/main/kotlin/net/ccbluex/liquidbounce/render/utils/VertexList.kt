@@ -70,14 +70,18 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
         return this
     }
 
-    fun add(vec: Vec3f): MutableVertexList = add(vec.x, vec.y, vec.z)
+    // codex start
+    // fun add(vec: Vec3f): MutableVertexList = add(vec.x, vec.y, vec.z)
+    // codex end
 
     fun add(vec: Vec3): MutableVertexList = add(vec.x.toFloat(), vec.y.toFloat(), vec.z.toFloat())
 
-    fun addAll(vertices: Iterable<Vec3>): MutableVertexList {
-        vertices.forEach(this::add)
-        return this
-    }
+    // codex start
+    // fun addAll(vertices: Iterable<Vec3>): MutableVertexList {
+    //     vertices.forEach(this::add)
+    //     return this
+    // }
+    // codex end
 
     fun addRelative(vec: Vec3, origin: Vec3): MutableVertexList = add(
         (vec.x - origin.x).toFloat(),
@@ -97,10 +101,12 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
         return addRelative(vec, cameraPos)
     }
 
-    fun addAllRelativeToCamera(vertices: Iterable<Vec3>, camera: Camera): MutableVertexList {
-        vertices.forEach { addRelativeToCamera(it, camera) }
-        return this
-    }
+    // codex start
+    // fun addAllRelativeToCamera(vertices: Iterable<Vec3>, camera: Camera): MutableVertexList {
+    //     vertices.forEach { addRelativeToCamera(it, camera) }
+    //     return this
+    // }
+    // codex end
 
     inline fun <T> addAll(vertices: Iterable<T>, vertexMapper: (T) -> Vec3): MutableVertexList {
         vertices.forEach { add(vertexMapper(it)) }

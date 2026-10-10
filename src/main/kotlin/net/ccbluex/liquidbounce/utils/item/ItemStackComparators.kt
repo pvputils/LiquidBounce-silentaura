@@ -36,9 +36,13 @@ fun Comparator<ItemStack>.asHolderComparator(): Comparator<ItemStackHolder> =
 // val COMPARING_DESCRIPTION_ID: Comparator<ItemStack> = Comparator.comparing { it.item.descriptionId }
 // codex end
 
-private fun ItemStack.block(): Block = (this.item as BlockItem).block
+// codex start
+// private fun ItemStack.block(): Block = (this.item as BlockItem).block
+// codex end
 
-private fun ItemStack.defaultBlockState(): BlockState = this.block().defaultBlockState()
+// codex start
+// private fun ItemStack.defaultBlockState(): BlockState = this.block().defaultBlockState()
+// codex end
 
 // codex start
 // object PreferFavourableBlocks : Comparator<ItemStack> {

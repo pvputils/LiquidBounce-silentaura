@@ -107,33 +107,35 @@ open class MutableListValue<T : MutableCollection<E>, E>(
     innerType
 )
 
-open class ItemListValue<T : MutableSet<E>, E>(
-    name: String,
-    value: T,
-    @Exclude var items: Set<NamedItem<E>>,
-    innerValueType: ValueType = ValueType.INVALID,
-    innerType: Class<E>,
-) : ListValue<T, E>(
-    name,
-    value,
-    ValueType.NAMED_ITEM_LIST,
-    innerValueType,
-    innerType
-) {
-
-    init {
-        require(items.isNotEmpty()) {
-            "ItemListValue must have at least one item defined."
-        }
-    }
-
-    data class NamedItem<T>(
-        val name: String,
-        val value: T,
-        val icon: String? = null
-    )
-
-}
+// codex start
+// open class ItemListValue<T : MutableSet<E>, E>(
+//     name: String,
+//     value: T,
+//     @Exclude var items: Set<NamedItem<E>>,
+//     innerValueType: ValueType = ValueType.INVALID,
+//     innerType: Class<E>,
+// ) : ListValue<T, E>(
+//     name,
+//     value,
+//     ValueType.NAMED_ITEM_LIST,
+//     innerValueType,
+//     innerType
+// ) {
+//
+//     init {
+//         require(items.isNotEmpty()) {
+//             "ItemListValue must have at least one item defined."
+//         }
+//     }
+//
+//     data class NamedItem<T>(
+//         val name: String,
+//         val value: T,
+//         val icon: String? = null
+//     )
+//
+// }
+// codex end
 
 /**
  *
@@ -174,24 +176,26 @@ private val VALUE_TYPE_TO_REGISTRY_NAME = enumMapOf(
 )
 
 
-class RegistryMutableListValue<T : MutableList<E>, E>(
-    name: String,
-    value: T,
-    innerValueType: ValueType = ValueType.INVALID,
-    innerType: Class<E>,
-) : ListValue<T, E>(
-    name,
-    value,
-    ValueType.REGISTRY_MUTABLE_LIST,
-    innerValueType,
-    innerType
-) {
-
-    /**
-     * This is used to determine the registry endpoint for the API.
-     */
-    @Exclude
-    val registry: String =
-        VALUE_TYPE_TO_REGISTRY_NAME[innerValueType] ?: error("Unsupported registry type: $innerValueType")
-
-}
+// codex start
+// class RegistryMutableListValue<T : MutableList<E>, E>(
+//     name: String,
+//     value: T,
+//     innerValueType: ValueType = ValueType.INVALID,
+//     innerType: Class<E>,
+// ) : ListValue<T, E>(
+//     name,
+//     value,
+//     ValueType.REGISTRY_MUTABLE_LIST,
+//     innerValueType,
+//     innerType
+// ) {
+//
+//     /**
+//      * This is used to determine the registry endpoint for the API.
+//      */
+//     @Exclude
+//     val registry: String =
+//         VALUE_TYPE_TO_REGISTRY_NAME[innerValueType] ?: error("Unsupported registry type: $innerValueType")
+//
+// }
+// codex end

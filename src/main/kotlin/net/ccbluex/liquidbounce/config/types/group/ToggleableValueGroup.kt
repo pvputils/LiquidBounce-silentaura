@@ -99,21 +99,27 @@ abstract class ToggleableValueGroup @JvmOverloads constructor(
 
     final override fun parent() = parent
 
-    protected fun <T : Mode> choices(name: String, active: T, choices: Array<T>) =
-        modes(this, name, active, choices)
+    // codex start
+    // protected fun <T : Mode> choices(name: String, active: T, choices: Array<T>) =
+    //     modes(this, name, active, choices)
+    // codex end
 
-    /**
-     * The first of [modes] starts active.
-     */
-    @Suppress("UNCHECKED_CAST")
-    protected fun <T : Mode> choices(name: String, vararg modes: T) =
-        modes(this, name, modes[0], modes as Array<T>)
+    // codex start
+    // /**
+    //  * The first of [modes] starts active.
+    //  */
+    // @Suppress("UNCHECKED_CAST")
+    // protected fun <T : Mode> choices(name: String, vararg modes: T) =
+    //     modes(this, name, modes[0], modes as Array<T>)
+    // codex end
 
-    protected fun <T : Mode> choices(
-        name: String,
-        activeIndex: Int = 0,
-        choicesCallback: (ModeValueGroup<T>) -> Array<T>
-    ) = modes(this, name, activeIndex, choicesCallback)
+    // codex start
+    // protected fun <T : Mode> choices(
+    //     name: String,
+    //     activeIndex: Int = 0,
+    //     choicesCallback: (ModeValueGroup<T>) -> Array<T>
+    // ) = modes(this, name, activeIndex, choicesCallback)
+    // codex end
 
 }
 

@@ -65,13 +65,15 @@ inline operator fun AABB.minus(offset: Vec3i): AABB =
 // // codex end
 // codex end
 
-fun AABB.centerOnSide(side: Direction): Vec3 {
-    val cx = minX + xsize * 0.5
-    val cy = minY + ysize * 0.5
-    val cz = minZ + zsize * 0.5
-
-    return pointOnSide(cx, cy, cz, side)
-}
+// codex start
+// fun AABB.centerOnSide(side: Direction): Vec3 {
+//     val cx = minX + xsize * 0.5
+//     val cy = minY + ysize * 0.5
+//     val cz = minZ + zsize * 0.5
+//
+//     return pointOnSide(cx, cy, cz, side)
+// }
+// codex end
 
 /**
  * Tests if the infinite line resulting from [start] and the point [p] will intersect this box.
@@ -132,8 +134,10 @@ fun AABB.samplePointOnSide(side: Direction, a: Double, b: Double): Vec3 {
     return pointAtProportion(spot.x, spot.y, spot.z)
 }
 
-fun AABB.pointAtProportion(p: Double): Vec3 =
-    pointAtProportion(p, p, p)
+// codex start
+// fun AABB.pointAtProportion(p: Double): Vec3 =
+//     pointAtProportion(p, p, p)
+// codex end
 
 fun AABB.pointAtProportion(pX: Double, pY: Double, pZ: Double): Vec3 = Vec3(
     Math.fma(xsize, pX, minX),
@@ -141,15 +145,17 @@ fun AABB.pointAtProportion(pX: Double, pY: Double, pZ: Double): Vec3 = Vec3(
     Math.fma(zsize, pZ, minZ),
 )
 
-private fun AABB.pointOnSide(x: Double, y: Double, z: Double, side: Direction): Vec3 =
-    when (side) {
-        Direction.DOWN -> Vec3(x, minY, z)
-        Direction.UP -> Vec3(x, maxY, z)
-        Direction.NORTH -> Vec3(x, y, minZ)
-        Direction.SOUTH -> Vec3(x, y, maxZ)
-        Direction.WEST -> Vec3(minX, y, z)
-        Direction.EAST -> Vec3(maxX, y, z)
-    }
+// codex start
+// private fun AABB.pointOnSide(x: Double, y: Double, z: Double, side: Direction): Vec3 =
+//     when (side) {
+//         Direction.DOWN -> Vec3(x, minY, z)
+//         Direction.UP -> Vec3(x, maxY, z)
+//         Direction.NORTH -> Vec3(x, y, minZ)
+//         Direction.SOUTH -> Vec3(x, y, maxZ)
+//         Direction.WEST -> Vec3(minX, y, z)
+//         Direction.EAST -> Vec3(maxX, y, z)
+//     }
+// codex end
 
 /**
  * Get visible sides from [eyes] **outside** the box.

@@ -279,51 +279,53 @@ fun FormattedText.asFormattedCharSequence() = FormattedCharSequence { output ->
 
 fun String.toLowerCamelCase(): String = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, this)
 
-/** Removes a server port and IPv6 brackets without resolving the host. Invalid addresses are left intact. */
-fun String.dropPort(): String {
-    return try {
-        // Bracketless IPv6 is accepted as a host without a port.
-        HostAndPort.fromString(this).host
-    } catch (_: IllegalArgumentException) {
-        this
-    }
-}
-
-private val IP_REGEX = Regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$")
-
-/**
- * Returns the root domain of the domain.
- *
- * This means it removes the subdomain from the domain.
- * If the domain is already a root domain or an IP address, do nothing.
- *
- * e.g.
- *   "sub.example.com" -> "example.com"
- *   "example.com." -> "example.com"
- *   "127.0.0.1" -> "127.0.0.1"
- */
-fun String.rootDomain(): String {
-    var domain = this.trim().lowercase()
-
-    val ipv6 = ':' in domain && InetAddresses.isInetAddress(domain.removeSurrounding("[", "]").substringBefore('%'))
-    if (ipv6 || domain.matches(IP_REGEX)) {
-        // IP address
-        return domain
-    }
-
-    // Check if domain ends with dot, if so, remove it
-    if (domain.endsWith('.')) {
-        domain = domain.dropLast(1)
-    }
-
-    val parts = domain.split('.')
-    if (parts.size <= 2) {
-        // Already a root domain
-        return domain
-    }
-
-    return "${parts[parts.lastIndex - 1]}.${parts.last()}"
-}
+// codex start
+// /** Removes a server port and IPv6 brackets without resolving the host. Invalid addresses are left intact. */
+// fun String.dropPort(): String {
+//     return try {
+//         // Bracketless IPv6 is accepted as a host without a port.
+//         HostAndPort.fromString(this).host
+//     } catch (_: IllegalArgumentException) {
+//         this
+//     }
+// }
+//
+// private val IP_REGEX = Regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$")
+//
+// /**
+//  * Returns the root domain of the domain.
+//  *
+//  * This means it removes the subdomain from the domain.
+//  * If the domain is already a root domain or an IP address, do nothing.
+//  *
+//  * e.g.
+//  *   "sub.example.com" -> "example.com"
+//  *   "example.com." -> "example.com"
+//  *   "127.0.0.1" -> "127.0.0.1"
+//  */
+// fun String.rootDomain(): String {
+//     var domain = this.trim().lowercase()
+//
+//     val ipv6 = ':' in domain && InetAddresses.isInetAddress(domain.removeSurrounding("[", "]").substringBefore('%'))
+//     if (ipv6 || domain.matches(IP_REGEX)) {
+//         // IP address
+//         return domain
+//     }
+//
+//     // Check if domain ends with dot, if so, remove it
+//     if (domain.endsWith('.')) {
+//         domain = domain.dropLast(1)
+//     }
+//
+//     val parts = domain.split('.')
+//     if (parts.size <= 2) {
+//         // Already a root domain
+//         return domain
+//     }
+//
+//     return "${parts[parts.lastIndex - 1]}.${parts.last()}"
+// }
+// codex end
 
 /**
  * Converts milliseconds to seconds, minutes, hours and days when present.
@@ -359,19 +361,21 @@ fun Long.formatAsCapacity(): String {
     }
 }
 
-fun String.hideSensitiveAddress(): String {
-    val idx = lastIndexOf(':')
-    val host = if (idx == -1) this else substring(0, idx)
-
-    // Hide possibly sensitive information from LiquidProxy
-    val newHost = when {
-        host.endsWith(".liquidbounce.net") -> "<redacted>.liquidbounce.net"
-        host.endsWith(".liquidproxy.net") -> "<redacted>.liquidproxy.net"
-        else -> host
-    }
-
-    return if (idx == -1) newHost else newHost + substring(idx)
-}
+// codex start
+// fun String.hideSensitiveAddress(): String {
+//     val idx = lastIndexOf(':')
+//     val host = if (idx == -1) this else substring(0, idx)
+//
+//     // Hide possibly sensitive information from LiquidProxy
+//     val newHost = when {
+//         host.endsWith(".liquidbounce.net") -> "<redacted>.liquidbounce.net"
+//         host.endsWith(".liquidproxy.net") -> "<redacted>.liquidproxy.net"
+//         else -> host
+//     }
+//
+//     return if (idx == -1) newHost else newHost + substring(idx)
+// }
+// codex end
 // codex start
 //
 // @JvmRecord
@@ -382,7 +386,9 @@ fun String.hideSensitiveAddress(): String {
 // // codex end
 // codex end
 
-fun Char.repeat(n: Int): String = CharArray(n) { this }.concatToString()
+// codex start
+// fun Char.repeat(n: Int): String = CharArray(n) { this }.concatToString()
+// codex end
 
 /**
  * Generates a progress bar based on the [percent]age (range 0 to 100).

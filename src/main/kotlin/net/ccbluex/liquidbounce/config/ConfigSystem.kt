@@ -148,7 +148,9 @@ object ConfigSystem {
         return config
     }
 
-    fun remove(config: Config): Boolean = configs.remove(config)
+    // codex start
+    // fun remove(config: Config): Boolean = configs.remove(config)
+    // codex end
 
     /**
      * Create a ZIP file backup of configs
@@ -163,22 +165,24 @@ object ConfigSystem {
         groups.map { valueGroup -> valueGroup.jsonFile }.createZipArchive(zipFile)
     }
 
-    /**
-     * Restore a backup from a ZIP file to the configs
-     */
-    fun restore(fileName: String) {
-        val zipFile = File(backupFolder, "$fileName.zip")
-        check(zipFile.exists()) { "Backup file does not exist" }
-
-        // The backup holds the json files of the configs, which load straight from it
-        ZipFile(zipFile).use { zip ->
-            for (config in configs) {
-                val entry = zip.getEntry(config.jsonFile.name) ?: continue
-                deserializeValueGroup(config, zip.getInputStream(entry).bufferedReader())
-                store(config)
-            }
-        }
-    }
+    // codex start
+    // /**
+    //  * Restore a backup from a ZIP file to the configs
+    //  */
+    // fun restore(fileName: String) {
+    //     val zipFile = File(backupFolder, "$fileName.zip")
+    //     check(zipFile.exists()) { "Backup file does not exist" }
+    //
+    //     // The backup holds the json files of the configs, which load straight from it
+    //     ZipFile(zipFile).use { zip ->
+    //         for (config in configs) {
+    //             val entry = zip.getEntry(config.jsonFile.name) ?: continue
+    //             deserializeValueGroup(config, zip.getInputStream(entry).bufferedReader())
+    //             store(config)
+    //         }
+    //     }
+    // }
+    // codex end
 
     /**
      * Loads all registered configs.
@@ -256,11 +260,13 @@ object ConfigSystem {
         }
     }
 
-    /**
-     * Serialize a config to a [JsonObject].
-     */
-    fun serializeValueGroup(valueGroup: ValueGroup, gson: Gson = fileGson): JsonObject =
-        gson.toJsonTree(valueGroup, ValueGroup::class.javaObjectType) as JsonObject
+    // codex start
+    // /**
+    //  * Serialize a config to a [JsonObject].
+    //  */
+    // fun serializeValueGroup(valueGroup: ValueGroup, gson: Gson = fileGson): JsonObject =
+    //     gson.toJsonTree(valueGroup, ValueGroup::class.javaObjectType) as JsonObject
+    // codex end
 
     /**
      * Deserialize a config from a reader, and close it

@@ -186,20 +186,22 @@ object RotationManager : EventListener {
         isNormalized = true
     )
 
-    @AddonApi
-    @Suppress("LongParameterList")
-    fun setRotationTarget(
-        rotation: Rotation,
-        considerInventory: Boolean = true,
-        valueGroup: RotationsValueGroup,
-        priority: Priority,
-        provider: ClientModule,
-        whenReached: RestrictedSingleUseAction? = null
-    ) {
-        setRotationTarget(valueGroup.toRotationTarget(
-            rotation, considerInventory = considerInventory, whenReached = whenReached
-        ), priority, provider)
-    }
+    // codex start
+    // @AddonApi
+    // @Suppress("LongParameterList")
+    // fun setRotationTarget(
+    //     rotation: Rotation,
+    //     considerInventory: Boolean = true,
+    //     valueGroup: RotationsValueGroup,
+    //     priority: Priority,
+    //     provider: ClientModule,
+    //     whenReached: RestrictedSingleUseAction? = null
+    // ) {
+    //     setRotationTarget(valueGroup.toRotationTarget(
+    //         rotation, considerInventory = considerInventory, whenReached = whenReached
+    //     ), priority, provider)
+    // }
+    // codex end
 
     @AddonApi
     fun setRotationTarget(plan: RotationTarget, priority: Priority, provider: ClientModule) =
