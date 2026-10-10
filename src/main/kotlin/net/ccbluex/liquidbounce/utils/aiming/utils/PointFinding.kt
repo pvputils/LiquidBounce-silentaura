@@ -20,11 +20,13 @@
 package net.ccbluex.liquidbounce.utils.aiming.utils
 
 import net.ccbluex.fastutil.mapToArray
-import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleProjectileAimbot
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
-import net.ccbluex.liquidbounce.render.engine.type.Color4b
-import net.ccbluex.liquidbounce.utils.client.world
+// codex start
+// import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleProjectileAimbot
+// import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
+// import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
+// import net.ccbluex.liquidbounce.render.engine.type.Color4b
+// import net.ccbluex.liquidbounce.utils.client.world
+// codex end
 import net.ccbluex.liquidbounce.utils.math.add
 import net.ccbluex.liquidbounce.utils.math.vertices
 import net.ccbluex.liquidbounce.utils.math.firstHit
@@ -167,59 +169,61 @@ inline fun projectPointsOnBox(
  * @param visibilityPredicate An optional predicate to determine if a given point is visible
  * @return the best visible spot found or `null`
  */
-fun findVisiblePointFromVirtualEye(
-    virtualEyes: Vec3,
-    box: AABB,
-    rangeToTest: Double,
-    visibilityPredicate: VisibilityPredicate = ArrowVisibilityPredicate,
-): Vec3? {
-    val points = projectPointsOnBox(virtualEyes, box) ?: return null
-
-    ModuleProjectileAimbot.debugGeometry("points") {
-        ModuleDebug.DebugCollection(points.map { ModuleDebug.DebuggedPoint(it, Color4b.BLUE, 0.01) })
-    }
-
-    val rays = ArrayList<ModuleDebug.DebuggedGeometry>()
-
-    val center = box.center
-    points.sortBy { it.distanceToSqr(center) }
-
-    for (spot in points) {
-        val vecFromEyes = spot - virtualEyes
-        val raycastTarget = virtualEyes.fma(2.0, vecFromEyes)
-        val spotOnBox = box.firstHit(virtualEyes, raycastTarget) ?: continue
-
-        val rayStart = spotOnBox - vecFromEyes.withLength(rangeToTest)
-
-        val visible = visibilityPredicate.isVisible(rayStart, spotOnBox)
-
-        rays.add(ModuleDebug.DebuggedLineSegment(rayStart, spotOnBox, if (visible) Color4b.GREEN else Color4b.RED))
-
-        if (visible) {
-            ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
-            return spotOnBox
-        }
-    }
-
-    ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
-
-    return null
-}
-
-object ArrowVisibilityPredicate : VisibilityPredicate {
-    override fun isVisible(eyesPos: Vec3, targetSpot: Vec3): Boolean {
-        val arrowEntity = Arrow(
-            world, eyesPos.x, eyesPos.y, eyesPos.z, Items.ARROW.defaultInstance,
-            null)
-
-        return world.clip(
-            ClipContext(
-                eyesPos,
-                targetSpot,
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE,
-                arrowEntity
-            )
-        ).type == HitResult.Type.MISS
-    }
-}
+// codex start
+// fun findVisiblePointFromVirtualEye(
+//     virtualEyes: Vec3,
+//     box: AABB,
+//     rangeToTest: Double,
+//     visibilityPredicate: VisibilityPredicate = ArrowVisibilityPredicate,
+// ): Vec3? {
+//     val points = projectPointsOnBox(virtualEyes, box) ?: return null
+//
+//     ModuleProjectileAimbot.debugGeometry("points") {
+//         ModuleDebug.DebugCollection(points.map { ModuleDebug.DebuggedPoint(it, Color4b.BLUE, 0.01) })
+//     }
+//
+//     val rays = ArrayList<ModuleDebug.DebuggedGeometry>()
+//
+//     val center = box.center
+//     points.sortBy { it.distanceToSqr(center) }
+//
+//     for (spot in points) {
+//         val vecFromEyes = spot - virtualEyes
+//         val raycastTarget = virtualEyes.fma(2.0, vecFromEyes)
+//         val spotOnBox = box.firstHit(virtualEyes, raycastTarget) ?: continue
+//
+//         val rayStart = spotOnBox - vecFromEyes.withLength(rangeToTest)
+//
+//         val visible = visibilityPredicate.isVisible(rayStart, spotOnBox)
+//
+//         rays.add(ModuleDebug.DebuggedLineSegment(rayStart, spotOnBox, if (visible) Color4b.GREEN else Color4b.RED))
+//
+//         if (visible) {
+//             ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
+//             return spotOnBox
+//         }
+//     }
+//
+//     ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
+//
+//     return null
+// }
+//
+// object ArrowVisibilityPredicate : VisibilityPredicate {
+//     override fun isVisible(eyesPos: Vec3, targetSpot: Vec3): Boolean {
+//         val arrowEntity = Arrow(
+//             world, eyesPos.x, eyesPos.y, eyesPos.z, Items.ARROW.defaultInstance,
+//             null)
+//
+//         return world.clip(
+//             ClipContext(
+//                 eyesPos,
+//                 targetSpot,
+//                 ClipContext.Block.COLLIDER,
+//                 ClipContext.Fluid.NONE,
+//                 arrowEntity
+//             )
+//         ).type == HitResult.Type.MISS
+//     }
+// }
+// codex end

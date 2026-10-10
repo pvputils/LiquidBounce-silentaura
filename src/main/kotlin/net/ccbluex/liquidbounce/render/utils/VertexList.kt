@@ -45,7 +45,9 @@ inline fun VertexList.forEachVertex(action: (x: Float, y: Float, z: Float) -> Un
     }
 }
 
-fun VertexList.lineStripAsLines(): VertexList = LineStripAsLinesVertexView(this)
+// codex start
+// fun VertexList.lineStripAsLines(): VertexList = LineStripAsLinesVertexView(this)
+// codex end
 
 @Suppress("TooManyFunctions")
 class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
@@ -134,22 +136,24 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
     }
 }
 
-private class LineStripAsLinesVertexView(private val source: VertexList) : VertexList {
-
-    override val size: Int
-        get() = if (source.size < 2) 0 else (source.size - 1) shl 1
-
-    override fun x(index: Int): Float = source.x(index.toSourceIndex())
-
-    override fun y(index: Int): Float = source.y(index.toSourceIndex())
-
-    override fun z(index: Int): Float = source.z(index.toSourceIndex())
-
-    private fun Int.toSourceIndex(): Int {
-        if (this !in 0 until size) {
-            throw IndexOutOfBoundsException("Index $this out of bounds [0, $size)")
-        }
-
-        return (this shr 1) + (this and 1)
-    }
-}
+// codex start
+// private class LineStripAsLinesVertexView(private val source: VertexList) : VertexList {
+//
+//     override val size: Int
+//         get() = if (source.size < 2) 0 else (source.size - 1) shl 1
+//
+//     override fun x(index: Int): Float = source.x(index.toSourceIndex())
+//
+//     override fun y(index: Int): Float = source.y(index.toSourceIndex())
+//
+//     override fun z(index: Int): Float = source.z(index.toSourceIndex())
+//
+//     private fun Int.toSourceIndex(): Int {
+//         if (this !in 0 until size) {
+//             throw IndexOutOfBoundsException("Index $this out of bounds [0, $size)")
+//         }
+//
+//         return (this shr 1) + (this and 1)
+//     }
+// }
+// codex end

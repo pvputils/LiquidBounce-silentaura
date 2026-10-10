@@ -509,18 +509,20 @@ fun WorldRenderEnvironment.drawBox(
 //  * Function to draw a colored [box] with specified [side].
 //  */
 // codex end
-fun WorldRenderEnvironment.drawBoxSide(
-    box: AABB,
-    side: Direction,
-    faceColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-) = drawBox(
-    box,
-    faceColor,
-    outlineColor,
-    faceVertices = BoxVertexIterator.FACE.sideMask(side),
-    outlineVertices = BoxVertexIterator.OUTLINE.sideMask(side),
-)
+// codex start
+// fun WorldRenderEnvironment.drawBoxSide(
+//     box: AABB,
+//     side: Direction,
+//     faceColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+// ) = drawBox(
+//     box,
+//     faceColor,
+//     outlineColor,
+//     faceVertices = BoxVertexIterator.FACE.sideMask(side),
+//     outlineVertices = BoxVertexIterator.OUTLINE.sideMask(side),
+// )
+// codex end
 
 /**
  * Function to draw a colored [box] with specified [sides].
