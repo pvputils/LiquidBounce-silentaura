@@ -33,9 +33,15 @@ object GlobalSettingsTarget : ValueGroup(
     val combatChoices = multiEnumChoice("Combat",
         default = enumSetOf(
             Targets.PLAYERS,
-            Targets.HOSTILE,
-            Targets.ANGERABLE,
-            Targets.WATER_CREATURE,
+            // codex start
+            // Targets.HOSTILE,
+            // codex end
+            // codex start
+            // Targets.ANGERABLE,
+            // codex end
+            // codex start
+            // Targets.WATER_CREATURE,
+            // codex end
             Targets.INVISIBLE,
         ),
         choices = enumSetAllOf<Targets>().apply { remove(Targets.SELF) },
@@ -44,9 +50,15 @@ object GlobalSettingsTarget : ValueGroup(
     val visualChoices = multiEnumChoice("Visual",
         default = enumSetOf(
             Targets.PLAYERS,
-            Targets.HOSTILE,
-            Targets.ANGERABLE,
-            Targets.WATER_CREATURE,
+            // codex start
+            // Targets.HOSTILE,
+            // codex end
+            // codex start
+            // Targets.ANGERABLE,
+            // codex end
+            // codex start
+            // Targets.WATER_CREATURE,
+            // codex end
             Targets.INVISIBLE,
         ),
         choices = enumSetAllOf(),

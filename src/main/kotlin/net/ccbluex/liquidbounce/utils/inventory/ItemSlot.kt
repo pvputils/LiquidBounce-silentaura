@@ -49,7 +49,9 @@ sealed interface ItemSlot : ItemStackHolder {
      */
     fun getIdForServer(screen: AbstractContainerScreen<*>?): Int?
 
-    fun getIdForServerWithCurrentScreen() = getIdForServer(mc.gui.screen() as? AbstractContainerScreen<*>)
+    // codex start
+    // fun getIdForServerWithCurrentScreen() = getIdForServer(mc.gui.screen() as? AbstractContainerScreen<*>)
+    // codex end
 
     override fun hashCode(): Int
 
@@ -131,19 +133,21 @@ class ContainerItemSlot(val slotInContainer: Int) : ItemSlot {
 
     override fun getIdForServer(screen: AbstractContainerScreen<*>?): Int = this.slotInContainer
 
-    fun distance(itemSlot: ContainerItemSlot): Int {
-        // TODO: only for 9xN types
-        val slotId = this.slotInContainer
-        val otherId = itemSlot.slotInContainer
-
-        val rowA = slotId / 9
-        val colA = slotId % 9
-
-        val rowB = otherId / 9
-        val colB = otherId % 9
-
-        return (colA - colB) * (colA - colB) + (rowA - rowB) * (rowA - rowB)
-    }
+    // codex start
+    // fun distance(itemSlot: ContainerItemSlot): Int {
+    //     // TODO: only for 9xN types
+    //     val slotId = this.slotInContainer
+    //     val otherId = itemSlot.slotInContainer
+    //
+    //     val rowA = slotId / 9
+    //     val colA = slotId % 9
+    //
+    //     val rowB = otherId / 9
+    //     val colB = otherId % 9
+    //
+    //     return (colA - colB) * (colA - colB) + (rowA - rowB) * (rowA - rowB)
+    // }
+    // codex end
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

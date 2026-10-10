@@ -33,7 +33,9 @@ class Alignment(
 ) : ValueGroup("Alignment") {
 
     companion {
-        fun center() = Alignment(ScreenAxisX.CENTER, 0, ScreenAxisY.CENTER, 0)
+        // codex start
+        // fun center() = Alignment(ScreenAxisX.CENTER, 0, ScreenAxisY.CENTER, 0)
+        // codex end
     }
 
     var horizontalAlignment by enumChoice("Horizontal", horizontalAlignment)
@@ -52,41 +54,45 @@ class Alignment(
 
     val guiScaledVerticalOffset get() = verticalOffset.toFloat() / mc.window.guiScale
 
-    fun setFrom(other: Alignment) {
-        this.horizontalAlignment = other.horizontalAlignment
-        this.horizontalOffset = other.horizontalOffset
-        this.verticalAlignment = other.verticalAlignment
-        this.verticalOffset = other.verticalOffset
-    }
+    // codex start
+    // fun setFrom(other: Alignment) {
+    //     this.horizontalAlignment = other.horizontalAlignment
+    //     this.horizontalOffset = other.horizontalOffset
+    //     this.verticalAlignment = other.verticalAlignment
+    //     this.verticalOffset = other.verticalOffset
+    // }
+    // codex end
 
-    /**
-     * @return Scaled bounds follows [com.mojang.blaze3d.platform.Window.guiScale]
-     */
-    fun getBounds(
-        width: Float,
-        height: Float,
-    ): BoundingBox2f {
-        val screenWidth = mc.window.guiScaledWidth.toFloat()
-        val screenHeight = mc.window.guiScaledHeight.toFloat()
-
-        val guiScaledHorizontalOffset = this.guiScaledHorizontalOffset
-        val x = when (horizontalAlignment) {
-            ScreenAxisX.LEFT -> guiScaledHorizontalOffset
-            ScreenAxisX.CENTER_TRANSLATED -> screenWidth / 2f - width / 2f + guiScaledHorizontalOffset
-            ScreenAxisX.RIGHT -> screenWidth - width - guiScaledHorizontalOffset
-            ScreenAxisX.CENTER -> screenWidth / 2f + guiScaledHorizontalOffset
-        }
-
-        val guiScaledVerticalOffset = this.guiScaledVerticalOffset
-        val y = when (verticalAlignment) {
-            ScreenAxisY.TOP -> guiScaledVerticalOffset
-            ScreenAxisY.CENTER_TRANSLATED -> screenHeight / 2f - height / 2f + guiScaledVerticalOffset
-            ScreenAxisY.BOTTOM -> screenHeight - height - guiScaledVerticalOffset
-            ScreenAxisY.CENTER -> screenHeight / 2f + guiScaledVerticalOffset
-        }
-
-        return BoundingBox2f(x, y, x + width, y + height)
-    }
+    // codex start
+    // /**
+    //  * @return Scaled bounds follows [com.mojang.blaze3d.platform.Window.guiScale]
+    //  */
+    // fun getBounds(
+    //     width: Float,
+    //     height: Float,
+    // ): BoundingBox2f {
+    //     val screenWidth = mc.window.guiScaledWidth.toFloat()
+    //     val screenHeight = mc.window.guiScaledHeight.toFloat()
+    //
+    //     val guiScaledHorizontalOffset = this.guiScaledHorizontalOffset
+    //     val x = when (horizontalAlignment) {
+    //         ScreenAxisX.LEFT -> guiScaledHorizontalOffset
+    //         ScreenAxisX.CENTER_TRANSLATED -> screenWidth / 2f - width / 2f + guiScaledHorizontalOffset
+    //         ScreenAxisX.RIGHT -> screenWidth - width - guiScaledHorizontalOffset
+    //         ScreenAxisX.CENTER -> screenWidth / 2f + guiScaledHorizontalOffset
+    //     }
+    //
+    //     val guiScaledVerticalOffset = this.guiScaledVerticalOffset
+    //     val y = when (verticalAlignment) {
+    //         ScreenAxisY.TOP -> guiScaledVerticalOffset
+    //         ScreenAxisY.CENTER_TRANSLATED -> screenHeight / 2f - height / 2f + guiScaledVerticalOffset
+    //         ScreenAxisY.BOTTOM -> screenHeight - height - guiScaledVerticalOffset
+    //         ScreenAxisY.CENTER -> screenHeight / 2f + guiScaledVerticalOffset
+    //     }
+    //
+    //     return BoundingBox2f(x, y, x + width, y + height)
+    // }
+    // codex end
 
     enum class ScreenAxisX(override val tag: String) : Tagged {
         LEFT("Left"),

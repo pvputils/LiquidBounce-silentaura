@@ -29,10 +29,7 @@ import net.ccbluex.liquidbounce.event.events.TransferOrigin
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.features.blink.BlinkManager
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.features.module.modules.combat.backtrack.ModuleBacktrack
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
 import net.ccbluex.liquidbounce.utils.aiming.data.Rotation
 import net.ccbluex.liquidbounce.utils.aiming.features.MovementCorrection
 import net.ccbluex.liquidbounce.utils.aiming.utils.RotationUtil
@@ -42,8 +39,12 @@ import net.ccbluex.liquidbounce.utils.client.RestrictedSingleUseAction
 import net.ccbluex.liquidbounce.utils.client.inGame
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.combat.CombatManager
-import net.ccbluex.liquidbounce.utils.entity.lastRotation
+// codex start
+// import net.ccbluex.liquidbounce.utils.combat.CombatManager
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.entity.lastRotation
+// codex end
 import net.ccbluex.liquidbounce.utils.entity.rotation
 import net.ccbluex.liquidbounce.utils.inventory.InventoryManager
 import net.ccbluex.liquidbounce.utils.kotlin.EventPriorityConvention
@@ -103,15 +104,19 @@ object RotationManager : EventListener {
     var previousRotation: Rotation? = null
         private set
 
-    private val fakeLagging
-        get() = BlinkManager.isLagging || ModuleBacktrack.isLagging()
+    // codex start
+    // private val fakeLagging
+    //     get() = BlinkManager.isLagging //codex (|| ModuleBacktrack.isLagging())
+    // codex end
 
-    private val freezing
-        get() = ModuleFreeze.running
+    // codex start
+    // private val freezing
+    //     get() = ModuleFreeze.running
+    // codex end
 
     @AddonApi
     val serverRotation: Rotation
-        get() = if (fakeLagging || freezing) theoreticalServerRotation else actualServerRotation
+        get() = actualServerRotation //codex (if (fakeLagging) theoreticalServerRotation else)
 
     /**
      * Yaw used by [net.minecraft.world.entity.Entity.moveRelative] after movement correction.
@@ -131,16 +136,24 @@ object RotationManager : EventListener {
     var actualServerRotation = Rotation.ZERO
         private set
 
-    private var theoreticalServerRotation = Rotation.ZERO
+    // codex start
+    // private var theoreticalServerRotation = Rotation.ZERO
+    // codex end
 
-    private fun reset() {
+    fun reset(resetServerRotation: Boolean = true) { //codex (private fun reset() {)
         rotationTargetHandler.clear()
         previousRotationTarget = null
         currentRotation = null
         playerRotation = null
         previousRotation = null
-        actualServerRotation = Rotation.ZERO
-        theoreticalServerRotation = Rotation.ZERO
+        // codex start
+        if (resetServerRotation) {
+            actualServerRotation = Rotation.ZERO
+            // codex start
+            // theoreticalServerRotation = Rotation.ZERO
+            // codex end
+        }
+        // codex end
     }
 
     /**
@@ -173,20 +186,22 @@ object RotationManager : EventListener {
         isNormalized = true
     )
 
-    @AddonApi
-    @Suppress("LongParameterList")
-    fun setRotationTarget(
-        rotation: Rotation,
-        considerInventory: Boolean = true,
-        valueGroup: RotationsValueGroup,
-        priority: Priority,
-        provider: ClientModule,
-        whenReached: RestrictedSingleUseAction? = null
-    ) {
-        setRotationTarget(valueGroup.toRotationTarget(
-            rotation, considerInventory = considerInventory, whenReached = whenReached
-        ), priority, provider)
-    }
+    // codex start
+    // @AddonApi
+    // @Suppress("LongParameterList")
+    // fun setRotationTarget(
+    //     rotation: Rotation,
+    //     considerInventory: Boolean = true,
+    //     valueGroup: RotationsValueGroup,
+    //     priority: Priority,
+    //     provider: ClientModule,
+    //     whenReached: RestrictedSingleUseAction? = null
+    // ) {
+    //     setRotationTarget(valueGroup.toRotationTarget(
+    //         rotation, considerInventory = considerInventory, whenReached = whenReached
+    //     ), priority, provider)
+    // }
+    // codex end
 
     @AddonApi
     fun setRotationTarget(plan: RotationTarget, priority: Priority, provider: ClientModule) =
@@ -194,9 +209,11 @@ object RotationManager : EventListener {
 
     @AddonApi
     fun setRotationTarget(plan: RotationTarget, priority: Int, provider: ClientModule) {
-        if (!allowedToUpdate()) {
-            return
-        }
+        // codex start
+        // if (!allowedToUpdate()) {
+        //     return
+        // }
+        // codex end
 
         rotationTargetHandler.request(
             RequestHandler.Request(
@@ -212,9 +229,11 @@ object RotationManager : EventListener {
      * Checks if the rotation is allowed to be updated
      */
     fun isRotatingAllowed(rotationTarget: RotationTarget): Boolean {
-        if (!allowedToUpdate()) {
-            return false
-        }
+        // codex start
+        // if (!allowedToUpdate()) {
+        //     return false
+        // }
+        // codex end
 
         if (rotationTarget.considerInventory) {
             if (InventoryManager.isInventoryOpen || mc.gui.screen() is ContainerScreen) {
@@ -302,17 +321,21 @@ object RotationManager : EventListener {
     /**
      * Checks if it should update the server-side rotations
      */
-    private fun allowedToUpdate() = !CombatManager.shouldPauseRotation
+    // codex start
+    // private fun allowedToUpdate() = !CombatManager.shouldPauseRotation
+    // codex end
 
-    fun rotationMatchesPreviousRotation(): Boolean {
-        val player = mc.player ?: return false
-
-        currentRotation?.let {
-            return it == previousRotation
-        }
-
-        return player.rotation == player.lastRotation
-    }
+    // codex start
+    // fun rotationMatchesPreviousRotation(): Boolean {
+    //     val player = mc.player ?: return false
+    //
+    //     currentRotation?.let {
+    //         return it == previousRotation
+    //     }
+    //
+    //     return player.rotation == player.lastRotation
+    // }
+    // codex end
 
     @Suppress("unused")
     private val velocityHandler = handler<PlayerVelocityStrafe>(priority = MODEL_STATE) { event ->
@@ -376,7 +399,9 @@ object RotationManager : EventListener {
         if (event.origin == TransferOrigin.INCOMING || !event.isCancelled) {
             actualServerRotation = rotation
         }
-        theoreticalServerRotation = rotation
+        // codex start
+        // theoreticalServerRotation = rotation
+        // codex end
     }
 
     override val running: Boolean

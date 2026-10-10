@@ -56,13 +56,15 @@ class StaticGlyphPage(
             return glyphPages
         }
 
-        /**
-         * Creates a bitmap which contains all [chars].
-         */
-        fun createGlyphPageWithFittingCharacters(chars: List<FontGlyph>): Pair<StaticGlyphPage, List<FontGlyph>> {
-            val (preparedPage, remainingGlyphs) = prepareGlyphPageWithFittingCharacters(chars)
-            return preparedPage.materialize() to remainingGlyphs
-        }
+        // codex start
+        // /**
+        //  * Creates a bitmap which contains all [chars].
+        //  */
+        // fun createGlyphPageWithFittingCharacters(chars: List<FontGlyph>): Pair<StaticGlyphPage, List<FontGlyph>> {
+        //     val (preparedPage, remainingGlyphs) = prepareGlyphPageWithFittingCharacters(chars)
+        //     return preparedPage.materialize() to remainingGlyphs
+        // }
+        // codex end
 
         private fun prepareGlyphPageWithFittingCharacters(
             chars: List<FontGlyph>

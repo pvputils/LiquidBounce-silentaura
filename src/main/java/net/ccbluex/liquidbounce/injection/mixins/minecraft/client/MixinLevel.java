@@ -18,56 +18,49 @@
  */
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
-import net.ccbluex.liquidbounce.common.ChunkUpdateFlag;
-import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.events.BlockChangeEvent;
-import net.ccbluex.liquidbounce.features.module.modules.render.customambience.ModuleCustomAmbience;
-import net.ccbluex.liquidbounce.utils.block.BlockExtensionsKt;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Level.class)
 public abstract class MixinLevel {
 
-    @Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z", at = @At("RETURN"))
-    private void injectBlockStateChange(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> cir) {
-        if (Minecraft.getInstance().level != (Object) this || ChunkUpdateFlag.isChunkDeltaUpdating()) {
-            return;
-        }
+    // codex start
+    // @Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z", at = @At("RETURN"))
+    // private void injectBlockStateChange(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> cir) {
+    //     if (Minecraft.getInstance().level != (Object) this || ChunkUpdateFlag.isChunkDeltaUpdating()) {
+    //         return;
+    //     }
+    //
+    //     // IMPORTANT: BlockPos might be a BlockPos.Mutable, so we need to create a new BlockPos instance to issues
+    //     EventManager.INSTANCE.callEvent(new BlockChangeEvent(BlockExtensionsKt.getImmutable(pos), state));
+    // }
+    // codex end
 
-        // IMPORTANT: BlockPos might be a BlockPos.Mutable, so we need to create a new BlockPos instance to issues
-        EventManager.INSTANCE.callEvent(new BlockChangeEvent(BlockExtensionsKt.getImmutable(pos), state));
-    }
-
-    @Inject(method = "getRainLevel", cancellable = true, at = @At("HEAD"))
-    private void injectOverrideWeather(float delta, CallbackInfoReturnable<Float> cir) {
-        var module = ModuleCustomAmbience.INSTANCE;
-        var desiredWeather = module.getWeather().get();
-        if (module.getRunning()) {
-            switch (desiredWeather) {
-                case SUNNY -> cir.setReturnValue(0.0f);
-                case RAINY, THUNDER -> cir.setReturnValue(1.0f);
-                case SNOWY -> cir.setReturnValue(0.9f);
-            }
-        }
-    }
-
-    @Inject(method = "getThunderLevel", cancellable = true, at = @At("HEAD"))
-    private void injectOverrideThunder(float delta, CallbackInfoReturnable<Float> cir) {
-        var module = ModuleCustomAmbience.INSTANCE;
-        var desiredWeather = module.getWeather().get();
-        if (module.getRunning()) {
-            switch (desiredWeather) {
-                case SUNNY, RAINY, SNOWY -> cir.setReturnValue(0.0f);
-                case THUNDER -> cir.setReturnValue(1.0f);
-            }
-        }
-    }
-
+    // codex start
+    // @Inject(method = "getRainLevel", cancellable = true, at = @At("HEAD"))
+    // private void injectOverrideWeather(float delta, CallbackInfoReturnable<Float> cir) {
+    //     var module = ModuleCustomAmbience.INSTANCE;
+    //     var desiredWeather = module.getWeather().get();
+    //     if (module.getRunning()) {
+    //         switch (desiredWeather) {
+    //             case SUNNY -> cir.setReturnValue(0.0f);
+    //             case RAINY, THUNDER -> cir.setReturnValue(1.0f);
+    //             case SNOWY -> cir.setReturnValue(0.9f);
+    //         }
+    //     }
+    // }
+    //
+    // @Inject(method = "getThunderLevel", cancellable = true, at = @At("HEAD"))
+    // private void injectOverrideThunder(float delta, CallbackInfoReturnable<Float> cir) {
+    //     var module = ModuleCustomAmbience.INSTANCE;
+    //     var desiredWeather = module.getWeather().get();
+    //     if (module.getRunning()) {
+    //         switch (desiredWeather) {
+    //             case SUNNY, RAINY, SNOWY -> cir.setReturnValue(0.0f);
+    //             case THUNDER -> cir.setReturnValue(1.0f);
+    //         }
+    //     }
+    // }
+    //
+    // codex end
 }

@@ -85,39 +85,47 @@ object ConfigSystem {
 
     val configs = ArrayList<Config>()
 
-    fun findValueByKey(key: String): Value<*>? {
-        ensureRootKeys()
-        val normalizedKey = normalizeKeyInput(key)
-        return configs.asSequence()
-            .flatMap { it.collectValuesRecursively(normalizedKey) }
-            .firstOrNull { it.key?.equals(normalizedKey, true) == true }
-    }
+    // codex start
+    // fun findValueByKey(key: String): Value<*>? {
+    //     ensureRootKeys()
+    //     val normalizedKey = normalizeKeyInput(key)
+    //     return configs.asSequence()
+    //         .flatMap { it.collectValuesRecursively(normalizedKey) }
+    //         .firstOrNull { it.key?.equals(normalizedKey, true) == true }
+    // }
+    // codex end
 
-    fun findValueGroupByKey(key: String): ValueGroup? {
-        ensureRootKeys()
-        val normalizedKey = normalizeKeyInput(key)
-        return configs.asSequence()
-            .flatMap { it.collectValueGroupsRecursively(normalizedKey) }
-            .firstOrNull { it.key?.equals(normalizedKey, true) == true }
-    }
+    // codex start
+    // fun findValueGroupByKey(key: String): ValueGroup? {
+    //     ensureRootKeys()
+    //     val normalizedKey = normalizeKeyInput(key)
+    //     return configs.asSequence()
+    //         .flatMap { it.collectValueGroupsRecursively(normalizedKey) }
+    //         .firstOrNull { it.key?.equals(normalizedKey, true) == true }
+    // }
+    // codex end
 
-    fun valueKeySequence(prefix: String): Sequence<String> = sequence {
-        ensureRootKeys()
-        for (valueGroup in configs) {
-            for (value in valueGroup.collectValuesRecursively(prefix)) {
-                value.key?.let { yield(it) }
-            }
-        }
-    }
+    // codex start
+    // fun valueKeySequence(prefix: String): Sequence<String> = sequence {
+    //     ensureRootKeys()
+    //     for (valueGroup in configs) {
+    //         for (value in valueGroup.collectValuesRecursively(prefix)) {
+    //             value.key?.let { yield(it) }
+    //         }
+    //     }
+    // }
+    // codex end
 
-    fun valueGroupsKeySequence(prefix: String): Sequence<String> = sequence {
-        ensureRootKeys()
-        for (valueGroup in configs) {
-            for (child in valueGroup.collectValueGroupsRecursively(prefix)) {
-                child.key?.let { yield(it) }
-            }
-        }
-    }
+    // codex start
+    // fun valueGroupsKeySequence(prefix: String): Sequence<String> = sequence {
+    //     ensureRootKeys()
+    //     for (valueGroup in configs) {
+    //         for (child in valueGroup.collectValueGroupsRecursively(prefix)) {
+    //             child.key?.let { yield(it) }
+    //         }
+    //     }
+    // }
+    // codex end
 
     /**
      * Create an config based on an existing tree
@@ -140,7 +148,9 @@ object ConfigSystem {
         return config
     }
 
-    fun remove(config: Config): Boolean = configs.remove(config)
+    // codex start
+    // fun remove(config: Config): Boolean = configs.remove(config)
+    // codex end
 
     /**
      * Create a ZIP file backup of configs
@@ -155,22 +165,24 @@ object ConfigSystem {
         groups.map { valueGroup -> valueGroup.jsonFile }.createZipArchive(zipFile)
     }
 
-    /**
-     * Restore a backup from a ZIP file to the configs
-     */
-    fun restore(fileName: String) {
-        val zipFile = File(backupFolder, "$fileName.zip")
-        check(zipFile.exists()) { "Backup file does not exist" }
-
-        // The backup holds the json files of the configs, which load straight from it
-        ZipFile(zipFile).use { zip ->
-            for (config in configs) {
-                val entry = zip.getEntry(config.jsonFile.name) ?: continue
-                deserializeValueGroup(config, zip.getInputStream(entry).bufferedReader())
-                store(config)
-            }
-        }
-    }
+    // codex start
+    // /**
+    //  * Restore a backup from a ZIP file to the configs
+    //  */
+    // fun restore(fileName: String) {
+    //     val zipFile = File(backupFolder, "$fileName.zip")
+    //     check(zipFile.exists()) { "Backup file does not exist" }
+    //
+    //     // The backup holds the json files of the configs, which load straight from it
+    //     ZipFile(zipFile).use { zip ->
+    //         for (config in configs) {
+    //             val entry = zip.getEntry(config.jsonFile.name) ?: continue
+    //             deserializeValueGroup(config, zip.getInputStream(entry).bufferedReader())
+    //             store(config)
+    //         }
+    //     }
+    // }
+    // codex end
 
     /**
      * Loads all registered configs.
@@ -248,11 +260,13 @@ object ConfigSystem {
         }
     }
 
-    /**
-     * Serialize a config to a [JsonObject].
-     */
-    fun serializeValueGroup(valueGroup: ValueGroup, gson: Gson = fileGson): JsonObject =
-        gson.toJsonTree(valueGroup, ValueGroup::class.javaObjectType) as JsonObject
+    // codex start
+    // /**
+    //  * Serialize a config to a [JsonObject].
+    //  */
+    // fun serializeValueGroup(valueGroup: ValueGroup, gson: Gson = fileGson): JsonObject =
+    //     gson.toJsonTree(valueGroup, ValueGroup::class.javaObjectType) as JsonObject
+    // codex end
 
     /**
      * Deserialize a config from a reader, and close it
@@ -352,25 +366,29 @@ object ConfigSystem {
         }
     }
 
-    private fun ensureRootKeys() {
-        for (valueGroup in configs) {
-            if (valueGroup.key == null) {
-                valueGroup.walkKeyPath()
-            }
-        }
-    }
+    // codex start
+    // private fun ensureRootKeys() {
+    //     for (valueGroup in configs) {
+    //         if (valueGroup.key == null) {
+    //             valueGroup.walkKeyPath()
+    //         }
+    //     }
+    // }
+    // codex end
 
-    private fun normalizeKeyInput(key: String): String {
-        val trimmed = key.trim()
-        if (trimmed.isBlank()) {
-            return trimmed
-        }
-        val prefix = "$KEY_PREFIX."
-        return if (trimmed.startsWith(prefix, ignoreCase = true)) {
-            trimmed
-        } else {
-            prefix + trimmed
-        }
-    }
+    // codex start
+    // private fun normalizeKeyInput(key: String): String {
+    //     val trimmed = key.trim()
+    //     if (trimmed.isBlank()) {
+    //         return trimmed
+    //     }
+    //     val prefix = "$KEY_PREFIX."
+    //     return if (trimmed.startsWith(prefix, ignoreCase = true)) {
+    //         trimmed
+    //     } else {
+    //         prefix + trimmed
+    //     }
+    // }
+    // codex end
 
 }

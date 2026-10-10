@@ -33,16 +33,17 @@ value class IntIntValuePair(@JvmField val bits: Long) {
     operator fun component2() = bits.low32()
 }
 
-@JvmInline
-value class IntFloatValuePair(@JvmField val bits: Long) {
-    constructor(left: Int, right: Float): this(longFrom32(left, right.toRawBits()))
-    inline val left get() = component1()
-    inline val right get() = component2()
-
-    operator fun component1() = bits.high32()
-    operator fun component2() = Float.fromBits(bits.low32())
-}
-
+// codex start
+// @JvmInline
+// value class IntFloatValuePair(@JvmField val bits: Long) {
+//     constructor(left: Int, right: Float): this(longFrom32(left, right.toRawBits()))
+//     inline val left get() = component1()
+//     inline val right get() = component2()
+//
+//     operator fun component1() = bits.high32()
+//     operator fun component2() = Float.fromBits(bits.low32())
+// }
+// codex end
 
 @JvmInline
 value class FloatFloatValuePair(@JvmField val bits: Long) {
@@ -54,12 +55,14 @@ value class FloatFloatValuePair(@JvmField val bits: Long) {
     operator fun component2() = Float.fromBits(bits.low32())
 }
 
-@JvmInline
-value class FloatIntValuePair(@JvmField val bits: Long) {
-    constructor(left: Float, right: Int): this(longFrom32(left.toRawBits(), right))
-    inline val left get() = component1()
-    inline val right get() = component2()
-
-    operator fun component1() = Float.fromBits(bits.high32())
-    operator fun component2() = bits.low32()
-}
+// codex start
+// @JvmInline
+// value class FloatIntValuePair(@JvmField val bits: Long) {
+//     constructor(left: Float, right: Int): this(longFrom32(left.toRawBits(), right))
+//     inline val left get() = component1()
+//     inline val right get() = component2()
+//
+//     operator fun component1() = Float.fromBits(bits.high32())
+//     operator fun component2() = bits.low32()
+// }
+// codex end

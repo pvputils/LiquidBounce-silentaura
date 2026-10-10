@@ -19,27 +19,17 @@
 
 package net.ccbluex.liquidbounce.utils.inventory
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.events.PacketEvent
-import net.ccbluex.liquidbounce.event.events.ScheduleInventoryActionEvent
 import net.ccbluex.liquidbounce.event.events.ScreenEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
-import net.ccbluex.liquidbounce.event.tickHandler
-import net.ccbluex.liquidbounce.event.waitTicks
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
-import net.ccbluex.liquidbounce.utils.client.chat
 import net.ccbluex.liquidbounce.utils.client.inGame
 import net.ccbluex.liquidbounce.utils.client.isOlderThanOrEqual1_11_1
-import net.ccbluex.liquidbounce.utils.client.logger
 import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.client.network
 import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.network.send1_11_1OpenInventory
-import net.ccbluex.liquidbounce.utils.network.sendCloseInventory
 import net.ccbluex.liquidbounce.utils.kotlin.EventPriorityConvention
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
@@ -48,9 +38,6 @@ import net.minecraft.network.protocol.game.ClientboundContainerClosePacket
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket
-import net.minecraft.world.inventory.ContainerInput
-import kotlin.math.max
-import kotlin.random.Random
 
 /**
  * Manages the inventory state and timings and schedules inventory actions
@@ -73,177 +60,179 @@ object InventoryManager : EventListener {
         get() = mc.gui.screen() is AbstractContainerScreen<*> || isInventoryOpenServerSide
 
     var isInventoryOpenServerSide = false
-        set(value) {
-            if (!field && value) {
-                onInventoryOpened()
-            }
-            field = value
-        }
-
-    var lastClickedSlot: Int = -1
-        internal set
-
-    private var recentInventoryOpen = false
-
-    /**
-     * As soon the inventory changes unexpectedly,
-     * we have to update the scheduled inventory actions
-     */
-    private var requiresUpdate = false
-
-    /**
-     * We keep running during the entire time
-     * and schedule the inventory actions
-     */
-    @Suppress("unused")
-    private val repeatingSchedulerExecutor = tickHandler {
-        // We are not in-game, so we don't need to do anything and throw away the schedule
-        if (!inGame) {
-            return@tickHandler
-        }
-
-        debugParameter("Inventory Open") { isInventoryOpen }
-        debugParameter("Inventory Open Server Side") { isInventoryOpenServerSide }
-        debugParameter("Cursor Stack") { player.containerMenu.carried }
-
-        var maximumCloseDelay = 0
-
-        var cycles = 0
-        do {
-            cycles++
-            // Safety check to prevent infinite loops
-            if (cycles > 100) {
-                chat("InventoryManager has been running for too long ($cycles cycles) on tick, stopping now. " +
-                    "Please report this issue.")
-                break
-            }
-
-            requiresUpdate = false
-
-            val event = EventManager.callEvent(ScheduleInventoryActionEvent())
-            val schedule = event.schedule
-                .filterTo(ObjectArrayList()) { actionChain ->
-                    actionChain.canPerformAction() && actionChain.actions.isNotEmpty()
-                }
-
-            // If the schedule is empty, we can break the loop
-            if (schedule.isEmpty) {
-                break
-            }
-
-            // Schedule of actions that have to be executed
-            // The schedule is sorted by
-            // 1. With Non-inventory open required actions
-            // 2. With inventory open required actions
-            schedule.sortWith(COMPARATOR_ACTION_CHAIN)
-
-            debugParameter("Schedule Size") { schedule.size }
-
-            // Handle non-inventory open actions first
-            for ((scheduleIndex, chained) in schedule.withIndex()) {
-                // Do not continue if we need to update the schedule
-                if (requiresUpdate) {
-                    break
-                }
-
-                // These are chained actions that have to be executed in order
-                // We cannot interrupt them
-                debugParameter("Schedule Index") { scheduleIndex }
-                debugParameter("Action Size") { chained.actions.size }
-                for ((index, action) in chained.actions.withIndex()) {
-                    debugParameter("Action Index") { index }
-                    val constraints = chained.inventoryConstraints
-
-                    // Update close delay maximum
-                    maximumCloseDelay = max(maximumCloseDelay, constraints.closeDelay.random())
-
-                    // First action to be executed will be the start delay
-                    if (recentInventoryOpen) {
-                        recentInventoryOpen = false
-                        waitTicks(constraints.startDelay.random())
-                        cycles = 0
-                    }
-
-                    // Handle player inventory open requirements
-                    val requiresPlayerInventory = action.requiresPlayerInventoryOpen()
-                    if (requiresPlayerInventory) {
-                        if (!isInventoryOpen) {
-                            network.send1_11_1OpenInventory()
-                            waitTicks(constraints.startDelay.random())
-                            cycles = 0
-                        }
-                    } else if (canCloseMainInventory) {
-                        // When all scheduled actions are done, we can close the inventory
-                        if (isInventoryOpen) {
-                            waitTicks(constraints.closeDelay.random())
-                            cycles = 0
-                            network.sendCloseInventory()
-                        }
-                    }
-
-                    // This should usually not happen, but we have to check it
-                    if (!chained.canPerformAction()) {
-                        logger.warn("Cannot perform action $action because it is not possible")
-                        break
-                    }
-
-                    // Check if this is the first action in the chain, which allows us to simulate a miss click
-                    // This is only possible for container-type slots and also does not make much sense when
-                    // the action is a throw action (you cannot miss-click really when throwing)
-                    if (index == 0 && action is InventoryAction.Click
-                        && constraints.missChance.random() > Random.nextInt(100)
-                        && action.actionType != ContainerInput.THROW
-                    ) {
-                        // Simulate a miss click (this is only possible for container-type slots)
-                        // TODO: Add support for inventory slots
-                        if (action.performMissClick()) {
-                            waitTicks(constraints.clickDelay.random())
-                            cycles = 0
-                        }
-                    }
-
-                    if (action is InventoryAction.CloseScreen) {
-                        waitTicks(constraints.closeDelay.random())
-                        cycles = 0
-                    }
-                    if (action.performAction()) {
-                        if (action !is InventoryAction.CloseScreen) {
-                            waitTicks(constraints.clickDelay.random())
-                            cycles = 0
-                        }
-                    }
-                }
-            }
-        } while (schedule.isNotEmpty())
-
-        // When all scheduled actions are done, we can close the inventory
-        if (isInventoryOpen && canCloseMainInventory) {
-            waitTicks(maximumCloseDelay)
-            network.sendCloseInventory()
-        }
-
-        lastClickedSlot = -1
-    }
-
-    /**
-     * Called when a click occurs. Can be tracked by listening for [ServerboundContainerClickPacket]
-     *
-     * @see net.ccbluex.liquidbounce.injection.mixins.viaversion.MixinPacketWrapper
-     */
-    @JvmStatic
-    fun onClickOccurs() {
-        // Every click will require an update
-        requiresUpdate = true
-    }
-
-    /**
-     * Called when the inventory was opened. Can be tracked by listening for [ClientboundOpenScreenPacket]
-     */
-    @JvmStatic
-    fun onInventoryOpened() {
-        recentInventoryOpen = true
-    }
-
+        // codex start
+        // set(value) {
+        //     if (!field && value) {
+        //         onInventoryOpened()
+        //     }
+        //     field = value
+        // }
+        // codex end
+    // codex start
+    // var lastClickedSlot: Int = -1
+    //     internal set
+//
+    // private var recentInventoryOpen = false
+//
+    // /**
+    //  * As soon the inventory changes unexpectedly,
+    //  * we have to update the scheduled inventory actions
+    //  */
+    // private var requiresUpdate = false
+//
+    // /**
+    //  * We keep running during the entire time
+    //  * and schedule the inventory actions
+    //  */
+    // @Suppress("unused")
+    // private val repeatingSchedulerExecutor = tickHandler {
+    //     // We are not in-game, so we don't need to do anything and throw away the schedule
+    //     if (!inGame) {
+    //         return@tickHandler
+    //     }
+//
+    //     debugParameter("Inventory Open") { isInventoryOpen }
+    //     debugParameter("Inventory Open Server Side") { isInventoryOpenServerSide }
+    //     debugParameter("Cursor Stack") { player.containerMenu.carried }
+//
+    //     var maximumCloseDelay = 0
+//
+    //     var cycles = 0
+    //     do {
+    //         cycles++
+    //         // Safety check to prevent infinite loops
+    //         if (cycles > 100) {
+    //             chat("InventoryManager has been running for too long ($cycles cycles) on tick, stopping now. " +
+    //                 "Please report this issue.")
+    //             break
+    //         }
+//
+    //         requiresUpdate = false
+//
+    //         val event = EventManager.callEvent(ScheduleInventoryActionEvent())
+    //         val schedule = event.schedule
+    //             .filterTo(ObjectArrayList()) { actionChain ->
+    //                 actionChain.canPerformAction() && actionChain.actions.isNotEmpty()
+    //             }
+//
+    //         // If the schedule is empty, we can break the loop
+    //         if (schedule.isEmpty) {
+    //             break
+    //         }
+//
+    //         // Schedule of actions that have to be executed
+    //         // The schedule is sorted by
+    //         // 1. With Non-inventory open required actions
+    //         // 2. With inventory open required actions
+    //         schedule.sortWith(COMPARATOR_ACTION_CHAIN)
+//
+    //         debugParameter("Schedule Size") { schedule.size }
+//
+    //         // Handle non-inventory open actions first
+    //         for ((scheduleIndex, chained) in schedule.withIndex()) {
+    //             // Do not continue if we need to update the schedule
+    //             if (requiresUpdate) {
+    //                 break
+    //             }
+//
+    //             // These are chained actions that have to be executed in order
+    //             // We cannot interrupt them
+    //             debugParameter("Schedule Index") { scheduleIndex }
+    //             debugParameter("Action Size") { chained.actions.size }
+    //             for ((index, action) in chained.actions.withIndex()) {
+    //                 debugParameter("Action Index") { index }
+    //                 val constraints = chained.inventoryConstraints
+//
+    //                 // Update close delay maximum
+    //                 maximumCloseDelay = max(maximumCloseDelay, constraints.closeDelay.random())
+//
+    //                 // First action to be executed will be the start delay
+    //                 if (recentInventoryOpen) {
+    //                     recentInventoryOpen = false
+    //                     waitTicks(constraints.startDelay.random())
+    //                     cycles = 0
+    //                 }
+//
+    //                 // Handle player inventory open requirements
+    //                 val requiresPlayerInventory = action.requiresPlayerInventoryOpen()
+    //                 if (requiresPlayerInventory) {
+    //                     if (!isInventoryOpen) {
+    //                         network.send1_11_1OpenInventory()
+    //                         waitTicks(constraints.startDelay.random())
+    //                         cycles = 0
+    //                     }
+    //                 } else if (canCloseMainInventory) {
+    //                     // When all scheduled actions are done, we can close the inventory
+    //                     if (isInventoryOpen) {
+    //                         waitTicks(constraints.closeDelay.random())
+    //                         cycles = 0
+    //                         network.sendCloseInventory()
+    //                     }
+    //                 }
+//
+    //                 // This should usually not happen, but we have to check it
+    //                 if (!chained.canPerformAction()) {
+    //                     logger.warn("Cannot perform action $action because it is not possible")
+    //                     break
+    //                 }
+//
+    //                 // Check if this is the first action in the chain, which allows us to simulate a miss click
+    //                 // This is only possible for container-type slots and also does not make much sense when
+    //                 // the action is a throw action (you cannot miss-click really when throwing)
+    //                 if (index == 0 && action is InventoryAction.Click
+    //                     && constraints.missChance.random() > Random.nextInt(100)
+    //                     && action.actionType != ContainerInput.THROW
+    //                 ) {
+    //                     // Simulate a miss click (this is only possible for container-type slots)
+    //                     // TODO: Add support for inventory slots
+    //                     if (action.performMissClick()) {
+    //                         waitTicks(constraints.clickDelay.random())
+    //                         cycles = 0
+    //                     }
+    //                 }
+//
+    //                 if (action is InventoryAction.CloseScreen) {
+    //                     waitTicks(constraints.closeDelay.random())
+    //                     cycles = 0
+    //                 }
+    //                 if (action.performAction()) {
+    //                     if (action !is InventoryAction.CloseScreen) {
+    //                         waitTicks(constraints.clickDelay.random())
+    //                         cycles = 0
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } while (schedule.isNotEmpty())
+//
+    //     // When all scheduled actions are done, we can close the inventory
+    //     if (isInventoryOpen && canCloseMainInventory) {
+    //         waitTicks(maximumCloseDelay)
+    //         network.sendCloseInventory()
+    //     }
+//
+    //     lastClickedSlot = -1
+    // }
+//
+    // /**
+    //  * Called when a click occurs. Can be tracked by listening for [ServerboundContainerClickPacket]
+    //  *
+    //  * @see net.ccbluex.liquidbounce.injection.mixins.viaversion.MixinPacketWrapper
+    //  */
+    // @JvmStatic
+    // fun onClickOccurs() {
+    //     // Every click will require an update
+    //     requiresUpdate = true
+    // }
+//
+    // /**
+    //  * Called when the inventory was opened. Can be tracked by listening for [ClientboundOpenScreenPacket]
+    //  */
+    // @JvmStatic
+    // fun onInventoryOpened() {
+    //     recentInventoryOpen = true
+    // }
+    // codex end
     /**
      * Listener for packets that are related to the inventory
      * to keep track of the inventory state and timings
@@ -258,7 +247,9 @@ object InventoryManager : EventListener {
 
         // If we actually send a click packet, we can reset the click chronometer
         if (packet is ServerboundContainerClickPacket) {
-            onClickOccurs()
+            // codex start
+            // onClickOccurs()
+            // codex end
 
             if (packet.containerId == 0) {
                 isInventoryOpenServerSide = true
@@ -306,7 +297,9 @@ object InventoryManager : EventListener {
                 isInventoryOpenServerSide = true
             }
 
-            onInventoryOpened()
+            // codex start
+            // onInventoryOpened()
+            // codex end
         }
     }
 
@@ -315,11 +308,12 @@ object InventoryManager : EventListener {
         isInventoryOpenServerSide = false
     }
 
-    private val COMPARATOR_ACTION_CHAIN: Comparator<InventoryAction.Chain> =
-        compareBy<InventoryAction.Chain> {
-            it.requiresInventoryOpen()
-        }.thenByDescending {
-            it.priority
-        }
-
+    // codex start
+    // private val COMPARATOR_ACTION_CHAIN: Comparator<InventoryAction.Chain> =
+    //     compareBy<InventoryAction.Chain> {
+    //         it.requiresInventoryOpen()
+    //     }.thenByDescending {
+    //         it.priority
+    //     }
+    // codex end
 }

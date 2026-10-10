@@ -24,51 +24,62 @@ import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
-import net.ccbluex.liquidbounce.utils.combat.EntityTargetClassification
+// codex start
+// import net.ccbluex.liquidbounce.utils.combat.EntityTargetClassification
+// codex end
 import net.ccbluex.liquidbounce.utils.combat.EntityTargetingInfo
 import net.ccbluex.liquidbounce.utils.kotlin.Priority
 import net.ccbluex.liquidbounce.utils.kotlin.PriorityField
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.LivingEntity
 
 @AddonApi
 @Tag("attack")
 class AttackEntityEvent(
     val entity: Entity
 ) : CancellableEvent()
-
-@Tag("entityMargin")
-class EntityMarginEvent(val entity: Entity, var margin: Float) : Event()
-
-@Tag("entityHealthUpdate")
-class EntityHealthUpdateEvent(val entity: LivingEntity, val old: Float, val new: Float, val max: Float) : Event()
+// codex start
+//
+// @Tag("entityMargin")
+// class EntityMarginEvent(val entity: Entity, var margin: Float) : Event()
+// // codex start
+// //
+// // @Tag("entityHealthUpdate")
+// // class EntityHealthUpdateEvent(val entity: LivingEntity, val old: Float, val new: Float, val max: Float) : Event()
+// // codex end
+// codex end
 
 @AddonApi
 @Tag("tagEntityEvent")
 class TagEntityEvent(val entity: Entity, var targetingInfo: EntityTargetingInfo) : Event() {
     val color: PriorityField<Color4b?> = PriorityField(null, Priority.NOT_IMPORTANT)
 
-    /**
-     * Don't start combat this target
-     */
-    fun dontTarget() {
-        if (this.targetingInfo.classification == EntityTargetClassification.TARGET) {
-            this.targetingInfo = this.targetingInfo.copy(classification = EntityTargetClassification.INTERESTING)
-        }
-    }
+    // codex start
+    // /**
+    //  * Don't start combat this target
+    //  */
+    // fun dontTarget() {
+    //     if (this.targetingInfo.classification == EntityTargetClassification.TARGET) {
+    //         this.targetingInfo = this.targetingInfo.copy(classification = EntityTargetClassification.INTERESTING)
+    //     }
+    // }
+    // codex end
 
-    /**
-     * Fully ignore that target
-     */
-    fun ignore() {
-        this.targetingInfo = targetingInfo.copy(classification = EntityTargetClassification.IGNORED)
-    }
+    // codex start
+    // /**
+    //  * Fully ignore that target
+    //  */
+    // fun ignore() {
+    //     this.targetingInfo = targetingInfo.copy(classification = EntityTargetClassification.IGNORED)
+    // }
+    // codex end
 
     fun assumeFriend() {
         this.targetingInfo = targetingInfo.copy(isFriend = true)
     }
 
-    fun color(col: Color4b, priority: Priority) {
-        this.color.trySet(col, priority)
-    }
+    // codex start
+    // fun color(col: Color4b, priority: Priority) {
+    //     this.color.trySet(col, priority)
+    // }
+    // codex end
 }

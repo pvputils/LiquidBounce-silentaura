@@ -55,10 +55,12 @@ enum class ExemptBoxPart(override val tag: String) : Tagged, ExemptPoint {
         }
     },;
 
-    /**
-     * Check if this part of the box is higher than the other by the index of the enum.
-     * So please DO NOT change the order of the enum.
-     */
-    fun isHigherThan(other: ExemptBoxPart) = entries.indexOf(this) < entries.indexOf(other)
+    // codex start
+    // /**
+    //  * Check if this part of the box is higher than the other by the index of the enum.
+    //  * So please DO NOT change the order of the enum.
+    //  */
+    // fun isHigherThan(other: ExemptBoxPart) = entries.indexOf(this) < entries.indexOf(other)
+    // codex end
 
 }

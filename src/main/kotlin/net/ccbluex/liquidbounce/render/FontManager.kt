@@ -20,20 +20,30 @@ package net.ccbluex.liquidbounce.render
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+// codex start
+// import kotlinx.coroutines.Dispatchers
+// codex end
+// codex start
+// import kotlinx.coroutines.withContext
+// codex end
 import net.ccbluex.liquidbounce.api.core.AsyncLazy
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.font.FontGlyphPageManager
 import net.ccbluex.liquidbounce.utils.client.clientLogger
-import net.ccbluex.liquidbounce.utils.io.createFont
+// codex start
+// import net.ccbluex.liquidbounce.utils.io.createFont
+// codex end
 import net.minecraft.util.Util
 import net.minecraft.util.Util.OS.LINUX
 import net.minecraft.util.Util.OS.OSX
 import net.minecraft.util.Util.OS.WINDOWS
 import java.awt.Font
-import java.io.File
-import java.io.InputStream
+// codex start
+// import java.io.File
+// codex end
+// codex start
+// import java.io.InputStream
+// codex end
 
 @AddonApi
 object FontManager {
@@ -86,11 +96,13 @@ object FontManager {
         put(COMMON_FONT.name, COMMON_FONT)
     }
 
-    private suspend fun addFontFace(fontFace: FontFace) = withContext(Dispatchers.Main) {
-        if (fontFaces.put(fontFace.name, fontFace) != null) {
-            logger.warn("FontFace ${fontFace.name} already exists, previous one has been replaced")
-        }
-    }
+    // codex start
+    // private suspend fun addFontFace(fontFace: FontFace) = withContext(Dispatchers.Main) {
+    //     if (fontFaces.put(fontFace.name, fontFace) != null) {
+    //         logger.warn("FontFace ${fontFace.name} already exists, previous one has been replaced")
+    //     }
+    // }
+    // codex end
 
     /**
      * The active font renderer that all text rendering will be based on.
@@ -136,41 +148,45 @@ object FontManager {
         _glyphManager = null
     }
 
-    internal suspend fun queueFontFromFile(file: File) {
-        try {
-            if (!file.exists()) {
-                logger.warn("Font file ${file.absolutePath} does not exist.")
-                return
-            }
+    // codex start
+    // internal suspend fun queueFontFromFile(file: File) {
+    //     try {
+    //         if (!file.exists()) {
+    //             logger.warn("Font file ${file.absolutePath} does not exist.")
+    //             return
+    //         }
+    //
+    //         if (!file.extension.equals("ttf", ignoreCase = true)) {
+    //             logger.warn("Font file ${file.absolutePath} is not a TrueType font.")
+    //             return
+    //         }
+    //
+    //         if (fontFaces.values.any { it.file == file }) {
+    //             logger.warn("Font file ${file.absolutePath} is already loaded.")
+    //             return
+    //         }
+    //
+    //         val font = file.createFont().deriveFont(DEFAULT_FONT_SIZE)
+    //
+    //         // Name will consist of the font name and family. This makes it possible
+    //         // to select the different styles of the font.
+    //         val fontFace = FontFace(font.name, DEFAULT_FONT_SIZE, file)
+    //         fontFace.fillDerivedStyles(font)
+    //         addFontFace(fontFace)
+    //     } catch (e: Exception) {
+    //         logger.warn("Failed to load font from file ${file.absolutePath}", e)
+    //     }
+    // }
+    // codex end
 
-            if (!file.extension.equals("ttf", ignoreCase = true)) {
-                logger.warn("Font file ${file.absolutePath} is not a TrueType font.")
-                return
-            }
-
-            if (fontFaces.values.any { it.file == file }) {
-                logger.warn("Font file ${file.absolutePath} is already loaded.")
-                return
-            }
-
-            val font = file.createFont().deriveFont(DEFAULT_FONT_SIZE)
-
-            // Name will consist of the font name and family. This makes it possible
-            // to select the different styles of the font.
-            val fontFace = FontFace(font.name, DEFAULT_FONT_SIZE, file)
-            fontFace.fillDerivedStyles(font)
-            addFontFace(fontFace)
-        } catch (e: Exception) {
-            logger.warn("Failed to load font from file ${file.absolutePath}", e)
-        }
-    }
-
-    suspend fun queueFontFromStream(stream: InputStream) {
-        val font = stream.createFont().deriveFont(DEFAULT_FONT_SIZE)
-        val fontFace = FontFace(font.name, DEFAULT_FONT_SIZE, file = null)
-        fontFace.fillDerivedStyles(font)
-        addFontFace(fontFace)
-    }
+    // codex start
+    // suspend fun queueFontFromStream(stream: InputStream) {
+    //     val font = stream.createFont().deriveFont(DEFAULT_FONT_SIZE)
+    //     val fontFace = FontFace(font.name, DEFAULT_FONT_SIZE, file = null)
+    //     fontFace.fillDerivedStyles(font)
+    //     addFontFace(fontFace)
+    // }
+    // codex end
 
     private suspend fun systemFont(name: String): FontFace {
         val fontFace = FontFace(name, DEFAULT_FONT_SIZE)

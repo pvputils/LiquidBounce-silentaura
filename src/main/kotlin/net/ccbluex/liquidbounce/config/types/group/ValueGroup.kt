@@ -37,25 +37,35 @@ import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.Vec3Value
 import net.ccbluex.liquidbounce.config.types.list.ChoiceListValue
-import net.ccbluex.liquidbounce.config.types.list.ItemListValue
+// codex start
+// import net.ccbluex.liquidbounce.config.types.list.ItemListValue
+// codex end
 import net.ccbluex.liquidbounce.config.types.list.ListValue
 import net.ccbluex.liquidbounce.config.types.list.MultiChoiceListValue
 import net.ccbluex.liquidbounce.config.types.list.MutableListValue
 import net.ccbluex.liquidbounce.config.types.list.RegistryListValue
-import net.ccbluex.liquidbounce.config.types.list.RegistryMutableListValue
+// codex start
+// import net.ccbluex.liquidbounce.config.types.list.RegistryMutableListValue
+// codex end
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.client.logger
 import net.ccbluex.liquidbounce.utils.input.InputBind
-import net.ccbluex.liquidbounce.utils.math.Easing
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.Easing
+// codex end
 import net.ccbluex.liquidbounce.utils.text.toLowerCamelCase
 import net.minecraft.core.Vec3i
 import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.world.effect.MobEffect
-import net.minecraft.world.entity.EntityType
+// codex start
+// import net.minecraft.world.effect.MobEffect
+// codex end
+// codex start
+// import net.minecraft.world.entity.EntityType
+// codex end
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.phys.Vec3
@@ -255,19 +265,23 @@ open class ValueGroup @JvmOverloads constructor(
         return valueGroup
     }
 
-    fun <T : ValueGroup> treeAll(vararg valueGroups: T) {
-        valueGroups.forEach(this::tree)
-    }
+    // codex start
+    // fun <T : ValueGroup> treeAll(vararg valueGroups: T) {
+    //     valueGroups.forEach(this::tree)
+    // }
+    // codex end
 
-    fun <T : ValueGroup> drop(valueGroup: T): T {
-        require(valueGroup.base === this) {
-            "ValueGroup '${valueGroup.name}' is not a child of '${this.name}'."
-        }
-
-        inner.remove(valueGroup)
-        valueGroup.base = null
-        return valueGroup
-    }
+    // codex start
+    // fun <T : ValueGroup> drop(valueGroup: T): T {
+    //     require(valueGroup.base === this) {
+    //         "ValueGroup '${valueGroup.name}' is not a child of '${this.name}'."
+    //     }
+    //
+    //     inner.remove(valueGroup)
+    //     valueGroup.base = null
+    //     return valueGroup
+    // }
+    // codex end
 
     fun <T : Any> value(
         name: String,
@@ -304,20 +318,24 @@ open class ValueGroup @JvmOverloads constructor(
         valueType: ValueType,
     ) = mutableList(name, defaultValue, valueType, E::class.java)
 
-    fun <T : MutableSet<E>, E> itemList(
-        name: String,
-        defaultValue: T,
-        items: Set<ItemListValue.NamedItem<E>>,
-        valueType: ValueType,
-        innerType: Class<E>,
-    ) = value(ItemListValue(name, defaultValue, items, valueType, innerType))
+    // codex start
+    // fun <T : MutableSet<E>, E> itemList(
+    //     name: String,
+    //     defaultValue: T,
+    //     items: Set<ItemListValue.NamedItem<E>>,
+    //     valueType: ValueType,
+    //     innerType: Class<E>,
+    // ) = value(ItemListValue(name, defaultValue, items, valueType, innerType))
+    // codex end
 
-    inline fun <T : MutableSet<E>, reified E> itemList(
-        name: String,
-        defaultValue: T,
-        items: Set<ItemListValue.NamedItem<E>>,
-        valueType: ValueType,
-    ) = itemList(name, defaultValue, items, valueType, E::class.java)
+    // codex start
+    // inline fun <T : MutableSet<E>, reified E> itemList(
+    //     name: String,
+    //     defaultValue: T,
+    //     items: Set<ItemListValue.NamedItem<E>>,
+    //     valueType: ValueType,
+    // ) = itemList(name, defaultValue, items, valueType, E::class.java)
+    // codex end
 
     fun <T : SequencedSet<E>, E> registryList(
         name: String,
@@ -332,18 +350,22 @@ open class ValueGroup @JvmOverloads constructor(
         valueType: ValueType,
     ) = registryList(name, defaultValue, valueType, E::class.java)
 
-    fun <T : MutableList<E>, E> registryMutableList(
-        name: String,
-        defaultValue: T,
-        valueType: ValueType,
-        innerType: Class<E>,
-    ) = value(RegistryMutableListValue(name, defaultValue, valueType, innerType))
+    // codex start
+    // fun <T : MutableList<E>, E> registryMutableList(
+    //     name: String,
+    //     defaultValue: T,
+    //     valueType: ValueType,
+    //     innerType: Class<E>,
+    // ) = value(RegistryMutableListValue(name, defaultValue, valueType, innerType))
+    // codex end
 
-    inline fun <T : MutableList<E>, reified E> registryMutableList(
-        name: String,
-        defaultValue: T,
-        valueType: ValueType,
-    ) = registryMutableList(name, defaultValue, valueType, E::class.java)
+    // codex start
+    // inline fun <T : MutableList<E>, reified E> registryMutableList(
+    //     name: String,
+    //     defaultValue: T,
+    //     valueType: ValueType,
+    // ) = registryMutableList(name, defaultValue, valueType, E::class.java)
+    // codex end
 
     private fun <T : Any> rangedValue(
         name: String,
@@ -431,7 +453,9 @@ open class ValueGroup @JvmOverloads constructor(
 
     fun bind(name: String, default: InputBind) = value(BindValue(name, defaultValue = default))
 
-    fun key(name: String, default: Int) = key(name, InputConstants.Type.KEYBOARD.getOrCreate(default))
+    // codex start
+    // fun key(name: String, default: Int) = key(name, InputConstants.Type.KEYBOARD.getOrCreate(default))
+    // codex end
 
     @JvmOverloads
     fun key(name: String, default: InputConstants.Key = InputConstants.UNKNOWN) =
@@ -444,14 +468,20 @@ open class ValueGroup @JvmOverloads constructor(
     fun <C : MutableCollection<String>> textList(name: String, default: C) =
         mutableList<C, String>(name, default, ValueType.TEXT)
 
-    fun <C : MutableCollection<Regex>> regexList(name: String, default: C) =
-        mutableList<C, Regex>(name, default, ValueType.TEXT)
+    // codex start
+    // fun <C : MutableCollection<Regex>> regexList(name: String, default: C) =
+    //     mutableList<C, Regex>(name, default, ValueType.TEXT)
+    // codex end
 
-    fun easing(name: String, default: Easing) = enumChoice(name, default)
+    // codex start
+    // fun easing(name: String, default: Easing) = enumChoice(name, default)
+    // codex end
 
     fun color(name: String, default: Color4b) = value(name, default, ValueType.COLOR)
 
-    fun block(name: String, default: Block) = value(name, default, ValueType.BLOCK)
+    // codex start
+    // fun block(name: String, default: Block) = value(name, default, ValueType.BLOCK)
+    // codex end
 
     fun vec2f(name: String, default: Vector2fc) = value(name, default, ValueType.VECTOR2_F)
 
@@ -474,31 +504,47 @@ open class ValueGroup @JvmOverloads constructor(
     fun <C : SequencedSet<Block>> blocks(name: String, default: C) =
         registryList(name, default, ValueType.BLOCK)
 
-    fun item(name: String, default: Item) = value(name, default, ValueType.ITEM)
+    // codex start
+    // fun item(name: String, default: Item) = value(name, default, ValueType.ITEM)
+    // codex end
 
     fun <C : SequencedSet<Item>> items(name: String, default: C) =
         registryList(name, default, ValueType.ITEM)
 
-    fun <C : MutableList<Item>> itemList(name: String, default: C) =
-        registryMutableList(name, default, ValueType.ITEM)
+    // codex start
+    // fun <C : MutableList<Item>> itemList(name: String, default: C) =
+    //     registryMutableList(name, default, ValueType.ITEM)
+    // codex end
 
-    fun <C : SequencedSet<SoundEvent>> sounds(name: String, default: C) =
-        registryList(name, default, ValueType.SOUND_EVENT)
+    // codex start
+    // fun <C : SequencedSet<SoundEvent>> sounds(name: String, default: C) =
+    //     registryList(name, default, ValueType.SOUND_EVENT)
+    // codex end
 
-    fun <C : SequencedSet<MobEffect>> mobEffects(name: String, default: C) =
-        registryList(name, default, ValueType.MOB_EFFECT)
+    // codex start
+    // fun <C : SequencedSet<MobEffect>> mobEffects(name: String, default: C) =
+    //     registryList(name, default, ValueType.MOB_EFFECT)
+    // codex end
 
-    fun <C : SequencedSet<Identifier>> enchantments(name: String, default: C) =
-        registryList(name, default, ValueType.ENCHANTMENT)
+    // codex start
+    // fun <C : SequencedSet<Identifier>> enchantments(name: String, default: C) =
+    //     registryList(name, default, ValueType.ENCHANTMENT)
+    // codex end
 
-    fun <C : SequencedSet<Identifier>> c2sPackets(name: String, default: C) =
-        registryList(name, default, ValueType.C2S_PACKET)
+    // codex start
+    // fun <C : SequencedSet<Identifier>> c2sPackets(name: String, default: C) =
+    //     registryList(name, default, ValueType.C2S_PACKET)
+    // codex end
 
-    fun <C : SequencedSet<Identifier>> s2cPackets(name: String, default: C) =
-        registryList(name, default, ValueType.S2C_PACKET)
+    // codex start
+    // fun <C : SequencedSet<Identifier>> s2cPackets(name: String, default: C) =
+    //     registryList(name, default, ValueType.S2C_PACKET)
+    // codex end
 
-    fun <C : SequencedSet<EntityType<*>>> entityTypes(name: String, default: C) =
-        registryList(name, default, ValueType.ENTITY_TYPE)
+    // codex start
+    // fun <C : SequencedSet<EntityType<*>>> entityTypes(name: String, default: C) =
+    //     registryList(name, default, ValueType.ENTITY_TYPE)
+    // codex end
 
     @Suppress("LongParameterList")
     fun curve(
@@ -596,23 +642,25 @@ open class ValueGroup @JvmOverloads constructor(
         fun ValueGroup.build()
     }
 
-    protected fun <T : Mode> modes(
-        eventListener: EventListener?,
-        name: String,
-        active: T,
-        modes: Array<T>,
-    ): ModeValueGroup<T> {
-        return modes(eventListener, name, { modes ->
-            val idx = modes.indexOf(active)
-
-            check(idx != -1) {
-                "The active choice $active is not contained within the choice array" +
-                    " (${modes.joinToString { it.name }})"
-            }
-
-            idx
-        }) { modes }
-    }
+    // codex start
+    // protected fun <T : Mode> modes(
+    //     eventListener: EventListener?,
+    //     name: String,
+    //     active: T,
+    //     modes: Array<T>,
+    // ): ModeValueGroup<T> {
+    //     return modes(eventListener, name, { modes ->
+    //         val idx = modes.indexOf(active)
+    //
+    //         check(idx != -1) {
+    //             "The active choice $active is not contained within the choice array" +
+    //                 " (${modes.joinToString { it.name }})"
+    //         }
+    //
+    //         idx
+    //     }) { modes }
+    // }
+    // codex end
 
     fun <T : Mode> modes(
         eventListener: EventListener?,

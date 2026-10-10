@@ -23,7 +23,9 @@ package net.ccbluex.liquidbounce.utils.math
 
 import net.minecraft.util.Mth
 import org.joml.Vector2f
-import java.math.RoundingMode
+// codex start
+// import java.math.RoundingMode
+// codex end
 
 inline fun Float.toRadians() = this * Mth.DEG_TO_RAD
 inline fun Double.toRadians() = this * Mth.DEG_TO_RAD
@@ -50,21 +52,25 @@ inline fun Float.fma(a: Float, b: Float) = Math.fma(a, b, this)
  */
 inline fun Double.fma(a: Double, b: Double) = Math.fma(a, b, this)
 
-/**
- * Rounds the given number to the specified decimal place (the first by default).
- * For additional info see [RoundingMode#HALF_UP].
- *
- * For example ```roundToNDecimalPlaces(1234.567,decimalPlaces=1)``` will
- * return ```1234.6```.
- *
- * @see https://stackoverflow.com/a/2808648/9140494
- * @return The rounded value
- */
-fun Double.roundToDecimalPlaces(decimalPlaces: Int = 1): Double =
-    toBigDecimal().setScale(decimalPlaces, RoundingMode.HALF_UP).toDouble()
+// codex start
+// /**
+//  * Rounds the given number to the specified decimal place (the first by default).
+//  * For additional info see [RoundingMode#HALF_UP].
+//  *
+//  * For example ```roundToNDecimalPlaces(1234.567,decimalPlaces=1)``` will
+//  * return ```1234.6```.
+//  *
+//  * @see https://stackoverflow.com/a/2808648/9140494
+//  * @return The rounded value
+//  */
+// fun Double.roundToDecimalPlaces(decimalPlaces: Int = 1): Double =
+//     toBigDecimal().setScale(decimalPlaces, RoundingMode.HALF_UP).toDouble()
+// codex end
 
-fun Float.roundToDecimalPlaces(decimalPlaces: Int = 1): Float =
-    toBigDecimal().setScale(decimalPlaces, RoundingMode.HALF_UP).toFloat()
+// codex start
+// fun Float.roundToDecimalPlaces(decimalPlaces: Int = 1): Float =
+//     toBigDecimal().setScale(decimalPlaces, RoundingMode.HALF_UP).toFloat()
+// codex end
 
 inline infix fun Float.vector2f(other: Float) = Vector2f(this, other)
 

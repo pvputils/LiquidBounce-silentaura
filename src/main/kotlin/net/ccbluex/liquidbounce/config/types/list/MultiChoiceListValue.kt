@@ -23,7 +23,6 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.list.Tagged.Companion.makeLookupTable
@@ -77,7 +76,7 @@ class MultiChoiceListValue<T : Tagged>(
         value.retainAll(choices)
     }
 
-    @Exclude @ProtocolExclude
+    @Exclude //codex (@ProtocolExclude)
     private val choiceByName = choices.makeLookupTable()
 
     override fun deserializeFrom(gson: Gson, element: JsonElement) {

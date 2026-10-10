@@ -20,26 +20,42 @@
 package net.ccbluex.liquidbounce.utils.aiming.utils
 
 import net.ccbluex.fastutil.mapToArray
-import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleProjectileAimbot
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
-import net.ccbluex.liquidbounce.render.engine.type.Color4b
-import net.ccbluex.liquidbounce.utils.client.world
+// codex start
+// import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleProjectileAimbot
+// import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
+// import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugGeometry
+// import net.ccbluex.liquidbounce.render.engine.type.Color4b
+// import net.ccbluex.liquidbounce.utils.client.world
+// codex end
 import net.ccbluex.liquidbounce.utils.math.add
 import net.ccbluex.liquidbounce.utils.math.vertices
-import net.ccbluex.liquidbounce.utils.math.firstHit
-import net.ccbluex.liquidbounce.utils.math.fma
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.firstHit
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.fma
+// codex end
 import net.ccbluex.liquidbounce.utils.math.geometry.Line
 import net.ccbluex.liquidbounce.utils.math.geometry.NormalizedPlane
 import net.ccbluex.liquidbounce.utils.math.geometry.PlaneSection
 import net.ccbluex.liquidbounce.utils.math.minus
 import net.ccbluex.liquidbounce.utils.math.toVec3d
-import net.ccbluex.liquidbounce.utils.math.withLength
-import net.minecraft.world.entity.projectile.arrow.Arrow
-import net.minecraft.world.item.Items
-import net.minecraft.world.level.ClipContext
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.withLength
+// codex end
+// codex start
+// import net.minecraft.world.entity.projectile.arrow.Arrow
+// codex end
+// codex start
+// import net.minecraft.world.item.Items
+// codex end
+// codex start
+// import net.minecraft.world.level.ClipContext
+// codex end
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.HitResult
+// codex start
+// import net.minecraft.world.phys.HitResult
+// codex end
 import net.minecraft.world.phys.Vec3
 import org.joml.Matrix3f
 import org.joml.Vector3f
@@ -167,59 +183,61 @@ inline fun projectPointsOnBox(
  * @param visibilityPredicate An optional predicate to determine if a given point is visible
  * @return the best visible spot found or `null`
  */
-fun findVisiblePointFromVirtualEye(
-    virtualEyes: Vec3,
-    box: AABB,
-    rangeToTest: Double,
-    visibilityPredicate: VisibilityPredicate = ArrowVisibilityPredicate,
-): Vec3? {
-    val points = projectPointsOnBox(virtualEyes, box) ?: return null
-
-    ModuleProjectileAimbot.debugGeometry("points") {
-        ModuleDebug.DebugCollection(points.map { ModuleDebug.DebuggedPoint(it, Color4b.BLUE, 0.01) })
-    }
-
-    val rays = ArrayList<ModuleDebug.DebuggedGeometry>()
-
-    val center = box.center
-    points.sortBy { it.distanceToSqr(center) }
-
-    for (spot in points) {
-        val vecFromEyes = spot - virtualEyes
-        val raycastTarget = virtualEyes.fma(2.0, vecFromEyes)
-        val spotOnBox = box.firstHit(virtualEyes, raycastTarget) ?: continue
-
-        val rayStart = spotOnBox - vecFromEyes.withLength(rangeToTest)
-
-        val visible = visibilityPredicate.isVisible(rayStart, spotOnBox)
-
-        rays.add(ModuleDebug.DebuggedLineSegment(rayStart, spotOnBox, if (visible) Color4b.GREEN else Color4b.RED))
-
-        if (visible) {
-            ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
-            return spotOnBox
-        }
-    }
-
-    ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
-
-    return null
-}
-
-object ArrowVisibilityPredicate : VisibilityPredicate {
-    override fun isVisible(eyesPos: Vec3, targetSpot: Vec3): Boolean {
-        val arrowEntity = Arrow(
-            world, eyesPos.x, eyesPos.y, eyesPos.z, Items.ARROW.defaultInstance,
-            null)
-
-        return world.clip(
-            ClipContext(
-                eyesPos,
-                targetSpot,
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE,
-                arrowEntity
-            )
-        ).type == HitResult.Type.MISS
-    }
-}
+// codex start
+// fun findVisiblePointFromVirtualEye(
+//     virtualEyes: Vec3,
+//     box: AABB,
+//     rangeToTest: Double,
+//     visibilityPredicate: VisibilityPredicate = ArrowVisibilityPredicate,
+// ): Vec3? {
+//     val points = projectPointsOnBox(virtualEyes, box) ?: return null
+//
+//     ModuleProjectileAimbot.debugGeometry("points") {
+//         ModuleDebug.DebugCollection(points.map { ModuleDebug.DebuggedPoint(it, Color4b.BLUE, 0.01) })
+//     }
+//
+//     val rays = ArrayList<ModuleDebug.DebuggedGeometry>()
+//
+//     val center = box.center
+//     points.sortBy { it.distanceToSqr(center) }
+//
+//     for (spot in points) {
+//         val vecFromEyes = spot - virtualEyes
+//         val raycastTarget = virtualEyes.fma(2.0, vecFromEyes)
+//         val spotOnBox = box.firstHit(virtualEyes, raycastTarget) ?: continue
+//
+//         val rayStart = spotOnBox - vecFromEyes.withLength(rangeToTest)
+//
+//         val visible = visibilityPredicate.isVisible(rayStart, spotOnBox)
+//
+//         rays.add(ModuleDebug.DebuggedLineSegment(rayStart, spotOnBox, if (visible) Color4b.GREEN else Color4b.RED))
+//
+//         if (visible) {
+//             ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
+//             return spotOnBox
+//         }
+//     }
+//
+//     ModuleProjectileAimbot.debugGeometry("rays") { ModuleDebug.DebugCollection(rays) }
+//
+//     return null
+// }
+//
+// object ArrowVisibilityPredicate : VisibilityPredicate {
+//     override fun isVisible(eyesPos: Vec3, targetSpot: Vec3): Boolean {
+//         val arrowEntity = Arrow(
+//             world, eyesPos.x, eyesPos.y, eyesPos.z, Items.ARROW.defaultInstance,
+//             null)
+//
+//         return world.clip(
+//             ClipContext(
+//                 eyesPos,
+//                 targetSpot,
+//                 ClipContext.Block.COLLIDER,
+//                 ClipContext.Fluid.NONE,
+//                 arrowEntity
+//             )
+//         ).type == HitResult.Type.MISS
+//     }
+// }
+// codex end

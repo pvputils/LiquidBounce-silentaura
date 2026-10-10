@@ -21,21 +21,25 @@ package net.ccbluex.liquidbounce.event.events
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.ccbluex.liquidbounce.annotations.Tag
-import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.integration.interop.protocol.event.WebSocketEvent
 import net.minecraft.client.gui.screens.Screen
-
-@Tag("windowResize")
-class WindowResizeEvent(val width: Int, val height: Int) : Event()
-
-@Tag("frameBufferResize")
-class FramebufferResizeEvent(val width: Int, val height: Int) : Event()
-
-@AddonApi
-@Tag("windowTitle")
-class WindowTitleEvent(val title: StringBuilder) : Event()
+// codex start
+//
+// @Tag("windowResize")
+// class WindowResizeEvent(val width: Int, val height: Int) : Event()
+// codex end
+// codex start
+//
+// @Tag("frameBufferResize")
+// class FramebufferResizeEvent(val width: Int, val height: Int) : Event()
+// codex end
+// codex start
+//
+// @AddonApi
+// @Tag("windowTitle")
+// class WindowTitleEvent(val title: StringBuilder) : Event()
+// codex end
 
 @AddonApi
 @Tag("mouseButton")
@@ -45,7 +49,7 @@ class MouseButtonEvent(
     val action: Int,
     val mods: Int,
     val screen: Screen? = null
-) : Event(), WebSocketEvent {
+) : Event() { //codex (, WebSocketEvent)
     val isPressed: Boolean get() = action == InputConstants.PRESS
     val isReleased: Boolean get() = action == InputConstants.RELEASE
 
@@ -57,15 +61,21 @@ class MouseButtonEvent(
     val isMiddleClick: Boolean get() = isPressed && isMiddleButton
     val isRightClick: Boolean get() = isPressed && isRightButton
 }
-
-@Tag("mouseScroll")
-class MouseScrollEvent(val horizontal: Double, val vertical: Double) : Event()
-
-@Tag("mouseScrollInHotbar")
-class MouseScrollInHotbarEvent(val speed: Int) : CancellableEvent()
-
-@Tag("mouseCursor")
-class MouseCursorEvent(val x: Double, val y: Double) : Event()
+// codex start
+//
+// @Tag("mouseScroll")
+// class MouseScrollEvent(val horizontal: Double, val vertical: Double) : Event()
+// codex end
+// codex start
+//
+// @Tag("mouseScrollInHotbar")
+// class MouseScrollInHotbarEvent(val speed: Int) : CancellableEvent()
+// // codex start
+// //
+// // @Tag("mouseCursor")
+// // class MouseCursorEvent(val x: Double, val y: Double) : Event()
+// // codex end
+// codex end
 
 @AddonApi
 @Tag("keyboardKey")
@@ -76,11 +86,13 @@ class KeyboardKeyEvent(
     val action: Int,
     val mods: Int,
     val screen: Screen? = null
-) : Event(), WebSocketEvent {
+) : Event() { //codex (, WebSocketEvent)
     val isPressed: Boolean get() = action == InputConstants.PRESS
     val isReleased: Boolean get() = action == InputConstants.RELEASE
     val isRepeat: Boolean get() = action == InputConstants.REPEAT
 }
-
-@Tag("keyboardChar")
-class KeyboardCharEvent(val codePoint: Int) : Event(), WebSocketEvent
+// codex start
+//
+// @Tag("keyboardChar")
+// class KeyboardCharEvent(val codePoint: Int) : Event(), WebSocketEvent
+// codex end

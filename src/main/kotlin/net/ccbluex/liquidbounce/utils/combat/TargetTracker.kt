@@ -56,36 +56,42 @@ open class TargetTracker(
 
     var target: LivingEntity? = null
 
-    fun selectFirst(predicate: Predicate<LivingEntity>? = null): LivingEntity? {
-        val enemies = targets()
-        val selected = if (predicate != null) enemies.firstOrNull(predicate::test) else enemies.firstOrNull()
-        return selected.also { this.target = it }
-    }
+    // codex start
+    // fun selectFirst(predicate: Predicate<LivingEntity>? = null): LivingEntity? {
+    //     val enemies = targets()
+    //     val selected = if (predicate != null) enemies.firstOrNull(predicate::test) else enemies.firstOrNull()
+    //     return selected.also { this.target = it }
+    // }
+    // codex end
 
-    fun <R> select(evaluator: (LivingEntity) -> R): R? {
-        for (enemy in targets()) {
-            val value = evaluator(enemy)
-            if (value != null) {
-                target = enemy
-                return value
-            }
-        }
-
-        reset()
-        return null
-    }
+    // codex start
+    // fun <R> select(evaluator: (LivingEntity) -> R): R? {
+    //     for (enemy in targets()) {
+    //         val value = evaluator(enemy)
+    //         if (value != null) {
+    //             target = enemy
+    //             return value
+    //         }
+    //     }
+    //
+    //     reset()
+    //     return null
+    // }
+    // codex end
 
     fun reset() {
         target = null
     }
 
-    fun validate(predicate: Predicate<LivingEntity>? = null) {
-        val target = target ?: return
-
-        if (!validate(target) || predicate != null && !predicate.test(target)) {
-            reset()
-        }
-    }
+    // codex start
+    // fun validate(predicate: Predicate<LivingEntity>? = null) {
+    //     val target = target ?: return
+    //
+    //     if (!validate(target) || predicate != null && !predicate.test(target)) {
+    //         reset()
+    //     }
+    // }
+    // codex end
 }
 
 open class TargetSelector(
@@ -114,12 +120,14 @@ open class TargetSelector(
 
     private var comparator: Comparator<in LivingEntity> = TargetPriority.TYPE
 
-    /**
-     * Counts available targets.
-     */
-    fun countTargets(): Int = world.entitiesForRendering().count { entity ->
-        entity is LivingEntity && validate(entity)
-    }
+    // codex start
+    // /**
+    //  * Counts available targets.
+    //  */
+    // fun countTargets(): Int = world.entitiesForRendering().count { entity ->
+    //     entity is LivingEntity && validate(entity)
+    // }
+    // codex end
 
     /**
      * Update should be called to always pick the best target out of the current world context

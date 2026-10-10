@@ -27,10 +27,12 @@ object RenderingDebug : DebuggedOwner {
     var renderPassCount = 0
         private set
 
-    @JvmStatic
-    fun increaseRenderPassCount() {
-        renderPassCount++
-    }
+    // codex start
+    // @JvmStatic
+    // fun increaseRenderPassCount() {
+    //     renderPassCount++
+    // }
+    // codex end
 
     @JvmStatic
     fun flipFrame() {

@@ -29,25 +29,21 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.RenderDrawKey
 import net.ccbluex.liquidbounce.render.mesh.BatchCollector
 import net.ccbluex.liquidbounce.render.mesh.MeshBuildScope
-import net.ccbluex.liquidbounce.utils.collection.Pools
 import net.minecraft.client.Camera
-import net.minecraft.client.gui.Font
-import net.minecraft.client.renderer.SubmitNodeStorage
-import net.minecraft.client.renderer.feature.TextFeatureRenderer
 import net.minecraft.client.renderer.texture.AbstractTexture
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
-import net.minecraft.util.FormattedCharSequence
-import org.joml.Matrix4f
 
-inline fun <T> usePoseStack(block: PoseStack.() -> T): T {
-    val matrices = Pools.MatStack.borrow()
-    try {
-        return block(matrices)
-    } finally {
-        Pools.MatStack.recycle(matrices)
-    }
-}
+// codex start
+// inline fun <T> usePoseStack(block: PoseStack.() -> T): T {
+//     val matrices = Pools.MatStack.borrow()
+//     try {
+//         return block(matrices)
+//     } finally {
+//         Pools.MatStack.recycle(matrices)
+//     }
+// }
+// codex end
 
 inline fun PoseStack.withPush(block: PoseStack.() -> Unit) {
     pushPose()
@@ -112,30 +108,32 @@ class WorldRenderEnvironment internal constructor(
 /**
  * @see SubmitNodeStorage.submitText
  */
-fun SubmitNodeStorage.submitTextAlwaysOnTop(
-    poseStack: PoseStack,
-    x: Float,
-    y: Float,
-    string: FormattedCharSequence,
-    dropShadow: Boolean,
-    displayMode: Font.DisplayMode,
-    lightCoords: Int,
-    color: Int,
-    backgroundColor: Int,
-    outlineColor: Int,
-) = this.seeThrough().submit(
-    TextFeatureRenderer.Submit(
-        Matrix4f(poseStack.last().pose()),
-        displayMode,
-        lightCoords,
-        TextFeatureRenderer.Content.Text(
-            x,
-            y,
-            string,
-            dropShadow,
-            color,
-            backgroundColor,
-            outlineColor,
-        )
-    )
-)
+// codex start
+// fun SubmitNodeStorage.submitTextAlwaysOnTop(
+//     poseStack: PoseStack,
+//     x: Float,
+//     y: Float,
+//     string: FormattedCharSequence,
+//     dropShadow: Boolean,
+//     displayMode: Font.DisplayMode,
+//     lightCoords: Int,
+//     color: Int,
+//     backgroundColor: Int,
+//     outlineColor: Int,
+// ) = this.seeThrough().submit(
+//     TextFeatureRenderer.Submit(
+//         Matrix4f(poseStack.last().pose()),
+//         displayMode,
+//         lightCoords,
+//         TextFeatureRenderer.Content.Text(
+//             x,
+//             y,
+//             string,
+//             dropShadow,
+//             color,
+//             backgroundColor,
+//             outlineColor,
+//         )
+//     )
+// )
+// codex end

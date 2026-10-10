@@ -18,29 +18,18 @@
  */
 package net.ccbluex.liquidbounce.features.module
 
-import com.mojang.blaze3d.platform.InputConstants
 import kotlinx.coroutines.launch
 import net.ccbluex.liquidbounce.config.ConfigSystem
 import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig
-import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig.loadingNow
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.group.ToggleableValueGroup
-import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.eventListenerScope
-import net.ccbluex.liquidbounce.event.events.ModuleActivationEvent
-import net.ccbluex.liquidbounce.event.events.ModuleToggleEvent
-import net.ccbluex.liquidbounce.event.events.NotificationEvent
-import net.ccbluex.liquidbounce.event.events.RefreshArrayListEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.features.module.modules.misc.antibot.ModuleAntiBot
 import net.ccbluex.liquidbounce.lang.LanguageManager
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.utils.client.clientLogger
-import net.ccbluex.liquidbounce.utils.client.notification
-import net.ccbluex.liquidbounce.utils.input.InputBind
 import net.ccbluex.liquidbounce.utils.text.plus
 import net.ccbluex.liquidbounce.utils.text.toLowerCamelCase
 import net.ccbluex.liquidbounce.utils.text.withFormat
@@ -56,8 +45,12 @@ import net.minecraft.util.FormattedCharSequence
 open class ClientModule @JvmOverloads constructor(
     name: String, // name parameter in configurable
     @Exclude val category: ModuleCategory, // module category
-    bind: Int = InputConstants.UNKNOWN.value, // default bind
-    bindAction: InputBind.BindAction = InputBind.BindAction.TOGGLE, // default action
+    // codex start
+    // bind: Int = InputConstants.UNKNOWN.value, // default bind
+    // codex end
+    // codex start
+    // bindAction: InputBind.BindAction = InputBind.BindAction.TOGGLE, // default action
+    // codex end
     state: Boolean = false, // default state
     @Exclude val notActivatable: Boolean = false, // disable settings that are not needed if the module can't be enabled
     @Exclude val disableActivation: Boolean = notActivatable, // disable activation
@@ -89,28 +82,32 @@ open class ClientModule @JvmOverloads constructor(
     override val running: Boolean
         get() = super<EventListener>.running && inGame && (enabled || notActivatable)
 
-    @AddonApi
-    val bindValue = bind("Bind", InputBind(InputConstants.Type.KEYBOARD, bind, bindAction))
-        .doNotIncludeWhen { !AutoConfig.includeConfiguration.includeBinds }
-        .independentDescription().apply {
-            if (notActivatable) {
-                notAnOption()
-            }
-        }
-    val bind get() = bindValue.get()
-
-    /**
-     * True when something outside LiquidBounce acts on [bind], so the module manager leaves it alone.
-     */
-    @AddonApi
-    open val externalBind: Boolean
-        get() = false
+    // codex start
+    // @AddonApi
+    // val bindValue = bind("Bind", InputBind(InputConstants.Type.KEYBOARD, bind, bindAction))
+    //     .doNotIncludeWhen { !AutoConfig.includeConfiguration.includeBinds }
+    //     .independentDescription().apply {
+    //         if (notActivatable) {
+    //             notAnOption()
+    //         }
+    //     }
+    // val bind get() = bindValue.get()
+    //
+    // /**
+    //  * True when something outside LiquidBounce acts on [bind], so the module manager leaves it alone.
+    //  */
+    // @AddonApi
+    // open val externalBind: Boolean
+    //     get() = false
+    // codex end
 
     var hidden by boolean("Hidden", hide)
         .doNotIncludeWhen { !AutoConfig.includeConfiguration.includeHidden }
         .independentDescription()
         .onChange {
-            EventManager.callEvent(RefreshArrayListEvent)
+            // codex start
+            // EventManager.callEvent(RefreshArrayListEvent)
+            // codex end
             it
         }.apply {
             if (notActivatable) {
@@ -149,9 +146,11 @@ open class ClientModule @JvmOverloads constructor(
             // Might not include the enabled state of the module depending on the category
             if (category == ModuleCategories.MISC || category == ModuleCategories.FUN ||
                 category == ModuleCategories.RENDER) {
-                if (this is ModuleAntiBot) {
-                    return@also
-                }
+                // codex start
+                // if (this is ModuleAntiBot) {
+                //     return@also
+                // }
+                // codex end
                 value.doNotIncludeAlways()
             }
         }.notAnOption().onChanged { newState ->
@@ -173,36 +172,46 @@ open class ClientModule @JvmOverloads constructor(
 
         val state = super.onToggled(state)
 
-        EventManager.callEvent(ModuleActivationEvent(name))
+        // codex start
+        // EventManager.callEvent(ModuleActivationEvent(name))
+        // codex end
 
         // If the module is not activatable, we do not want to change state
         if (disableActivation) {
             return false
         }
 
-        if (!loadingNow) {
-            val (title, severity) = if (state) {
-                translation("liquidbounce.generic.enabled") to NotificationEvent.Severity.ENABLED
-            } else {
-                translation("liquidbounce.generic.disabled") to NotificationEvent.Severity.DISABLED
-            }
-            notification(title, this.name, severity)
-        }
+        // codex start
+        // if (!loadingNow) {
+        //     val (title, severity) = if (state) {
+        //         translation("liquidbounce.generic.enabled") to NotificationEvent.Severity.ENABLED
+        //     } else {
+        //         translation("liquidbounce.generic.disabled") to NotificationEvent.Severity.DISABLED
+        //     }
+        //     notification(title, this.name, severity)
+        // }
+        // codex end
 
-        EventManager.callEvent(ModuleToggleEvent(name, hidden, state))
+        // codex start
+        // EventManager.callEvent(ModuleToggleEvent(name, hidden, state))
+        // codex end
         return state
     }
 
-    fun tagBy(setting: Value<*>) {
-        check(this.tagValue == null) { "Tag already set" }
-
-        this.tagValue = setting
-
-        // Refresh arraylist on tag change
-        setting.onChanged {
-            EventManager.callEvent(RefreshArrayListEvent)
-        }
-    }
+    // codex start
+    // fun tagBy(setting: Value<*>) {
+    //     check(this.tagValue == null) { "Tag already set" }
+    //
+    //     this.tagValue = setting
+    //
+    //     // Refresh arraylist on tag change
+    //     setting.onChanged {
+    //         // codex start
+    //         // EventManager.callEvent(RefreshArrayListEvent)
+    //         // codex end
+    //     }
+    // }
+    // codex end
 
     /**
      * Warns when no module description is set in the main translation file.
@@ -219,7 +228,9 @@ open class ClientModule @JvmOverloads constructor(
         }
     }
 
-    fun message(key: String, vararg args: Any) = translation("$baseKey.messages.$key", args = args)
+    // codex start
+    // fun message(key: String, vararg args: Any) = translation("$baseKey.messages.$key", args = args)
+    // codex end
 
     override fun toString(): String = "Module$name"
 

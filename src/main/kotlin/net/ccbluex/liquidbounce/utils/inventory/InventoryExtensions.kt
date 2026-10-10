@@ -19,23 +19,24 @@
 package net.ccbluex.liquidbounce.utils.inventory
 
 import net.ccbluex.liquidbounce.utils.client.mc
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
-import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
-import net.minecraft.world.inventory.AbstractContainerMenu
 
-val AbstractContainerMenu.isPlayerInventory: Boolean
-    get() = this.containerId == 0
+// codex start
+// val AbstractContainerMenu.isPlayerInventory: Boolean
+//     get() = this.containerId == 0
+// codex end
 
 val isInInventoryScreen
     get() = mc.gui.screen() is InventoryScreen
 
-val isInContainerScreen
-    get() = mc.gui.screen() is ContainerScreen
-
-val canCloseMainInventory
-    get() = !isInInventoryScreen && mc.player?.containerMenu?.isPlayerInventory == true
-        && InventoryManager.isInventoryOpen
-
-val AbstractContainerScreen<*>?.syncId
-    get() = this?.menu?.containerId ?: 0
+// codex start
+// val isInContainerScreen
+//     get() = mc.gui.screen() is ContainerScreen
+//
+// val canCloseMainInventory
+//     get() = !isInInventoryScreen && mc.player?.containerMenu?.isPlayerInventory == true
+//         && InventoryManager.isInventoryOpen
+//
+// val AbstractContainerScreen<*>?.syncId
+//     get() = this?.menu?.containerId ?: 0
+// codex end

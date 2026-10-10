@@ -24,7 +24,6 @@ import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.util.Mth;
 import org.jspecify.annotations.Nullable;
-
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 

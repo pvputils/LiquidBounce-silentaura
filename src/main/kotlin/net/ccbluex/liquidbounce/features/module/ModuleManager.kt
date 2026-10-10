@@ -19,262 +19,20 @@
 package net.ccbluex.liquidbounce.features.module
 
 import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet
-import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap
 import net.ccbluex.liquidbounce.config.ConfigSystem
 import net.ccbluex.liquidbounce.config.autoconfig.AutoConfig
 import net.ccbluex.liquidbounce.config.types.VALUE_NAME_ORDER
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.event.events.DisconnectEvent
-import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent
-import net.ccbluex.liquidbounce.event.events.MouseButtonEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.event.sequenceHandler
 import net.ccbluex.liquidbounce.event.tickUntil
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAimbot
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker
-import net.ccbluex.liquidbounce.features.module.modules.world.automobheal.AutoMobHeal
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoLeave
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoRod
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoShoot
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoWeapon
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleFakeLag
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleHitbox
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleKeepSprint
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleMaceKill
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleNoMissCooldown
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSuperKnockback
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleSwordBlock
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleTickBase
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleTimerRange
-import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleAutoBow
-import net.ccbluex.liquidbounce.features.module.modules.combat.autoarmor.ModuleAutoArmor
-import net.ccbluex.liquidbounce.features.module.modules.combat.backtrack.ModuleBacktrack
-import net.ccbluex.liquidbounce.features.module.modules.combat.criticals.ModuleCriticals
-import net.ccbluex.liquidbounce.features.module.modules.combat.crystalaura.ModuleCrystalAura
-import net.ccbluex.liquidbounce.features.module.modules.combat.elytratarget.ModuleElytraTarget
 import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.ModuleKillAura
-import net.ccbluex.liquidbounce.features.module.modules.combat.spearkill.ModuleSpearKill
-import net.ccbluex.liquidbounce.features.module.modules.combat.tpaura.ModuleTpAura
-import net.ccbluex.liquidbounce.features.module.modules.combat.velocity.ModuleVelocity
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleAbortBreaking
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleAntiHunger
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleAntiReducedDebugInfo
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleClickTp
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleClip
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleDamage
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleExtendedFirework
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleGhostHand
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleKick
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMoreCarry
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleNameCollector
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleNoPitchLimit
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModulePingSpoof
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModulePlugins
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModulePortalMenu
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleResetVL
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleSleepWalker
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleTimeShift
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleVehicleOneHit
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleYggdrasilSignatureFix
-import net.ccbluex.liquidbounce.features.module.modules.exploit.disabler.ModuleDisabler
-import net.ccbluex.liquidbounce.features.module.modules.exploit.dupe.ModuleDupe
-import net.ccbluex.liquidbounce.features.module.modules.exploit.phase.ModulePhase
-import net.ccbluex.liquidbounce.features.module.modules.exploit.servercrasher.ModuleServerCrasher
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.ModuleDankBobbing
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.ModuleDerp
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.ModuleHandDerp
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.ModuleSkinDerp
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.ModuleTwerk
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.ModuleVomit
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.notebot.ModuleNotebot
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAntiCheatDetect
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAntiStaff
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoAccount
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoChatGame
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoConfig
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleAutoPearl
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleBetterTab
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleBookBot
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleEasyPearl
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleElytraSwap
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleFlagCheck
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleGUICloser
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleInventoryTracker
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleItemScroller
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleMacros
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleMiddleClickAction
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleNotifier
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModulePacketLogger
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleSpammer
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTargetLock
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTeams
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleTextFieldProtect
-import net.ccbluex.liquidbounce.features.module.modules.misc.antibot.ModuleAntiBot
-import net.ccbluex.liquidbounce.features.module.modules.misc.betterchat.ModuleBetterChat
-import net.ccbluex.liquidbounce.features.module.modules.misc.debugrecorder.ModuleDebugRecorder
-import net.ccbluex.liquidbounce.features.module.modules.misc.nameprotect.ModuleNameProtect
-import net.ccbluex.liquidbounce.features.module.modules.misc.reporthelper.ModuleReportHelper
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleAirJump
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleAnchor
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleAntiBounce
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleAntiLevitation
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleAvoidHazards
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleBlockBounce
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleBlockWalk
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleElytraRecast
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleEntityControl
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleFreeze
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleNoClip
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleNoJumpDelay
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleNoPose
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleNoPush
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleParkour
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleSafeWalk
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleSneak
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleSprint
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleStrafe
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleTargetStrafe
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleTeleport
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleTridentBoost
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleVehicleBoost
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleVehicleControl
-import net.ccbluex.liquidbounce.features.module.modules.movement.ModuleSnapTap
-import net.ccbluex.liquidbounce.features.module.modules.movement.autododge.ModuleAutoDodge
-import net.ccbluex.liquidbounce.features.module.modules.movement.elytrafly.ModuleElytraFly
-import net.ccbluex.liquidbounce.features.module.modules.movement.fly.ModuleFly
-import net.ccbluex.liquidbounce.features.module.modules.movement.highjump.ModuleHighJump
-import net.ccbluex.liquidbounce.features.module.modules.movement.inventorymove.ModuleInventoryMove
-import net.ccbluex.liquidbounce.features.module.modules.movement.liquidwalk.ModuleLiquidWalk
-import net.ccbluex.liquidbounce.features.module.modules.movement.longjump.ModuleLongJump
-import net.ccbluex.liquidbounce.features.module.modules.movement.noslow.ModuleNoSlow
-import net.ccbluex.liquidbounce.features.module.modules.movement.noweb.ModuleNoWeb
-import net.ccbluex.liquidbounce.features.module.modules.movement.speed.ModuleSpeed
-import net.ccbluex.liquidbounce.features.module.modules.movement.spider.ModuleSpider
-import net.ccbluex.liquidbounce.features.module.modules.movement.step.ModuleReverseStep
-import net.ccbluex.liquidbounce.features.module.modules.movement.step.ModuleStep
-import net.ccbluex.liquidbounce.features.module.modules.movement.terrainspeed.ModuleTerrainSpeed
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAntiAFK
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAntiExploit
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoBreak
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoFish
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoRespawn
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoWalk
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoWindCharge
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleBlink
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleChestCleaner
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleEagle
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleFastExp
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleFastUse
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoBlockInteract
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoEntityInteract
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoRotateSet
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoSlotSet
-import net.ccbluex.liquidbounce.features.module.modules.player.ModulePotionSpoof
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleReach
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleReplenish
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleSmartEat
-import net.ccbluex.liquidbounce.features.module.modules.player.antivoid.ModuleAntiVoid
-import net.ccbluex.liquidbounce.features.module.modules.player.autobuff.ModuleAutoBuff
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoCrafter
-import net.ccbluex.liquidbounce.features.module.modules.player.autoqueue.ModuleAutoQueue
-import net.ccbluex.liquidbounce.features.module.modules.player.autodeposit.ModuleAutoDeposit
-import net.ccbluex.liquidbounce.features.module.modules.player.autoshop.ModuleAutoShop
-import net.ccbluex.liquidbounce.features.module.modules.player.cheststealer.ModuleChestStealer
-import net.ccbluex.liquidbounce.features.module.modules.player.invcleaner.ModuleInventoryCleaner
-import net.ccbluex.liquidbounce.features.module.modules.player.nofall.ModuleNoFall
-import net.ccbluex.liquidbounce.features.module.modules.player.offhand.ModuleOffhand
-import net.ccbluex.liquidbounce.features.module.modules.render.animations.ModuleAnimations
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleAntiBlind
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleAspect
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleAutoF5
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleBedPlates
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleBetterInventory
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleBlockESP
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleBlockOutline
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleBreadcrumbs
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleChams
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleClickGui
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleCombineMobs
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleCrystalView
-import net.ccbluex.liquidbounce.features.module.modules.render.customambience.ModuleCustomAmbience
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDamageParticles
 import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeLook
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFullBright
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleHoleESP
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleHud
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleItemChams
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleItemESP
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleItemTags
-import net.ccbluex.liquidbounce.features.module.modules.render.jumpeffect.ModuleJumpEffect
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleLogoffSpot
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleMobOwners
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNewChunks
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNoBob
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNoFov
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNoHurtCam
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleNoSwing
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleParticles
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleProphuntESP
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleProtectionZones
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleQuickPerspectiveSwap
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleRadar
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleRotations
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleSilentHotbar
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleSkinChanger
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleSmoothCamera
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleStorageESP
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleTNTTimer
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleTracers
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleTrueSight
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleVoidESP
-import net.ccbluex.liquidbounce.features.module.modules.render.wings.ModuleWings
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleXRay
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleZoom
-import net.ccbluex.liquidbounce.features.module.modules.render.cameraclip.ModuleCameraClip
-import net.ccbluex.liquidbounce.features.module.modules.render.crosshair.ModuleCrosshair
-import net.ccbluex.liquidbounce.features.module.modules.render.esp.ModuleESP
-import net.ccbluex.liquidbounce.features.module.modules.render.hats.ModuleHats
-import net.ccbluex.liquidbounce.features.module.modules.render.hitfx.ModuleHitFX
-import net.ccbluex.liquidbounce.features.module.modules.render.murdermystery.ModuleMurderMystery
-import net.ccbluex.liquidbounce.features.module.modules.render.nametags.ModuleNametags
-import net.ccbluex.liquidbounce.features.module.modules.render.potionfx.ModulePotionFX
-import net.ccbluex.liquidbounce.features.module.modules.render.totemeffect.ModuleTotemEffect
-import net.ccbluex.liquidbounce.features.module.modules.render.trajectories.ModuleTrajectories
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleAirPlace
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleAutoDisable
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleAutoTool
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleBedDefender
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleBlockIn
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleBlockTrap
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleExtinguish
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleFastBreak
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleFastPlace
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleHoleFiller
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleLiquidFiller
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleLiquidPlace
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleNoInterpolation
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleNoSlowBreak
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleProjectilePuncher
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleStrongholdFinder
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleSurround
-import net.ccbluex.liquidbounce.features.module.modules.world.ModuleTimer
-import net.ccbluex.liquidbounce.features.module.modules.world.autobuild.ModuleAutoBuild
-import net.ccbluex.liquidbounce.features.module.modules.world.autofarm.ModuleAutoFarm
-import net.ccbluex.liquidbounce.features.module.modules.world.fucker.ModuleFucker
-import net.ccbluex.liquidbounce.features.module.modules.world.nuker.ModuleNuker
-import net.ccbluex.liquidbounce.features.module.modules.world.packetmine.ModulePacketMine
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ModuleScaffold
-import net.ccbluex.liquidbounce.features.module.modules.world.traps.ModuleAutoTrap
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.utils.client.clientStartDurationMs
 import net.ccbluex.liquidbounce.utils.client.inGame
 import net.ccbluex.liquidbounce.utils.client.logger
-import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.input.InputBind
 
 private val modules = ObjectRBTreeSet<ClientModule>(VALUE_NAME_ORDER)
 
@@ -285,128 +43,130 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
 
     val modulesConfig = ConfigSystem.root("modules", modules)
 
-    private const val SMART_MOUSE_HOLD_THRESHOLD_MS = 200L
-
-    private enum class SmartBindKeyboardState {
-        PENDING_ENABLED, PENDING_DISABLED, HOLDING,
-    }
-    private class SmartBindMouseState(val pendingEnabled: Boolean, val pressTimestamp: Long)
-
-    private val smartKeyboardStates = Reference2ObjectArrayMap<ClientModule, SmartBindKeyboardState>()
-    private val smartMouseStates = Reference2ObjectArrayMap<ClientModule, SmartBindMouseState>()
-
-    private fun modulesWithOwnBinds() = modules.filterNot(ClientModule::externalBind)
-
-    /**
-     * Handles keystrokes for module binds.
-     * This also runs in GUIs, so that if a GUI is opened while a key is pressed,
-     * any modules that need to be disabled on key release will be properly disabled.
-     */
-    @Suppress("unused")
-    private val keyboardKeyHandler = handler<KeyboardKeyEvent> { event ->
-        if (event.isPressed) {
-            if (mc.gui.screen() == null) {
-                // Usually nobody actually wants a module to activate when they press the Minecraft debug key combo.
-                if (mc.options.keyDebugModifier.isDown) return@handler
-                for (m in modulesWithOwnBinds()) {
-                    if (!m.bind.matchesKeyPress(event)) {
-                        continue
-                    }
-
-                    when (m.bind.action) {
-                        InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
-                        InputBind.BindAction.HOLD -> m.enabled = true
-                        InputBind.BindAction.SMART -> {
-                            smartKeyboardStates[m] = if (m.enabled) {
-                                SmartBindKeyboardState.PENDING_ENABLED
-                            } else {
-                                SmartBindKeyboardState.PENDING_DISABLED
-                            }
-                            m.enabled = true
-                        }
-                    }
-                }
-            }
-        } else if (event.isRepeat) {
-            for (m in modulesWithOwnBinds()) {
-                if (m.bind.action != InputBind.BindAction.SMART ||
-                    !m.bind.matchesKey(event.scanCode) ||
-                    m !in smartKeyboardStates
-                ) {
-                    continue
-                }
-
-                smartKeyboardStates[m] = SmartBindKeyboardState.HOLDING
-            }
-        } else if (event.isReleased) {
-            for (m in modulesWithOwnBinds()) {
-                if (!m.bind.matchesKeyRelease(event)) {
-                    continue
-                }
-
-                when (m.bind.action) {
-                    InputBind.BindAction.HOLD -> m.enabled = false
-
-                    InputBind.BindAction.SMART -> {
-                        val stateBeforePress = smartKeyboardStates.remove(m) ?: continue
-                        m.enabled = stateBeforePress == SmartBindKeyboardState.PENDING_DISABLED
-                    }
-
-                    InputBind.BindAction.TOGGLE -> {}
-                }
-            }
-        }
-    }
-
-    @Suppress("unused")
-    private val mouseButtonHandler = handler<MouseButtonEvent> { event ->
-        if (event.isPressed) {
-            if (mc.gui.screen() == null) {
-                for (m in modulesWithOwnBinds()) {
-                    if (!m.bind.matchesMousePress(event)) {
-                        continue
-                    }
-
-                    when (m.bind.action) {
-                        InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
-                        InputBind.BindAction.HOLD -> m.enabled = true
-                        InputBind.BindAction.SMART -> {
-                            smartMouseStates[m] = SmartBindMouseState(m.enabled, clientStartDurationMs)
-                            m.enabled = true
-                        }
-                    }
-                }
-            }
-        } else if (event.isReleased) {
-            for (m in modulesWithOwnBinds()) {
-                if (!m.bind.matchesMouseRelease(event)) {
-                    continue
-                }
-
-                when (m.bind.action) {
-                    InputBind.BindAction.HOLD -> m.enabled = false
-
-                    InputBind.BindAction.SMART -> {
-                        val state = smartMouseStates.remove(m) ?: continue
-
-                        // Mouse button events do not emit SDL repeat, so SMART falls back to:
-                        // - hold if the press was long enough
-                        // - toggle otherwise
-                        val shouldFallbackToHold =
-                            clientStartDurationMs - state.pressTimestamp >= SMART_MOUSE_HOLD_THRESHOLD_MS
-
-                        if (shouldFallbackToHold) {
-                            m.enabled = false
-                        } else {
-                            m.enabled = !state.pendingEnabled
-                        }
-                    }
-
-                    InputBind.BindAction.TOGGLE -> {}
-                }
-            }
-        }
-    }
+    // codex start
+    // private const val SMART_MOUSE_HOLD_THRESHOLD_MS = 200L
+    //
+    // private enum class SmartBindKeyboardState {
+    //     PENDING_ENABLED, PENDING_DISABLED, HOLDING,
+    // }
+    // private class SmartBindMouseState(val pendingEnabled: Boolean, val pressTimestamp: Long)
+    //
+    // private val smartKeyboardStates = Reference2ObjectArrayMap<ClientModule, SmartBindKeyboardState>()
+    // private val smartMouseStates = Reference2ObjectArrayMap<ClientModule, SmartBindMouseState>()
+    //
+    // private fun modulesWithOwnBinds() = modules.filterNot(ClientModule::externalBind)
+    //
+    // /**
+    //  * Handles keystrokes for module binds.
+    //  * This also runs in GUIs, so that if a GUI is opened while a key is pressed,
+    //  * any modules that need to be disabled on key release will be properly disabled.
+    //  */
+    // @Suppress("unused")
+    // private val keyboardKeyHandler = handler<KeyboardKeyEvent> { event ->
+    //     if (event.isPressed) {
+    //         if (mc.gui.screen() == null) {
+    //             // Usually nobody actually wants a module to activate when they press the Minecraft debug key combo.
+    //             if (mc.options.keyDebugModifier.isDown) return@handler
+    //             for (m in modulesWithOwnBinds()) {
+    //                 if (!m.bind.matchesKeyPress(event)) {
+    //                     continue
+    //                 }
+    //
+    //                 when (m.bind.action) {
+    //                     InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
+    //                     InputBind.BindAction.HOLD -> m.enabled = true
+    //                     InputBind.BindAction.SMART -> {
+    //                         smartKeyboardStates[m] = if (m.enabled) {
+    //                             SmartBindKeyboardState.PENDING_ENABLED
+    //                         } else {
+    //                             SmartBindKeyboardState.PENDING_DISABLED
+    //                         }
+    //                         m.enabled = true
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } else if (event.isRepeat) {
+    //         for (m in modulesWithOwnBinds()) {
+    //             if (m.bind.action != InputBind.BindAction.SMART ||
+    //                 !m.bind.matchesKey(event.scanCode) ||
+    //                 m !in smartKeyboardStates
+    //             ) {
+    //                 continue
+    //             }
+    //
+    //             smartKeyboardStates[m] = SmartBindKeyboardState.HOLDING
+    //         }
+    //     } else if (event.isReleased) {
+    //         for (m in modulesWithOwnBinds()) {
+    //             if (!m.bind.matchesKeyRelease(event)) {
+    //                 continue
+    //             }
+    //
+    //             when (m.bind.action) {
+    //                 InputBind.BindAction.HOLD -> m.enabled = false
+    //
+    //                 InputBind.BindAction.SMART -> {
+    //                     val stateBeforePress = smartKeyboardStates.remove(m) ?: continue
+    //                     m.enabled = stateBeforePress == SmartBindKeyboardState.PENDING_DISABLED
+    //                 }
+    //
+    //                 InputBind.BindAction.TOGGLE -> {}
+    //             }
+    //         }
+    //     }
+    // }
+    //
+    // @Suppress("unused")
+    // private val mouseButtonHandler = handler<MouseButtonEvent> { event ->
+    //     if (event.isPressed) {
+    //         if (mc.gui.screen() == null) {
+    //             for (m in modulesWithOwnBinds()) {
+    //                 if (!m.bind.matchesMousePress(event)) {
+    //                     continue
+    //                 }
+    //
+    //                 when (m.bind.action) {
+    //                     InputBind.BindAction.TOGGLE -> m.enabled = !m.enabled
+    //                     InputBind.BindAction.HOLD -> m.enabled = true
+    //                     InputBind.BindAction.SMART -> {
+    //                         smartMouseStates[m] = SmartBindMouseState(m.enabled, clientStartDurationMs)
+    //                         m.enabled = true
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } else if (event.isReleased) {
+    //         for (m in modulesWithOwnBinds()) {
+    //             if (!m.bind.matchesMouseRelease(event)) {
+    //                 continue
+    //             }
+    //
+    //             when (m.bind.action) {
+    //                 InputBind.BindAction.HOLD -> m.enabled = false
+    //
+    //                 InputBind.BindAction.SMART -> {
+    //                     val state = smartMouseStates.remove(m) ?: continue
+    //
+    //                     // Mouse button events do not emit SDL repeat, so SMART falls back to:
+    //                     // - hold if the press was long enough
+    //                     // - toggle otherwise
+    //                     val shouldFallbackToHold =
+    //                         clientStartDurationMs - state.pressTimestamp >= SMART_MOUSE_HOLD_THRESHOLD_MS
+    //
+    //                     if (shouldFallbackToHold) {
+    //                         m.enabled = false
+    //                     } else {
+    //                         m.enabled = !state.pendingEnabled
+    //                     }
+    //                 }
+    //
+    //                 InputBind.BindAction.TOGGLE -> {}
+    //             }
+    //         }
+    //     }
+    // }
+    // codex end
 
     /**
      * Handles world change and enables modules that are not enabled yet
@@ -458,258 +218,392 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
     fun registerInbuilt() {
         val builtin = arrayOf(
             // Combat
-            ModuleAimbot,
-            ModuleAutoArmor,
-            ModuleAutoBow,
-            ModuleAutoClicker,
-            ModuleAutoLeave,
-            ModuleAutoBuff,
-            ModuleAutoRod,
-            ModuleAutoWeapon,
-            ModuleFakeLag,
-            ModuleCriticals,
-            ModuleHitbox,
+            // codex start
+            // ModuleAimbot,
+            // ModuleAutoArmor,
+            // codex end
+            // codex start
+            // ModuleAutoBow,
+            // codex end
+            // codex start
+            // ModuleAutoClicker,
+            // codex end
+            // codex start
+            // ModuleAutoLeave,
+            // codex end
+            // codex start
+            // ModuleAutoBuff,
+            // codex end
+            // codex start
+            // ModuleAutoRod,
+            // codex end
+            // codex start
+            // ModuleAutoWeapon,
+            // codex end
+            // codex start
+            // ModuleFakeLag,
+            // codex end
+            // codex start
+            // ModuleCriticals,
+            // codex end
+            // codex start
+            // ModuleHitbox,
+            // codex end
             ModuleKillAura,
-            ModuleTpAura,
-            ModuleSuperKnockback,
-            ModuleTimerRange,
-            ModuleTickBase,
-            ModuleVelocity,
-            ModuleBacktrack,
-            ModuleSwordBlock,
-            ModuleAutoShoot,
-            ModuleKeepSprint,
-            ModuleMaceKill,
-            ModuleSpearKill,
-            ModuleNoMissCooldown,
+            // codex start
+            // ModuleTpAura,
+            // ModuleSuperKnockback,
+            // ModuleTimerRange,
+            // ModuleTickBase,
+            // codex end
+            // codex start
+            // ModuleVelocity,
+            // codex end
+            // codex start
+            // ModuleBacktrack,
+            // codex end
+            // codex start
+            // ModuleSwordBlock,
+            // codex end
+            // codex start
+            // ModuleAutoShoot,
+            // ModuleKeepSprint,
+            // codex end
+            // codex start
+            // ModuleMaceKill,
+            // codex end
+            // codex start
+            // ModuleSpearKill,
+            // ModuleNoMissCooldown,
+            // codex end
 
             // Exploit
-            ModuleAbortBreaking,
-            ModuleAntiReducedDebugInfo,
-            ModuleAntiHunger,
-            ModuleClip,
-            ModuleExtendedFirework,
-            ModuleResetVL,
-            ModuleDamage,
-            ModuleDisabler,
-            ModuleGhostHand,
-            ModuleKick,
-            ModuleMoreCarry,
-            ModuleMultiActions,
-            ModuleNewChunks,
-            ModuleNameCollector,
-            ModuleNoPitchLimit,
-            ModulePingSpoof,
-            ModulePlugins,
-            ModulePortalMenu,
-            ModuleSleepWalker,
-            ModuleVehicleOneHit,
-            ModuleServerCrasher,
-            ModuleDupe,
-            ModuleClickTp,
-            ModuleTimeShift,
-            ModuleTeleport,
-            ModulePhase,
-            ModuleYggdrasilSignatureFix,
+            // codex start
+            // ModuleAbortBreaking,
+            // ModuleAntiReducedDebugInfo,
+            // ModuleAntiHunger,
+            // ModuleClip,
+            // ModuleExtendedFirework,
+            // ModuleResetVL,
+            // ModuleDamage,
+            // ModuleDisabler,
+            // ModuleGhostHand,
+            // ModuleKick,
+            // ModuleMoreCarry,
+            // codex end
+            // codex start
+            // ModuleMultiActions,
+            // codex end
+            // codex start
+            // ModuleNewChunks,
+            // ModuleNameCollector,
+            // ModuleNoPitchLimit,
+            // codex end
+            // codex start
+            // ModulePingSpoof,
+            // codex end
+            // codex start
+            // ModulePlugins,
+            // ModulePortalMenu,
+            // ModuleSleepWalker,
+            // ModuleVehicleOneHit,
+            // ModuleServerCrasher,
+            // ModuleDupe,
+            // ModuleClickTp,
+            // ModuleTimeShift,
+            // ModuleTeleport,
+            // ModulePhase,
+            // ModuleYggdrasilSignatureFix,
+            // codex end
 
             // Fun
-            ModuleDankBobbing,
-            ModuleDerp,
-            ModuleNotebot,
-            ModuleSkinDerp,
-            ModuleHandDerp,
-            ModuleTwerk,
-            ModuleVomit,
+            // codex start
+            // ModuleDankBobbing,
+            // ModuleDerp,
+            // ModuleNotebot,
+            // ModuleSkinDerp,
+            // ModuleHandDerp,
+            // ModuleTwerk,
+            // ModuleVomit,
+            // codex end
 
             // Misc
-            ModuleAutoConfig,
-            ModuleGUICloser,
-            ModuleBookBot,
-            ModuleAntiBot,
-            ModuleBetterTab,
-            ModuleItemScroller,
-            ModuleBetterChat,
-            ModuleElytraTarget,
-            ModuleMacros,
-            ModuleMiddleClickAction,
-            ModuleInventoryTracker,
-            ModuleNameProtect,
-            ModuleTextFieldProtect,
-            ModuleNotifier,
-            ModuleSpammer,
-            ModuleAutoAccount,
-            ModuleTeams,
-            ModuleElytraSwap,
-            ModuleAutoChatGame,
-            ModuleReportHelper,
-            ModuleTargetLock,
-            ModuleAutoPearl,
-            ModuleAntiStaff,
-            ModuleFlagCheck,
-            ModulePacketLogger,
-            ModuleDebugRecorder,
-            ModuleAntiCheatDetect,
-            ModuleEasyPearl,
+            // codex start
+            // ModuleAutoConfig,
+            // ModuleGUICloser,
+            // ModuleBookBot,
+            // codex end
+            // codex start
+            // ModuleAntiBot,
+            // codex end
+            // codex start
+            // ModuleBetterTab,
+            // ModuleItemScroller,
+            // ModuleBetterChat,
+            // codex end
+            // codex start
+            // ModuleElytraTarget,
+            // codex end
+            // codex start
+            // ModuleMacros,
+            // ModuleMiddleClickAction,
+            // ModuleInventoryTracker,
+            // codex end
+            // codex start
+            // ModuleNameProtect,
+            // codex end
+            // codex start
+            // ModuleTextFieldProtect,
+            // ModuleNotifier,
+            // ModuleSpammer,
+            // ModuleAutoAccount,
+            // codex end
+            // codex start
+            // ModuleTeams,
+            // codex end
+            // codex start
+            // ModuleElytraSwap,
+            // ModuleAutoChatGame,
+            // ModuleReportHelper,
+            // codex end
+            // codex start
+            // ModuleTargetLock,
+            // codex end
+            // codex start
+            // ModuleAutoPearl,
+            // ModuleAntiStaff,
+            // ModuleFlagCheck,
+            // codex end
+            // codex start
+            // ModulePacketLogger,
+            // codex end
+            // codex start
+            // ModuleDebugRecorder,
+            // codex end
+            // codex start
+            // ModuleAntiCheatDetect,
+            // codex end
+            // codex start
+            // ModuleEasyPearl,
+            // codex end
 
             // Movement
-            ModuleAirJump,
-            ModuleAntiBounce,
-            ModuleAntiLevitation,
-            ModuleAutoDodge,
-            ModuleAvoidHazards,
-            ModuleBlockBounce,
-            ModuleBlockWalk,
-            ModuleElytraRecast,
-            ModuleElytraFly,
-            ModuleFly,
-            ModuleFreeze,
-            ModuleHighJump,
-            ModuleInventoryMove,
-            ModuleLiquidWalk,
-            ModuleLongJump,
-            ModuleNoClip,
-            ModuleNoJumpDelay,
-            ModuleNoPose,
-            ModuleNoPush,
-            ModuleNoSlow,
-            ModuleNoWeb,
-            ModuleParkour,
-            ModuleEntityControl,
-            ModuleSafeWalk,
-            ModuleSneak,
-            ModuleSpeed,
-            ModuleSprint,
-            ModuleStep,
-            ModuleReverseStep,
-            ModuleStrafe,
-            ModuleTerrainSpeed,
-            ModuleTridentBoost,
-            ModuleVehicleBoost,
-            ModuleVehicleControl,
-            ModuleSpider,
-            ModuleTargetStrafe,
-            ModuleAnchor,
-            ModuleSnapTap,
+            // codex start
+            // ModuleAirJump,
+            // ModuleAntiBounce,
+            // ModuleAntiLevitation,
+            // ModuleAutoDodge,
+            // ModuleAvoidHazards,
+            // ModuleBlockBounce,
+            // ModuleBlockWalk,
+            // ModuleElytraRecast,
+            // ModuleElytraFly,
+            // codex end
+            // codex start
+            // ModuleFly,
+            // codex end
+            // codex start
+            // ModuleFreeze,
+            // codex end
+            // codex start
+            // ModuleHighJump,
+            // ModuleInventoryMove,
+            // codex end
+            // codex start
+            // ModuleLiquidWalk,
+            // codex end
+            // codex start
+            // ModuleLongJump,
+            // ModuleNoClip,
+            // ModuleNoJumpDelay,
+            // ModuleNoPose,
+            // ModuleNoPush,
+            // ModuleNoSlow,
+            // ModuleNoWeb,
+            // ModuleParkour,
+            // ModuleEntityControl,
+            // codex end
+            // codex start
+            // ModuleSafeWalk,
+            // codex end
+            // codex start
+            // ModuleSneak,
+            // codex end
+            // codex start
+            // ModuleSpeed,
+            // codex end
+            // codex start
+            // ModuleSprint,
+            // ModuleStep,
+            // ModuleReverseStep,
+            // ModuleStrafe,
+            // ModuleTerrainSpeed,
+            // ModuleTridentBoost,
+            // ModuleVehicleBoost,
+            // ModuleVehicleControl,
+            // ModuleSpider,
+            // ModuleTargetStrafe,
+            // ModuleAnchor,
+            // ModuleSnapTap,
+            // codex end
 
             // Player
-            ModuleAntiVoid,
-            ModuleAntiAFK,
-            ModuleAntiExploit,
-            ModuleAutoBreak,
-            ModuleAutoCrafter,
-            ModuleAutoFish,
-            ModuleAutoRespawn,
-            ModuleAutoWindCharge,
-            ModuleOffhand,
-            ModuleAutoShop,
-            ModuleAutoWalk,
-            ModuleBlink,
-            ModuleChestCleaner,
-            ModuleChestStealer,
-            ModuleAutoDeposit,
-            ModuleEagle,
-            ModuleFastExp,
-            ModuleFastUse,
-            ModuleInventoryCleaner,
-            ModuleNoBlockInteract,
-            ModuleNoEntityInteract,
-            ModuleNoFall,
-            ModuleNoRotateSet,
-            ModuleNoSlotSet,
-            ModuleReach,
-            ModuleAutoQueue,
-            ModuleSmartEat,
-            ModuleReplenish,
-            ModulePotionSpoof,
+            // codex start
+            // ModuleAntiVoid,
+            // ModuleAntiAFK,
+            // ModuleAntiExploit,
+            // ModuleAutoBreak,
+            // ModuleAutoCrafter,
+            // ModuleAutoFish,
+            // ModuleAutoRespawn,
+            // ModuleAutoWindCharge,
+            // codex end
+            // codex start
+            // ModuleOffhand,
+            // codex end
+            // codex start
+            // ModuleAutoShop,
+            // ModuleAutoWalk,
+            // ModuleBlink,
+            // ModuleChestCleaner,
+            // ModuleChestStealer,
+            // ModuleAutoDeposit,
+            // codex end
+            // codex start
+            // ModuleEagle,
+            // codex end
+            // codex start
+            // ModuleFastExp,
+            // codex end
+            // codex start
+            // ModuleFastUse,
+            // codex end
+            // codex start
+            // ModuleInventoryCleaner,
+            // codex end
+            // codex start
+            // ModuleNoBlockInteract,
+            // ModuleNoEntityInteract,
+            // codex end
+            // codex start
+            // ModuleNoFall,
+            // codex end
+            // codex start
+            // ModuleNoRotateSet,
+            // ModuleNoSlotSet,
+            // ModuleReach,
+            // ModuleAutoQueue,
+            // ModuleSmartEat,
+            // ModuleReplenish,
+            // ModulePotionSpoof,
+            // codex end
 
             // Render
-            ModuleAnimations,
-            ModuleAntiBlind,
-            ModuleBetterInventory,
-            ModuleBlockESP,
-            ModuleBlockOutline,
-            ModuleBreadcrumbs,
-            ModuleCameraClip,
-            ModuleClickGui,
-            ModuleDamageParticles,
-            ModuleParticles,
-            ModuleESP,
-            ModuleLogoffSpot,
-            ModuleFreeCam,
-            ModuleSmoothCamera,
-            ModuleFreeLook,
-            ModuleFullBright,
-            ModuleHoleESP,
-            ModuleHud,
-            ModuleHats,
-            ModuleItemESP,
-            ModuleItemTags,
-            ModuleJumpEffect,
-            ModuleMobOwners,
-            ModuleMurderMystery,
-            ModuleHitFX,
-            ModuleNametags,
-            ModuleCombineMobs,
-            ModuleAspect,
-            ModuleAutoF5,
-            ModuleChams,
-            ModuleBedPlates,
-            ModuleNoBob,
-            ModuleNoFov,
-            ModuleNoHurtCam,
-            ModuleNoSwing,
-            ModuleCustomAmbience,
-            ModuleProphuntESP,
-            ModuleQuickPerspectiveSwap,
-            ModuleRadar,
-            ModuleRotations,
-            ModuleSilentHotbar,
-            ModuleStorageESP,
-            ModuleTNTTimer,
-            ModuleTracers,
-            ModuleTrajectories,
-            ModuleTrueSight,
-            ModuleVoidESP,
-            ModuleXRay,
+            // codex start
+            // ModuleAnimations,
+            // ModuleAntiBlind,
+            // ModuleBetterInventory,
+            // ModuleBlockESP,
+            // ModuleBlockOutline,
+            // ModuleBreadcrumbs,
+            // ModuleCameraClip,
+            // ModuleClickGui,
+            // ModuleDamageParticles,
+            // ModuleParticles,
+            // ModuleESP,
+            // ModuleLogoffSpot,
+            // ModuleFreeCam,
+            // ModuleSmoothCamera,
+            // ModuleFreeLook,
+            // ModuleFullBright,
+            // ModuleHoleESP,
+            // ModuleHud,
+            // ModuleHats,
+            // ModuleItemESP,
+            // ModuleItemTags,
+            // ModuleJumpEffect,
+            // ModuleMobOwners,
+            // ModuleMurderMystery,
+            // ModuleHitFX,
+            // ModuleNametags,
+            // codex end
+            // codex start
+            // ModuleCombineMobs,
+            // codex end
+            // codex start
+            // ModuleAspect,
+            // ModuleAutoF5,
+            // ModuleChams,
+            // ModuleBedPlates,
+            // ModuleNoBob,
+            // ModuleNoFov,
+            // ModuleNoHurtCam,
+            // ModuleNoSwing,
+            // ModuleCustomAmbience,
+            // ModuleProphuntESP,
+            // ModuleQuickPerspectiveSwap,
+            // ModuleRadar,
+            // ModuleRotations,
+            // ModuleSilentHotbar,
+            // ModuleStorageESP,
+            // ModuleTNTTimer,
+            // ModuleTracers,
+            // ModuleTrajectories,
+            // ModuleTrueSight,
+            // ModuleVoidESP,
+            // ModuleXRay,
+            // codex end
             ModuleDebug,
-            ModuleZoom,
-            ModuleItemChams,
-            ModuleCrystalView,
-            ModuleSkinChanger,
-            ModuleProtectionZones,
-            ModuleCrosshair,
-            ModuleWings,
-            ModulePotionFX,
-            ModuleTotemEffect,
+            // codex start
+            // ModuleZoom,
+            // ModuleItemChams,
+            // ModuleCrystalView,
+            // ModuleSkinChanger,
+            // ModuleProtectionZones,
+            // ModuleCrosshair,
+            // ModuleWings,
+            // ModulePotionFX,
+            // ModuleTotemEffect,
+            // codex end
 
             // World
-            AutoMobHeal,
-            ModuleAirPlace,
-            ModuleAutoBuild,
-            ModuleAutoDisable,
-            ModuleAutoFarm,
-            ModuleAutoTool,
-            ModuleCrystalAura,
-            ModuleFastBreak,
-            ModuleFastPlace,
-            ModuleFucker,
-            ModuleAutoTrap,
-            ModuleBlockTrap,
-            ModuleNoSlowBreak,
-            ModuleLiquidFiller,
-            ModuleLiquidPlace,
-            ModuleProjectilePuncher,
-            ModuleScaffold,
-            ModuleTimer,
-            ModuleNuker,
-            ModuleExtinguish,
-            ModuleBedDefender,
-            ModuleBlockIn,
-            ModuleSurround,
-            ModulePacketMine,
-            ModuleHoleFiller,
-            ModuleStrongholdFinder,
-            ModuleNoInterpolation,
+            // codex start
+            // AutoMobHeal,
+            // ModuleAirPlace,
+            // ModuleAutoBuild,
+            // ModuleAutoDisable,
+            // ModuleAutoFarm,
+            // ModuleAutoTool,
+            // codex end
+            // codex start
+            // ModuleCrystalAura,
+            // codex end
+            // codex start
+            // ModuleFastBreak,
+            // ModuleFastPlace,
+            // ModuleFucker,
+            // ModuleAutoTrap,
+            // ModuleBlockTrap,
+            // ModuleNoSlowBreak,
+            // ModuleLiquidFiller,
+            // ModuleLiquidPlace,
+            // ModuleProjectilePuncher,
+            // codex end
+            // codex start
+            // ModuleScaffold,
+            // codex end
+            // codex start
+            // ModuleTimer,
+            // ModuleNuker,
+            // ModuleExtinguish,
+            // ModuleBedDefender,
+            // ModuleBlockIn,
+            // ModuleSurround,
+            // ModulePacketMine,
+            // ModuleHoleFiller,
+            // ModuleStrongholdFinder,
+            // ModuleNoInterpolation,
+            // codex end
         )
 
         builtin.forEach { module ->
@@ -732,20 +626,24 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
         }.getOrThrow()
     }
 
-    fun removeModule(module: ClientModule) {
-        // The set compares by name, so check identity.
-        check(any { it === module }) { "Module '${module.name}' is not registered." }
-        modules.remove(module)
+    // codex start
+    // fun removeModule(module: ClientModule) {
+    //     // The set compares by name, so check identity.
+    //     check(any { it === module }) { "Module '${module.name}' is not registered." }
+    //     modules.remove(module)
+    //
+    //     if (module.enabled) {
+    //         module.enabled = false
+    //     }
+    //     module.unregister()
+    // }
+    // codex end
 
-        if (module.enabled) {
-            module.enabled = false
-        }
-        module.unregister()
-    }
-
-    fun clear() {
-        modules.clear()
-    }
+    // codex start
+    // fun clear() {
+    //     modules.clear()
+    // }
+    // codex end
 
     @AddonApi
     operator fun get(moduleName: String) = modules.find { it.name.equals(moduleName, true) }

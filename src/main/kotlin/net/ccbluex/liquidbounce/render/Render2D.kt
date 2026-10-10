@@ -31,26 +31,28 @@ import net.ccbluex.liquidbounce.utils.math.ceilToInt
 import net.ccbluex.liquidbounce.utils.math.floorToInt
 import net.ccbluex.liquidbounce.utils.collection.Pools
 import net.ccbluex.liquidbounce.render.gui.element.CircleGuiElementRenderState
-import net.ccbluex.liquidbounce.render.gui.element.LambdaSimpleGuiElementRenderState
 import net.ccbluex.liquidbounce.render.gui.element.LineGuiElementRenderState
 import net.ccbluex.liquidbounce.render.gui.element.QuadGuiElementRenderState
-import net.ccbluex.liquidbounce.render.gui.element.RoundedRectGuiElementRenderState
 import net.ccbluex.liquidbounce.render.gui.element.TexQuadGuiElementRenderState
 import net.ccbluex.liquidbounce.render.gui.element.TriangleGuiElementRenderState
-import net.ccbluex.liquidbounce.utils.render.VerticesSetupHandler
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.navigation.ScreenRectangle
 import net.minecraft.client.gui.render.TextureSetup
 import net.minecraft.client.renderer.RenderPipelines
-import net.minecraft.client.renderer.state.gui.BlitRenderState
 import net.minecraft.world.phys.Vec2
 import org.joml.Matrix3x2f
 import org.joml.Matrix3x2fStack
 import org.joml.Matrix3x2fc
 import org.joml.Vector2f
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
+// codex start
+// import kotlin.contracts.ExperimentalContracts
+// codex end
+// codex start
+// import kotlin.contracts.InvocationKind
+// codex end
+// codex start
+// import kotlin.contracts.contract
+// codex end
 
 private val LEFT_TOP = Vector2f()
 private val RIGHT_TOP = Vector2f()
@@ -85,13 +87,15 @@ private fun Matrix3x2fc.transformMaxBounds(
 val ScreenRectangle.isEmpty: Boolean
     get() = width == 0 || height == 0
 
-@OptIn(ExperimentalContracts::class)
-inline fun ScreenRectangle.ifEmpty(defaultValue: () -> ScreenRectangle): ScreenRectangle {
-    contract {
-        callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
-    }
-    return if (isEmpty) defaultValue() else this
-}
+// codex start
+// @OptIn(ExperimentalContracts::class)
+// inline fun ScreenRectangle.ifEmpty(defaultValue: () -> ScreenRectangle): ScreenRectangle {
+//     contract {
+//         callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
+//     }
+//     return if (isEmpty) defaultValue() else this
+// }
+// codex end
 
 /**
  * @see net.minecraft.client.renderer.state.gui.ColoredRectangleRenderState.getBounds
@@ -101,19 +105,25 @@ fun GuiGraphicsExtractor.getBounds(left: Float, top: Float, right: Float, bottom
     return this.scissorStack.peek()?.intersection(rect) ?: rect
 }
 
-/**
- * @see net.minecraft.client.renderer.state.gui.ColoredRectangleRenderState.getBounds
- */
-fun GuiGraphicsExtractor.getBoundsXYWH(x: Float, y: Float, w: Float, h: Float): ScreenRectangle {
-    return getBounds(x, y, x + w, y + h)
-}
+// codex start
+// /**
+//  * @see net.minecraft.client.renderer.state.gui.ColoredRectangleRenderState.getBounds
+//  */
+// fun GuiGraphicsExtractor.getBoundsXYWH(x: Float, y: Float, w: Float, h: Float): ScreenRectangle {
+//     return getBounds(x, y, x + w, y + h)
+// }
+// codex end
 
-fun GuiGraphicsExtractor.getBounds(box: BoundingBox2f): ScreenRectangle =
-    getBounds(box.xMin, box.yMin, box.xMax, box.yMax)
+// codex start
+// fun GuiGraphicsExtractor.getBounds(box: BoundingBox2f): ScreenRectangle =
+//     getBounds(box.xMin, box.yMin, box.xMax, box.yMax)
+// codex end
 
 inline fun GuiGraphicsExtractor.copyPosePooled(): Matrix3x2f = Pools.Mat3x2f.borrow().set(this.pose())
 
-inline fun GuiGraphicsExtractor.copyPose(): Matrix3x2f = Matrix3x2f(this.pose())
+// codex start
+// inline fun GuiGraphicsExtractor.copyPose(): Matrix3x2f = Matrix3x2f(this.pose())
+// codex end
 
 inline fun Matrix3x2fStack.withPush(block: Matrix3x2fStack.() -> Unit) {
     pushMatrix()
@@ -136,23 +146,25 @@ inline fun GuiGraphicsExtractor.ScissorStack.withPush(
         pop()
     }
 }
-
-inline fun GuiGraphicsExtractor.drawCustomElement(
-    pipeline: RenderPipeline = RenderPipelines.GUI, // PosColor + QUADS
-    textureSetup: TextureSetup = TextureSetup.noTexture(),
-    scissorArea: ScreenRectangle? = this.scissorStack.peek(),
-    bounds: ScreenRectangle? = null,
-    verticesSetupHandler: VerticesSetupHandler,
-) = this.guiRenderState.addGuiElement(
-    LambdaSimpleGuiElementRenderState(
-        pipeline,
-        textureSetup,
-        copyPosePooled(),
-        scissorArea,
-        bounds,
-        verticesSetupHandler
-    )
-)
+// codex start
+//
+// inline fun GuiGraphicsExtractor.drawCustomElement(
+//     pipeline: RenderPipeline = RenderPipelines.GUI, // PosColor + QUADS
+//     textureSetup: TextureSetup = TextureSetup.noTexture(),
+//     scissorArea: ScreenRectangle? = this.scissorStack.peek(),
+//     bounds: ScreenRectangle? = null,
+//     verticesSetupHandler: VerticesSetupHandler,
+// ) = this.guiRenderState.addGuiElement(
+//     LambdaSimpleGuiElementRenderState(
+//         pipeline,
+//         textureSetup,
+//         copyPosePooled(),
+//         scissorArea,
+//         bounds,
+//         verticesSetupHandler
+//     )
+// )
+// codex end
 
 fun GuiGraphicsExtractor.drawLines(
     points: FloatArray,
@@ -222,57 +234,61 @@ fun GuiGraphicsExtractor.drawQuad(
         )
     }
 }
-
-fun GuiGraphicsExtractor.drawRoundedRect(
-    x1: Float,
-    y1: Float,
-    x2: Float,
-    y2: Float,
-    radius: Float,
-    fillColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-    outlineWidth: Float = 1.0f,
-) {
-    val x11 = minOf(x1, x2)
-    val y11 = minOf(y1, y2)
-    val x21 = maxOf(x1, x2)
-    val y21 = maxOf(y1, y2)
-
-    val fill = fillColor ?: Color4b.TRANSPARENT
-    val outline = outlineColor ?: Color4b.TRANSPARENT
-    if (fill.isTransparent && (outline.isTransparent || outlineWidth <= 0.0f)) {
-        return
-    }
-
-    this.guiRenderState.addGuiElement(
-        RoundedRectGuiElementRenderState(
-            x11,
-            y11,
-            x21,
-            y21,
-            radius.coerceAtLeast(0.0f),
-            fill.argb,
-            outline.argb,
-            outlineWidth.coerceAtLeast(0.0f),
-            copyPosePooled(),
-            this.scissorStack.peek(),
-            getBounds(x11, y11, x21, y21),
-        )
-    )
-}
-
-inline fun GuiGraphicsExtractor.drawQuadXYWH(
-    x: Float,
-    y: Float,
-    w: Float,
-    h: Float,
-    fillColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-) = drawQuad(x, y, x + w, y + h, fillColor, outlineColor)
-
-/**
- * Float version of [GuiGraphicsExtractor.drawHorizontalLine]
- */
+// codex start
+//
+// fun GuiGraphicsExtractor.drawRoundedRect(
+//     x1: Float,
+//     y1: Float,
+//     x2: Float,
+//     y2: Float,
+//     radius: Float,
+//     fillColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineWidth: Float = 1.0f,
+// ) {
+//     val x11 = minOf(x1, x2)
+//     val y11 = minOf(y1, y2)
+//     val x21 = maxOf(x1, x2)
+//     val y21 = maxOf(y1, y2)
+//
+//     val fill = fillColor ?: Color4b.TRANSPARENT
+//     val outline = outlineColor ?: Color4b.TRANSPARENT
+//     if (fill.isTransparent && (outline.isTransparent || outlineWidth <= 0.0f)) {
+//         return
+//     }
+//
+//     this.guiRenderState.addGuiElement(
+//         RoundedRectGuiElementRenderState(
+//             x11,
+//             y11,
+//             x21,
+//             y21,
+//             radius.coerceAtLeast(0.0f),
+//             fill.argb,
+//             outline.argb,
+//             outlineWidth.coerceAtLeast(0.0f),
+//             copyPosePooled(),
+//             this.scissorStack.peek(),
+//             getBounds(x11, y11, x21, y21),
+//         )
+//     )
+// }
+// codex end
+// codex start
+//
+// inline fun GuiGraphicsExtractor.drawQuadXYWH(
+//     x: Float,
+//     y: Float,
+//     w: Float,
+//     h: Float,
+//     fillColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+// ) = drawQuad(x, y, x + w, y + h, fillColor, outlineColor)
+//
+// /**
+//  * Float version of [GuiGraphicsExtractor.drawHorizontalLine]
+//  */
+// codex end
 fun GuiGraphicsExtractor.drawHorizontalLine(x1: Float, x2: Float, y: Float, thickness: Float, color: Color4b) {
     this.drawQuad(x1, y, x2, y + thickness, color)
 }
@@ -280,9 +296,11 @@ fun GuiGraphicsExtractor.drawHorizontalLine(x1: Float, x2: Float, y: Float, thic
 /**
  * Float version of [GuiGraphicsExtractor.drawVerticalLine]
  */
-fun GuiGraphicsExtractor.drawVerticalLine(x: Float, y1: Float, y2: Float, thickness: Float, color: Color4b) {
-    this.drawQuad(x, y1, x + thickness, y2, color)
-}
+// codex start
+// fun GuiGraphicsExtractor.drawVerticalLine(x: Float, y1: Float, y2: Float, thickness: Float, color: Color4b) {
+//     this.drawQuad(x, y1, x + thickness, y2, color)
+// }
+// codex end
 
 @Suppress("LongParameterList")
 fun GuiGraphicsExtractor.drawTriangle(
@@ -326,14 +344,16 @@ fun GuiGraphicsExtractor.drawTriangle(
     }
 }
 
-fun GuiGraphicsExtractor.drawTriangle(
-    p1: Vec2, p2: Vec2, p3: Vec2,
-    fillColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-) = drawTriangle(
-    p1.x, p1.y, p2.x, p2.y, p3.x, p3.y,
-    fillColor, outlineColor,
-)
+// codex start
+// fun GuiGraphicsExtractor.drawTriangle(
+//     p1: Vec2, p2: Vec2, p3: Vec2,
+//     fillColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+// ) = drawTriangle(
+//     p1.x, p1.y, p2.x, p2.y, p3.x, p3.y,
+//     fillColor, outlineColor,
+// )
+// codex end
 
 @Suppress("LongParameterList")
 inline fun GuiGraphicsExtractor.drawTexQuad(
@@ -368,68 +388,72 @@ inline fun GuiGraphicsExtractor.drawTexQuad(
         )
     )
 }
+// codex start
+//
+// @Suppress("LongParameterList")
+// inline fun GuiGraphicsExtractor.drawBlitOnCurrentLayer(
+//     textureSetup: TextureSetup,
+//     x0: Int,
+//     y0: Int,
+//     x1: Int,
+//     y1: Int,
+//     u1: Float = 0f,
+//     v1: Float = 0f,
+//     u2: Float = 1f,
+//     v2: Float = 1f,
+//     argb: Int = -1,
+//     pipeline: RenderPipeline = RenderPipelines.GUI_TEXTURED,
+// ) {
+//     this.guiRenderState.addBlitToCurrentLayer(
+//         BlitRenderState(
+//             pipeline,
+//             textureSetup,
+//             copyPose(),
+//             x0,
+//             y0,
+//             x1,
+//             y1,
+//             u1,
+//             v1,
+//             u2,
+//             v2,
+//             argb,
+//             this.scissorStack.peek(),
+//             null,
+//         )
+//     )
+// }
+// codex end
 
-@Suppress("LongParameterList")
-inline fun GuiGraphicsExtractor.drawBlitOnCurrentLayer(
-    textureSetup: TextureSetup,
-    x0: Int,
-    y0: Int,
-    x1: Int,
-    y1: Int,
-    u1: Float = 0f,
-    v1: Float = 0f,
-    u2: Float = 1f,
-    v2: Float = 1f,
-    argb: Int = -1,
-    pipeline: RenderPipeline = RenderPipelines.GUI_TEXTURED,
-) {
-    this.guiRenderState.addBlitToCurrentLayer(
-        BlitRenderState(
-            pipeline,
-            textureSetup,
-            copyPose(),
-            x0,
-            y0,
-            x1,
-            y1,
-            u1,
-            v1,
-            u2,
-            v2,
-            argb,
-            this.scissorStack.peek(),
-            null,
-        )
-    )
-}
-
-fun GuiGraphicsExtractor.drawCircle(
-    x: Float,
-    y: Float,
-    radius: Float,
-    innerRadius: Float = 0f,
-    colorGetter: Float2IntFunction = Float2IntFunction { Color4b.WHITE.argb },
-) {
-    if (radius <= 0f) {
-        return
-    }
-
-    val lut = GuiCircleLutAtlas.allocate(colorGetter)
-    val innerRatio = (innerRadius / radius).coerceIn(0f, 1f)
-    val bounds = getBoundsXYWH(x - radius, y - radius, radius * 2, radius * 2)
-
-    this.guiRenderState.addGuiElement(
-        CircleGuiElementRenderState(
-            x,
-            y,
-            radius,
-            innerRatio,
-            lut.row,
-            ClientRenderPipelines.GUI.circleLut(),
-            lut.textureSetup,
-            copyPosePooled(),
-            this.scissorStack.peek(),
-            bounds
-        )
-    )
-}
+// codex start
+// fun GuiGraphicsExtractor.drawCircle(
+//     x: Float,
+//     y: Float,
+//     radius: Float,
+//     innerRadius: Float = 0f,
+//     colorGetter: Float2IntFunction = Float2IntFunction { Color4b.WHITE.argb },
+// ) {
+//     if (radius <= 0f) {
+//         return
+//     }
+//
+//     val lut = GuiCircleLutAtlas.allocate(colorGetter)
+//     val innerRatio = (innerRadius / radius).coerceIn(0f, 1f)
+//     val bounds = getBoundsXYWH(x - radius, y - radius, radius * 2, radius * 2)
+//
+//     this.guiRenderState.addGuiElement(
+//         CircleGuiElementRenderState(
+//             x,
+//             y,
+//             radius,
+//             innerRatio,
+//             lut.row,
+//             ClientRenderPipelines.GUI.circleLut(),
+//             lut.textureSetup,
+//             copyPosePooled(),
+//             this.scissorStack.peek(),
+//             bounds
+//         )
+//     )
+// }
+// codex end

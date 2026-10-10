@@ -147,41 +147,67 @@ inline fun jsonObject(
 
 inline fun JsonArray.getOrNull(index: Int): JsonElement? =
     if (index in 0 until this.size()) this[index] else null
-
-inline fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement?): JsonArray {
-    val a = if (this is Collection) JsonArray(this.size) else JsonArray()
-    forEach { a.add(transform(it)) }
-    return a
-}
-
-/**
- * Unlike [JsonObject.get] followed by `asString` and friends, these return `null` for an absent key
- * instead of throwing.
- */
+// codex start
+//
+// inline fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement?): JsonArray {
+//     val a = if (this is Collection) JsonArray(this.size) else JsonArray()
+//     forEach { a.add(transform(it)) }
+//     return a
+// }
+//
+// /**
+//  * Unlike [JsonObject.get] followed by `asString` and friends, these return `null` for an absent key
+//  * instead of throwing.
+//  */
+// codex end
 fun JsonObject.string(key: String): String? = if (has(key)) get(key).asString else null
 
-fun JsonObject.int(key: String): Int? = if (has(key)) get(key).asInt else null
+// codex start
+// fun JsonObject.int(key: String): Int? = if (has(key)) get(key).asInt else null
+// codex end
 
-fun JsonObject.long(key: String): Long? = if (has(key)) get(key).asLong else null
+// codex start
+// fun JsonObject.long(key: String): Long? = if (has(key)) get(key).asLong else null
+// codex end
 
-fun JsonObject.double(key: String): Double? = if (has(key)) get(key).asDouble else null
+// codex start
+// fun JsonObject.double(key: String): Double? = if (has(key)) get(key).asDouble else null
+// codex end
 
-fun JsonObject.boolean(key: String): Boolean? = if (has(key)) get(key).asBoolean else null
+// codex start
+// fun JsonObject.boolean(key: String): Boolean? = if (has(key)) get(key).asBoolean else null
+// codex end
 
-fun JsonObject.obj(key: String): JsonObject? = if (has(key)) get(key).asJsonObject else null
+// codex start
+// fun JsonObject.obj(key: String): JsonObject? = if (has(key)) get(key).asJsonObject else null
+// codex end
 
 fun JsonObject.array(key: String): JsonArray? = if (has(key)) get(key).asJsonArray else null
 
-fun JsonArray.string(index: Int): String? = getOrNull(index)?.asString
+// codex start
+// fun JsonArray.string(index: Int): String? = getOrNull(index)?.asString
+// codex end
 
-fun JsonArray.int(index: Int): Int? = getOrNull(index)?.asInt
+// codex start
+// fun JsonArray.int(index: Int): Int? = getOrNull(index)?.asInt
+// codex end
 
-fun JsonArray.long(index: Int): Long? = getOrNull(index)?.asLong
+// codex start
+// fun JsonArray.long(index: Int): Long? = getOrNull(index)?.asLong
+// codex end
 
-fun JsonArray.double(index: Int): Double? = getOrNull(index)?.asDouble
+// codex start
+// fun JsonArray.double(index: Int): Double? = getOrNull(index)?.asDouble
+// codex end
 
-fun JsonArray.boolean(index: Int): Boolean? = getOrNull(index)?.asBoolean
+// codex start
+// fun JsonArray.boolean(index: Int): Boolean? = getOrNull(index)?.asBoolean
+// codex end
 
-fun JsonArray.obj(index: Int): JsonObject? = getOrNull(index)?.asJsonObject
+// codex start
+// fun JsonArray.obj(index: Int): JsonObject? = getOrNull(index)?.asJsonObject
+// codex end
 
-fun JsonArray.array(index: Int): JsonArray? = getOrNull(index)?.asJsonArray
+// codex start
+// fun JsonArray.array(index: Int): JsonArray? = getOrNull(index)?.asJsonArray
+// codex end

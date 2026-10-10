@@ -18,23 +18,31 @@
  */
 package net.ccbluex.liquidbounce.utils.render
 
-import net.ccbluex.liquidbounce.features.module.modules.combat.aimbot.ModuleProjectileAimbot
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleDebug.debugParameter
-import net.ccbluex.liquidbounce.render.engine.type.Rect
+// codex start
+// import net.ccbluex.liquidbounce.render.engine.type.Rect
+// codex end
 import net.ccbluex.liquidbounce.render.engine.type.Vec3f
 import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.math.vertices
-import net.ccbluex.liquidbounce.utils.math.geometry.Line
-import net.ccbluex.liquidbounce.utils.math.toVec3d
-import net.minecraft.client.renderer.GameRenderer
-import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.Vec2
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.vertices
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.geometry.Line
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.toVec3d
+// codex end
+// codex start
+// import net.minecraft.world.phys.AABB
+// codex end
+// codex start
+// import net.minecraft.world.phys.Vec2
+// codex end
 import net.minecraft.world.phys.Vec3
 import org.joml.Matrix4f
 import org.joml.Matrix4fc
 import org.joml.Vector3f
 import org.joml.Vector4f
-import java.text.NumberFormat
 
 /**
  * This util should only be called from main thread
@@ -93,47 +101,53 @@ object WorldToScreen {
         return Vec3f(screenPos)
     }
 
-    @JvmStatic
-    @JvmOverloads
-    fun calculateMouseRay(posOnScreen: Vec2, cameraPos: Vec3 = this.cachedCameraPos): Line {
-        val screenVec = cacheVec3f.set(posOnScreen.x, posOnScreen.y, 1.0F)
+    // codex start
+    // @JvmStatic
+    // @JvmOverloads
+    // fun calculateMouseRay(posOnScreen: Vec2, cameraPos: Vec3 = this.cachedCameraPos): Line {
+    //     val screenVec = cacheVec3f.set(posOnScreen.x, posOnScreen.y, 1.0F)
+    //
+    //     val scaleFactor = mc.window.guiScale
+    //     val guiScaleMul = 0.5f / scaleFactor.toFloat()
+    //
+    //     val transformedPos = screenVec.mul(
+    //         1.0F / (guiScaleMul * mc.gameRenderer.mainRenderTarget().width),
+    //         1.0F / (guiScaleMul * mc.gameRenderer.mainRenderTarget().height),
+    //         1.0F
+    //     ).sub(1.0F, 1.0F, 0.0F).mul(1.0F, -1.0F, 1.0F)
+    //
+    //     val relativePos = cacheVec3f.set(transformedPos)
+    //         .mulProject(this.projModelViewMatrix.invert(cacheMat4f))
+    //
+    //     // codex start
+    //     // ModuleProjectileAimbot.debugParameter("s2w") {
+    //     //     relativePos.toString(NumberFormat.getInstance())
+    //     // }
+    //     //
+    //     // codex end
+    //     return Line(cameraPos, relativePos.toVec3d())
+    // }
+    // codex end
 
-        val scaleFactor = mc.window.guiScale
-        val guiScaleMul = 0.5f / scaleFactor.toFloat()
-
-        val transformedPos = screenVec.mul(
-            1.0F / (guiScaleMul * mc.gameRenderer.mainRenderTarget().width),
-            1.0F / (guiScaleMul * mc.gameRenderer.mainRenderTarget().height),
-            1.0F
-        ).sub(1.0F, 1.0F, 0.0F).mul(1.0F, -1.0F, 1.0F)
-
-        val relativePos = cacheVec3f.set(transformedPos)
-            .mulProject(this.projModelViewMatrix.invert(cacheMat4f))
-
-        ModuleProjectileAimbot.debugParameter("s2w") {
-            relativePos.toString(NumberFormat.getInstance())
-        }
-
-        return Line(cameraPos, relativePos.toVec3d())
-    }
-
-    @JvmStatic
-    @JvmOverloads
-    fun calculateScreenRect(box: AABB, cameraPos: Vec3 = this.cachedCameraPos): Rect? {
-        var minX = Float.POSITIVE_INFINITY
-        var minY = Float.POSITIVE_INFINITY
-        var maxX = Float.NEGATIVE_INFINITY
-        var maxY = Float.NEGATIVE_INFINITY
-        for (vertex in box.vertices) {
-            val (x, y, _) = calculateScreenPos(vertex, cameraPos) ?: continue
-            if (minX > x) minX = x
-            if (minY > y) minY = y
-            if (maxX < x) maxX = x
-            if (maxY < y) maxY = y
-        }
-
-        if (maxX <= minX || maxY <= minY) return null
-        return Rect(minX, minY, maxX, maxY)
-    }
+    // codex start
+    // @JvmStatic
+    // @JvmOverloads
+    // fun calculateScreenRect(box: AABB, cameraPos: Vec3 = this.cachedCameraPos): Rect? {
+    //     var minX = Float.POSITIVE_INFINITY
+    //     var minY = Float.POSITIVE_INFINITY
+    //     var maxX = Float.NEGATIVE_INFINITY
+    //     var maxY = Float.NEGATIVE_INFINITY
+    //     for (vertex in box.vertices) {
+    //         val (x, y, _) = calculateScreenPos(vertex, cameraPos) ?: continue
+    //         if (minX > x) minX = x
+    //         if (minY > y) minY = y
+    //         if (maxX < x) maxX = x
+    //         if (maxY < y) maxY = y
+    //     }
+    //
+    //     if (maxX <= minX || maxY <= minY) return null
+    //     return Rect(minX, minY, maxX, maxY)
+    // }
+    // codex end
 
 }

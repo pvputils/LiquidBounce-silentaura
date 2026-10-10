@@ -23,7 +23,6 @@ package net.ccbluex.liquidbounce.render
 
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice
 import com.mojang.renderpearl.api.pipeline.RenderPipeline
-import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.ccbluex.fastutil.objectObjectMapOf
@@ -31,19 +30,19 @@ import net.ccbluex.liquidbounce.event.events.WorldRenderEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.render.engine.type.Vec3f
-import net.ccbluex.liquidbounce.render.utils.DistanceFadeUniformValueGroup
 import net.ccbluex.liquidbounce.render.utils.VertexList
 import net.ccbluex.liquidbounce.render.utils.forEachVertex
 import net.ccbluex.liquidbounce.render.utils.UnitCircle
 import net.ccbluex.liquidbounce.utils.client.gpuDevice
 import net.ccbluex.liquidbounce.utils.render.writeStd140
 import net.minecraft.client.renderer.texture.AbstractTexture
-import net.minecraft.core.Direction
+// codex start
+// import net.minecraft.core.Direction
+// codex end
 import net.minecraft.core.Vec3i
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
-import net.minecraft.world.phys.shapes.VoxelShape
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import java.util.function.Consumer
@@ -66,8 +65,10 @@ val HAS_AMD_VEGA_APU = gpuDevice.deviceInfo.name.startsWith("AMD Radeon(TM) RX V
 @JvmField
 val FULL_BOX = AABB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
 
-@JvmField
-val EMPTY_BOX = AABB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+// codex start
+// @JvmField
+// val EMPTY_BOX = AABB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+// codex end
 
 private val ROUNDED_RECT_AS_OUTLINE_CIRCLE_UBO by lazy(LazyThreadSafetyMode.NONE) {
     val slice = ClientUniformDefine.ROUNDED_RECT.createSingleBuffer()
@@ -122,50 +123,60 @@ inline fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3i, draw:
 
 // The same for Java, which cannot pass the receiver lambdas above.
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(draw: Consumer<WorldRenderEnvironment>) =
-    withPositionRelativeToCamera { draw.accept(this) }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(draw: Consumer<WorldRenderEnvironment>) =
+//     withPositionRelativeToCamera { draw.accept(this) }
+// codex end
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(
-    x: Double, y: Double, z: Double, draw: Consumer<WorldRenderEnvironment>
-) =
-    withPositionRelativeToCamera(x, y, z) { draw.accept(this) }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(
+//     x: Double, y: Double, z: Double, draw: Consumer<WorldRenderEnvironment>
+// ) =
+//     withPositionRelativeToCamera(x, y, z) { draw.accept(this) }
+// codex end
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3, draw: Consumer<WorldRenderEnvironment>) =
-    withPositionRelativeToCamera(pos) { draw.accept(this) }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3, draw: Consumer<WorldRenderEnvironment>) =
+//     withPositionRelativeToCamera(pos) { draw.accept(this) }
+// codex end
 
-@AddonApi
-fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3i, draw: Consumer<WorldRenderEnvironment>) =
-    withPositionRelativeToCamera(pos) { draw.accept(this) }
-
-internal inline fun RenderTarget.drawGenericBlockESP(
-    renderState: CachedMeshStorage,
-    pipeline: RenderPipeline,
-    distanceFade: DistanceFadeUniformValueGroup,
-    dynamicTransforms: () -> GpuBufferSlice = ::getDynamicTransformsUniform,
-): Boolean {
-    if (!renderState.isReady) return false
-
-    distanceFade.updateIfDirty()
-    val dynamicTransforms = dynamicTransforms()
-    this.createRenderPass({ renderState.label + " Pass" }).use { pass ->
-        pass.setPipeline(pipeline)
-
-        pass.bindProjectionUniform()
-        pass.bindGlobalsUniform()
-        pass.bindDynamicTransformsUniform(dynamicTransforms)
-        renderState.bindUniform(pass)
-        distanceFade.bindUniform(pass)
-        renderState.bindAndDraw(pass)
-    }
-    return true
-}
-
-/**
- * Variant of [drawCustomMesh] that binds [sampler0] as `Sampler0`.
- */
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.withPositionRelativeToCamera(pos: Vec3i, draw: Consumer<WorldRenderEnvironment>) =
+//     withPositionRelativeToCamera(pos) { draw.accept(this) }
+// codex end
+// codex start
+//
+// internal inline fun RenderTarget.drawGenericBlockESP(
+//     renderState: CachedMeshStorage,
+//     pipeline: RenderPipeline,
+//     distanceFade: DistanceFadeUniformValueGroup,
+//     dynamicTransforms: () -> GpuBufferSlice = ::getDynamicTransformsUniform,
+// ): Boolean {
+//     if (!renderState.isReady) return false
+//
+//     distanceFade.updateIfDirty()
+//     val dynamicTransforms = dynamicTransforms()
+//     this.createRenderPass({ renderState.label + " Pass" }).use { pass ->
+//         pass.setPipeline(pipeline)
+//
+//         pass.bindProjectionUniform()
+//         pass.bindGlobalsUniform()
+//         pass.bindDynamicTransformsUniform(dynamicTransforms)
+//         renderState.bindUniform(pass)
+//         distanceFade.bindUniform(pass)
+//         renderState.bindAndDraw(pass)
+//     }
+//     return true
+// }
+//
+// /**
+//  * Variant of [drawCustomMesh] that binds [sampler0] as `Sampler0`.
+//  */
+// codex end
 inline fun WorldRenderEnvironment.drawCustomMeshTextured(
     sampler0: AbstractTexture,
     pipeline: RenderPipeline = ClientRenderPipelines.texQuads(noDepthTest = true),
@@ -199,113 +210,127 @@ inline fun WorldRenderEnvironment.drawCustomMesh(
 /**
  * Draws a line with endpoint [p1] and [p2] and color [argb].
  */
-fun WorldRenderEnvironment.drawLine(p1: Vec3f, p2: Vec3f, argb: Int) =
-    drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        addVertex(pose, p1).setColor(argb)
-        addVertex(pose, p2).setColor(argb)
-    }
+// codex start
+// fun WorldRenderEnvironment.drawLine(p1: Vec3f, p2: Vec3f, argb: Int) =
+//     drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         addVertex(pose, p1).setColor(argb)
+//         addVertex(pose, p2).setColor(argb)
+//     }
+// codex end
 
 /**
  * Draws a line with endpoint [p1] and [p2] and color [argb].
  */
-@AddonApi
-fun WorldRenderEnvironment.drawLine(p1: Vec3, p2: Vec3, argb: Int) =
-    drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        addVertex(pose, p1).setColor(argb)
-        addVertex(pose, p2).setColor(argb)
-    }
+// codex start
+// @AddonApi
+// fun WorldRenderEnvironment.drawLine(p1: Vec3, p2: Vec3, argb: Int) =
+//     drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         addVertex(pose, p1).setColor(argb)
+//         addVertex(pose, p2).setColor(argb)
+//     }
+// codex end
 
-/**
- * Draws lines with [width].
- * Modern GL doesn't support `glLineWidth` well, so draw with shader simulation.
- */
-fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, vararg positions: Vec3f) {
-    if (positions.isEmpty()) return
-    require(positions.size and 1 == 0)
+// codex start
+// /**
+//  * Draws lines with [width].
+//  * Modern GL doesn't support `glLineWidth` well, so draw with shader simulation.
+//  */
+// fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, vararg positions: Vec3f) {
+//     if (positions.isEmpty()) return
+//     require(positions.size and 1 == 0)
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
+//         for (i in 0 until positions.size step 2) {
+//             val p1 = positions[i]
+//             val p2 = positions[i + 1]
+//             val norm1 = (p1 - p2).normalized()
+//             addVertex(pose, p1)
+//                 .setColor(argb)
+//                 .setNormal(pose, norm1)
+//                 .setLineWidth(width)
+//             addVertex(pose, p2)
+//                 .setColor(argb)
+//                 .setNormal(pose, -norm1)
+//                 .setLineWidth(width)
+//         }
+//     }
+// }
+// codex end
 
-    drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
-        for (i in 0 until positions.size step 2) {
-            val p1 = positions[i]
-            val p2 = positions[i + 1]
-            val norm1 = (p1 - p2).normalized()
-            addVertex(pose, p1)
-                .setColor(argb)
-                .setNormal(pose, norm1)
-                .setLineWidth(width)
-            addVertex(pose, p2)
-                .setColor(argb)
-                .setNormal(pose, -norm1)
-                .setLineWidth(width)
-        }
-    }
-}
+// codex start
+// fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, positions: VertexList) {
+//     if (positions.size == 0) return
+//     require(positions.size and 1 == 0)
+//
+//     val p1 = Vector3f()
+//     val p2 = Vector3f()
+//     val norm1 = Vector3f()
+//     drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
+//         for (i in 0 until positions.size step 2) {
+//             positions.vec(i, p1)
+//             positions.vec(i + 1, p2)
+//             val norm1 = p1.sub(p2, norm1).normalize()
+//
+//             addVertex(pose, p1)
+//                 .setColor(argb)
+//                 .setNormal(pose, norm1)
+//                 .setLineWidth(width)
+//             addVertex(pose, p2)
+//                 .setColor(argb)
+//                 .setNormal(pose, norm1.negate())
+//                 .setLineWidth(width)
+//         }
+//     }
+// }
+// codex end
 
-fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, positions: VertexList) {
-    if (positions.size == 0) return
-    require(positions.size and 1 == 0)
+// codex start
+// /**
+//  * Function to draw lines using the specified [positions] vectors.
+//  *
+//  * @param positions The vectors representing the lines.
+//  */
+// fun WorldRenderEnvironment.drawLines(argb: Int, vararg positions: Vec3f) {
+//     if (positions.isEmpty()) return
+//     require(positions.size and 1 == 0)
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         for (pos in positions) {
+//             addVertex(pose, pos).setColor(argb)
+//         }
+//     }
+// }
+// codex end
 
-    val p1 = Vector3f()
-    val p2 = Vector3f()
-    val norm1 = Vector3f()
-    drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
-        for (i in 0 until positions.size step 2) {
-            positions.vec(i, p1)
-            positions.vec(i + 1, p2)
-            val norm1 = p1.sub(p2, norm1).normalize()
+// codex start
+// fun WorldRenderEnvironment.drawLines(argb: Int, positions: VertexList) {
+//     if (positions.size == 0) return
+//     require(positions.size and 1 == 0)
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//         positions.forEachVertex { x, y, z ->
+//             addVertex(pose, x, y, z).setColor(argb)
+//         }
+//     }
+// }
+// codex end
 
-            addVertex(pose, p1)
-                .setColor(argb)
-                .setNormal(pose, norm1)
-                .setLineWidth(width)
-            addVertex(pose, p2)
-                .setColor(argb)
-                .setNormal(pose, norm1.negate())
-                .setLineWidth(width)
-        }
-    }
-}
-
-/**
- * Function to draw lines using the specified [positions] vectors.
- *
- * @param positions The vectors representing the lines.
- */
-fun WorldRenderEnvironment.drawLines(argb: Int, vararg positions: Vec3f) {
-    if (positions.isEmpty()) return
-    require(positions.size and 1 == 0)
-
-    drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        for (pos in positions) {
-            addVertex(pose, pos).setColor(argb)
-        }
-    }
-}
-
-fun WorldRenderEnvironment.drawLines(argb: Int, positions: VertexList) {
-    if (positions.size == 0) return
-    require(positions.size and 1 == 0)
-
-    drawCustomMesh(pipeline = ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-        positions.forEachVertex { x, y, z ->
-            addVertex(pose, x, y, z).setColor(argb)
-        }
-    }
-}
-
-/**
- * Function to draw a line strip using the specified [positions] vectors.
- *
- * @param positions The vectors representing the line strip.
- */
-fun WorldRenderEnvironment.drawLineStrip(argb: Int, vararg positions: Vec3f) {
-    if (positions.isEmpty()) return
-
-    drawCustomMesh(pipeline = ClientRenderPipelines.LineStrip) { pose ->
-        for (pos in positions) {
-            addVertex(pose, pos).setColor(argb)
-        }
-    }
-}
+// codex start
+// /**
+//  * Function to draw a line strip using the specified [positions] vectors.
+//  *
+//  * @param positions The vectors representing the line strip.
+//  */
+// fun WorldRenderEnvironment.drawLineStrip(argb: Int, vararg positions: Vec3f) {
+//     if (positions.isEmpty()) return
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.LineStrip) { pose ->
+//         for (pos in positions) {
+//             addVertex(pose, pos).setColor(argb)
+//         }
+//     }
+// }
+// codex end
 
 fun WorldRenderEnvironment.drawLineStrip(argb: Int, positions: VertexList) {
     if (positions.size == 0) return
@@ -359,72 +384,74 @@ fun WorldRenderEnvironment.drawSquareTexture(
         .setColor(argb)
 
 }
-
-fun WorldRenderEnvironment.drawSquareTextureGradient(
-    sampler0: AbstractTexture,
-    outerRadius: Float,
-    innerRadius: Float,
-    outerColor: Color4b,
-    innerColor: Color4b,
-    anchor: AnchorPoint = AnchorPoint.TOP_LEFT,
-    subdivisions: Int = 16,
-    startOffset: Float = 0.5f,
-    noDepthTest: Boolean = true,
-) {
-    if (outerRadius <= 0f || (outerColor.isTransparent && innerColor.isTransparent)) {
-        return
-    }
-
-    val size = outerRadius * 2f
-    val minX = size * anchor.xFactor
-    val minY = size * anchor.yFactor
-
-    val step = size / subdivisions
-    val centerX = minX + outerRadius
-    val centerY = minY + outerRadius
-
-    val baseRatio = (innerRadius / outerRadius).coerceIn(0f, 1f)
-    val effectiveRatio = maxOf(baseRatio, startOffset.coerceIn(0f, 0.99f))
-
-    fun getColorForPos(x: Float, y: Float): Int {
-        val dx = x - centerX
-        val dy = y - centerY
-        val distRatio = (kotlin.math.sqrt(dx * dx + dy * dy) / outerRadius).coerceIn(0f, 1f)
-
-        val t = when (distRatio <= effectiveRatio) {
-            true -> 0.0
-            else -> ((distRatio - effectiveRatio) / (1.0 - effectiveRatio)).coerceIn(0.0, 1.0)
-        }
-
-        return innerColor.interpolateTo(outerColor, t).argb
-    }
-
-    drawCustomMeshTextured(sampler0, ClientRenderPipelines.texQuads(noDepthTest)) { matrix ->
-        for (row in 0 until subdivisions) {
-            for (col in 0 until subdivisions) {
-                val x1 = minX + col * step
-                val x2 = x1 + step
-                val y1 = minY + row * step
-                val y2 = y1 + step
-
-                val u1 = col.toFloat() / subdivisions
-                val u2 = (col + 1).toFloat() / subdivisions
-                val v1 = row.toFloat() / subdivisions
-                val v2 = (row + 1).toFloat() / subdivisions
-
-                val c11 = getColorForPos(x1, y1)
-                val c12 = getColorForPos(x1, y2)
-                val c22 = getColorForPos(x2, y2)
-                val c21 = getColorForPos(x2, y1)
-
-                addVertex(matrix, x1, y2, 0.0f).setUv(u1, v2).setColor(c12)
-                addVertex(matrix, x1, y1, 0.0f).setUv(u1, v1).setColor(c11)
-                addVertex(matrix, x2, y1, 0.0f).setUv(u2, v1).setColor(c21)
-                addVertex(matrix, x2, y2, 0.0f).setUv(u2, v2).setColor(c22)
-            }
-        }
-    }
-}
+// codex start
+//
+// fun WorldRenderEnvironment.drawSquareTextureGradient(
+//     sampler0: AbstractTexture,
+//     outerRadius: Float,
+//     innerRadius: Float,
+//     outerColor: Color4b,
+//     innerColor: Color4b,
+//     anchor: AnchorPoint = AnchorPoint.TOP_LEFT,
+//     subdivisions: Int = 16,
+//     startOffset: Float = 0.5f,
+//     noDepthTest: Boolean = true,
+// ) {
+//     if (outerRadius <= 0f || (outerColor.isTransparent && innerColor.isTransparent)) {
+//         return
+//     }
+//
+//     val size = outerRadius * 2f
+//     val minX = size * anchor.xFactor
+//     val minY = size * anchor.yFactor
+//
+//     val step = size / subdivisions
+//     val centerX = minX + outerRadius
+//     val centerY = minY + outerRadius
+//
+//     val baseRatio = (innerRadius / outerRadius).coerceIn(0f, 1f)
+//     val effectiveRatio = maxOf(baseRatio, startOffset.coerceIn(0f, 0.99f))
+//
+//     fun getColorForPos(x: Float, y: Float): Int {
+//         val dx = x - centerX
+//         val dy = y - centerY
+//         val distRatio = (kotlin.math.sqrt(dx * dx + dy * dy) / outerRadius).coerceIn(0f, 1f)
+//
+//         val t = when (distRatio <= effectiveRatio) {
+//             true -> 0.0
+//             else -> ((distRatio - effectiveRatio) / (1.0 - effectiveRatio)).coerceIn(0.0, 1.0)
+//         }
+//
+//         return innerColor.interpolateTo(outerColor, t).argb
+//     }
+//
+//     drawCustomMeshTextured(sampler0, ClientRenderPipelines.texQuads(noDepthTest)) { matrix ->
+//         for (row in 0 until subdivisions) {
+//             for (col in 0 until subdivisions) {
+//                 val x1 = minX + col * step
+//                 val x2 = x1 + step
+//                 val y1 = minY + row * step
+//                 val y2 = y1 + step
+//
+//                 val u1 = col.toFloat() / subdivisions
+//                 val u2 = (col + 1).toFloat() / subdivisions
+//                 val v1 = row.toFloat() / subdivisions
+//                 val v2 = (row + 1).toFloat() / subdivisions
+//
+//                 val c11 = getColorForPos(x1, y1)
+//                 val c12 = getColorForPos(x1, y2)
+//                 val c22 = getColorForPos(x2, y2)
+//                 val c21 = getColorForPos(x2, y1)
+//
+//                 addVertex(matrix, x1, y2, 0.0f).setUv(u1, v2).setColor(c12)
+//                 addVertex(matrix, x1, y1, 0.0f).setUv(u1, v1).setColor(c11)
+//                 addVertex(matrix, x2, y1, 0.0f).setUv(u2, v1).setColor(c21)
+//                 addVertex(matrix, x2, y2, 0.0f).setUv(u2, v2).setColor(c22)
+//             }
+//         }
+//     }
+// }
+// codex end
 
 @JvmOverloads
 fun WorldRenderEnvironment.drawTriangle(p1: Vec3f, p2: Vec3f, p3: Vec3f, argb: Int, noDepthTest: Boolean = true) {
@@ -460,123 +487,133 @@ fun WorldRenderEnvironment.drawBox(
         }
     }
 }
-
-fun WorldRenderEnvironment.drawShape(
-    shape: VoxelShape,
-    faceColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-) {
-    if (faceColor != null && !faceColor.isTransparent) {
-        drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = true)) { pose ->
-            addShapeFaces(pose.pose(), shape, color = faceColor)
-        }
-    }
-
-    if (outlineColor != null && !outlineColor.isTransparent) {
-        drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-            addShapeOutlines(pose.pose(), shape, outlineColor)
-        }
-    }
-}
-
-fun WorldRenderEnvironment.drawShapeSide(
-    shape: VoxelShape,
-    side: Direction,
-    hitPos: Vec3,
-    faceColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-) {
-    if (faceColor != null && !faceColor.isTransparent) {
-        drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = true)) { pose ->
-            addShapeSideFaces(pose.pose(), shape, side, hitPos, color = faceColor)
-        }
-    }
-
-    if (outlineColor != null && !outlineColor.isTransparent) {
-        drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
-            addShapeSideOutlines(pose.pose(), shape, side, hitPos, outlineColor)
-        }
-    }
-}
-
-/**
- * Function to draw a colored [box] with specified [side].
- */
-fun WorldRenderEnvironment.drawBoxSide(
-    box: AABB,
-    side: Direction,
-    faceColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-) = drawBox(
-    box,
-    faceColor,
-    outlineColor,
-    faceVertices = BoxVertexIterator.FACE.sideMask(side),
-    outlineVertices = BoxVertexIterator.OUTLINE.sideMask(side),
-)
+// codex start
+//
+// fun WorldRenderEnvironment.drawShape(
+//     shape: VoxelShape,
+//     faceColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+// ) {
+//     if (faceColor != null && !faceColor.isTransparent) {
+//         drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = true)) { pose ->
+//             addShapeFaces(pose.pose(), shape, color = faceColor)
+//         }
+//     }
+//
+//     if (outlineColor != null && !outlineColor.isTransparent) {
+//         drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//             addShapeOutlines(pose.pose(), shape, outlineColor)
+//         }
+//     }
+// }
+// codex end
+// codex start
+//
+// fun WorldRenderEnvironment.drawShapeSide(
+//     shape: VoxelShape,
+//     side: Direction,
+//     hitPos: Vec3,
+//     faceColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+// ) {
+//     if (faceColor != null && !faceColor.isTransparent) {
+//         drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = true)) { pose ->
+//             addShapeSideFaces(pose.pose(), shape, side, hitPos, color = faceColor)
+//         }
+//     }
+//
+//     if (outlineColor != null && !outlineColor.isTransparent) {
+//         drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = true)) { pose ->
+//             addShapeSideOutlines(pose.pose(), shape, side, hitPos, outlineColor)
+//         }
+//     }
+// }
+//
+// /**
+//  * Function to draw a colored [box] with specified [side].
+//  */
+// codex end
+// codex start
+// fun WorldRenderEnvironment.drawBoxSide(
+//     box: AABB,
+//     side: Direction,
+//     faceColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+// ) = drawBox(
+//     box,
+//     faceColor,
+//     outlineColor,
+//     faceVertices = BoxVertexIterator.FACE.sideMask(side),
+//     outlineVertices = BoxVertexIterator.OUTLINE.sideMask(side),
+// )
+// codex end
 
 /**
  * Function to draw a colored [box] with specified [sides].
  */
-fun WorldRenderEnvironment.drawBoxSides(
-    box: AABB,
-    sides: Iterable<Direction>,
-    faceColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-) = drawBox(
-    box,
-    faceColor,
-    outlineColor,
-    faceVertices = BoxVertexIterator.FACE.sideMask(sides),
-    outlineVertices = BoxVertexIterator.OUTLINE.sideMask(sides),
-)
-
-/**
- * Function to draw a flat plane on the XZ axis with an optional outline.
- */
-fun WorldRenderEnvironment.drawPlane(
-    sizeX: Float,
-    sizeZ: Float,
-    fillColor: Color4b? = Color4b.TRANSPARENT,
-    outlineColor: Color4b? = Color4b.TRANSPARENT,
-    noDepthTest: Boolean = true
-) {
-    if (fillColor != null && !fillColor.isTransparent) {
-        val argb = fillColor.argb
-        drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = noDepthTest)) { matrix ->
-            addVertex(matrix, 0f, 0f, 0f).setColor(argb)
-            addVertex(matrix, 0f, 0f, sizeZ).setColor(argb)
-            addVertex(matrix, sizeX, 0f, sizeZ).setColor(argb)
-            addVertex(matrix, sizeX, 0f, 0f).setColor(argb)
-        }
-    }
-
-    if (outlineColor != null && !outlineColor.isTransparent) {
-        val argb = outlineColor.argb
-        drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = noDepthTest)) { matrix ->
-            addVertex(matrix, 0f, 0f, 0f).setColor(argb)
-            addVertex(matrix, 0f, 0f, sizeZ).setColor(argb)
-
-            addVertex(matrix, 0f, 0f, sizeZ).setColor(argb)
-            addVertex(matrix, sizeX, 0f, sizeZ).setColor(argb)
-
-            addVertex(matrix, sizeX, 0f, sizeZ).setColor(argb)
-            addVertex(matrix, sizeX, 0f, 0f).setColor(argb)
-
-            addVertex(matrix, sizeX, 0f, 0f).setColor(argb)
-            addVertex(matrix, 0f, 0f, 0f).setColor(argb)
-        }
-    }
-}
-
-/**
- * Function to draw a circle of the size [outerRadius] with a cutout of size [innerRadius]
- *
- * @param outerRadius The radius of the circle
- * @param innerRadius The radius inside the circle (the cutout)
- * @param outerColor The color of the outer edges
- * @param innerColor The color of the inner edges
- */
+// codex start
+// fun WorldRenderEnvironment.drawBoxSides(
+//     box: AABB,
+//     sides: Iterable<Direction>,
+//     faceColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+// ) = drawBox(
+//     box,
+//     faceColor,
+//     outlineColor,
+//     faceVertices = BoxVertexIterator.FACE.sideMask(sides),
+//     outlineVertices = BoxVertexIterator.OUTLINE.sideMask(sides),
+// )
+//
+// /**
+//  * Function to draw a flat plane on the XZ axis with an optional outline.
+//  */
+// codex end
+// codex start
+// fun WorldRenderEnvironment.drawPlane(
+//     sizeX: Float,
+//     sizeZ: Float,
+//     fillColor: Color4b? = Color4b.TRANSPARENT,
+//     outlineColor: Color4b? = Color4b.TRANSPARENT,
+//     noDepthTest: Boolean = true
+// ) {
+//     if (fillColor != null && !fillColor.isTransparent) {
+//         val argb = fillColor.argb
+//         drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = noDepthTest)) { matrix ->
+//             addVertex(matrix, 0f, 0f, 0f).setColor(argb)
+//             addVertex(matrix, 0f, 0f, sizeZ).setColor(argb)
+//             addVertex(matrix, sizeX, 0f, sizeZ).setColor(argb)
+//             addVertex(matrix, sizeX, 0f, 0f).setColor(argb)
+//         }
+//     }
+//
+//     if (outlineColor != null && !outlineColor.isTransparent) {
+//         val argb = outlineColor.argb
+//         drawCustomMesh(ClientRenderPipelines.lines(noDepthTest = noDepthTest)) { matrix ->
+//             addVertex(matrix, 0f, 0f, 0f).setColor(argb)
+//             addVertex(matrix, 0f, 0f, sizeZ).setColor(argb)
+//
+//             addVertex(matrix, 0f, 0f, sizeZ).setColor(argb)
+//             addVertex(matrix, sizeX, 0f, sizeZ).setColor(argb)
+//
+//             addVertex(matrix, sizeX, 0f, sizeZ).setColor(argb)
+//             addVertex(matrix, sizeX, 0f, 0f).setColor(argb)
+//
+//             addVertex(matrix, sizeX, 0f, 0f).setColor(argb)
+//             addVertex(matrix, 0f, 0f, 0f).setColor(argb)
+//         }
+//     }
+// }
+//
+// /**
+//  * Function to draw a circle of the size [outerRadius] with a cutout of size [innerRadius]
+//  *
+//  * @param outerRadius The radius of the circle
+//  * @param innerRadius The radius inside the circle (the cutout)
+//  * @param outerColor The color of the outer edges
+//  * @param innerColor The color of the inner edges
+//  */
+// codex end
 fun WorldRenderEnvironment.drawGradientCircle(
     outerRadius: Float,
     innerRadius: Float,
@@ -704,39 +741,41 @@ fun WorldRenderEnvironment.drawCircleOutline(radius: Float, color: Color4b, noDe
         uniform = ROUNDED_RECT_AS_OUTLINE_CIRCLE_UBO,
     )
 }
-
-fun WorldRenderEnvironment.drawGradientSides(
-    height: Double,
-    baseColor: Color4b,
-    topColor: Color4b,
-    box: AABB
-) {
-    if (height == 0.0) {
-        return
-    }
-
-    drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = true)) { pose ->
-        addVertex(pose, box.minX, 0.0, box.minZ).setColor(baseColor)
-        addVertex(pose, box.minX, height, box.minZ).setColor(topColor)
-        addVertex(pose, box.maxX, height, box.minZ).setColor(topColor)
-        addVertex(pose, box.maxX, 0.0, box.minZ).setColor(baseColor)
-
-        addVertex(pose, box.maxX, 0.0, box.minZ).setColor(baseColor)
-        addVertex(pose, box.maxX, height, box.minZ).setColor(topColor)
-        addVertex(pose, box.maxX, height, box.maxZ).setColor(topColor)
-        addVertex(pose, box.maxX, 0.0, box.maxZ).setColor(baseColor)
-
-        addVertex(pose, box.maxX, 0.0, box.maxZ).setColor(baseColor)
-        addVertex(pose, box.maxX, height, box.maxZ).setColor(topColor)
-        addVertex(pose, box.minX, height, box.maxZ).setColor(topColor)
-        addVertex(pose, box.minX, 0.0, box.maxZ).setColor(baseColor)
-
-        addVertex(pose, box.minX, 0.0, box.maxZ).setColor(baseColor)
-        addVertex(pose, box.minX, height, box.maxZ).setColor(topColor)
-        addVertex(pose, box.minX, height, box.minZ).setColor(topColor)
-        addVertex(pose, box.minX, 0.0, box.minZ).setColor(baseColor)
-    }
-}
+// codex start
+//
+// fun WorldRenderEnvironment.drawGradientSides(
+//     height: Double,
+//     baseColor: Color4b,
+//     topColor: Color4b,
+//     box: AABB
+// ) {
+//     if (height == 0.0) {
+//         return
+//     }
+//
+//     drawCustomMesh(ClientRenderPipelines.quads(noDepthTest = true)) { pose ->
+//         addVertex(pose, box.minX, 0.0, box.minZ).setColor(baseColor)
+//         addVertex(pose, box.minX, height, box.minZ).setColor(topColor)
+//         addVertex(pose, box.maxX, height, box.minZ).setColor(topColor)
+//         addVertex(pose, box.maxX, 0.0, box.minZ).setColor(baseColor)
+//
+//         addVertex(pose, box.maxX, 0.0, box.minZ).setColor(baseColor)
+//         addVertex(pose, box.maxX, height, box.minZ).setColor(topColor)
+//         addVertex(pose, box.maxX, height, box.maxZ).setColor(topColor)
+//         addVertex(pose, box.maxX, 0.0, box.maxZ).setColor(baseColor)
+//
+//         addVertex(pose, box.maxX, 0.0, box.maxZ).setColor(baseColor)
+//         addVertex(pose, box.maxX, height, box.maxZ).setColor(topColor)
+//         addVertex(pose, box.minX, height, box.maxZ).setColor(topColor)
+//         addVertex(pose, box.minX, 0.0, box.maxZ).setColor(baseColor)
+//
+//         addVertex(pose, box.minX, 0.0, box.maxZ).setColor(baseColor)
+//         addVertex(pose, box.minX, height, box.maxZ).setColor(topColor)
+//         addVertex(pose, box.minX, height, box.minZ).setColor(topColor)
+//         addVertex(pose, box.minX, 0.0, box.minZ).setColor(baseColor)
+//     }
+// }
+// codex end
 
 @Suppress("unused")
 enum class AnchorPoint(val xFactor: Float, val yFactor: Float) {

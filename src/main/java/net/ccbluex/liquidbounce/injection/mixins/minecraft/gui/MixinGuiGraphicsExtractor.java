@@ -20,7 +20,6 @@ package net.ccbluex.liquidbounce.injection.mixins.minecraft.gui;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.ccbluex.liquidbounce.additions.GuiGraphicsExtractorAddition;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleBetterInventory;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
@@ -44,11 +43,13 @@ public abstract class MixinGuiGraphicsExtractor implements GuiGraphicsExtractorA
 
     @Shadow
     protected abstract void itemCooldown(ItemStack stack, int x, int y);
-
-    @Inject(method = "itemCooldown", at = @At("TAIL"))
-    private void drawCooldownProgress(ItemStack stack, int x, int y, CallbackInfo ci) {
-        ModuleBetterInventory.INSTANCE.drawTextCooldownProgress((GuiGraphicsExtractor) (Object) this, stack, x, y);
-    }
+    // codex start
+    //
+    // @Inject(method = "itemCooldown", at = @At("TAIL"))
+    // private void drawCooldownProgress(ItemStack stack, int x, int y, CallbackInfo ci) {
+    //     ModuleBetterInventory.INSTANCE.drawTextCooldownProgress((GuiGraphicsExtractor) (Object) this, stack, x, y);
+    // }
+    // codex end
 
     @Override
     public void liquidbounce$drawItemBar(ItemStack stack, int x, int y) {

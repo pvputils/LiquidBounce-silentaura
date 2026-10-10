@@ -17,7 +17,6 @@
  * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.github.gradle.node.npm.task.NpmTask
 import dev.detekt.gradle.DetektCreateBaselineTask
 import groovy.json.JsonOutput
 import java.time.Duration
@@ -30,7 +29,9 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.gradleGitProperties)
     alias(libs.plugins.detekt)
-    alias(libs.plugins.nodeGradle)
+    // codex start
+    // alias(libs.plugins.nodeGradle)
+    // codex end
     alias(libs.plugins.dokka)
     `maven-publish`
 }
@@ -130,71 +131,121 @@ dependencies {
     api(libs.fabric.kotlin)
 
     // Mod menu
-    api(libs.modmenu)
+    // codex start
+    // api(libs.modmenu)
+    // codex end
 
     // Recommended mods (on IDE)
-    api(libs.sodium)
-    api(libs.lithium)
-    runtimeOnly(libs.immediatelyFast)
-    runtimeOnly(libs.iris)
+    // codex start
+    // api(libs.sodium)
+    // codex end
+    // codex start
+    // api(libs.lithium)
+    // codex end
+    // codex start
+    // runtimeOnly(libs.immediatelyFast)
+    // codex end
+    // codex start
+    // runtimeOnly(libs.iris)
+    // codex end
 
     // ViaFabricPlus
     api(libs.vfp.api)
     runtimeOnly(libs.vfp)
 
     // Exploit Preventer
-    api(libs.exploitPreventer.api)
-    runtimeOnly(libs.exploitPreventer)
+    // codex start
+    // api(libs.exploitPreventer.api)
+    // codex end
+    // codex start
+    // runtimeOnly(libs.exploitPreventer)
+    // codex end
 
     // Minecraft account authentication (Microsoft/Xbox Live/XSTS token chain)
-    jij(libs.minecraftauth)
+    // codex start
+    // jij(libs.minecraftauth)
+    // codex end
 
     // TheAltening alt service
-    jij(libs.thealtening)
+    // codex start
+    // jij(libs.thealtening)
+    // codex end
 
     // Mojang REST APIs
-    jij(libs.bundles.retrofit)
+    // codex start
+    // jij(libs.bundles.retrofit)
+    // codex end
 
     // LWJGL EGL
-    jij(libs.lwjgl.egl)
+    // codex start
+    // jij(libs.lwjgl.egl)
+    // codex end
 
     // Chromium, through the bundled CEF add-on. It depends on the client, so it stays out of the published POM and
     // brings nothing along.
-    include(libs.liquidbounce.cef)
-    localRuntime(libs.liquidbounce.cef) { isTransitive = false }
+    // codex start
+    // include(libs.liquidbounce.cef)
+    // localRuntime(libs.liquidbounce.cef) { isTransitive = false }
+    // codex end
 
 
     // Ktor Server
-    jij(libs.ktor.server.core)
-    jij(libs.ktor.server.cio)
-    jij(libs.ktor.server.websockets)
-    jij(libs.ktor.server.sse)
-    jij(libs.ktor.server.cors)
-    jij(libs.ktor.server.compression)
-    jij(libs.ktor.server.content.negotiation)
-    jij(libs.ktor.server.status.pages)
-    jij(libs.ktor.serialization.gson)
+    // codex start
+    // jij(libs.ktor.server.core)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.cio)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.websockets)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.sse)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.cors)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.compression)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.content.negotiation)
+    // codex end
+    // codex start
+    // jij(libs.ktor.server.status.pages)
+    // codex end
+    // codex start
+    // jij(libs.ktor.serialization.gson)
+    // codex end
 
     // Machine Learning
     jij(libs.djl.api)
     jij(libs.djl.pytorch)
 
     // HTTP library
-    jij(libs.bundles.okhttp)
+    jij(libs.okhttp) //codex (jij(libs.bundles.okhttp))
 
     // SOCKS5 & HTTP Proxy Support
-    jij(libs.netty.handler.proxy)
+    // codex start
+    // jij(libs.netty.handler.proxy)
+    // codex end
 
     // Update Checker
-    jij(libs.semver4j)
+    // codex start
+    // jij(libs.semver4j)
+    // codex end
 
     // Name Protect
-    jij(libs.ahocorasick)
+    // codex start
+    // jij(libs.ahocorasick)
+    // codex end
 
     // External utils
     compileOnlyApi(libs.fastutil4k.extensionsOnly)
     jij(libs.fastutil4k.moreCollections)
-    jij(libs.discord.ipc)
+    // codex start
+    // jij(libs.discord.ipc)
+    // codex end
 
     // Test libraries
     testImplementation(kotlin("test"))
@@ -205,11 +256,13 @@ dependencies {
 addResolvedDependencies(jij, "compileOnly", "include", "api")
 
 tasks.processResources {
-    dependsOn("buildTheme")
-
-    from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
-    }
+    // codex start
+    // dependsOn("buildTheme")
+    //
+    // from("src-theme/dist") {
+    //     into("resources/liquidbounce/themes/liquidbounce")
+    // }
+    // codex end
 
     val modVersion = providers.gradleProperty("mod_version")
     val minecraftVersion = providers.gradleProperty("mod_mc_version")
@@ -257,51 +310,53 @@ tasks.processResources {
             )
         )
     }
-}
-
-// The following code will include the theme into the build
-
-// The plugin uses global tools when download=false, so include their actual versions in the cache key.
-val nodeVersion = providers.exec {
-    commandLine("node", "--version")
-}.standardOutput.asText.map(String::trim)
-val npmVersion = providers.exec {
-    // On Windows, CreateProcess cannot launch bare "npm" (a .cmd shim); node-gradle uses npm.cmd as well.
-    val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) "npm.cmd" else "npm"
-    commandLine(npmExecutable, "--version")
-}.standardOutput.asText.map(String::trim)
-
-tasks.register<NpmTask>("npmInstallTheme") {
-    description = "Installs the locked dependencies for the web theme"
-    workingDir = file("src-theme")
-    args.set(listOf("ci"))
-
-    inputs.files("src-theme/package.json", "src-theme/package-lock.json")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.dir("src-theme/node_modules")
-}
-
-tasks.register<NpmTask>("buildTheme") {
-    description = "Builds the distributable web theme assets"
-    dependsOn("npmInstallTheme")
-    workingDir = file("src-theme")
-    args.set(listOf("run", "build"))
-
-    inputs.property("nodeVersion", nodeVersion)
-    inputs.property("npmVersion", npmVersion)
-    inputs.files(
-        "src-theme/package.json",
-        "src-theme/package-lock.json",
-        "src-theme/index.html",
-        "src-theme/svelte.config.js",
-        "src-theme/tsconfig.json",
-        "src-theme/tsconfig.node.json",
-        "src-theme/vite.config.ts",
-    ).withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.dir("src-theme/src").withPathSensitivity(PathSensitivity.RELATIVE)
-    inputs.dir("src-theme/public").withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.dir("src-theme/dist")
-    outputs.cacheIf("Theme output is reproducible for locked dependencies and tool versions") { true }
+// codex start
+// }
+//
+// // The following code will include the theme into the build
+//
+// // The plugin uses global tools when download=false, so include their actual versions in the cache key.
+// val nodeVersion = providers.exec {
+//     commandLine("node", "--version")
+// }.standardOutput.asText.map(String::trim)
+// val npmVersion = providers.exec {
+//     // On Windows, CreateProcess cannot launch bare "npm" (a .cmd shim); node-gradle uses npm.cmd as well.
+//     val npmExecutable = if (System.getProperty("os.name").lowercase().contains("windows")) "npm.cmd" else "npm"
+//     commandLine(npmExecutable, "--version")
+// }.standardOutput.asText.map(String::trim)
+//
+// tasks.register<NpmTask>("npmInstallTheme") {
+//     description = "Installs the locked dependencies for the web theme"
+//     workingDir = file("src-theme")
+//     args.set(listOf("ci"))
+//
+//     inputs.files("src-theme/package.json", "src-theme/package-lock.json")
+//         .withPathSensitivity(PathSensitivity.RELATIVE)
+//     outputs.dir("src-theme/node_modules")
+// }
+//
+// tasks.register<NpmTask>("buildTheme") {
+//     description = "Builds the distributable web theme assets"
+//     dependsOn("npmInstallTheme")
+//     workingDir = file("src-theme")
+//     args.set(listOf("run", "build"))
+//
+//     inputs.property("nodeVersion", nodeVersion)
+//     inputs.property("npmVersion", npmVersion)
+//     inputs.files(
+//         "src-theme/package.json",
+//         "src-theme/package-lock.json",
+//         "src-theme/index.html",
+//         "src-theme/svelte.config.js",
+//         "src-theme/tsconfig.json",
+//         "src-theme/tsconfig.node.json",
+//         "src-theme/vite.config.ts",
+//     ).withPathSensitivity(PathSensitivity.RELATIVE)
+//     inputs.dir("src-theme/src").withPathSensitivity(PathSensitivity.RELATIVE)
+//     inputs.dir("src-theme/public").withPathSensitivity(PathSensitivity.RELATIVE)
+//     outputs.dir("src-theme/dist")
+//     outputs.cacheIf("Theme output is reproducible for locked dependencies and tool versions") { true }
+// codex end
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
@@ -397,15 +452,17 @@ kotlin {
         freeCompilerArgs.add("-Xcompanion-blocks-and-extensions")
     }
 
-    // Add-ons are compiled against these; `./gradlew updateKotlinAbi` records a deliberate change.
-    @OptIn(ExperimentalAbiValidation::class)
-    abiValidation {
-        filters {
-            include {
-                annotatedWith.add("net.ccbluex.liquidbounce.features.addon.AddonApi")
-            }
-        }
-    }
+    // codex start
+    // // Add-ons are compiled against these; `./gradlew updateKotlinAbi` records a deliberate change.
+    // @OptIn(ExperimentalAbiValidation::class)
+    // abiValidation {
+    //     filters {
+    //         include {
+    //             annotatedWith.add("net.ccbluex.liquidbounce.features.addon.AddonApi")
+    //         }
+    //     }
+    // }
+    // codex end
 }
 
 tasks.jar {
@@ -493,10 +550,13 @@ tasks.register<Copy>("copyZipInclude") {
 }
 
 tasks.named<Jar>("sourcesJar") {
-    dependsOn("buildTheme", "generateGitProperties")
-    from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
-    }
+    // codex start
+    // dependsOn("buildTheme", "generateGitProperties")
+    // from("src-theme/dist") {
+    //     into("resources/liquidbounce/themes/liquidbounce")
+    // }
+    // codex end
+    dependsOn("generateGitProperties") //codex (dependsOn("buildTheme", "generateGitProperties"))
 }
 
 tasks.named("build") {

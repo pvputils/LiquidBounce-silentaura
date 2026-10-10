@@ -22,7 +22,6 @@ package net.ccbluex.liquidbounce.render.buffers;
 import com.mojang.renderpearl.api.buffers.GpuBuffer;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import org.jspecify.annotations.Nullable;
-
 import java.util.Comparator;
 
 /**

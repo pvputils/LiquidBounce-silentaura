@@ -18,7 +18,6 @@
  */
 package net.ccbluex.liquidbounce.event
 
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 
 /**
@@ -26,7 +25,9 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
  */
 @AddonApi
 abstract class Event {
-    @ProtocolExclude
+    // codex start
+    // @ProtocolExclude
+    // codex end
     var isCompleted: Boolean = false
         internal set
 }
@@ -55,17 +56,19 @@ abstract class CancellableEvent : Event() {
 
 }
 
-/**
- * MixinEntityRenderState of event. Might be PRE or POST.
- */
-@AddonApi
-enum class EventState(val stateName: String) {
-    PRE("PRE"), POST("POST")
-}
+// codex start
+// /**
+//  * MixinEntityRenderState of event. Might be PRE or POST.
+//  */
+// @AddonApi
+// enum class EventState(val stateName: String) {
+//     PRE("PRE"), POST("POST")
+// }
+//
+// /**
+//  * The event's name on the interop protocol, or the simple class name for an untagged add-on event.
+//  */
+// codex end
 
-/**
- * The event's name on the interop protocol, or the simple class name for an untagged add-on event.
- */
 val Class<out Event>.eventName: String
     get() = EventManager.eventNameOrNull(this) ?: simpleName
-

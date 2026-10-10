@@ -51,10 +51,12 @@ inline fun RenderPass.setUniforms(textures: Map<String, AbstractTexture?>) =
 @JvmName("setTextureUniform")
 inline fun RenderPass.setUniform(name: String, texture: AbstractTexture?) =
     setUniform(name, texture?.textureView, texture?.sampler)
-
-@JvmName("unsetTextureUniform")
-inline fun RenderPass.unsetUniform(name: String) =
-    setUniform(name, null, null)
+// codex start
+//
+// @JvmName("unsetTextureUniform")
+// inline fun RenderPass.unsetUniform(name: String) =
+//     setUniform(name, null, null)
+// codex end
 
 @JvmName("setBufferUniforms")
 inline fun RenderPass.setUniforms(uniforms: Map<String, GpuBufferSlice>) =
@@ -62,21 +64,29 @@ inline fun RenderPass.setUniforms(uniforms: Map<String, GpuBufferSlice>) =
 
 inline fun RenderPass.bindDefaultUniforms() = RenderSystem.bindDefaultUniforms(this)
 
-inline fun RenderPass.bindProjectionUniform() {
-    RenderSystem.getProjectionMatrixBuffer()?.let { setUniform("Projection", it) }
-}
+// codex start
+// inline fun RenderPass.bindProjectionUniform() {
+//     RenderSystem.getProjectionMatrixBuffer()?.let { setUniform("Projection", it) }
+// }
+// // codex start
+// //
+// // inline fun RenderPass.bindFogUniform() {
+// //     RenderSystem.getShaderFog()?.let { setUniform("Fog", it) }
+// // }
+// // codex end
+// codex end
 
-inline fun RenderPass.bindFogUniform() {
-    RenderSystem.getShaderFog()?.let { setUniform("Fog", it) }
-}
-
-inline fun RenderPass.bindGlobalsUniform() {
-    RenderSystem.getGlobalSettingsUniform()?.let { setUniform("Globals", it) }
-}
-
-inline fun RenderPass.bindLightingUniform() {
-    RenderSystem.getShaderLights()?.let { setUniform("Lighting", it) }
-}
+// codex start
+// inline fun RenderPass.bindGlobalsUniform() {
+//     RenderSystem.getGlobalSettingsUniform()?.let { setUniform("Globals", it) }
+// }
+// // codex start
+// //
+// // inline fun RenderPass.bindLightingUniform() {
+// //     RenderSystem.getShaderLights()?.let { setUniform("Lighting", it) }
+// // }
+// // codex end
+// codex end
 
 inline fun RenderPass.bindDynamicTransformsUniform(gpuBufferSlice: GpuBufferSlice) {
     setUniform("DynamicTransforms", gpuBufferSlice)
@@ -94,27 +104,29 @@ inline fun RenderPass.setupRenderTypeScissor() {
     }
 }
 
-/**
- * Set vertex and index buffers for [RenderPass] and call [RenderPass.drawIndexed].
- *
- * This function assumes the [GpuBufferSlice]s are correctly aligned with corresponding vertex/index byte count.
- */
-fun RenderPass.bindAndDraw(
-    vertexSlice: GpuBufferSlice,
-    indexSlice: GpuBufferSlice,
-    indexType: IndexType,
-    indexCount: Int,
-) {
-    setVertexBuffer(0, vertexSlice)
-    setIndexBuffer(indexSlice.buffer, indexType)
-    drawIndexed(
-        indexCount,
-        1,
-        (indexSlice.offset / indexType.bytes).toInt(),
-        0,
-        0,
-    )
-}
+// codex start
+// /**
+//  * Set vertex and index buffers for [RenderPass] and call [RenderPass.drawIndexed].
+//  *
+//  * This function assumes the [GpuBufferSlice]s are correctly aligned with corresponding vertex/index byte count.
+//  */
+// fun RenderPass.bindAndDraw(
+//     vertexSlice: GpuBufferSlice,
+//     indexSlice: GpuBufferSlice,
+//     indexType: IndexType,
+//     indexCount: Int,
+// ) {
+//     setVertexBuffer(0, vertexSlice)
+//     setIndexBuffer(indexSlice.buffer, indexType)
+//     drawIndexed(
+//         indexCount,
+//         1,
+//         (indexSlice.offset / indexType.bytes).toInt(),
+//         0,
+//         0,
+//     )
+// }
+// codex end
 
 private val COLOR_MODULATOR = Vector4f(1f)
 private val VECTOR3F_0 = Vector3f()

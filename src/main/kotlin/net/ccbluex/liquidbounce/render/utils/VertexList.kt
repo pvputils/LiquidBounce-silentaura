@@ -45,7 +45,9 @@ inline fun VertexList.forEachVertex(action: (x: Float, y: Float, z: Float) -> Un
     }
 }
 
-fun VertexList.lineStripAsLines(): VertexList = LineStripAsLinesVertexView(this)
+// codex start
+// fun VertexList.lineStripAsLines(): VertexList = LineStripAsLinesVertexView(this)
+// codex end
 
 @Suppress("TooManyFunctions")
 class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
@@ -68,14 +70,18 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
         return this
     }
 
-    fun add(vec: Vec3f): MutableVertexList = add(vec.x, vec.y, vec.z)
+    // codex start
+    // fun add(vec: Vec3f): MutableVertexList = add(vec.x, vec.y, vec.z)
+    // codex end
 
     fun add(vec: Vec3): MutableVertexList = add(vec.x.toFloat(), vec.y.toFloat(), vec.z.toFloat())
 
-    fun addAll(vertices: Iterable<Vec3>): MutableVertexList {
-        vertices.forEach(this::add)
-        return this
-    }
+    // codex start
+    // fun addAll(vertices: Iterable<Vec3>): MutableVertexList {
+    //     vertices.forEach(this::add)
+    //     return this
+    // }
+    // codex end
 
     fun addRelative(vec: Vec3, origin: Vec3): MutableVertexList = add(
         (vec.x - origin.x).toFloat(),
@@ -83,34 +89,40 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
         (vec.z - origin.z).toFloat(),
     )
 
-    fun addAllRelative(vertices: Iterable<Vec3>, origin: Vec3): MutableVertexList {
-        vertices.forEach { addRelative(it, origin) }
-        return this
-    }
+    // codex start
+    // fun addAllRelative(vertices: Iterable<Vec3>, origin: Vec3): MutableVertexList {
+    //     vertices.forEach { addRelative(it, origin) }
+    //     return this
+    // }
+    // codex end
 
     fun addRelativeToCamera(vec: Vec3, camera: Camera): MutableVertexList {
         val cameraPos = camera.position()
         return addRelative(vec, cameraPos)
     }
 
-    fun addAllRelativeToCamera(vertices: Iterable<Vec3>, camera: Camera): MutableVertexList {
-        vertices.forEach { addRelativeToCamera(it, camera) }
-        return this
-    }
+    // codex start
+    // fun addAllRelativeToCamera(vertices: Iterable<Vec3>, camera: Camera): MutableVertexList {
+    //     vertices.forEach { addRelativeToCamera(it, camera) }
+    //     return this
+    // }
+    // codex end
 
     inline fun <T> addAll(vertices: Iterable<T>, vertexMapper: (T) -> Vec3): MutableVertexList {
         vertices.forEach { add(vertexMapper(it)) }
         return this
     }
 
-    inline fun <T> addAllRelative(
-        vertices: Iterable<T>,
-        origin: Vec3,
-        vertexMapper: (T) -> Vec3,
-    ): MutableVertexList {
-        vertices.forEach { addRelative(vertexMapper(it), origin) }
-        return this
-    }
+    // codex start
+    // inline fun <T> addAllRelative(
+    //     vertices: Iterable<T>,
+    //     origin: Vec3,
+    //     vertexMapper: (T) -> Vec3,
+    // ): MutableVertexList {
+    //     vertices.forEach { addRelative(vertexMapper(it), origin) }
+    //     return this
+    // }
+    // codex end
 
     inline fun <T> addAllRelativeToCamera(
         vertices: Iterable<T>,
@@ -134,22 +146,24 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
     }
 }
 
-private class LineStripAsLinesVertexView(private val source: VertexList) : VertexList {
-
-    override val size: Int
-        get() = if (source.size < 2) 0 else (source.size - 1) shl 1
-
-    override fun x(index: Int): Float = source.x(index.toSourceIndex())
-
-    override fun y(index: Int): Float = source.y(index.toSourceIndex())
-
-    override fun z(index: Int): Float = source.z(index.toSourceIndex())
-
-    private fun Int.toSourceIndex(): Int {
-        if (this !in 0 until size) {
-            throw IndexOutOfBoundsException("Index $this out of bounds [0, $size)")
-        }
-
-        return (this shr 1) + (this and 1)
-    }
-}
+// codex start
+// private class LineStripAsLinesVertexView(private val source: VertexList) : VertexList {
+//
+//     override val size: Int
+//         get() = if (source.size < 2) 0 else (source.size - 1) shl 1
+//
+//     override fun x(index: Int): Float = source.x(index.toSourceIndex())
+//
+//     override fun y(index: Int): Float = source.y(index.toSourceIndex())
+//
+//     override fun z(index: Int): Float = source.z(index.toSourceIndex())
+//
+//     private fun Int.toSourceIndex(): Int {
+//         if (this !in 0 until size) {
+//             throw IndexOutOfBoundsException("Index $this out of bounds [0, $size)")
+//         }
+//
+//         return (this shr 1) + (this and 1)
+//     }
+// }
+// codex end

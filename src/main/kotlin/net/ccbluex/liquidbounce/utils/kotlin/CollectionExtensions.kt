@@ -21,14 +21,10 @@
 
 package net.ccbluex.liquidbounce.utils.kotlin
 
-import it.unimi.dsi.fastutil.objects.ObjectArraySet
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet
 import net.minecraft.world.level.block.ColorCollection
 import net.minecraft.world.level.block.WeatheringCopperCollection
 import java.util.Collections
-import java.util.SequencedCollection
-import java.util.function.Predicate
 
 fun <T> Array<out T>?.unmodifiable(): List<T> =
     when {
@@ -36,50 +32,60 @@ fun <T> Array<out T>?.unmodifiable(): List<T> =
         size == 1 -> Collections.singletonList(this[0])
         else -> ObjectImmutableList(this)
     }
+// codex start
+//
+// fun <E> Collection<E>.toOrderedSet(): Set<E> {
+//     return when (this.size) {
+//         0 -> emptySet()
+//         1 -> Collections.singleton(if (this is SequencedCollection) this.first else this.iterator().next())
+//         in 2..4 -> ObjectArraySet(this)
+//         else -> ObjectLinkedOpenHashSet(this)
+//     }
+// }
+// codex end
+// codex start
+//
+// fun <T> Iterable<Predicate<T>>.matchesAny(t: T): Boolean =
+//     any { it.test(t) }
+// codex end
+// codex start
+//
+// fun <T> Iterable<Predicate<T>>.matchesAll(t: T): Boolean =
+//     all { it.test(t) }
+// // codex start
+// //
+// // inline fun <T : Any> Array<T?>.getOrSet(index: Int, defaultValue: () -> T): T {
+// //     val t = get(index)
+// //     if (t != null) return t
+// //     val y = defaultValue()
+// //     set(index, y)
+// //     return y
+// // }
+// // codex end
+//
+// operator fun <T : Any> ColorCollection<T>.contains(e: T) =
+//     e === this.white ||
+//         e === this.orange ||
+//         e === this.magenta ||
+//         e === this.lightBlue ||
+//         e === this.yellow ||
+//         e === this.lime ||
+//         e === this.pink ||
+//         e === this.gray ||
+//         e === this.lightGray ||
+//         e === this.cyan ||
+//         e === this.purple ||
+//         e === this.blue ||
+//         e === this.brown ||
+//         e === this.green ||
+//         e === this.red ||
+//         e === this.black
+// codex end
 
-fun <E> Collection<E>.toOrderedSet(): Set<E> {
-    return when (this.size) {
-        0 -> emptySet()
-        1 -> Collections.singleton(if (this is SequencedCollection) this.first else this.iterator().next())
-        in 2..4 -> ObjectArraySet(this)
-        else -> ObjectLinkedOpenHashSet(this)
-    }
-}
-
-fun <T> Iterable<Predicate<T>>.matchesAny(t: T): Boolean =
-    any { it.test(t) }
-
-fun <T> Iterable<Predicate<T>>.matchesAll(t: T): Boolean =
-    all { it.test(t) }
-
-inline fun <T : Any> Array<T?>.getOrSet(index: Int, defaultValue: () -> T): T {
-    val t = get(index)
-    if (t != null) return t
-    val y = defaultValue()
-    set(index, y)
-    return y
-}
-
-operator fun <T : Any> ColorCollection<T>.contains(e: T) =
-    e === this.white ||
-        e === this.orange ||
-        e === this.magenta ||
-        e === this.lightBlue ||
-        e === this.yellow ||
-        e === this.lime ||
-        e === this.pink ||
-        e === this.gray ||
-        e === this.lightGray ||
-        e === this.cyan ||
-        e === this.purple ||
-        e === this.blue ||
-        e === this.brown ||
-        e === this.green ||
-        e === this.red ||
-        e === this.black
-
-fun <T : Any> MutableCollection<T>.addAll(other: ColorCollection<T>) =
-    other.forEach(this::add)
+// codex start
+// fun <T : Any> MutableCollection<T>.addAll(other: ColorCollection<T>) =
+//     other.forEach(this::add)
+// codex end
 
 operator fun <T : Any> WeatheringCopperCollection<T>.contains(e: T) =
     this.weathering.contains(e) || this.waxed.contains(e)
@@ -87,5 +93,7 @@ operator fun <T : Any> WeatheringCopperCollection<T>.contains(e: T) =
 operator fun <T : Any> WeatheringCopperCollection.ByState<T>.contains(e: T) =
     e === this.unaffected || e === this.exposed || e === this.weathered || e === this.oxidized
 
-fun <T : Any> MutableCollection<T>.addAll(other: WeatheringCopperCollection<T>) =
-    other.forEach(this::add)
+// codex start
+// fun <T : Any> MutableCollection<T>.addAll(other: WeatheringCopperCollection<T>) =
+//     other.forEach(this::add)
+// codex end

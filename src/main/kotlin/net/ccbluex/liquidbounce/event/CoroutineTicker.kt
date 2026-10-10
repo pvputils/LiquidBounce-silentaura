@@ -159,19 +159,21 @@ internal class TickUntilCallback(
  *
  * @returns if we passed the time of [ticks] without breaking the loop.
  */
-suspend fun tickConditional(ticks: Int, breakLoop: BooleanSupplier): Boolean {
-    // Don't wait if ticks is 0
-    if (ticks == 0) {
-        return !breakLoop.asBoolean
-    }
-
-    return tickUntil { breakLoop.asBoolean || it >= ticks } >= ticks
-}
-
-/**
- * Waits a fixed amount of ticks before continuing.
- * Re-entry at the game tick.
- */
+// codex start
+// suspend fun tickConditional(ticks: Int, breakLoop: BooleanSupplier): Boolean {
+//     // Don't wait if ticks is 0
+//     if (ticks == 0) {
+//         return !breakLoop.asBoolean
+//     }
+//
+//     return tickUntil { breakLoop.asBoolean || it >= ticks } >= ticks
+// }
+//
+// /**
+//  * Waits a fixed amount of ticks before continuing.
+//  * Re-entry at the game tick.
+//  */
+// codex end
 suspend fun waitTicks(ticks: Int) {
     // Don't wait if ticks is 0
     if (ticks == 0) {
@@ -187,4 +189,6 @@ suspend fun waitTicks(ticks: Int) {
  *
  * Note: When TPS is not 20, this won't be actual `seconds`.
  */
-suspend fun waitSeconds(seconds: Int) = waitTicks(seconds * 20)
+// codex start
+// suspend fun waitSeconds(seconds: Int) = waitTicks(seconds * 20)
+// codex end

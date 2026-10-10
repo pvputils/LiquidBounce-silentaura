@@ -29,7 +29,9 @@ import net.ccbluex.liquidbounce.utils.math.sq
 import net.minecraft.network.chat.TextColor
 import net.minecraft.util.ARGB
 import net.minecraft.world.item.DyeColor
-import org.joml.Vector3f
+// codex start
+// import org.joml.Vector3f
+// codex end
 import org.joml.Vector4f
 
 @ValueClassCandidate
@@ -164,12 +166,14 @@ data class Color4b(val argb: Int) {
 
     fun alpha(alpha: Int) = with(a = alpha)
 
-    @Deprecated(
-        message = "Replaced with Color4b.argb",
-        replaceWith = ReplaceWith("this.argb"),
-        level = DeprecationLevel.ERROR, // For script compatibility only
-    )
-    fun toARGB() = this.argb
+    // codex start
+    // @Deprecated(
+    //     message = "Replaced with Color4b.argb",
+    //     replaceWith = ReplaceWith("this.argb"),
+    //     level = DeprecationLevel.ERROR, // For script compatibility only
+    // )
+    // fun toARGB() = this.argb
+    // codex end
 
     fun fade(fade: Float): Color4b {
         return if (fade >= 1.0f) {
@@ -179,9 +183,13 @@ data class Color4b(val argb: Int) {
         }
     }
 
-    fun darker() = Color4b(darkerChannel(r), darkerChannel(g), darkerChannel(b), a)
+    // codex start
+    // fun darker() = Color4b(darkerChannel(r), darkerChannel(g), darkerChannel(b), a)
+    // codex end
 
-    private fun darkerChannel(value: Int) = (value * 0.7f).toInt().coerceAtLeast(0)
+    // codex start
+    // private fun darkerChannel(value: Int) = (value * 0.7f).toInt().coerceAtLeast(0)
+    // codex end
 
     /**
      * Interpolates this color with another color using the given percentage.
@@ -216,21 +224,25 @@ data class Color4b(val argb: Int) {
         fma(tA, (other.a - a).toDouble(), a.toDouble()).toInt().coerceIn(0, 255),
     )
 
-    /**
-     * Converts this [Color4b] to a Java AWT Color
-     *
-     * @return The Color object representation
-     */
-    fun toAwtColor(): Color = Color(r, g, b, a)
+    // codex start
+    // /**
+    //  * Converts this [Color4b] to a Java AWT Color
+    //  *
+    //  * @return The Color object representation
+    //  */
+    // fun toAwtColor(): Color = Color(r, g, b, a)
+    // codex end
 
     fun toTextColor(): TextColor = TextColor.fromRgb(argb)
 
-    /**
-     * @return the ARGB value in hex string with [format].
-     */
-    @JvmOverloads
-    fun toHexString(format: HexFormat = HexFormat.Default): String =
-        argb.toHexString(format)
+    // codex start
+    // /**
+    //  * @return the ARGB value in hex string with [format].
+    //  */
+    // @JvmOverloads
+    // fun toHexString(format: HexFormat = HexFormat.Default): String =
+    //     argb.toHexString(format)
+    // codex end
 
     /**
      * Get closest [DyeColor] entry with RGB 3D distance (ignoring alpha)
@@ -252,9 +264,11 @@ data class Color4b(val argb: Int) {
         return dest.set(r / 255f, g / 255f, b / 255f, a / 255f)
     }
 
-    @JvmOverloads
-    fun toRgbVector3f(dest: Vector3f = Vector3f()): Vector3f {
-        return dest.set(r / 255f, g / 255f, b / 255f)
-    }
+    // codex start
+    // @JvmOverloads
+    // fun toRgbVector3f(dest: Vector3f = Vector3f()): Vector3f {
+    //     return dest.set(r / 255f, g / 255f, b / 255f)
+    // }
+    // codex end
 
 }

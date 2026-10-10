@@ -18,21 +18,26 @@
  */
 package net.ccbluex.liquidbounce.event
 
-import kotlinx.coroutines.CompletionHandler
+// codex start
+// import kotlinx.coroutines.CompletionHandler
+// codex end
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withTimeoutOrNull
+// codex start
+// import kotlinx.coroutines.suspendCancellableCoroutine
+// codex end
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
-import java.util.function.Consumer
-import java.util.function.Predicate
+// codex start
+// import java.util.function.Consumer
+// codex end
+// codex start
+// import java.util.function.Predicate
+// codex end
 import kotlin.coroutines.ContinuationInterceptor
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.time.Duration
 
 typealias SuspendableEventHandler<T> = suspend CoroutineScope.(T) -> Unit
 
@@ -88,55 +93,59 @@ inline fun <reified T : Event> EventListener.suspendHandler(
     }
 }
 
-suspend fun <T : Event> EventListener.waitMatches(
-    eventClass: Class<T>,
-    priority: Short,
-    predicate: Predicate<T>,
-): T = suspendCancellableCoroutine { continuation ->
-    val handler = object : CompletionHandler, Consumer<T> {
-        @JvmField val eventHook: EventHook<T> = this@waitMatches.newEventHook(priority, this)
+// codex start
+// suspend fun <T : Event> EventListener.waitMatches(
+//     eventClass: Class<T>,
+//     priority: Short,
+//     predicate: Predicate<T>,
+// ): T = suspendCancellableCoroutine { continuation ->
+//     val handler = object : CompletionHandler, Consumer<T> {
+//         @JvmField val eventHook: EventHook<T> = this@waitMatches.newEventHook(priority, this)
+//
+//         private fun unregisterAndResume(result: Result<T>) {
+//             EventManager.unregisterEventHook(eventClass, eventHook)
+//             if (continuation.isActive) {
+//                 continuation.resumeWith(result)
+//             }
+//         }
+//
+//         override fun invoke(p1: Throwable?) {
+//             EventManager.unregisterEventHook(eventClass, eventHook)
+//         }
+//
+//         override fun accept(event: T) {
+//             try {
+//                 if (predicate.test(event)) {
+//                     unregisterAndResume(Result.success(event))
+//                 }
+//             } catch (e: Throwable) {
+//                 unregisterAndResume(Result.failure(e))
+//             }
+//         }
+//     }
+//
+//     continuation.invokeOnCancellation(handler)
+//     EventManager.registerEventHook(eventClass, handler.eventHook)
+// }
+// codex end
 
-        private fun unregisterAndResume(result: Result<T>) {
-            EventManager.unregisterEventHook(eventClass, eventHook)
-            if (continuation.isActive) {
-                continuation.resumeWith(result)
-            }
-        }
-
-        override fun invoke(p1: Throwable?) {
-            EventManager.unregisterEventHook(eventClass, eventHook)
-        }
-
-        override fun accept(event: T) {
-            try {
-                if (predicate.test(event)) {
-                    unregisterAndResume(Result.success(event))
-                }
-            } catch (e: Throwable) {
-                unregisterAndResume(Result.failure(e))
-            }
-        }
-    }
-
-    continuation.invokeOnCancellation(handler)
-    EventManager.registerEventHook(eventClass, handler.eventHook)
-}
-
-/**
- * Wait an event of type [T] which matches given [predicate].
- *
- * The continuation resumes on the event handler thread. For example:
- * - [net.ccbluex.liquidbounce.event.events.PacketEvent]: client Netty IO (EventLoopGroup)
- * - [net.ccbluex.liquidbounce.event.events.GameTickEvent]: client render thread
- *
- * @param priority The priority of the event hook.
- * @param predicate The predicate to match the event.
- * If it throws a [Throwable], the continuation will be resumed with [Result.failure].
- */
-suspend inline fun <reified T : Event> EventListener.waitMatches(
-    priority: Short = 0,
-    predicate: Predicate<T>,
-): T = waitMatches(T::class.java, priority, predicate)
+// codex start
+// /**
+//  * Wait an event of type [T] which matches given [predicate].
+//  *
+//  * The continuation resumes on the event handler thread. For example:
+//  * - [net.ccbluex.liquidbounce.event.events.PacketEvent]: client Netty IO (EventLoopGroup)
+//  * - [net.ccbluex.liquidbounce.event.events.GameTickEvent]: client render thread
+//  *
+//  * @param priority The priority of the event hook.
+//  * @param predicate The predicate to match the event.
+//  * If it throws a [Throwable], the continuation will be resumed with [Result.failure].
+//  */
+// suspend inline fun <reified T : Event> EventListener.waitMatches(
+//     priority: Short = 0,
+//     predicate: Predicate<T>,
+// ): T = waitMatches(T::class.java, priority, predicate)
+// codex end
 
 /**
  * Wait an event of type [T] which matches given [predicate].
@@ -152,8 +161,10 @@ suspend inline fun <reified T : Event> EventListener.waitMatches(
  * @param predicate The predicate to match the event.
  * If it throws a [Throwable], the continuation will be resumed with [Result.failure].
  */
-suspend inline fun <reified T : Event> EventListener.waitMatchesWithTimeout(
-    timeout: Duration,
-    priority: Short = 0,
-    predicate: Predicate<T>,
-): T? = withTimeoutOrNull(timeout) { waitMatches(priority, predicate) }
+// codex start
+// suspend inline fun <reified T : Event> EventListener.waitMatchesWithTimeout(
+//     timeout: Duration,
+//     priority: Short = 0,
+//     predicate: Predicate<T>,
+// ): T? = withTimeoutOrNull(timeout) { waitMatches(priority, predicate) }
+// codex end

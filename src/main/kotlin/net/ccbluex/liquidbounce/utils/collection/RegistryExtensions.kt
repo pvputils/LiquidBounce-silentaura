@@ -33,10 +33,14 @@ private val BLOCK_REGISTRY_COMPARATOR = BuiltInRegistries.BLOCK.asComparator()
 
 fun itemSortedSetOf(): SortedSet<Item> = ObjectRBTreeSet(ITEM_REGISTRY_COMPARATOR)
 
-fun itemSortedSetOf(vararg items: Item): SortedSet<Item> =
-    ObjectRBTreeSet(items, ITEM_REGISTRY_COMPARATOR)
+// codex start
+// fun itemSortedSetOf(vararg items: Item): SortedSet<Item> =
+//     ObjectRBTreeSet(items, ITEM_REGISTRY_COMPARATOR)
+// codex end
 
 fun blockSortedSetOf(): SortedSet<Block> = ObjectRBTreeSet(BLOCK_REGISTRY_COMPARATOR)
 
-fun blockSortedSetOf(vararg blocks: Block): SortedSet<Block> =
-    ObjectRBTreeSet(blocks, BLOCK_REGISTRY_COMPARATOR)
+// codex start
+// fun blockSortedSetOf(vararg blocks: Block): SortedSet<Block> =
+//     ObjectRBTreeSet(blocks, BLOCK_REGISTRY_COMPARATOR)
+// codex end

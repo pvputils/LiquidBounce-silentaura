@@ -19,9 +19,6 @@
 package net.ccbluex.liquidbounce.features.global
 
 import net.ccbluex.liquidbounce.config.types.Config
-import net.ccbluex.liquidbounce.features.blink.BlinkManager
-import net.ccbluex.liquidbounce.features.command.CommandManager
-import net.ccbluex.liquidbounce.integration.backend.browser.GlobalBrowserSettings
 import net.ccbluex.liquidbounce.lang.LanguageManager
 
 /**
@@ -33,13 +30,17 @@ object GlobalManager : Config("Settings") {
 
     init {
         tree(LanguageManager)
-        tree(CommandManager.GlobalSettings)
+        // codex start
+        // tree(CommandManager.GlobalSettings)
+        // codex end
         tree(GlobalSettingsTarget)
-        tree(BlinkManager)
-        tree(GlobalSettingsAutoTranslate)
-        tree(GlobalBrowserSettings)
-        tree(GlobalSettingsClientChat)
-        tree(GlobalSettingsRichPresence)
+        // codex start
+        // tree(BlinkManager)
+        // tree(GlobalSettingsAutoTranslate)
+        // tree(GlobalBrowserSettings)
+        // tree(GlobalSettingsClientChat)
+        // tree(GlobalSettingsRichPresence)
+        // codex end
     }
 
 }

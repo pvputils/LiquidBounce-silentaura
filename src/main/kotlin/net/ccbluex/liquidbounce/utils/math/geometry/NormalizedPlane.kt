@@ -69,18 +69,22 @@ class NormalizedPlane(val pos: Vec3, normalVec: Vec3) {
     }
 
     companion {
-        fun fromPoints(a: Vec3, b: Vec3, c: Vec3): NormalizedPlane {
-            return fromParams(a, b.subtract(a), c.subtract(a))
-        }
+        // codex start
+        // fun fromPoints(a: Vec3, b: Vec3, c: Vec3): NormalizedPlane {
+        //     return fromParams(a, b.subtract(a), c.subtract(a))
+        // }
+        // codex end
 
-        fun fromParams(base: Vec3, directionA: Vec3, directionB: Vec3): NormalizedPlane {
-            val normalVec = directionA.cross(directionB).normalize()
-
-            require(!normalVec.isLikelyZero) {
-                "Points must not be on the same line"
-            }
-
-            return NormalizedPlane(base, normalVec)
-        }
+        // codex start
+        // fun fromParams(base: Vec3, directionA: Vec3, directionB: Vec3): NormalizedPlane {
+        //     val normalVec = directionA.cross(directionB).normalize()
+        //
+        //     require(!normalVec.isLikelyZero) {
+        //         "Points must not be on the same line"
+        //     }
+        //
+        //     return NormalizedPlane(base, normalVec)
+        // }
+        // codex end
     }
 }

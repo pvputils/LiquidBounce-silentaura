@@ -19,15 +19,12 @@
 
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.ccbluex.liquidbounce.additions.MouseHandlerAddition;
 import net.ccbluex.liquidbounce.event.EventManager;
 import net.ccbluex.liquidbounce.event.events.*;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleZoom;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.input.MouseButtonInfo;
@@ -76,39 +73,47 @@ public abstract class MixinMouseHandler implements MouseHandlerAddition {
         ));
     }
 
-    /**
-     * Hook mouse scroll event
-     */
-    @Inject(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;overlay()Lnet/minecraft/client/gui/screens/Overlay;", shift = At.Shift.BEFORE, ordinal = 0))
-    private void hookMouseScroll(long window, double horizontal, double vertical, CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(new MouseScrollEvent(horizontal, vertical));
-    }
+    // codex start
+    // /**
+    //  * Hook mouse scroll event
+    //  */
+    // @Inject(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;overlay()Lnet/minecraft/client/gui/screens/Overlay;", shift = At.Shift.BEFORE, ordinal = 0))
+    // private void hookMouseScroll(long window, double horizontal, double vertical, CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(new MouseScrollEvent(horizontal, vertical));
+    // }
+    // codex end
 
-    @Inject(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z", shift = At.Shift.BEFORE), cancellable = true)
-    private void hookMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci, @Local(name = "wheel") int i) {
-        if (EventManager.INSTANCE.callEvent(new MouseScrollInHotbarEvent(i)).isCancelled()) {
-            ci.cancel();
-        }
-    }
+    // codex start
+    // @Inject(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z", shift = At.Shift.BEFORE), cancellable = true)
+    // private void hookMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci, @Local(name = "wheel") int i) {
+    //     if (EventManager.INSTANCE.callEvent(new MouseScrollInHotbarEvent(i)).isCancelled()) {
+    //         ci.cancel();
+    //     }
+    // }
+    // codex end
 
-    /**
-     * Hook mouse cursor event
-     */
-    @Inject(method = "onMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isWindowActive()Z", shift = At.Shift.BEFORE, ordinal = 0))
-    private void hookCursorPos(long handle, double xpos, double ypos, double xrel, double yrel, CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(new MouseCursorEvent(xpos, ypos));
-    }
+    // codex start
+    // /**
+    //  * Hook mouse cursor event
+    //  */
+    // @Inject(method = "onMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isWindowActive()Z", shift = At.Shift.BEFORE, ordinal = 0))
+    // private void hookCursorPos(long handle, double xpos, double ypos, double xrel, double yrel, CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(new MouseCursorEvent(xpos, ypos));
+    // }
+    // codex end
 
-    @ModifyExpressionValue(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
-    private boolean injectZoomCondition1(boolean original) {
-        return original || ModuleZoom.INSTANCE.getRunning();
-    }
-
-    @ModifyExpressionValue(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isScoping()Z"))
-    private boolean injectZoomCondition2(boolean original) {
-        return original || ModuleZoom.INSTANCE.getRunning();
-    }
-
+    // codex start
+    // @ModifyExpressionValue(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
+    // private boolean injectZoomCondition1(boolean original) {
+    //     return original || ModuleZoom.INSTANCE.getRunning();
+    // }
+    //
+    // @ModifyExpressionValue(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isScoping()Z"))
+    // private boolean injectZoomCondition2(boolean original) {
+    //     return original || ModuleZoom.INSTANCE.getRunning();
+    // }
+    //
+    // codex end
     @WrapOperation(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), require = 1, allow = 1)
     private void modifyMouseRotationInput(LocalPlayer instance, double cursorDeltaX, double cursorDeltaY, Operation<Void> original) {
         final MouseRotationEvent event = new MouseRotationEvent(cursorDeltaX, cursorDeltaY);

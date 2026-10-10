@@ -31,8 +31,6 @@ import net.ccbluex.liquidbounce.render.withPush
 import net.ccbluex.liquidbounce.utils.client.clientStartDurationMs
 import net.ccbluex.liquidbounce.utils.entity.boxedDistanceTo
 import net.ccbluex.liquidbounce.utils.entity.interpolateCurrentPosition
-import net.ccbluex.liquidbounce.utils.inventory.InventoryManager.isInventoryOpen
-import net.minecraft.client.gui.screens.inventory.ContainerScreen
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.LivingEntity
 import kotlin.math.sin
@@ -64,7 +62,9 @@ object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndic
     private val hideWhenDead by boolean("HideWhenDead", true)
     private val hideWhenSpectator by boolean("HideWhenSpectator", true)
     private val hideInVehicle by boolean("HideInVehicle", false)
-    private val respectInventorySetting by boolean("RespectInventorySetting", true)
+    // codex start
+    // private val respectInventorySetting by boolean("RespectInventorySetting", true)
+    // codex end
 
     private val canBeCovered by boolean("CanBeCovered", false)
 
@@ -143,9 +143,12 @@ object KillAuraRangeIndicator : ToggleableValueGroup(ModuleKillAura, "RangeIndic
     private fun canRender(): Boolean {
         return !((hideWhenDead && player.isDeadOrDying) ||
             (hideWhenSpectator && player.isSpectator) ||
-            (hideInVehicle && player.vehicle != null) ||
-            (respectInventorySetting && !ModuleKillAura.ignoreOpenInventory &&
-                (isInventoryOpen || mc.gui.screen() is ContainerScreen)))
+            // codex start
+            // (hideInVehicle && player.vehicle != null) ||
+            // (respectInventorySetting && !ModuleKillAura.ignoreOpenInventory &&
+            //     (isInventoryOpen || mc.gui.screen() is ContainerScreen)))
+            // codex end
+            (hideInVehicle && player.vehicle != null)) //codex (respectInventorySetting)
     }
 
     private fun WorldRenderEnvironment.drawRangeCircle(

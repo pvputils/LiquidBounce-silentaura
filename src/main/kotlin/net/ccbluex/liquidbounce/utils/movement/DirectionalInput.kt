@@ -58,14 +58,16 @@ data class DirectionalInput(
         right = movementSideways < 0.0
     )
 
-    fun invert(): DirectionalInput {
-        return DirectionalInput(
-            forwards = backwards,
-            backwards = forwards,
-            left = right,
-            right = left
-        )
-    }
+    // codex start
+    // fun invert(): DirectionalInput {
+    //     return DirectionalInput(
+    //         forwards = backwards,
+    //         backwards = forwards,
+    //         left = right,
+    //         right = left
+    //     )
+    // }
+    // codex end
 
     val isMoving: Boolean
         get() = forwards != backwards || left != right

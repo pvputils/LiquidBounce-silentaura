@@ -22,7 +22,6 @@ package net.ccbluex.liquidbounce.render.buffers;
 import com.mojang.renderpearl.api.buffers.GpuBuffer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.renderpearl.api.commands.GpuFence;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

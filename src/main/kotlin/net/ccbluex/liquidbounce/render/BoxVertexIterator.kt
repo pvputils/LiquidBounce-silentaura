@@ -19,61 +19,65 @@
 
 package net.ccbluex.liquidbounce.render
 
-import net.minecraft.core.Direction
+// codex start
+// import net.minecraft.core.Direction
+// codex end
 import net.minecraft.world.phys.AABB
 
-enum class BoxVertexIterator {
-    FACE {
-        override fun forEachVertex(box: AABB, consumer: BoxVertexConsumer) {
-            box.forEachFaceVertex(consumer::invoke)
-        }
-
-        override fun sideMask(side: Direction): Int = when (side) {
-            Direction.DOWN -> 0x00_000F
-            Direction.UP -> 0x00_00F0
-            Direction.NORTH -> 0x00_0F00
-            Direction.EAST -> 0x00_F000
-            Direction.SOUTH -> 0x0F_0000
-            Direction.WEST -> 0xF0_0000
-        }
-    },
-    OUTLINE {
-        override fun forEachVertex(box: AABB, consumer: BoxVertexConsumer) {
-            box.forEachOutlineVertex(consumer::invoke)
-        }
-
-        override fun sideMask(side: Direction): Int = when (side) {
-            Direction.DOWN -> 0b0000_0000_0000_0000_1111_1111
-            Direction.UP -> 0b1111_1111_0000_0000_0000_0000
-            Direction.NORTH -> 0b0000_0011_0000_1111_0000_0011
-            Direction.EAST -> 0b0000_1100_0011_1100_0000_1100
-            Direction.SOUTH -> 0b0011_0000_1111_0000_0011_0000
-            Direction.WEST -> 0b1100_0000_1100_0011_1100_0000
-        }
-    };
-
-    /**
-     * For Java and JS usage.
-     */
-    abstract fun forEachVertex(box: AABB, consumer: BoxVertexConsumer)
-
-    /**
-     * For [drawBox].
-     */
-    abstract fun sideMask(side: Direction): Int
-
-    fun sideMask(sides: Iterable<Direction>): Int {
-        var bits = 0
-        for (side in sides) {
-            bits = bits or sideMask(side)
-        }
-        return bits
-    }
-
-    fun interface BoxVertexConsumer {
-        operator fun invoke(index: Int, x: Double, y: Double, z: Double)
-    }
-}
+// codex start
+// enum class BoxVertexIterator {
+//     FACE {
+//         override fun forEachVertex(box: AABB, consumer: BoxVertexConsumer) {
+//             box.forEachFaceVertex(consumer::invoke)
+//         }
+//
+//         override fun sideMask(side: Direction): Int = when (side) {
+//             Direction.DOWN -> 0x00_000F
+//             Direction.UP -> 0x00_00F0
+//             Direction.NORTH -> 0x00_0F00
+//             Direction.EAST -> 0x00_F000
+//             Direction.SOUTH -> 0x0F_0000
+//             Direction.WEST -> 0xF0_0000
+//         }
+//     },
+//     OUTLINE {
+//         override fun forEachVertex(box: AABB, consumer: BoxVertexConsumer) {
+//             box.forEachOutlineVertex(consumer::invoke)
+//         }
+//
+//         override fun sideMask(side: Direction): Int = when (side) {
+//             Direction.DOWN -> 0b0000_0000_0000_0000_1111_1111
+//             Direction.UP -> 0b1111_1111_0000_0000_0000_0000
+//             Direction.NORTH -> 0b0000_0011_0000_1111_0000_0011
+//             Direction.EAST -> 0b0000_1100_0011_1100_0000_1100
+//             Direction.SOUTH -> 0b0011_0000_1111_0000_0011_0000
+//             Direction.WEST -> 0b1100_0000_1100_0011_1100_0000
+//         }
+//     };
+//
+//     /**
+//      * For Java and JS usage.
+//      */
+//     abstract fun forEachVertex(box: AABB, consumer: BoxVertexConsumer)
+//
+//     /**
+//      * For [drawBox].
+//      */
+//     abstract fun sideMask(side: Direction): Int
+//
+//     fun sideMask(sides: Iterable<Direction>): Int {
+//         var bits = 0
+//         for (side in sides) {
+//             bits = bits or sideMask(side)
+//         }
+//         return bits
+//     }
+//
+//     fun interface BoxVertexConsumer {
+//         operator fun invoke(index: Int, x: Double, y: Double, z: Double)
+//     }
+// }
+// codex end
 
 inline fun AABB.forEachFaceVertex(fn: (index: Int, x: Double, y: Double, z: Double) -> Unit) {
     var i = 0

@@ -25,7 +25,9 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.AttackRange
-import net.minecraft.world.phys.Vec3
+// codex start
+// import net.minecraft.world.phys.Vec3
+// codex end
 import kotlin.math.max
 import kotlin.math.min
 
@@ -100,7 +102,9 @@ open class RangeValueGroup(
         itemStack.get(DataComponents.ATTACK_RANGE) ?: AttackRange.defaultFor(player)
     )
 
-    fun isInRange(itemStack: ItemStack = player.getItemInHand(InteractionHand.MAIN_HAND), pos: Vec3) =
-        getAttackRange(itemStack).isInRange(player, pos)
+    // codex start
+    // fun isInRange(itemStack: ItemStack = player.getItemInHand(InteractionHand.MAIN_HAND), pos: Vec3) =
+    //     getAttackRange(itemStack).isInRange(player, pos)
+    // codex end
 
 }

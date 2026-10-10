@@ -24,12 +24,16 @@ import net.ccbluex.liquidbounce.utils.aiming.utils.RotationUtil
 import net.ccbluex.liquidbounce.utils.aiming.utils.RotationUtil.angleDifference
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.math.toDegrees
-import net.ccbluex.liquidbounce.utils.math.toRadians
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.toRadians
+// codex end
 import net.ccbluex.liquidbounce.utils.entity.rotation
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
-import org.joml.Quaternionf
+// codex start
+// import org.joml.Quaternionf
+// codex end
 import java.lang.Math.fma
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -75,9 +79,11 @@ data class Rotation @JvmOverloads constructor(
     val xRot: Float inline get() = pitch
     val yRot: Float inline get() = yaw
 
-    @JvmOverloads
-    fun toQuaternion(dest: Quaternionf = Quaternionf()): Quaternionf =
-        dest.rotationYXZ(Mth.PI - yRot.toRadians(), -xRot.toRadians(), 0f)
+    // codex start
+    // @JvmOverloads
+    // fun toQuaternion(dest: Quaternionf = Quaternionf()): Quaternionf =
+    //     dest.rotationYXZ(Mth.PI - yRot.toRadians(), -xRot.toRadians(), 0f)
+    // codex end
 
     /**
      * Fixes GCD and Modulo 360° at yaw

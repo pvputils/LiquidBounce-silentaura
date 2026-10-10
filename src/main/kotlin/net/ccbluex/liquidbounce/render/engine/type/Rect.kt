@@ -36,16 +36,22 @@ data class Rect(val x1: Float, val y1: Float, val x2: Float, val y2: Float) {
         require(y1 <= y2)
     }
 
-    fun contains(px: Float, py: Float): Boolean =
-        px in x1..x2 && py in y1..y2
+    // codex start
+    // fun contains(px: Float, py: Float): Boolean =
+    //     px in x1..x2 && py in y1..y2
+    // codex end
 
-    fun intersects(other: Rect): Boolean =
-        !(other.x1 > x2 || other.x2 < x1 || other.y1 > y2 || other.y2 < y1)
+    // codex start
+    // fun intersects(other: Rect): Boolean =
+    //     !(other.x1 > x2 || other.x2 < x1 || other.y1 > y2 || other.y2 < y1)
+    // codex end
 
     companion {
-        fun of(cx: Float, cy: Float, w: Float, h: Float): Rect {
-            return Rect(cx - w * 0.5F, cy - h * 0.5F, cx + w * 0.5F, cy + h * 0.5F)
-        }
+        // codex start
+        // fun of(cx: Float, cy: Float, w: Float, h: Float): Rect {
+        //     return Rect(cx - w * 0.5F, cy - h * 0.5F, cx + w * 0.5F, cy + h * 0.5F)
+        // }
+        // codex end
     }
 
 }

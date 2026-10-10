@@ -21,17 +21,25 @@ package net.ccbluex.liquidbounce.utils.input
 import com.mojang.blaze3d.platform.InputConstants
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap
-import net.ccbluex.fastutil.enumSetOf
+// codex start
+// import net.ccbluex.fastutil.enumSetOf
+// codex end
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.config.types.list.Tagged.Companion.makeLookupTable
-import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent
-import net.ccbluex.liquidbounce.event.events.MouseButtonEvent
+// codex start
+// import net.ccbluex.liquidbounce.event.events.KeyboardKeyEvent
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.event.events.MouseButtonEvent
+// codex end
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.utils.text.asPlainText
 import net.ccbluex.liquidbounce.utils.client.bold
 import net.ccbluex.liquidbounce.utils.client.copyable
-import net.ccbluex.liquidbounce.utils.client.mc
+// codex start
+// import net.ccbluex.liquidbounce.utils.client.mc
+// codex end
 import net.ccbluex.liquidbounce.utils.client.onHover
 import net.ccbluex.liquidbounce.utils.client.regular
 import net.ccbluex.liquidbounce.utils.client.variable
@@ -94,90 +102,104 @@ data class InputBind(
         return !isUnbound && this.boundKey.type == InputConstants.Type.KEYBOARD && this.boundKey.value == scanCode
     }
 
-    /**
-     * Determines if the specified mouse button code matches the bound key.
-     *
-     * @param code The mouse button code to check.
-     * @return True if the mouse button matches the bound key, false otherwise.
-     */
-    fun matchesMouse(code: Int): Boolean {
-        return this.boundKey.type == InputConstants.Type.MOUSE && this.boundKey.value == code
-    }
+    // codex start
+    // /**
+    //  * Determines if the specified mouse button code matches the bound key.
+    //  *
+    //  * @param code The mouse button code to check.
+    //  * @return True if the mouse button matches the bound key, false otherwise.
+    //  */
+    // fun matchesMouse(code: Int): Boolean {
+    //     return this.boundKey.type == InputConstants.Type.MOUSE && this.boundKey.value == code
+    // }
+    // codex end
 
-    /**
-     * Determines if the given modifiers match the required modifiers.
-     *
-     * @param mods The bits of modifiers.
-     * @see InputConstants
-     */
-    fun matchesModifiers(mods: Int): Boolean {
-        return this.modifiers.all { it.isActive(mods) }
-    }
+    // codex start
+    // /**
+    //  * Determines if the given modifiers match the required modifiers.
+    //  *
+    //  * @param mods The bits of modifiers.
+    //  * @see InputConstants
+    //  */
+    // fun matchesModifiers(mods: Int): Boolean {
+    //     return this.modifiers.all { it.isActive(mods) }
+    // }
+    // codex end
 
-    /**
-     * Determines if a keyboard press event matches this bind key and required modifiers.
-     */
-    fun matchesKeyPress(event: KeyboardKeyEvent): Boolean {
-        return event.isPressed
-            && matchesKey(event.scanCode)
-            && matchesModifiers(event.mods)
-    }
+    // codex start
+    // /**
+    //  * Determines if a keyboard press event matches this bind key and required modifiers.
+    //  */
+    // fun matchesKeyPress(event: KeyboardKeyEvent): Boolean {
+    //     return event.isPressed
+    //         && matchesKey(event.scanCode)
+    //         && matchesModifiers(event.mods)
+    // }
+    // codex end
 
-    /**
-     * Determines if a keyboard release affects this bind key or one of its required modifiers.
-     */
-    fun matchesKeyRelease(event: KeyboardKeyEvent): Boolean {
-        if (!event.isReleased) return false
-        val keyReleased = matchesKey(event.scanCode)
-        val modifierReleased = event.key.toModifierOrNull().let { it in modifiers && !it!!.isAnyPressed }
+    // codex start
+    // /**
+    //  * Determines if a keyboard release affects this bind key or one of its required modifiers.
+    //  */
+    // fun matchesKeyRelease(event: KeyboardKeyEvent): Boolean {
+    //     if (!event.isReleased) return false
+    //     val keyReleased = matchesKey(event.scanCode)
+    //     val modifierReleased = event.key.toModifierOrNull().let { it in modifiers && !it!!.isAnyPressed }
+    //
+    //     return keyReleased || modifierReleased
+    // }
+    // codex end
 
-        return keyReleased || modifierReleased
-    }
+    // codex start
+    // /**
+    //  * Determines if a mouse press event matches this bind button and required modifiers.
+    //  */
+    // fun matchesMousePress(event: MouseButtonEvent): Boolean {
+    //     return event.isPressed
+    //         && matchesMouse(event.button)
+    //         && matchesModifiers(event.mods)
+    // }
+    // codex end
 
-    /**
-     * Determines if a mouse press event matches this bind button and required modifiers.
-     */
-    fun matchesMousePress(event: MouseButtonEvent): Boolean {
-        return event.isPressed
-            && matchesMouse(event.button)
-            && matchesModifiers(event.mods)
-    }
+    // codex start
+    // /**
+    //  * Determines if a mouse release affects this bind button or one of its required modifiers.
+    //  */
+    // fun matchesMouseRelease(event: MouseButtonEvent): Boolean {
+    //     if (!event.isReleased) return false
+    //     val buttonReleased = matchesMouse(event.button)
+    //     val modifierReleased = event.key.toModifierOrNull().let { it in modifiers && !it!!.isAnyPressed }
+    //
+    //     return buttonReleased || modifierReleased
+    // }
+    // codex end
 
-    /**
-     * Determines if a mouse release affects this bind button or one of its required modifiers.
-     */
-    fun matchesMouseRelease(event: MouseButtonEvent): Boolean {
-        if (!event.isReleased) return false
-        val buttonReleased = matchesMouse(event.button)
-        val modifierReleased = event.key.toModifierOrNull().let { it in modifiers && !it!!.isAnyPressed }
-
-        return buttonReleased || modifierReleased
-    }
-
-    /**
-     * Handles the event. Returns the new state, assumes the original state is `false`.
-     *
-     * @param event The [KeyboardKeyEvent] to handle.
-     * @param currentState The current state.
-     * @return The new state.
-     */
-    fun getNewState(event: KeyboardKeyEvent, currentState: Boolean): Boolean {
-        if (!matchesKey(event.scanCode)) {
-            return currentState
-        }
-
-        return when {
-            event.isPressed && mc.gui.screen() == null -> when (action) {
-                BindAction.TOGGLE -> !currentState
-                BindAction.HOLD, BindAction.SMART -> true
-            }
-            event.isReleased -> when (action) {
-                BindAction.HOLD -> false
-                BindAction.TOGGLE, BindAction.SMART -> currentState
-            }
-            else -> currentState
-        }
-    }
+    // codex start
+    // /**
+    //  * Handles the event. Returns the new state, assumes the original state is `false`.
+    //  *
+    //  * @param event The [KeyboardKeyEvent] to handle.
+    //  * @param currentState The current state.
+    //  * @return The new state.
+    //  */
+    // fun getNewState(event: KeyboardKeyEvent, currentState: Boolean): Boolean {
+    //     if (!matchesKey(event.scanCode)) {
+    //         return currentState
+    //     }
+    //
+    //     return when {
+    //         event.isPressed && mc.gui.screen() == null -> when (action) {
+    //             BindAction.TOGGLE -> !currentState
+    //             BindAction.HOLD, BindAction.SMART -> true
+    //         }
+    //         event.isReleased -> when (action) {
+    //             BindAction.HOLD -> false
+    //             BindAction.TOGGLE, BindAction.SMART -> currentState
+    //         }
+    //         else -> currentState
+    //     }
+    // }
+    // codex end
 
     /**
      * Action mode used to interpret bind input events.
@@ -216,10 +238,12 @@ data class InputBind(
         ALT("Alt", InputConstants.MOD_ALT, InputConstants.KEY_LALT, InputConstants.KEY_RALT),
         SUPER("Super", InputConstants.MOD_SUPER, InputConstants.KEY_LGUI, InputConstants.KEY_RGUI);
 
-        /**
-         * Check if self is active in [modifiers] value.
-         */
-        fun isActive(modifiers: Int) = modifiers and this.bitMask != 0
+        // codex start
+        // /**
+        //  * Check if self is active in [modifiers] value.
+        //  */
+        // fun isActive(modifiers: Int) = modifiers and this.bitMask != 0
+        // codex end
 
         /**
          * Check if any one modifier key is pressed.
@@ -260,11 +284,15 @@ data class InputBind(
 
             fun of(string: String?): Modifier? = byName[string]
 
-            fun of(keyCode: Int): Modifier? = byKeyCode[keyCode]
+            // codex start
+            // fun of(keyCode: Int): Modifier? = byKeyCode[keyCode]
+            // codex end
 
-            fun fromRawValue(modifiers: Int) = entries.filterTo(enumSetOf()) {
-                it.isActive(modifiers)
-            }
+            // codex start
+            // fun fromRawValue(modifiers: Int) = entries.filterTo(enumSetOf()) {
+            //     it.isActive(modifiers)
+            // }
+            // codex end
         }
     }
 
@@ -281,16 +309,20 @@ data class InputBind(
  */
 fun Value<InputBind>.bind(name: String) = set(get().copy(boundKey = inputByName(name)))
 
-/**
- * Binds to the given input type and code.
- */
-fun Value<InputBind>.bind(key: InputConstants.Key, action: InputBind.BindAction, modifiers: Set<InputBind.Modifier>) =
-    set(get().copy(boundKey = key, action = action, modifiers = modifiers))
+// codex start
+// /**
+//  * Binds to the given input type and code.
+//  */
+// fun Value<InputBind>.bind(key: InputConstants.Key, action: InputBind.BindAction, modifiers: Set<InputBind.Modifier>) =
+//     set(get().copy(boundKey = key, action = action, modifiers = modifiers))
+// codex end
 
 /**
  * Unbinds the key by setting it to UNKNOWN_KEY.
  */
-fun Value<InputBind>.unbind() = set(InputBind.UNBOUND)
+// codex start
+// fun Value<InputBind>.unbind() = set(InputBind.UNBOUND)
+// codex end
 
 fun InputBind.renderText(): Component = buildText {
     add(

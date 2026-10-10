@@ -83,6 +83,8 @@ object QuickFixes {
         return quickFix
     }
 
-    fun unregister(quickFix: QuickFix): Boolean = registry.remove(quickFix)
+    // codex start
+    // fun unregister(quickFix: QuickFix): Boolean = registry.remove(quickFix)
+    // codex end
 
 }

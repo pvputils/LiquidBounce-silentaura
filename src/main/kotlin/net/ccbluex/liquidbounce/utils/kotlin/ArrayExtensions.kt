@@ -28,22 +28,26 @@ import java.util.stream.Stream
 inline infix operator fun IntRange.contains(range: IntRange): Boolean {
     return this.first <= range.first && this.last >= range.last
 }
-
-fun ClosedFloatingPointRange<Float>.valueAtProportion(proportion: Float): Float {
-    return when {
-        proportion >= 1f -> endInclusive
-        proportion <= 0f -> start
-        else -> start + (endInclusive - start) * proportion
-    }
-}
-
-fun ClosedFloatingPointRange<Float>.proportionOfValue(value: Float): Float {
-    return when {
-        value >= endInclusive -> 1f
-        value <= start -> 0f
-        else -> (value - start) / (endInclusive - start)
-    }
-}
+// codex start
+//
+// fun ClosedFloatingPointRange<Float>.valueAtProportion(proportion: Float): Float {
+//     return when {
+//         proportion >= 1f -> endInclusive
+//         proportion <= 0f -> start
+//         else -> start + (endInclusive - start) * proportion
+//     }
+// }
+// codex end
+// codex start
+//
+// fun ClosedFloatingPointRange<Float>.proportionOfValue(value: Float): Float {
+//     return when {
+//         value >= endInclusive -> 1f
+//         value <= start -> 0f
+//         else -> (value - start) / (endInclusive - start)
+//     }
+// }
+// codex end
 
 inline fun range(iterable1: DoubleIterable, iterable2: DoubleIterable, operation: (Double, Double) -> Unit) {
     iterable1.forEachDouble { d1 ->
@@ -91,45 +95,57 @@ inline operator fun ClosedFloatingPointRange<Float>.unaryMinus(): ClosedFloating
     return -endInclusive..-start
 }
 
-fun ClosedFloatingPointRange<Double>.random(): Double {
-    return if (start >= endInclusive) start else ThreadLocalRandom.current().nextDouble(start, endInclusive)
-}
+// codex start
+// fun ClosedFloatingPointRange<Double>.random(): Double {
+//     return if (start >= endInclusive) start else ThreadLocalRandom.current().nextDouble(start, endInclusive)
+// }
+// codex end
 
-fun ClosedFloatingPointRange<Float>.toDouble(): ClosedFloatingPointRange<Double> {
-    require(start.isFinite())
-    require(endInclusive.isFinite())
-    return start.toDouble()..endInclusive.toDouble()
-}
+// codex start
+// fun ClosedFloatingPointRange<Float>.toDouble(): ClosedFloatingPointRange<Double> {
+//     require(start.isFinite())
+//     require(endInclusive.isFinite())
+//     return start.toDouble()..endInclusive.toDouble()
+// }
+// codex end
 
-fun <T> List<T>.subList(fromIndex: Int): List<T> {
-    return this.subList(fromIndex, this.size)
-}
+// codex start
+// fun <T> List<T>.subList(fromIndex: Int): List<T> {
+//     return this.subList(fromIndex, this.size)
+// }
+// codex end
 
-/**
- * Inserts a new element into a sorted list while maintaining the order.
- */
-inline fun <T, K : Comparable<K>> MutableList<T>.sortedInsert(item: T, crossinline selector: (T) -> K?) {
-    val insertIndex = binarySearchBy(selector(item), selector = selector).let {
-        if (it >= 0) it else it.inv()
-    }
+// codex start
+// /**
+//  * Inserts a new element into a sorted list while maintaining the order.
+//  */
+// // codex start
+// // inline fun <T, K : Comparable<K>> MutableList<T>.sortedInsert(item: T, crossinline selector: (T) -> K?) {
+// //     val insertIndex = binarySearchBy(selector(item), selector = selector).let {
+// //         if (it >= 0) it else it.inv()
+// //     }
+// //
+// //     add(insertIndex, item)
+// // }
+// //
+// // /**
+// //  * Transform a String to another String with same length by given [transform]
+// //  */
+// // codex end
+// inline fun String.mapString(transform: (Char) -> Char) = String(CharArray(length) {
+//     transform(this[it])
+// })
+// codex end
 
-    add(insertIndex, item)
-}
-
-/**
- * Transform a String to another String with same length by given [transform]
- */
-inline fun String.mapString(transform: (Char) -> Char) = String(CharArray(length) {
-    transform(this[it])
-})
-
-/**
- * Transform a Collection to a String with by given [transform]
- */
-inline fun <T> Collection<T>.mapString(transform: (T) -> Char) = with(iterator()) {
-    String(CharArray(size) {
-        transform(next())
-    })
-}
+// codex start
+// /**
+//  * Transform a Collection to a String with by given [transform]
+//  */
+// inline fun <T> Collection<T>.mapString(transform: (T) -> Char) = with(iterator()) {
+//     String(CharArray(size) {
+//         transform(next())
+//     })
+// }
+// codex end
 
 inline fun <reified T> Stream<T>.toTypedArray(): Array<T> = toArray(::arrayOfNulls)

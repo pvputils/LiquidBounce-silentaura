@@ -20,7 +20,6 @@
 package net.ccbluex.liquidbounce.config.types.group
 
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.event.EventListener
@@ -37,7 +36,7 @@ import net.ccbluex.liquidbounce.utils.client.logger
  */
 @AddonApi
 abstract class ToggleableValueGroup @JvmOverloads constructor(
-    @Exclude @ProtocolExclude val parent: EventListener? = null,
+    @Exclude val parent: EventListener? = null, //codex (@ProtocolExclude)
     name: String,
     enabled: Boolean,
     aliases: List<String> = emptyList(),
@@ -100,21 +99,27 @@ abstract class ToggleableValueGroup @JvmOverloads constructor(
 
     final override fun parent() = parent
 
-    protected fun <T : Mode> choices(name: String, active: T, choices: Array<T>) =
-        modes(this, name, active, choices)
+    // codex start
+    // protected fun <T : Mode> choices(name: String, active: T, choices: Array<T>) =
+    //     modes(this, name, active, choices)
+    // codex end
 
-    /**
-     * The first of [modes] starts active.
-     */
-    @Suppress("UNCHECKED_CAST")
-    protected fun <T : Mode> choices(name: String, vararg modes: T) =
-        modes(this, name, modes[0], modes as Array<T>)
+    // codex start
+    // /**
+    //  * The first of [modes] starts active.
+    //  */
+    // @Suppress("UNCHECKED_CAST")
+    // protected fun <T : Mode> choices(name: String, vararg modes: T) =
+    //     modes(this, name, modes[0], modes as Array<T>)
+    // codex end
 
-    protected fun <T : Mode> choices(
-        name: String,
-        activeIndex: Int = 0,
-        choicesCallback: (ModeValueGroup<T>) -> Array<T>
-    ) = modes(this, name, activeIndex, choicesCallback)
+    // codex start
+    // protected fun <T : Mode> choices(
+    //     name: String,
+    //     activeIndex: Int = 0,
+    //     choicesCallback: (ModeValueGroup<T>) -> Array<T>
+    // ) = modes(this, name, activeIndex, choicesCallback)
+    // codex end
 
 }
 

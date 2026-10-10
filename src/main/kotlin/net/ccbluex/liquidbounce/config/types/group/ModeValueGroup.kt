@@ -19,14 +19,17 @@
 package net.ccbluex.liquidbounce.config.types.group
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
-import net.ccbluex.fastutil.mapToArray
+// codex start
+// import net.ccbluex.fastutil.mapToArray
+// codex end
 import net.ccbluex.liquidbounce.config.OptionalInclusion
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExclude
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.features.addon.AddonApi
+// codex start
+// import net.ccbluex.liquidbounce.features.addon.AddonApi
+// codex end
 import net.ccbluex.liquidbounce.features.module.MinecraftShortcuts
 import java.util.function.ToIntFunction
 
@@ -34,7 +37,7 @@ import java.util.function.ToIntFunction
  * Allows configuring and manage modes
  */
 class ModeValueGroup<T : Mode>(
-    @Exclude @ProtocolExclude val eventListener: EventListener?,
+    @Exclude val eventListener: EventListener?, //codex (@ProtocolExclude)
     name: String,
     activeModeIndexCallback: ToIntFunction<List<T>>,
     modesCallback: (ModeValueGroup<T>) -> Array<T>
@@ -106,30 +109,36 @@ class ModeValueGroup<T : Mode>(
         }
     }
 
-    fun addMode(mode: T) {
-        require(modes.none { it.name.equals(mode.name, ignoreCase = true) }) {
-            "ModeValueGroup '$name' already has a mode named '${mode.name}'"
-        }
+    // codex start
+    // fun addMode(mode: T) {
+    //     require(modes.none { it.name.equals(mode.name, ignoreCase = true) }) {
+    //         "ModeValueGroup '$name' already has a mode named '${mode.name}'"
+    //     }
+    //
+    //     mode.base = this
+    //     modes.add(mode)
+    //     // Unwalked groups key their modes once the owner is walked.
+    //     key?.let { mode.walkKeyPath(it) }
+    // }
+    // codex end
 
-        mode.base = this
-        modes.add(mode)
-        // Unwalked groups key their modes once the owner is walked.
-        key?.let { mode.walkKeyPath(it) }
-    }
+    // codex start
+    // fun removeMode(mode: Mode) {
+    //     if (activeMode === mode) {
+    //         restore()
+    //     }
+    //
+    //     if (modes.remove(mode)) {
+    //         mode.base = null
+    //         mode.unregister()
+    //     }
+    // }
+    // codex end
 
-    fun removeMode(mode: Mode) {
-        if (activeMode === mode) {
-            restore()
-        }
-
-        if (modes.remove(mode)) {
-            mode.base = null
-            mode.unregister()
-        }
-    }
-
-    @AddonApi
-    fun getModeStrings(): Array<String> = modes.mapToArray { it.name }
+    // codex start
+    // @AddonApi
+    // fun getModeStrings(): Array<String> = modes.mapToArray { it.name }
+    // codex end
 
 }
 
@@ -165,8 +174,10 @@ abstract class Mode @JvmOverloads constructor(
 
     override fun parent() = this.parent.eventListener
 
-    protected fun <T: Mode> modes(name: String, active: T, choices: Array<T>) =
-        modes(this, name, active, choices)
+    // codex start
+    // protected fun <T: Mode> modes(name: String, active: T, choices: Array<T>) =
+    //     modes(this, name, active, choices)
+    // codex end
 
     protected fun <T: Mode> modes(
         name: String,
@@ -178,4 +189,6 @@ abstract class Mode @JvmOverloads constructor(
 /**
  * Empty mode without any functionality. Use as a disable mode.
  */
-class NoneMode(override val parent: ModeValueGroup<*>) : Mode("None")
+// codex start
+// class NoneMode(override val parent: ModeValueGroup<*>) : Mode("None")
+// codex end

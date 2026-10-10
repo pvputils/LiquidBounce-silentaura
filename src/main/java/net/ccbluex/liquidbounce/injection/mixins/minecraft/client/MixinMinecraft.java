@@ -18,36 +18,20 @@
  */
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReceiver;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.Window;
 import net.ccbluex.liquidbounce.LiquidBounce;
 import net.ccbluex.liquidbounce.event.CoroutineTicker;
 import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
+// codex start
+// import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
+// codex end
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.features.misc.SelfDestruct;
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleAutoClicker;
-import net.ccbluex.liquidbounce.features.module.modules.combat.ModuleNoMissCooldown;
-import net.ccbluex.liquidbounce.features.module.modules.combat.killaura.features.KillAuraAutoBlock;
-import net.ccbluex.liquidbounce.features.module.modules.exploit.ModuleMultiActions;
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleMiddleClickAction;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleAutoBreak;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleNoBlockInteract;
-import net.ccbluex.liquidbounce.features.module.modules.player.ModuleReach;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleFreeCam;
-import net.ccbluex.liquidbounce.injection.mixins.minecraft.entity.MixinEntityAccessor;
-import net.ccbluex.liquidbounce.integration.screen.ScreenManager;
 import net.ccbluex.liquidbounce.render.ClientTesselator;
 import net.ccbluex.liquidbounce.render.buffers.StaticGpuBufferPool;
 import net.ccbluex.liquidbounce.render.mesh.MeshDraw;
 import net.ccbluex.liquidbounce.render.utils.RenderingDebug;
 import net.ccbluex.liquidbounce.utils.client.vfp.VfpCompatibility;
-import net.ccbluex.liquidbounce.utils.combat.CombatManager;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -60,16 +44,8 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.server.IntegratedServer;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.component.AttackRange;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -77,8 +53,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
 import static net.ccbluex.liquidbounce.utils.client.ProtocolUtilKt.getUsesViaFabricPlus;
 
 @Mixin(Minecraft.class)
@@ -146,12 +120,14 @@ public abstract class MixinMinecraft {
         EventManager.INSTANCE.callEvent(ClientShutdownEvent.INSTANCE);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/client/main/GameConfig;)V", at = @At(value = "FIELD",
-        target = "Lnet/minecraft/client/Minecraft;profileKeyPairManager:Lnet/minecraft/client/multiplayer/ProfileKeyPairManager;",
-        ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
-    private void onSessionInit(CallbackInfo callback) {
-        EventManager.INSTANCE.callEvent(new SessionEvent(getUser()));
-    }
+    // codex start
+    // @Inject(method = "<init>(Lnet/minecraft/client/main/GameConfig;)V", at = @At(value = "FIELD",
+    //     target = "Lnet/minecraft/client/Minecraft;profileKeyPairManager:Lnet/minecraft/client/multiplayer/ProfileKeyPairManager;",
+    //     ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
+    // private void onSessionInit(CallbackInfo callback) {
+    //     EventManager.INSTANCE.callEvent(new SessionEvent(getUser()));
+    // }
+    // codex end
 
     /**
      * Modify window title to our client title.
@@ -199,7 +175,9 @@ public abstract class MixinMinecraft {
             titleBuilder.append(SharedConstants.getCurrentVersion().name());
         }
 
-        EventManager.INSTANCE.callEvent(new WindowTitleEvent(titleBuilder));
+        // codex start
+        // EventManager.INSTANCE.callEvent(new WindowTitleEvent(titleBuilder));
+        // codex end
 
         ClientPacketListener clientPlayNetworkHandler = this.getConnection();
         if (clientPlayNetworkHandler != null && clientPlayNetworkHandler.getConnection().isConnected()) {
@@ -225,202 +203,236 @@ public abstract class MixinMinecraft {
     @Inject(method = "tick", at = @At("HEAD"))
     private void hookTickEvent(CallbackInfo callbackInfo) {
         CoroutineTicker.INSTANCE.beginMinecraftTick();
-        TickLoopTaskExecutor.INSTANCE.onTickLoopStart();
+        // codex start
+        // TickLoopTaskExecutor.INSTANCE.onTickLoopStart();
+        // codex end
         CoroutineTicker.INSTANCE.tick();
         EventManager.INSTANCE.callEvent(GameTickEvent.INSTANCE);
     }
 
-    @Inject(method = "tick", at = @At(
-        value = "INVOKE",
-        target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V",
-        shift = At.Shift.AFTER
-    ))
-    private void hookTickLoopCompletedAfterTickEndPacket(CallbackInfo callbackInfo) {
-        TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
-    }
+    // codex start
+    // @Inject(method = "tick", at = @At(
+    //     value = "INVOKE",
+    //     target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V",
+    //     shift = At.Shift.AFTER
+    // ))
+    // private void hookTickLoopCompletedAfterTickEndPacket(CallbackInfo callbackInfo) {
+    //     TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
+    // }
+    // codex end
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void fallbackCompleteTickLoop(CallbackInfo callbackInfo) {
-        if (TickLoopTaskExecutor.INSTANCE.isInTickLoop()) {
-            TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
-        }
+        // codex start
+        // if (TickLoopTaskExecutor.INSTANCE.isInTickLoop()) {
+        //     TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
+        // }
+        // codex end
 
         CoroutineTicker.INSTANCE.endMinecraftTick();
     }
 
-    /**
-     * Hook game render task queue event
-     */
-    @Inject(method = "runTick", at = @At("HEAD"))
-    private void hookRenderTaskQueue(CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(GameRenderTaskQueueEvent.INSTANCE);
-    }
+    // codex start
+    // /**
+    //  * Hook game render task queue event
+    //  */
+    // @Inject(method = "runTick", at = @At("HEAD"))
+    // private void hookRenderTaskQueue(CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(GameRenderTaskQueueEvent.INSTANCE);
+    // }
+    // codex end
 
-    @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;runAllTasks()V", shift = At.Shift.BEFORE))
-    private void hookPacketProcess(CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(TickPacketProcessEvent.INSTANCE);
-    }
+    // codex start
+    // @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;runAllTasks()V", shift = At.Shift.BEFORE))
+    // private void hookPacketProcess(CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(TickPacketProcessEvent.INSTANCE);
+    // }
+    // codex end
 
-    /**
-     * Hook input handling
-     */
-    @Inject(method = "handleKeybinds", at = @At("RETURN"))
-    private void hookHandleInputEvent(CallbackInfo callbackInfo) {
-        EventManager.INSTANCE.callEvent(InputHandleEvent.INSTANCE);
-    }
+    // codex start
+    // /**
+    //  * Hook input handling
+    //  */
+    // @Inject(method = "handleKeybinds", at = @At("RETURN"))
+    // private void hookHandleInputEvent(CallbackInfo callbackInfo) {
+    //     EventManager.INSTANCE.callEvent(InputHandleEvent.INSTANCE);
+    // }
+    // codex end
 
-    /**
-     * Hook item use cooldown
-     */
-    @Inject(method = "startUseItem", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;rightClickDelay:I", shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
-    private void hookItemUseCooldown(CallbackInfo callbackInfo) {
-        UseCooldownEvent useCooldownEvent = new UseCooldownEvent(rightClickDelay);
-        EventManager.INSTANCE.callEvent(useCooldownEvent);
-        rightClickDelay = useCooldownEvent.getCooldown();
-    }
+    // codex start
+    // /**
+    //  * Hook item use cooldown
+    //  */
+    // @Inject(method = "startUseItem", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;rightClickDelay:I", shift = At.Shift.AFTER, opcode = Opcodes.PUTFIELD))
+    // private void hookItemUseCooldown(CallbackInfo callbackInfo) {
+    //     UseCooldownEvent useCooldownEvent = new UseCooldownEvent(rightClickDelay);
+    //     EventManager.INSTANCE.callEvent(useCooldownEvent);
+    //     rightClickDelay = useCooldownEvent.getCooldown();
+    // }
+    // codex end
 
-    @Inject(method = "pickBlockOrEntity", at = @At("HEAD"), cancellable = true)
-    private void hookItemPick(CallbackInfo ci) {
-        if (ModuleMiddleClickAction.Pearl.INSTANCE.cancelPick()) {
-            ci.cancel();
-        }
-    }
-
-    @ModifyExpressionValue(method = "startAttack",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
-    private int injectNoMissCooldown(int original) {
-        if (ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getRemoveAttackCooldown()) {
-            return 0;
-        }
-
-        if (ModuleAutoClicker.AttackButton.INSTANCE.getRunning()) {
-            var clickAmount = ModuleAutoClicker.AttackButton.INSTANCE.getClicker().getClickAmount();
-            if (clickAmount != null && clickAmount > 0) {
-                return 0;
-            }
-        }
-
-        return original;
-    }
-
-    @ModifyReceiver(
-        method = "startAttack",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/item/component/AttackRange;isInRange(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/phys/Vec3;)Z"
-        )
-    )
-    private AttackRange injectReachAttackRange(AttackRange instance, LivingEntity entity, Vec3 pos) {
-        if (ModuleReach.INSTANCE.getRunning()) {
-            return ModuleReach.INSTANCE.getEntity().adjustAttackRange(instance);
-        }
-
-        return instance;
-    }
-
-    @WrapWithCondition(method = "startAttack", at = @At(value = "FIELD",
-        target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 1, opcode = Opcodes.PUTFIELD))
-    private boolean disableAttackCooldown(Minecraft instance, int value) {
-        return !(ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getRemoveAttackCooldown());
-    }
-
-    @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
-    private void injectCombatPause(CallbackInfoReturnable<Boolean> cir) {
-        if (player == null || hitResult == null || hitResult.getType() == HitResult.Type.MISS) {
-            if (ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getCancelAttackOnMiss()) {
-                // Prevent swinging
-                cir.setReturnValue(true);
-            }
-            return;
-        }
-
-        if (CombatManager.INSTANCE.getShouldPauseCombat()) {
-            cir.setReturnValue(false);
-        }
-    }
-
+    // codex start
+    // @Inject(method = "pickBlockOrEntity", at = @At("HEAD"), cancellable = true)
+    // private void hookItemPick(CallbackInfo ci) {
+    //     if (ModuleMiddleClickAction.Pearl.INSTANCE.cancelPick()) {
+    //         ci.cancel();
+    //     }
+    // }
+    //
+    // @ModifyExpressionValue(method = "startAttack",
+    //         at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.GETFIELD))
+    // private int injectNoMissCooldown(int original) {
+    //     if (ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getRemoveAttackCooldown()) {
+    //         return 0;
+    //     }
+    //
+    //     if (ModuleAutoClicker.AttackButton.INSTANCE.getRunning()) {
+    //         var clickAmount = ModuleAutoClicker.AttackButton.INSTANCE.getClicker().getClickAmount();
+    //         if (clickAmount != null && clickAmount > 0) {
+    //             return 0;
+    //         }
+    //     }
+    //
+    //     return original;
+    // }
+    //
+    // @ModifyReceiver(
+    //     method = "startAttack",
+    //     at = @At(
+    //         value = "INVOKE",
+    //         target = "Lnet/minecraft/world/item/component/AttackRange;isInRange(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/phys/Vec3;)Z"
+    //     )
+    // )
+    // private AttackRange injectReachAttackRange(AttackRange instance, LivingEntity entity, Vec3 pos) {
+    //     if (ModuleReach.INSTANCE.getRunning()) {
+    //         return ModuleReach.INSTANCE.getEntity().adjustAttackRange(instance);
+    //     }
+    //
+    //     return instance;
+    // }
+    //
+    // @WrapWithCondition(method = "startAttack", at = @At(value = "FIELD",
+    //     target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 1, opcode = Opcodes.PUTFIELD))
+    // private boolean disableAttackCooldown(Minecraft instance, int value) {
+    //     return !(ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getRemoveAttackCooldown());
+    // }
+    //
+    // @Inject(method = "startAttack", at = @At("HEAD"), cancellable = true)
+    // private void injectCombatPause(CallbackInfoReturnable<Boolean> cir) {
+    //     if (player == null || hitResult == null || hitResult.getType() == HitResult.Type.MISS) {
+    //         if (ModuleNoMissCooldown.INSTANCE.getRunning() && ModuleNoMissCooldown.INSTANCE.getCancelAttackOnMiss()) {
+    //             // Prevent swinging
+    //             cir.setReturnValue(true);
+    //         }
+    //         return;
+    //     }
+    //
+    //     if (CombatManager.INSTANCE.getShouldPauseCombat()) {
+    //         cir.setReturnValue(false);
+    //     }
+    // }
+    //
+    // codex end
     @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("HEAD"))
     private void hookWorldChangeEvent(ClientLevel world, boolean bl, CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(new WorldChangeEvent(world));
     }
 
-    @Inject(method = "renderFrame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;fps:I",
-        ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTSTATIC))
-    private void hookFpsChange(CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(new FpsChangeEvent(this.getFps()));
-    }
+    // codex start
+    // // codex start
+    // // @Inject(method = "renderFrame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;fps:I",
+    // //     ordinal = 0, shift = At.Shift.AFTER, opcode = Opcodes.PUTSTATIC))
+    // // private void hookFpsChange(CallbackInfo ci) {
+    // //     EventManager.INSTANCE.callEvent(new FpsChangeEvent(this.getFps()));
+    // // }
+    // // codex end
+    // @Inject(method = "onResourceLoadFinished", at = @At("HEAD"))
+    // private void onFinishedLoading(CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(ResourceReloadEvent.INSTANCE);
+    // }
+    // codex end
 
-    @Inject(method = "onResourceLoadFinished", at = @At("HEAD"))
-    private void onFinishedLoading(CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(ResourceReloadEvent.INSTANCE);
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
+    // private boolean injectMultiActionsBreakingWhileUsing(boolean original) {
+    //     return original && !ModuleMultiActions.mayBreakWhileUsing();
+    // }
+    // codex end
 
-    @ModifyExpressionValue(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
-    private boolean injectMultiActionsBreakingWhileUsing(boolean original) {
-        return original && !ModuleMultiActions.mayBreakWhileUsing();
-    }
+    // codex start
+    // @ModifyExpressionValue(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
+    // private boolean injectMultiActionsPlacingWhileBreaking(boolean original) {
+    //     return original && !ModuleMultiActions.mayPlaceWhileBreaking();
+    // }
+    // codex end
 
-    @ModifyExpressionValue(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;isDestroying()Z"))
-    private boolean injectMultiActionsPlacingWhileBreaking(boolean original) {
-        return original && !ModuleMultiActions.mayPlaceWhileBreaking();
-    }
+    // codex start
+    // /**
+    //  * Alternative input handler of [handleInputEvents] while being inside a client-side screen.
+    //  */
+    // @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILSOFT)
+    // private void passthroughInputHandler(CallbackInfo ci, @Local(name = "profiler") ProfilerFiller profiler) {
+    //     if (this.gui.overlay() == null && this.player != null && this.level
+    //         != null && ScreenManager.isClientScreen(this.gui.screen())) {
+    //         profiler.popPush("Keybindings");
+    //
+    //         if (ModuleAutoBreak.INSTANCE.getEnabled()) {
+    //             this.continueAttack(this.options.keyAttack.isDown());
+    //         }
+    //     }
+    // }
+    //
+    // codex end
+    // codex start
+    // @ModifyExpressionValue(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z", ordinal = 0))
+    // private boolean injectMultiActionsAttackingWhileUsingAndEnforcedBlockingState(boolean isUsingItem) {
+    //     if (isUsingItem) {
+    //         if (!this.options.keyUse.isDown() && !(KillAuraAutoBlock.INSTANCE.getRunning() && KillAuraAutoBlock.INSTANCE.getEnforcedBlockingHand() != null)) {
+    //             this.gameMode.releaseUsingItem(this.player);
+    //         }
+    //
+    //         if (!ModuleMultiActions.mayAttackWhileUsing()) {
+    //             this.options.keyAttack.clickCount = 0;
+    //         }
+    //
+    //         this.options.keyPickItem.clickCount = 0;
+    //         this.options.keyUse.clickCount = 0;
+    //     }
+    //
+    //     return false;
+    // }
+    // codex end
 
-    /**
-     * Alternative input handler of [handleInputEvents] while being inside a client-side screen.
-     */
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;screen()Lnet/minecraft/client/gui/screens/Screen;", ordinal = 1, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void passthroughInputHandler(CallbackInfo ci, @Local(name = "profiler") ProfilerFiller profiler) {
-        if (this.gui.overlay() == null && this.player != null && this.level
-            != null && ScreenManager.isClientScreen(this.gui.screen())) {
-            profiler.popPush("Keybindings");
-
-            if (ModuleAutoBreak.INSTANCE.getEnabled()) {
-                this.continueAttack(this.options.keyAttack.isDown());
-            }
-        }
-    }
-
-    @ModifyExpressionValue(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z", ordinal = 0))
-    private boolean injectMultiActionsAttackingWhileUsingAndEnforcedBlockingState(boolean isUsingItem) {
-        if (isUsingItem) {
-            if (!this.options.keyUse.isDown() && !(KillAuraAutoBlock.INSTANCE.getRunning() && KillAuraAutoBlock.INSTANCE.getEnforcedBlockingHand() != null)) {
-                this.gameMode.releaseUsingItem(this.player);
-            }
-
-            if (!ModuleMultiActions.mayAttackWhileUsing()) {
-                this.options.keyAttack.clickCount = 0;
-            }
-
-            this.options.keyPickItem.clickCount = 0;
-            this.options.keyUse.clickCount = 0;
-        }
-
-        return false;
-    }
-
-    @WrapWithCondition(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.PUTFIELD))
-    private boolean injectFixAttackCooldownOnVirtualBrowserScreen(Minecraft instance, int value) {
-        // Do not reset attack cooldown when we are in the vr/browser screen, as this poses an
-        // unintended modification to the attack cooldown, which is not intended.
-        return !ScreenManager.isClientScreen(this.gui.screen());
-    }
-
+    // codex start
+    // @WrapWithCondition(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;missTime:I", ordinal = 0, opcode = Opcodes.PUTFIELD))
+    // private boolean injectFixAttackCooldownOnVirtualBrowserScreen(Minecraft instance, int value) {
+    //     // Do not reset attack cooldown when we are in the vr/browser screen, as this poses an
+    //     // unintended modification to the attack cooldown, which is not intended.
+    //     return !ScreenManager.isClientScreen(this.gui.screen());
+    // }
+    //
+    // codex end
     @Inject(method = "clearDownloadedResourcePacks", at = @At("HEAD"))
     private void handleDisconnection(CallbackInfo ci) {
         EventManager.INSTANCE.callEvent(DisconnectEvent.INSTANCE);
-    }
-
-    @Inject(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"), cancellable = true)
-    private void hookBlockInteract(CallbackInfo ci) {
-        final BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
-        if (blockHitResult == null) return; // it should never be null
-
-        if (ModuleNoBlockInteract.INSTANCE.getRunning() &&
-                ModuleNoBlockInteract.INSTANCE.shouldSneak(blockHitResult)) {
-
-            ModuleNoBlockInteract.INSTANCE.startSneaking();
-            ci.cancel();
-        }
+    // codex start
+    // }
+    //
+    // codex end
+    // codex start
+    // @Inject(method = "startUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;useItemOn(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"), cancellable = true)
+    // private void hookBlockInteract(CallbackInfo ci) {
+    //     final BlockHitResult blockHitResult = (BlockHitResult) this.hitResult;
+    //     if (blockHitResult == null) return; // it should never be null
+    //
+    //     if (ModuleNoBlockInteract.INSTANCE.getRunning() &&
+    //             ModuleNoBlockInteract.INSTANCE.shouldSneak(blockHitResult)) {
+    //
+    //         ModuleNoBlockInteract.INSTANCE.startSneaking();
+    //         ci.cancel();
+    //     }
+    // }
+    // codex end
     }
 
     @Inject(method = "renderFrame", at = @At(value = "INVOKE", target = "Lcom/mojang/renderpearl/api/commands/CommandEncoder;submit()V", shift = At.Shift.BEFORE))
@@ -435,46 +447,48 @@ public abstract class MixinMinecraft {
         StaticGpuBufferPool.cleanup();
     }
 
-    @WrapOperation(method = "pick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;raycastHitResult(FLnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/HitResult;"))
-    private HitResult updateTargetedEntityInvoke(LocalPlayer instance, float a, Entity cameraEntity, Operation<HitResult> original) {
-        HitResult result;
-        if (cameraEntity == instance && ModuleFreeCam.shouldCameraInteractActive()) {
-            final Vec3 position = cameraEntity.position();
-            final AABB boundingBox = cameraEntity.getBoundingBox();
-            final Vec3 lastPosition = new Vec3(cameraEntity.xo, cameraEntity.yo, cameraEntity.zo);
-            final float yRot = cameraEntity.getYRot();
-            final float xRot = cameraEntity.getXRot();
-            final float yRot0 = cameraEntity.yRotO;
-            final float xRot0 = cameraEntity.xRotO;
-
-            final Vec3 cameraPosition = ModuleFreeCam.PositionState.pos.subtract(0.0, cameraEntity.getEyeHeight(), 0.0);
-            ((MixinEntityAccessor) cameraEntity).position(cameraPosition);
-            cameraEntity.setBoundingBox(boundingBox.move(cameraPosition.subtract(position)));
-            cameraEntity.xo = ModuleFreeCam.PositionState.lastPos.x;
-            cameraEntity.yo = ModuleFreeCam.PositionState.lastPos.y - cameraEntity.getEyeHeight();
-            cameraEntity.zo = ModuleFreeCam.PositionState.lastPos.z;
-            ((MixinEntityAccessor) cameraEntity).yRot(ModuleFreeCam.PositionState.rot.yRot());
-            ((MixinEntityAccessor) cameraEntity).xRot(ModuleFreeCam.PositionState.rot.xRot());
-            cameraEntity.yRotO = ModuleFreeCam.PositionState.lastRot.yRot();
-            cameraEntity.xRotO = ModuleFreeCam.PositionState.lastRot.xRot();
-
-            try {
-                result = original.call(instance, a, cameraEntity);
-            } finally {
-                ((MixinEntityAccessor) cameraEntity).position(position);
-                cameraEntity.setBoundingBox(boundingBox);
-                cameraEntity.xo = lastPosition.x;
-                cameraEntity.yo = lastPosition.y;
-                cameraEntity.zo = lastPosition.z;
-                ((MixinEntityAccessor) cameraEntity).yRot(yRot);
-                ((MixinEntityAccessor) cameraEntity).xRot(xRot);
-                cameraEntity.yRotO = yRot0;
-                cameraEntity.xRotO = xRot0;
-            }
-        } else {
-            result = original.call(instance, a, cameraEntity);
-        }
-
-        return result;
-    }
+    // codex start
+    // @WrapOperation(method = "pick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;raycastHitResult(FLnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/phys/HitResult;"))
+    // private HitResult updateTargetedEntityInvoke(LocalPlayer instance, float a, Entity cameraEntity, Operation<HitResult> original) {
+    //     HitResult result;
+    //     if (cameraEntity == instance && ModuleFreeCam.shouldCameraInteractActive()) {
+    //         final Vec3 position = cameraEntity.position();
+    //         final AABB boundingBox = cameraEntity.getBoundingBox();
+    //         final Vec3 lastPosition = new Vec3(cameraEntity.xo, cameraEntity.yo, cameraEntity.zo);
+    //         final float yRot = cameraEntity.getYRot();
+    //         final float xRot = cameraEntity.getXRot();
+    //         final float yRot0 = cameraEntity.yRotO;
+    //         final float xRot0 = cameraEntity.xRotO;
+    //
+    //         final Vec3 cameraPosition = ModuleFreeCam.PositionState.pos.subtract(0.0, cameraEntity.getEyeHeight(), 0.0);
+    //         ((MixinEntityAccessor) cameraEntity).position(cameraPosition);
+    //         cameraEntity.setBoundingBox(boundingBox.move(cameraPosition.subtract(position)));
+    //         cameraEntity.xo = ModuleFreeCam.PositionState.lastPos.x;
+    //         cameraEntity.yo = ModuleFreeCam.PositionState.lastPos.y - cameraEntity.getEyeHeight();
+    //         cameraEntity.zo = ModuleFreeCam.PositionState.lastPos.z;
+    //         ((MixinEntityAccessor) cameraEntity).yRot(ModuleFreeCam.PositionState.rot.yRot());
+    //         ((MixinEntityAccessor) cameraEntity).xRot(ModuleFreeCam.PositionState.rot.xRot());
+    //         cameraEntity.yRotO = ModuleFreeCam.PositionState.lastRot.yRot();
+    //         cameraEntity.xRotO = ModuleFreeCam.PositionState.lastRot.xRot();
+    //
+    //         try {
+    //             result = original.call(instance, a, cameraEntity);
+    //         } finally {
+    //             ((MixinEntityAccessor) cameraEntity).position(position);
+    //             cameraEntity.setBoundingBox(boundingBox);
+    //             cameraEntity.xo = lastPosition.x;
+    //             cameraEntity.yo = lastPosition.y;
+    //             cameraEntity.zo = lastPosition.z;
+    //             ((MixinEntityAccessor) cameraEntity).yRot(yRot);
+    //             ((MixinEntityAccessor) cameraEntity).xRot(xRot);
+    //             cameraEntity.yRotO = yRot0;
+    //             cameraEntity.xRotO = xRot0;
+    //         }
+    //     } else {
+    //         result = original.call(instance, a, cameraEntity);
+    //     }
+    //
+    //     return result;
+    // }
+    // codex end
 }

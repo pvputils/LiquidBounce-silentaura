@@ -35,7 +35,6 @@ import net.ccbluex.liquidbounce.render.setColor
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.util.ARGB
 import net.minecraft.util.FormattedCharSequence
-import java.awt.Font
 
 @Suppress("TooManyFunctions")
 class FontRenderer(

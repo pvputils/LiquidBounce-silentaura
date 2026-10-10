@@ -19,17 +19,7 @@
 
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.gui;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import net.ccbluex.liquidbounce.features.module.modules.misc.ModuleItemScroller;
-import net.ccbluex.liquidbounce.features.module.modules.player.cheststealer.features.FeatureSilentScreen;
-import net.ccbluex.liquidbounce.features.module.modules.render.ModuleBetterInventory;
-import net.ccbluex.liquidbounce.injection.mixins.minecraft.client.MixinMouseHandlerAccessor;
-import net.minecraft.client.MouseHandler;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.util.Util;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
@@ -38,11 +28,6 @@ import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class MixinAbstractContainerScreen<T extends AbstractContainerMenu> extends MixinScreen {
@@ -73,77 +58,79 @@ public abstract class MixinAbstractContainerScreen<T extends AbstractContainerMe
     @Shadow
     protected int topPos;
 
-    @Inject(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", at = @At("HEAD"), cancellable = true)
-    private void cancelMouseClick(Slot slot, int slotId, int button, ContainerInput actionType, CallbackInfo ci) {
-        if (FeatureSilentScreen.INSTANCE.getShouldHide()) {
-            ci.cancel();
-        }
-    }
-
-    // Before `if (itemStack.isEmpty() && slot.isActive()) {`
-    @Inject(method = "extractSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 0))
-    private void drawSlotOutline(GuiGraphicsExtractor context, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
-        ModuleBetterInventory.INSTANCE.drawHighlightSlot(context, slot);
-    }
-
-    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlots(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V", shift = At.Shift.AFTER))
-    private void hookDrawSlot(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        var cursorStack = this.menu.getCarried();
-        var slot = getHoveredSlot(mouseX, mouseY);
-
-        if (!cursorStack.isEmpty() || slot == null) {
-            return;
-        }
-
-        var stack = slot.getItem();
-        if (!ModuleBetterInventory.INSTANCE.drawContainerItemView(context, cursorStack, this.leftPos, this.topPos, mouseX, mouseY)) {
-            ModuleBetterInventory.INSTANCE.drawContainerItemView(context, stack, this.leftPos, this.topPos, mouseX, mouseY);
-        }
-
-        if (matchingItemScrollerMoveConditions(mouseX, mouseY)) {
-            this.lastQuickMoved = stack.isEmpty() ? ItemStack.EMPTY : stack.copy();
-
-            ModuleItemScroller.getClickMode().getAction().invoke(this.menu, slot, this::slotClicked);
-
-            this.skipNextRelease = true;
-
-            this.lastClickSlot = slot;
-            // See Mouse.onMouseButton
-            /*
-            <pre>
-             long l = Util.getMeasuringTimeMs();
-             boolean bl2 = this.lastMouseClick != null
-             && l - this.lastMouseClick.time() < 250L
-             && this.lastMouseClick.screen() == screen
-             && this.lastMouseButton == click.button();
-             if (screen.mouseClicked(click, bl2)) {
-             this.lastMouseClick = new Mouse.MouseClickTime(l, screen);
-             this.lastMouseButton = mouseInput.button();
-             return;
-             }
-             </pre>
-             */
-            var mouse = (MixinMouseHandlerAccessor) this.minecraft.mouseHandler;
-            mouse.setLastClick(new MouseHandler.LastClick(Util.getMillis(), (Screen) (Object) this));
-            mouse.setLastClickButton(InputConstants.MOUSE_BUTTON_LEFT);
-
-            ModuleItemScroller.INSTANCE.resetChronometer();
-        }
-    }
-
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void hookMouseClicked(MouseButtonEvent click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
-        /*
-         * We move the item by itself, we don't need this action by Minecraft
-         */
-        if (matchingItemScrollerMoveConditions(click.x(), click.y())) {
-            cir.cancel();
-        }
-    }
-
-    @Unique
-    private boolean matchingItemScrollerMoveConditions(double mouseX, double mouseY) {
-        return getHoveredSlot(mouseX, mouseY) != null && ModuleItemScroller.INSTANCE.canPerformScroll();
-    }
-
+    // codex start
+    // @Inject(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", at = @At("HEAD"), cancellable = true)
+    // private void cancelMouseClick(Slot slot, int slotId, int button, ContainerInput actionType, CallbackInfo ci) {
+    //     if (FeatureSilentScreen.INSTANCE.getShouldHide()) {
+    //         ci.cancel();
+    //     }
+    // }
+    //
+    // // Before `if (itemStack.isEmpty() && slot.isActive()) {`
+    // @Inject(method = "extractSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", ordinal = 0))
+    // private void drawSlotOutline(GuiGraphicsExtractor context, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
+    //     ModuleBetterInventory.INSTANCE.drawHighlightSlot(context, slot);
+    // }
+    //
+    // @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlots(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V", shift = At.Shift.AFTER))
+    // private void hookDrawSlot(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    //     var cursorStack = this.menu.getCarried();
+    //     var slot = getHoveredSlot(mouseX, mouseY);
+    //
+    //     if (!cursorStack.isEmpty() || slot == null) {
+    //         return;
+    //     }
+    //
+    //     var stack = slot.getItem();
+    //     if (!ModuleBetterInventory.INSTANCE.drawContainerItemView(context, cursorStack, this.leftPos, this.topPos, mouseX, mouseY)) {
+    //         ModuleBetterInventory.INSTANCE.drawContainerItemView(context, stack, this.leftPos, this.topPos, mouseX, mouseY);
+    //     }
+    //
+    //     if (matchingItemScrollerMoveConditions(mouseX, mouseY)) {
+    //         this.lastQuickMoved = stack.isEmpty() ? ItemStack.EMPTY : stack.copy();
+    //
+    //         ModuleItemScroller.getClickMode().getAction().invoke(this.menu, slot, this::slotClicked);
+    //
+    //         this.skipNextRelease = true;
+    //
+    //         this.lastClickSlot = slot;
+    //         // See Mouse.onMouseButton
+    //         /*
+    //         <pre>
+    //          long l = Util.getMeasuringTimeMs();
+    //          boolean bl2 = this.lastMouseClick != null
+    //          && l - this.lastMouseClick.time() < 250L
+    //          && this.lastMouseClick.screen() == screen
+    //          && this.lastMouseButton == click.button();
+    //          if (screen.mouseClicked(click, bl2)) {
+    //          this.lastMouseClick = new Mouse.MouseClickTime(l, screen);
+    //          this.lastMouseButton = mouseInput.button();
+    //          return;
+    //          }
+    //          </pre>
+    //          */
+    //         var mouse = (MixinMouseHandlerAccessor) this.minecraft.mouseHandler;
+    //         mouse.setLastClick(new MouseHandler.LastClick(Util.getMillis(), (Screen) (Object) this));
+    //         mouse.setLastClickButton(InputConstants.MOUSE_BUTTON_LEFT);
+    //
+    //         ModuleItemScroller.INSTANCE.resetChronometer();
+    //     }
+    // }
+    //
+    // @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    // private void hookMouseClicked(MouseButtonEvent click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
+    //     /*
+    //      * We move the item by itself, we don't need this action by Minecraft
+    //      */
+    //     if (matchingItemScrollerMoveConditions(click.x(), click.y())) {
+    //         cir.cancel();
+    //     }
+    // }
+    //
+    // @Unique
+    // private boolean matchingItemScrollerMoveConditions(double mouseX, double mouseY) {
+    //     return getHoveredSlot(mouseX, mouseY) != null && ModuleItemScroller.INSTANCE.canPerformScroll();
+    // }
+    //
+    // codex end
 }

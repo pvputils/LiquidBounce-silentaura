@@ -22,7 +22,6 @@ package net.ccbluex.liquidbounce.utils.text;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
-
 import java.util.List;
 import java.util.Objects;
 

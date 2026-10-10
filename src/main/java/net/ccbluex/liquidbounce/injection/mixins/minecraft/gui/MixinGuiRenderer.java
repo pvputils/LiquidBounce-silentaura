@@ -20,15 +20,10 @@
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.gui;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import net.ccbluex.liquidbounce.render.engine.BlurEffectRenderer;
 import net.ccbluex.liquidbounce.render.gui.GuiCircleLutAtlas;
 import net.minecraft.client.gui.render.GuiRenderer;
-import net.minecraft.client.renderer.GameRenderer;
 import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,25 +39,29 @@ public abstract class MixinGuiRenderer {
         return original || pipeline.getPrimitiveTopology().connectedPrimitives;
     }
 
-    @WrapOperation(
-        method = "draw",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;mainRenderTarget()Lcom/mojang/blaze3d/pipeline/RenderTarget;")
-    )
-    private RenderTarget injectBlurRenderTarget(GameRenderer instance, Operation<RenderTarget> original) {
-        BlurEffectRenderer blurEffectRenderer = BlurEffectRenderer.INSTANCE;
-        if (blurEffectRenderer.shouldDrawBlur()) {
-            blurEffectRenderer.setDrawingHudFramebuffer(true);
-            return blurEffectRenderer.getOverlayRenderTargetHolder().initAndGet();
-        }
-        return original.call(instance);
-    }
-
+    // codex start
+    // @WrapOperation(
+    //     method = "draw",
+    //     at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;mainRenderTarget()Lcom/mojang/blaze3d/pipeline/RenderTarget;")
+    // )
+    // private RenderTarget injectBlurRenderTarget(GameRenderer instance, Operation<RenderTarget> original) {
+    //     BlurEffectRenderer blurEffectRenderer = BlurEffectRenderer.INSTANCE;
+    //     if (blurEffectRenderer.shouldDrawBlur()) {
+    //         blurEffectRenderer.setDrawingHudFramebuffer(true);
+    //         return blurEffectRenderer.getOverlayRenderTargetHolder().initAndGet();
+    //     }
+    //     return original.call(instance);
+    // }
+    //
+    // codex end
     @Inject(
         method = "draw", at = @At("RETURN")
     )
     private void afterRenderBlurOverlay(CallbackInfo ci) {
         GuiCircleLutAtlas.INSTANCE.resetForNextDraw();
-        BlurEffectRenderer.INSTANCE.blitBlurOverlay();
+        // codex start
+        // BlurEffectRenderer.INSTANCE.blitBlurOverlay();
+        // codex end
     }
 
 }

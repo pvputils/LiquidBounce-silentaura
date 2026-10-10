@@ -50,35 +50,39 @@ object Pools {
         initializer = { StringBuilder(128) },
     ) { it.setLength(0) }.sync()
 
-    /**
-     * Use [Pools.StringBuilder] to build [String].
-     */
-    inline fun buildStringPooled(
-        builderAction: StringBuilder.() -> Unit,
-    ): String {
-        val sb = StringBuilder.borrow()
-        try {
-            sb.builderAction()
-            return sb.toString()
-        } finally {
-            StringBuilder.recycle(sb)
-        }
-    }
+    // codex start
+    // /**
+    //  * Use [Pools.StringBuilder] to build [String].
+    //  */
+    // inline fun buildStringPooled(
+    //     builderAction: StringBuilder.() -> Unit,
+    // ): String {
+    //     val sb = StringBuilder.borrow()
+    //     try {
+    //         sb.builderAction()
+    //         return sb.toString()
+    //     } finally {
+    //         StringBuilder.recycle(sb)
+    //     }
+    // }
+    // codex end
 
-    /**
-     * Use [Pools.StringBuilder] to build [String].
-     */
-    inline fun buildStringPooled(
-        capacity: Int,
-        builderAction: StringBuilder.() -> Unit,
-    ): String {
-        val sb = StringBuilder.borrow()
-        try {
-            sb.ensureCapacity(capacity)
-            sb.builderAction()
-            return sb.toString()
-        } finally {
-            StringBuilder.recycle(sb)
-        }
-    }
+    // codex start
+    // /**
+    //  * Use [Pools.StringBuilder] to build [String].
+    //  */
+    // inline fun buildStringPooled(
+    //     capacity: Int,
+    //     builderAction: StringBuilder.() -> Unit,
+    // ): String {
+    //     val sb = StringBuilder.borrow()
+    //     try {
+    //         sb.ensureCapacity(capacity)
+    //         sb.builderAction()
+    //         return sb.toString()
+    //     } finally {
+    //         StringBuilder.recycle(sb)
+    //     }
+    // }
+    // codex end
 }

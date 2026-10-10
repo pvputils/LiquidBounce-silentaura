@@ -20,16 +20,19 @@ package net.ccbluex.liquidbounce.utils.client
 
 import net.ccbluex.liquidbounce.additions.realSelectedSlot
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.event.EventManager
 import net.ccbluex.liquidbounce.event.events.GameTickEvent
-import net.ccbluex.liquidbounce.event.events.SelectHotbarSlotSilentlyEvent
 import net.ccbluex.liquidbounce.event.events.WorldChangeEvent
 import net.ccbluex.liquidbounce.event.handler
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.features.module.modules.world.scaffold.ModuleScaffold
-import net.ccbluex.liquidbounce.utils.inventory.HotbarItemSlot
-import net.minecraft.world.entity.player.Inventory
-import org.jetbrains.annotations.Range
+// codex start
+// import net.ccbluex.liquidbounce.utils.inventory.HotbarItemSlot
+// codex end
+// codex start
+// import net.minecraft.world.entity.player.Inventory
+// codex end
+// codex start
+// import org.jetbrains.annotations.Range
+// codex end
 
 /**
  * Manages things like [ModuleScaffold]'s silent mode.
@@ -50,47 +53,59 @@ object SilentHotbar : EventListener {
     val clientsideSlot: Int
         get() = hotbarState?.clientsideSlot ?: mc.player?.inventory?.realSelectedSlot ?: 0
 
-    /**
-     * Silently selects a main-hand hotbar slot for duration of [ticksUntilReset].
-     * Offhand is ignored because it is not selected through held-item changes.
-     *
-     * @return `true` when the slot is selected or no selection is required, `false` when the request is cancelled
-     */
-    fun selectSlotSilently(requester: Any?, slot: HotbarItemSlot, ticksUntilReset: Int): Boolean =
-        slot.hotbarIndex?.let { selectSlotSilently(requester, it, ticksUntilReset) } ?: true
+    // codex start
+    // /**
+    //  * Silently selects a main-hand hotbar slot for duration of [ticksUntilReset].
+    //  * Offhand is ignored because it is not selected through held-item changes.
+    //  *
+    //  * @return `true` when the slot is selected or no selection is required, `false` when the request is cancelled
+    //  */
+    // fun selectSlotSilently(requester: Any?, slot: HotbarItemSlot, ticksUntilReset: Int): Boolean =
+    //     slot.hotbarIndex?.let { selectSlotSilently(requester, it, ticksUntilReset) } ?: true
+    // codex end
 
-    /**
-     * @see net.minecraft.world.entity.player.Inventory.isHotbarSlot
-     */
-    fun selectSlotSilently(
-        requester: Any?,
-        slot: @Range(from = 0, to = Inventory.SELECTION_SIZE - 1L) Int,
-        ticksUntilReset: Int,
-    ): Boolean {
-        require(Inventory.isHotbarSlot(slot)) { "Invalid hotbar slot: $slot" }
+    // codex start
+    // /**
+    //  * @see net.minecraft.world.entity.player.Inventory.isHotbarSlot
+    //  */
+    // fun selectSlotSilently(
+    //     requester: Any?,
+    //     slot: @Range(from = 0, to = Inventory.SELECTION_SIZE - 1L) Int,
+    //     ticksUntilReset: Int,
+    // ): Boolean {
+    //     require(Inventory.isHotbarSlot(slot)) { "Invalid hotbar slot: $slot" }
+    //
+    //     // codex start
+    //     // val event = EventManager.callEvent(SelectHotbarSlotSilentlyEvent(requester, slot))
+    //     // if (event.isCancelled) {
+    //     //     return false
+    //     // }
+    //     // codex end
+    //
+    //     hotbarState = SilentHotbarState(slot, requester, ticksUntilReset, clientsideSlot)
+    //     ticksSinceLastUpdate = 0
+    //     return true
+    // }
+    // codex end
 
-        val event = EventManager.callEvent(SelectHotbarSlotSilentlyEvent(requester, slot))
-        if (event.isCancelled) {
-            return false
-        }
+    // codex start
+    // fun resetSlot(requester: Any?) {
+    //     if (hotbarState?.requester === requester) {
+    //         hotbarState = null
+    //     }
+    // }
+    // codex end
 
-        hotbarState = SilentHotbarState(slot, requester, ticksUntilReset, clientsideSlot)
-        ticksSinceLastUpdate = 0
-        return true
-    }
+    // codex start
+    // fun isSlotModified() = hotbarState != null
+    // codex end
 
-    fun resetSlot(requester: Any?) {
-        if (hotbarState?.requester === requester) {
-            hotbarState = null
-        }
-    }
-
-    fun isSlotModified() = hotbarState != null
-
-    /**
-     * Returns if the slot is currently getting modified by a given requester
-     */
-    fun isSlotModifiedBy(requester: Any?) = hotbarState?.requester === requester
+    // codex start
+    // /**
+    //  * Returns if the slot is currently getting modified by a given requester
+    //  */
+    // fun isSlotModifiedBy(requester: Any?) = hotbarState?.requester === requester
+    // codex end
 
     @Suppress("unused")
     private val worldChangeHandler = handler<WorldChangeEvent> {

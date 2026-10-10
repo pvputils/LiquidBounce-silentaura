@@ -32,11 +32,15 @@ inline fun Double.sq(): Double {
     return this * this
 }
 
-inline fun Float.toFixed(digits: Int): String {
-    return "%.${digits}f".format(this)
-}
+// codex start
+// inline fun Float.toFixed(digits: Int): String {
+//     return "%.${digits}f".format(this)
+// }
+// codex end
 
-inline fun Double.toFixed(digits: Int): String {
-    return "%.${digits}f".format(this)
-}
+// codex start
+// inline fun Double.toFixed(digits: Int): String {
+//     return "%.${digits}f".format(this)
+// }
+// codex end
 

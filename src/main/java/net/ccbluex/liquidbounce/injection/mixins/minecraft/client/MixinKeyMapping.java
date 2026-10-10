@@ -18,31 +18,30 @@
  */
 package net.ccbluex.liquidbounce.injection.mixins.minecraft.client;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.events.KeybindChangeEvent;
-import net.ccbluex.liquidbounce.event.events.KeybindIsPressedEvent;
 import net.minecraft.client.KeyMapping;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import java.util.function.Consumer;
 
 @Mixin(KeyMapping.class)
 public abstract class MixinKeyMapping {
 
-    @Inject(method = "setKey", at = @At("RETURN"))
-    private void hookSetBoundKey(InputConstants.Key boundKey, CallbackInfo ci) {
-        EventManager.INSTANCE.callEvent(KeybindChangeEvent.INSTANCE);
-    }
+    // codex start
+    // @Inject(method = "setKey", at = @At("RETURN"))
+    // private void hookSetBoundKey(InputConstants.Key boundKey, CallbackInfo ci) {
+    //     EventManager.INSTANCE.callEvent(KeybindChangeEvent.INSTANCE);
+    // }
+    // codex end
 
-    @ModifyReturnValue(method = "isDown", at = @At("RETURN"))
-    private boolean isPressed(boolean original) {
-        return EventManager.INSTANCE.callEvent(new KeybindIsPressedEvent((KeyMapping) (Object) this, original)).isPressed();
-    }
+    // codex start
+    // @ModifyReturnValue(method = "isDown", at = @At("RETURN"))
+    // private boolean isPressed(boolean original) {
+    //     return EventManager.INSTANCE.callEvent(new KeybindIsPressedEvent((KeyMapping) (Object) this, original)).isPressed();
+    // }
+    // codex end
 
     /**
      * TODO(26.4): remove this after 26.4-snapshot-2

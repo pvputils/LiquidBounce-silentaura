@@ -21,28 +21,20 @@
 
 package net.ccbluex.liquidbounce.utils.client
 
-import net.ccbluex.liquidbounce.event.EventManager
-import net.ccbluex.liquidbounce.event.events.NotificationEvent
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.features.module.ClientModule
-import net.ccbluex.liquidbounce.injection.mixins.minecraft.gui.MixinChatScreenAccessor
-import net.ccbluex.liquidbounce.interfaces.TextColorAddition
 import net.ccbluex.liquidbounce.lang.translation
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
-import net.ccbluex.liquidbounce.utils.text.RunnableClickEvent
 import net.ccbluex.liquidbounce.utils.text.asPlainText
 import net.ccbluex.liquidbounce.utils.text.asText
 import net.ccbluex.liquidbounce.utils.text.plus
 import net.minecraft.ChatFormatting
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.network.chat.TextColor
-import java.io.File
 
 // Chat formatting
 private val clientPrefix: Component = "".asText()
@@ -50,8 +42,10 @@ private val clientPrefix: Component = "".asText()
     .append(gradientText("LiquidBounce", Color4b.fromHex("#4677ff"), Color4b.fromHex("#24AA7F")))
     .append(" ▸ ".asText().withStyle(ChatFormatting.RESET, ChatFormatting.GRAY))
 
-@AddonApi
-fun regular(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.GRAY)
+// codex start
+// @AddonApi
+// fun regular(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.GRAY)
+// codex end
 
 @AddonApi
 fun regular(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.GRAY)
@@ -61,28 +55,40 @@ fun variable(text: MutableComponent): MutableComponent = text.withStyle(ChatForm
 
 @AddonApi
 fun variable(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.GOLD)
+// codex start
+//
+// fun clickablePath(file: File): MutableComponent =
+//     variable(file.absolutePath)
+//         .onClick(ClickEvent.OpenFile(file))
+//         .onHover(HoverEvent.ShowText("Open".asPlainText()))
+// codex end
 
-fun clickablePath(file: File): MutableComponent =
-    variable(file.absolutePath)
-        .onClick(ClickEvent.OpenFile(file))
-        .onHover(HoverEvent.ShowText("Open".asPlainText()))
+// codex start
+// @AddonApi
+// fun highlight(text: MutableComponent): MutableComponent = text
+//     .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex end
 
-@AddonApi
-fun highlight(text: MutableComponent): MutableComponent = text
-    .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex start
+// @AddonApi
+// fun highlight(text: String): MutableComponent = text.asText()
+//     .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex end
 
-@AddonApi
-fun highlight(text: String): MutableComponent = text.asText()
-    .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex start
+// @AddonApi
+// fun warning(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.YELLOW)
+// codex end
 
-@AddonApi
-fun warning(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.YELLOW)
+// codex start
+// @AddonApi
+// fun warning(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.YELLOW)
+// codex end
 
-@AddonApi
-fun warning(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.YELLOW)
-
-@AddonApi
-fun markAsError(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.RED)
+// codex start
+// @AddonApi
+// fun markAsError(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.RED)
+// codex end
 
 @AddonApi
 fun markAsError(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.RED)
@@ -101,9 +107,11 @@ inline fun MutableComponent.obfuscated(value: Boolean?): MutableComponent =
 
 inline fun MutableComponent.strikethrough(value: Boolean?): MutableComponent =
     setStyle(style.withStrikethrough(value))
-
-inline fun MutableComponent.underline(value: Boolean?): MutableComponent =
-    setStyle(style.withUnderlined(value))
+// codex start
+//
+// inline fun MutableComponent.underline(value: Boolean?): MutableComponent =
+//     setStyle(style.withUnderlined(value))
+// codex end
 
 inline fun MutableComponent.italic(value: Boolean?): MutableComponent =
     setStyle(style.withItalic(value))
@@ -113,9 +121,11 @@ inline fun MutableComponent.onHover(event: HoverEvent?): MutableComponent =
 
 inline fun MutableComponent.onClick(event: ClickEvent?): MutableComponent =
     setStyle(style.withClickEvent(event))
-
-inline fun MutableComponent.onClickRun(callback: Runnable): MutableComponent =
-    setStyle(style.withClickEvent(RunnableClickEvent(callback)))
+// codex start
+//
+// inline fun MutableComponent.onClickRun(callback: Runnable): MutableComponent =
+//     setStyle(style.withClickEvent(RunnableClickEvent(callback)))
+// codex end
 
 inline operator fun MutableComponent.plusAssign(other: String) {
     this.append(other)
@@ -161,24 +171,28 @@ fun MutableComponent.copyable(
     hover?.let(::onHover)
     onClick(ClickEvent.CopyToClipboard(copyContent))
 }
-
-fun MutableComponent.bypassNameProtection(): MutableComponent = withStyle {
-    val color = it.color ?: TextColor.fromLegacyFormat(ChatFormatting.RESET)
-
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    val newColor = (color as TextColorAddition).`liquid_bounce$withNameProtectionBypass`()
-
-    it.withColor(newColor)
-}
-
-/**
- * Open a [ChatScreen] with given text,
- * or set the text of current [ChatScreen]
- */
-fun Minecraft.openChat(text: String, draft: Boolean = false, closeOnSubmit: Boolean = true) = schedule {
-    (this.gui.screen() as? MixinChatScreenAccessor)?.input?.setValue(text)
-        ?: this.gui.setScreen(ChatScreen(text, draft, closeOnSubmit))
-}
+// codex start
+//
+// fun MutableComponent.bypassNameProtection(): MutableComponent = withStyle {
+//     val color = it.color ?: TextColor.fromLegacyFormat(ChatFormatting.RESET)
+//
+//     @Suppress("CAST_NEVER_SUCCEEDS")
+//     val newColor = (color as TextColorAddition).`liquid_bounce$withNameProtectionBypass`()
+//
+//     it.withColor(newColor)
+// }
+//
+// /**
+//  * Open a [ChatScreen] with given text,
+//  * or set the text of current [ChatScreen]
+//  */
+// codex end
+// codex start
+// fun Minecraft.openChat(text: String, draft: Boolean = false, closeOnSubmit: Boolean = true) = schedule {
+//     (this.gui.screen() as? MixinChatScreenAccessor)?.input?.setValue(text)
+//         ?: this.gui.setScreen(ChatScreen(text, draft, closeOnSubmit))
+// }
+// codex end
 
 private val defaultMessageMetadata = MessageMetadata()
 
@@ -225,39 +239,50 @@ fun chat(text: Component, metadata: MessageMetadata = defaultMessageMetadata) {
     chatHud.addMessage(realText, metadata.id, metadata.count)
 }
 
-/**
- * Adds a new chat message.
- */
-@AddonApi
-fun chat(vararg texts: Component, metadata: MessageMetadata = defaultMessageMetadata) {
-    chat(texts.asText(), metadata)
-}
+// codex start
+// /**
+//  * Adds a new chat message.
+//  */
+// @AddonApi
+// fun chat(vararg texts: Component, metadata: MessageMetadata = defaultMessageMetadata) {
+//     chat(texts.asText(), metadata)
+// }
+// codex end
 
-@AddonApi
-fun chat(text: Component, module: ClientModule) = chat(text, metadata = MessageMetadata.byModule(module))
+// codex start
+// @AddonApi
+// fun chat(text: Component, module: ClientModule) = chat(text, metadata = MessageMetadata.byModule(module))
+// codex end
 
-@AddonApi
-fun chat(text: String, module: ClientModule) = chat(text.asPlainText(), module)
+// codex start
+// @AddonApi
+// fun chat(text: String, module: ClientModule) = chat(text.asPlainText(), module)
+// codex end
 
-@AddonApi
-fun chat(text: String) = chat(text.asPlainText())
+// codex start
+// @AddonApi
+// fun chat(text: String) = chat(text.asPlainText())
+// codex end
 
-@AddonApi
-fun notification(title: Component, message: String, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title.string, message, severity))
-
-@AddonApi
-fun notification(title: String, message: Component, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title, message.string, severity))
-
-@AddonApi
-fun notification(title: Component, message: Component, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title.string, message.string, severity))
-
-@AddonApi
-fun notification(title: String, message: String, severity: NotificationEvent.Severity) =
-    EventManager.callEvent(NotificationEvent(title, message, severity))
-
-val TextColor.bypassesNameProtection: Boolean
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    get() = (this as TextColorAddition).`liquid_bounce$doesBypassingNameProtect`()
+// codex start
+// @AddonApi
+// fun notification(title: Component, message: String, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title.string, message, severity))
+//
+// @AddonApi
+// fun notification(title: String, message: Component, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title, message.string, severity))
+//
+// @AddonApi
+// fun notification(title: Component, message: Component, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title.string, message.string, severity))
+//
+// @AddonApi
+// fun notification(title: String, message: String, severity: NotificationEvent.Severity) =
+//     EventManager.callEvent(NotificationEvent(title, message, severity))
+// codex end
+// codex start
+// val TextColor.bypassesNameProtection: Boolean
+//     @Suppress("CAST_NEVER_SUCCEEDS")
+//     get() = (this as TextColorAddition).`liquid_bounce$doesBypassingNameProtect`()
+// codex end

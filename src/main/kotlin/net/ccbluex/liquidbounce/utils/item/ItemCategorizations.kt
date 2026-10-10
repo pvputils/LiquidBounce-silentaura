@@ -22,33 +22,34 @@ package net.ccbluex.liquidbounce.utils.item
 import net.ccbluex.liquidbounce.utils.kotlin.contains
 import net.minecraft.core.TypedInstance
 import net.minecraft.core.component.DataComponentGetter
-import net.minecraft.core.component.DataComponentHolder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.tags.ItemTags
-import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import net.minecraft.world.item.component.Tool
 
-val DataComponentHolder.isConsumable: Boolean
-    get() = this.has(DataComponents.CONSUMABLE)
+// codex start
+// val DataComponentHolder.isConsumable: Boolean
+//     get() = this.has(DataComponents.CONSUMABLE)
+//
+// val DataComponentGetter.isFood: Boolean
+//     get() = foodComponent != null
+//
+// val DataComponentHolder.isGlider: Boolean
+//     get() = this.has(DataComponents.GLIDER)
+// codex end
 
-val DataComponentGetter.isFood: Boolean
-    get() = foodComponent != null
-
-val DataComponentHolder.isGlider: Boolean
-    get() = this.has(DataComponents.GLIDER)
-
-val DataComponentGetter.foodComponent: FoodProperties?
-    get() = this.get(DataComponents.FOOD)
-
-val DataComponentGetter.toolComponent: Tool?
-    get() = this.get(DataComponents.TOOL)
-
-val TypedInstance<Item>.isBundle
-    get() = this.`is`(ItemTags.BUNDLES)
+// codex start
+// val DataComponentGetter.foodComponent: FoodProperties?
+//     get() = this.get(DataComponents.FOOD)
+//
+// // codex start
+// // val DataComponentGetter.toolComponent: Tool?
+// //     get() = this.get(DataComponents.TOOL)
+// //
+// // val TypedInstance<Item>.isBundle
+// //     get() = this.`is`(ItemTags.BUNDLES)
+// // codex end
+// codex end
 
 val TypedInstance<Item>.isAnyChest: Boolean
     get() = this.`is`(Items.CHEST)
@@ -58,46 +59,56 @@ val TypedInstance<Item>.isAnyChest: Boolean
 
 // Tools
 
-val TypedInstance<Item>.isSword
-    get() = this.`is`(ItemTags.SWORDS)
-
-val TypedInstance<Item>.isSpear
-    get() = this.`is`(ItemTags.SPEARS)
-
-val TypedInstance<Item>.isPickaxe
-    get() = this.`is`(ItemTags.PICKAXES)
+// codex start
+// val TypedInstance<Item>.isSword
+//     get() = this.`is`(ItemTags.SWORDS)
+//
+// // codex start
+// // val TypedInstance<Item>.isSpear
+// //     get() = this.`is`(ItemTags.SPEARS)
+// // codex end
+//
+// val TypedInstance<Item>.isPickaxe
+//     get() = this.`is`(ItemTags.PICKAXES)
+// codex end
 
 val TypedInstance<Item>.isAxe
     get() = this.`is`(ItemTags.AXES)
 
-val TypedInstance<Item>.isShovel
-    get() = this.`is`(ItemTags.SHOVELS)
-
-val TypedInstance<Item>.isHoe
-    get() = this.`is`(ItemTags.HOES)
-
-/**
- * Replacement of 1.21.4 `MiningToolItem`
- */
-val TypedInstance<Item>.isMiningTool
-    get() = isAxe || isPickaxe || isShovel || isHoe
-
-// Armors
-
-val TypedInstance<Item>.isFootArmor
-    get() = this.`is`(ItemTags.FOOT_ARMOR)
-
-val TypedInstance<Item>.isLegArmor
-    get() = this.`is`(ItemTags.LEG_ARMOR)
-
-val TypedInstance<Item>.isChestArmor
-    get() = this.`is`(ItemTags.CHEST_ARMOR)
-
-val TypedInstance<Item>.isHeadArmor
-    get() = this.`is`(ItemTags.HEAD_ARMOR)
-
-val TypedInstance<Item>.isPlayerArmor
-    get() = isFootArmor || isLegArmor || isChestArmor || isHeadArmor
+// codex start
+// val TypedInstance<Item>.isShovel
+//     get() = this.`is`(ItemTags.SHOVELS)
+//
+// val TypedInstance<Item>.isHoe
+//     get() = this.`is`(ItemTags.HOES)
+//
+// /**
+//  * Replacement of 1.21.4 `MiningToolItem`
+//  */
+// // codex start
+// // val TypedInstance<Item>.isMiningTool
+// //     get() = isAxe || isPickaxe || isShovel || isHoe
+// //
+// // // Armors
+// // codex end
+//
+// val TypedInstance<Item>.isFootArmor
+//     get() = this.`is`(ItemTags.FOOT_ARMOR)
+//
+// val TypedInstance<Item>.isLegArmor
+//     get() = this.`is`(ItemTags.LEG_ARMOR)
+//
+// val TypedInstance<Item>.isChestArmor
+//     get() = this.`is`(ItemTags.CHEST_ARMOR)
+//
+// val TypedInstance<Item>.isHeadArmor
+//     get() = this.`is`(ItemTags.HEAD_ARMOR)
+//
+// // codex start
+// // val TypedInstance<Item>.isPlayerArmor
+// //     get() = isFootArmor || isLegArmor || isChestArmor || isHeadArmor
+// // codex end
+// codex end
 
 val DataComponentGetter.equippableComponent
     get() = this.get(DataComponents.EQUIPPABLE)
@@ -105,19 +116,21 @@ val DataComponentGetter.equippableComponent
 val DataComponentGetter.equipmentSlot
     get() = this.equippableComponent?.slot
 
-val DataComponentGetter.armorToughness
-    get() = this.getAttributeValue(Attributes.ARMOR_TOUGHNESS, this.equipmentSlot)
-
-val DataComponentGetter.armorValue
-    get() = this.getAttributeValue(Attributes.ARMOR, this.equipmentSlot)
-
-val DataComponentGetter.armorKnockbackResistance
-    get() = this.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE, this.equipmentSlot)
-
-// Shield
-
-/**
- * @see Items.SHIELD
- */
-val DataComponentGetter.blocksAttacksComponent
-    get() = this.get(DataComponents.BLOCKS_ATTACKS)
+// codex start
+// val DataComponentGetter.armorToughness
+//     get() = this.getAttributeValue(Attributes.ARMOR_TOUGHNESS, this.equipmentSlot)
+//
+// val DataComponentGetter.armorValue
+//     get() = this.getAttributeValue(Attributes.ARMOR, this.equipmentSlot)
+//
+// val DataComponentGetter.armorKnockbackResistance
+//     get() = this.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE, this.equipmentSlot)
+//
+// // Shield
+//
+// /**
+//  * @see Items.SHIELD
+//  */
+// val DataComponentGetter.blocksAttacksComponent
+//     get() = this.get(DataComponents.BLOCKS_ATTACKS)
+// codex end

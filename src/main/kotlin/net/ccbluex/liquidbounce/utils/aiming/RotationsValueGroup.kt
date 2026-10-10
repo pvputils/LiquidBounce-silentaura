@@ -85,16 +85,18 @@ open class RotationsValueGroup(
         whenReached
     )
 
-    /**
-     * How long it takes to rotate to a rotation in ticks
-     *
-     * Calculates the difference from the server rotation to the target rotation and divides it by the
-     * minimum turn speed (to make sure we are always there in time)
-     *
-     * @param rotation The rotation to rotate to
-     * @return The amount of ticks it takes to rotate to the rotation
-     */
-    fun calculateTicks(rotation: Rotation) = angleSmooth.activeMode
-        .calculateTicks(RotationManager.actualServerRotation, rotation)
+    // codex start
+    // /**
+    //  * How long it takes to rotate to a rotation in ticks
+    //  *
+    //  * Calculates the difference from the server rotation to the target rotation and divides it by the
+    //  * minimum turn speed (to make sure we are always there in time)
+    //  *
+    //  * @param rotation The rotation to rotate to
+    //  * @return The amount of ticks it takes to rotate to the rotation
+    //  */
+    // fun calculateTicks(rotation: Rotation) = angleSmooth.activeMode
+    //     .calculateTicks(RotationManager.actualServerRotation, rotation)
+    // codex end
 
 }

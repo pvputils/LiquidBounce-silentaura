@@ -21,8 +21,6 @@ package net.ccbluex.liquidbounce.render.gui.element
 
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.renderpearl.api.pipeline.RenderPipeline
-import it.unimi.dsi.fastutil.floats.FloatArrayList
-import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.ccbluex.liquidbounce.render.engine.font.GlyphPage
 import net.ccbluex.liquidbounce.utils.collection.GenericPools
 import net.ccbluex.liquidbounce.utils.collection.Pools

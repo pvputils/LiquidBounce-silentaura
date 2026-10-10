@@ -37,8 +37,10 @@ import net.minecraft.server.players.UserNameToIdResolver
 val Window.dimensions
     get() = IntIntValuePair(screenWidth, screenHeight)
 
-val Window.scaledDimension
-    get() = IntIntValuePair(guiScaledWidth, guiScaledHeight)
+// codex start
+// val Window.scaledDimension
+//     get() = IntIntValuePair(guiScaledWidth, guiScaledHeight)
+// codex end
 
 val mc: Minecraft
     inline get() = Minecraft.getInstance()
@@ -53,20 +55,22 @@ val interaction: MultiPlayerGameMode
 val gpuDevice: GpuDevice
     inline get() = RenderSystem.getDevice()
 
-fun Services.with(
-    sessionService: SessionService = this.sessionService,
-    servicesKeySet: ServicesKeySet = this.servicesKeySet,
-    profileRepository: GameProfileRepository = this.profileRepository,
-    nameToIdCache: UserNameToIdResolver = this.nameToIdCache,
-    profileResolver: ProfileResolver = this.profileResolver
-): Services {
-    return Services(
-        sessionService, servicesKeySet,
-        profileRepository,
-        nameToIdCache,
-        profileResolver
-    )
-}
+// codex start
+// fun Services.with(
+//     sessionService: SessionService = this.sessionService,
+//     servicesKeySet: ServicesKeySet = this.servicesKeySet,
+//     profileRepository: GameProfileRepository = this.profileRepository,
+//     nameToIdCache: UserNameToIdResolver = this.nameToIdCache,
+//     profileResolver: ProfileResolver = this.profileResolver
+// ): Services {
+//     return Services(
+//         sessionService, servicesKeySet,
+//         profileRepository,
+//         nameToIdCache,
+//         profileResolver
+//     )
+// }
+// codex end
 
 // Copied from 26.1.2
 val Minecraft.isSingleplayer: Boolean

@@ -22,7 +22,6 @@ package net.ccbluex.liquidbounce.config.gson
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mojang.blaze3d.platform.InputConstants
-import net.ccbluex.liquidbounce.config.gson.adapter.AlignmentAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.CodecBasedAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.ColorAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.IdentifierWithRegistryAdapter
@@ -31,7 +30,6 @@ import net.ccbluex.liquidbounce.config.gson.adapter.InstantAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.IntRangeAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.LocalDateAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.LocalDateTimeAdapter
-import net.ccbluex.liquidbounce.config.gson.adapter.MinecraftAccountAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.OffsetDateTimeAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.OptionalAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.RangeAdapter
@@ -41,31 +39,18 @@ import net.ccbluex.liquidbounce.config.gson.adapter.Vec3dAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.Vec3iAdapter
 import net.ccbluex.liquidbounce.config.gson.adapter.Vector2fcAdapter
 import net.ccbluex.liquidbounce.config.gson.serializer.ModeValueGroupSerializer
-import net.ccbluex.liquidbounce.config.gson.serializer.ReadOnlyComponentSerializer
-import net.ccbluex.liquidbounce.config.gson.serializer.ReadOnlyThemeSerializer
 import net.ccbluex.liquidbounce.config.gson.serializer.SupplierSerializer
 import net.ccbluex.liquidbounce.config.gson.serializer.TaggedSerializer
 import net.ccbluex.liquidbounce.config.gson.serializer.ValueGroupSerializer
 import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.ItemStackSerializer
-import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.ScreenSerializer
-import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.ServerInfoSerializer
-import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.SessionSerializer
 import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.StatusEffectInstanceSerializer
 import net.ccbluex.liquidbounce.config.gson.serializer.minecraft.StringRepresentableSerializer
 import net.ccbluex.liquidbounce.config.gson.stategies.ExcludeStrategy
-import net.ccbluex.liquidbounce.config.gson.stategies.ProtocolExcludeStrategy
 import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.config.types.group.ValueGroup
 import net.ccbluex.liquidbounce.config.types.list.Tagged
-import net.ccbluex.liquidbounce.features.account.MinecraftAccount
-import net.ccbluex.liquidbounce.integration.theme.Theme
-import net.ccbluex.liquidbounce.integration.theme.component.HudComponent
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.input.InputBind
-import net.ccbluex.liquidbounce.utils.render.Alignment
-import net.minecraft.client.User
-import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.core.Vec3i
 import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.network.chat.Component
@@ -113,36 +98,44 @@ val publicGson: Gson = GsonBuilder()
 /**
  * This GSON instance is used for interop communication.
  */
-internal val interopGson: Gson = GsonBuilder()
-    .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
-    .registerCommonTypeAdapters()
-    .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
-    .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
-    .create()
 
-/**
- * This GSON instance is used for serializing objects as accessible JSON which means it is READ-ONLY (!)
- * and often comes with an easier syntax to use in other programming languages like JavaScript.
- */
-internal val accessibleInteropGson: Gson = GsonBuilder()
-    .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
-    .registerCommonTypeAdapters()
-    .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
-    .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
-    .registerTypeHierarchyAdapter(Theme::class.javaObjectType, ReadOnlyThemeSerializer)
-    .registerTypeHierarchyAdapter(HudComponent::class.javaObjectType, ReadOnlyComponentSerializer)
-    .registerTypeHierarchyAdapter(Alignment::class.javaObjectType, AlignmentAdapter)
-    .create()
+// codex start
+// internal val interopGson: Gson = GsonBuilder()
+//     .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
+//     .registerCommonTypeAdapters()
+//     .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
+//     .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
+//     .create()
+//
+// /**
+//  * This GSON instance is used for serializing objects as accessible JSON which means it is READ-ONLY (!)
+//  * and often comes with an easier syntax to use in other programming languages like JavaScript.
+//  */
+// // codex start
+// // internal val accessibleInteropGson: Gson = GsonBuilder()
+// //     .addSerializationExclusionStrategy(ProtocolExcludeStrategy)
+// //     .registerCommonTypeAdapters()
+// //     .registerTypeAdapter(ModeValueGroup::class.java, ModeValueGroupSerializer.INTEROP_SERIALIZER)
+// //     .registerTypeHierarchyAdapter(ValueGroup::class.java, ValueGroupSerializer.INTEROP_SERIALIZER)
+// //     // codex start
+// //     // .registerTypeHierarchyAdapter(Theme::class.javaObjectType, ReadOnlyThemeSerializer)
+// //     // .registerTypeHierarchyAdapter(HudComponent::class.javaObjectType, ReadOnlyComponentSerializer)
+// //     // .registerTypeHierarchyAdapter(Alignment::class.javaObjectType, AlignmentAdapter)
+// //     // codex end
+// //     .create()
+// //
+// // /**
+// //  * Register common type adapters
+// //  * These adapters include anything from Kotlin classes to Minecraft and LiquidBounce types
+// //  * They are safe to use on any GSON instance. (clientGson, autoConfigGson, ...)
+// //  * It does not include any configurable serializers, which means you need to add them yourself if needed!
+// //  *
+// //  * @see GsonBuilder.registerTypeHierarchyAdapter
+// //  * @see GsonBuilder.registerTypeAdapter
+// //  */
+// // codex end
+// codex end
 
-/**
- * Register common type adapters
- * These adapters include anything from Kotlin classes to Minecraft and LiquidBounce types
- * They are safe to use on any GSON instance. (clientGson, autoConfigGson, ...)
- * It does not include any configurable serializers, which means you need to add them yourself if needed!
- *
- * @see GsonBuilder.registerTypeHierarchyAdapter
- * @see GsonBuilder.registerTypeAdapter
- */
 private fun GsonBuilder.registerCommonTypeAdapters() =
     registerTypeAdapter(LocalDate::class.java, LocalDateAdapter)
         .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter)
@@ -167,11 +160,15 @@ private fun GsonBuilder.registerCommonTypeAdapters() =
         .registerTypeHierarchyAdapter(InputConstants.Key::class.javaObjectType, SimpleStringTypeAdapter.INPUT_KEY)
         .registerTypeHierarchyAdapter(InputBind::class.javaObjectType, InputBindAdapter)
         .registerTypeHierarchyAdapter(Tagged::class.javaObjectType, TaggedSerializer)
-        .registerTypeHierarchyAdapter(MinecraftAccount::class.javaObjectType, MinecraftAccountAdapter)
+        // codex start
+        // .registerTypeHierarchyAdapter(MinecraftAccount::class.javaObjectType, MinecraftAccountAdapter)
+        // codex end
         .registerTypeHierarchyAdapter(Component::class.javaObjectType, CodecBasedAdapter.SANITIZED_COMPONENT)
-        .registerTypeHierarchyAdapter(Screen::class.javaObjectType, ScreenSerializer)
-        .registerTypeHierarchyAdapter(User::class.javaObjectType, SessionSerializer)
-        .registerTypeAdapter(ServerData::class.javaObjectType, ServerInfoSerializer)
+        // codex start
+        // .registerTypeHierarchyAdapter(Screen::class.javaObjectType, ScreenSerializer)
+        // .registerTypeHierarchyAdapter(User::class.javaObjectType, SessionSerializer)
+        // .registerTypeAdapter(ServerData::class.javaObjectType, ServerInfoSerializer)
+        // codex end
         .registerTypeHierarchyAdapter(StringRepresentable::class.java, StringRepresentableSerializer)
         .registerTypeAdapter(ItemStack::class.javaObjectType, ItemStackSerializer)
         .registerTypeAdapter(Identifier::class.javaObjectType, SimpleStringTypeAdapter.IDENTIFIER)
