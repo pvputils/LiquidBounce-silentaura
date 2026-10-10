@@ -39,8 +39,12 @@ import net.ccbluex.liquidbounce.utils.client.RestrictedSingleUseAction
 import net.ccbluex.liquidbounce.utils.client.inGame
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
-import net.ccbluex.liquidbounce.utils.combat.CombatManager
-import net.ccbluex.liquidbounce.utils.entity.lastRotation
+// codex start
+// import net.ccbluex.liquidbounce.utils.combat.CombatManager
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.entity.lastRotation
+// codex end
 import net.ccbluex.liquidbounce.utils.entity.rotation
 import net.ccbluex.liquidbounce.utils.inventory.InventoryManager
 import net.ccbluex.liquidbounce.utils.kotlin.EventPriorityConvention
@@ -203,9 +207,11 @@ object RotationManager : EventListener {
 
     @AddonApi
     fun setRotationTarget(plan: RotationTarget, priority: Int, provider: ClientModule) {
-        if (!allowedToUpdate()) {
-            return
-        }
+        // codex start
+        // if (!allowedToUpdate()) {
+        //     return
+        // }
+        // codex end
 
         rotationTargetHandler.request(
             RequestHandler.Request(
@@ -221,9 +227,11 @@ object RotationManager : EventListener {
      * Checks if the rotation is allowed to be updated
      */
     fun isRotatingAllowed(rotationTarget: RotationTarget): Boolean {
-        if (!allowedToUpdate()) {
-            return false
-        }
+        // codex start
+        // if (!allowedToUpdate()) {
+        //     return false
+        // }
+        // codex end
 
         if (rotationTarget.considerInventory) {
             if (InventoryManager.isInventoryOpen || mc.gui.screen() is ContainerScreen) {
@@ -311,17 +319,21 @@ object RotationManager : EventListener {
     /**
      * Checks if it should update the server-side rotations
      */
-    private fun allowedToUpdate() = !CombatManager.shouldPauseRotation
+    // codex start
+    // private fun allowedToUpdate() = !CombatManager.shouldPauseRotation
+    // codex end
 
-    fun rotationMatchesPreviousRotation(): Boolean {
-        val player = mc.player ?: return false
-
-        currentRotation?.let {
-            return it == previousRotation
-        }
-
-        return player.rotation == player.lastRotation
-    }
+    // codex start
+    // fun rotationMatchesPreviousRotation(): Boolean {
+    //     val player = mc.player ?: return false
+    //
+    //     currentRotation?.let {
+    //         return it == previousRotation
+    //     }
+    //
+    //     return player.rotation == player.lastRotation
+    // }
+    // codex end
 
     @Suppress("unused")
     private val velocityHandler = handler<PlayerVelocityStrafe>(priority = MODEL_STATE) { event ->

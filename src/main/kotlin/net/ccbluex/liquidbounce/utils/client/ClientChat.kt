@@ -61,19 +61,27 @@ fun variable(text: String): MutableComponent = text.asText().withStyle(ChatForma
 //         .onHover(HoverEvent.ShowText("Open".asPlainText()))
 // codex end
 
-@AddonApi
-fun highlight(text: MutableComponent): MutableComponent = text
-    .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex start
+// @AddonApi
+// fun highlight(text: MutableComponent): MutableComponent = text
+//     .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex end
 
-@AddonApi
-fun highlight(text: String): MutableComponent = text.asText()
-    .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex start
+// @AddonApi
+// fun highlight(text: String): MutableComponent = text.asText()
+//     .withStyle(Style.EMPTY + Color4b.LIQUID_BOUNCE + ChatFormatting.BOLD)
+// codex end
 
-@AddonApi
-fun warning(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.YELLOW)
+// codex start
+// @AddonApi
+// fun warning(text: MutableComponent): MutableComponent = text.withStyle(ChatFormatting.YELLOW)
+// codex end
 
-@AddonApi
-fun warning(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.YELLOW)
+// codex start
+// @AddonApi
+// fun warning(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.YELLOW)
+// codex end
 
 @AddonApi
 fun markAsError(text: String): MutableComponent = text.asText().withStyle(ChatFormatting.RED)

@@ -319,10 +319,12 @@ object ModuleDebug : ClientModule("Debug", ModuleCategories.RENDER) {
         debugParameter(owner = this@debugParameter, name, lazyValue())
     }
 
-    fun getArrayEntryColor(idx: Int, length: Int): Color4b {
-        val hue = idx.toFloat() / length.toFloat()
-        return Color4b.ofHSB(hue, 1f, 1f, alpha = 32f / 255f)
-    }
+    // codex start
+    // fun getArrayEntryColor(idx: Int, length: Int): Color4b {
+    //     val hue = idx.toFloat() / length.toFloat()
+    //     return Color4b.ofHSB(hue, 1f, 1f, alpha = 32f / 255f)
+    // }
+    // codex end
 
     fun interface DebuggedGeometry {
         context(env: WorldRenderEnvironment)

@@ -198,18 +198,20 @@ open class ClientModule @JvmOverloads constructor(
         return state
     }
 
-    fun tagBy(setting: Value<*>) {
-        check(this.tagValue == null) { "Tag already set" }
-
-        this.tagValue = setting
-
-        // Refresh arraylist on tag change
-        setting.onChanged {
-            // codex start
-            // EventManager.callEvent(RefreshArrayListEvent)
-            // codex end
-        }
-    }
+    // codex start
+    // fun tagBy(setting: Value<*>) {
+    //     check(this.tagValue == null) { "Tag already set" }
+    //
+    //     this.tagValue = setting
+    //
+    //     // Refresh arraylist on tag change
+    //     setting.onChanged {
+    //         // codex start
+    //         // EventManager.callEvent(RefreshArrayListEvent)
+    //         // codex end
+    //     }
+    // }
+    // codex end
 
     /**
      * Warns when no module description is set in the main translation file.

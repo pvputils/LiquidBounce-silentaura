@@ -49,13 +49,19 @@ import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
 import net.ccbluex.liquidbounce.utils.client.logger
 import net.ccbluex.liquidbounce.utils.input.InputBind
-import net.ccbluex.liquidbounce.utils.math.Easing
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.Easing
+// codex end
 import net.ccbluex.liquidbounce.utils.text.toLowerCamelCase
 import net.minecraft.core.Vec3i
 import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.world.effect.MobEffect
-import net.minecraft.world.entity.EntityType
+// codex start
+// import net.minecraft.world.effect.MobEffect
+// codex end
+// codex start
+// import net.minecraft.world.entity.EntityType
+// codex end
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.phys.Vec3
@@ -255,9 +261,11 @@ open class ValueGroup @JvmOverloads constructor(
         return valueGroup
     }
 
-    fun <T : ValueGroup> treeAll(vararg valueGroups: T) {
-        valueGroups.forEach(this::tree)
-    }
+    // codex start
+    // fun <T : ValueGroup> treeAll(vararg valueGroups: T) {
+    //     valueGroups.forEach(this::tree)
+    // }
+    // codex end
 
     fun <T : ValueGroup> drop(valueGroup: T): T {
         require(valueGroup.base === this) {
@@ -444,10 +452,14 @@ open class ValueGroup @JvmOverloads constructor(
     fun <C : MutableCollection<String>> textList(name: String, default: C) =
         mutableList<C, String>(name, default, ValueType.TEXT)
 
-    fun <C : MutableCollection<Regex>> regexList(name: String, default: C) =
-        mutableList<C, Regex>(name, default, ValueType.TEXT)
+    // codex start
+    // fun <C : MutableCollection<Regex>> regexList(name: String, default: C) =
+    //     mutableList<C, Regex>(name, default, ValueType.TEXT)
+    // codex end
 
-    fun easing(name: String, default: Easing) = enumChoice(name, default)
+    // codex start
+    // fun easing(name: String, default: Easing) = enumChoice(name, default)
+    // codex end
 
     fun color(name: String, default: Color4b) = value(name, default, ValueType.COLOR)
 
@@ -485,20 +497,28 @@ open class ValueGroup @JvmOverloads constructor(
     fun <C : SequencedSet<SoundEvent>> sounds(name: String, default: C) =
         registryList(name, default, ValueType.SOUND_EVENT)
 
-    fun <C : SequencedSet<MobEffect>> mobEffects(name: String, default: C) =
-        registryList(name, default, ValueType.MOB_EFFECT)
+    // codex start
+    // fun <C : SequencedSet<MobEffect>> mobEffects(name: String, default: C) =
+    //     registryList(name, default, ValueType.MOB_EFFECT)
+    // codex end
 
     fun <C : SequencedSet<Identifier>> enchantments(name: String, default: C) =
         registryList(name, default, ValueType.ENCHANTMENT)
 
-    fun <C : SequencedSet<Identifier>> c2sPackets(name: String, default: C) =
-        registryList(name, default, ValueType.C2S_PACKET)
+    // codex start
+    // fun <C : SequencedSet<Identifier>> c2sPackets(name: String, default: C) =
+    //     registryList(name, default, ValueType.C2S_PACKET)
+    // codex end
 
-    fun <C : SequencedSet<Identifier>> s2cPackets(name: String, default: C) =
-        registryList(name, default, ValueType.S2C_PACKET)
+    // codex start
+    // fun <C : SequencedSet<Identifier>> s2cPackets(name: String, default: C) =
+    //     registryList(name, default, ValueType.S2C_PACKET)
+    // codex end
 
-    fun <C : SequencedSet<EntityType<*>>> entityTypes(name: String, default: C) =
-        registryList(name, default, ValueType.ENTITY_TYPE)
+    // codex start
+    // fun <C : SequencedSet<EntityType<*>>> entityTypes(name: String, default: C) =
+    //     registryList(name, default, ValueType.ENTITY_TYPE)
+    // codex end
 
     @Suppress("LongParameterList")
     fun curve(

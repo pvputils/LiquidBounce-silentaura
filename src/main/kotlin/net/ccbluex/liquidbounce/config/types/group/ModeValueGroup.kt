@@ -19,13 +19,17 @@
 package net.ccbluex.liquidbounce.config.types.group
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
-import net.ccbluex.fastutil.mapToArray
+// codex start
+// import net.ccbluex.fastutil.mapToArray
+// codex end
 import net.ccbluex.liquidbounce.config.OptionalInclusion
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.EventListener
-import net.ccbluex.liquidbounce.features.addon.AddonApi
+// codex start
+// import net.ccbluex.liquidbounce.features.addon.AddonApi
+// codex end
 import net.ccbluex.liquidbounce.features.module.MinecraftShortcuts
 import java.util.function.ToIntFunction
 
@@ -105,30 +109,36 @@ class ModeValueGroup<T : Mode>(
         }
     }
 
-    fun addMode(mode: T) {
-        require(modes.none { it.name.equals(mode.name, ignoreCase = true) }) {
-            "ModeValueGroup '$name' already has a mode named '${mode.name}'"
-        }
+    // codex start
+    // fun addMode(mode: T) {
+    //     require(modes.none { it.name.equals(mode.name, ignoreCase = true) }) {
+    //         "ModeValueGroup '$name' already has a mode named '${mode.name}'"
+    //     }
+    //
+    //     mode.base = this
+    //     modes.add(mode)
+    //     // Unwalked groups key their modes once the owner is walked.
+    //     key?.let { mode.walkKeyPath(it) }
+    // }
+    // codex end
 
-        mode.base = this
-        modes.add(mode)
-        // Unwalked groups key their modes once the owner is walked.
-        key?.let { mode.walkKeyPath(it) }
-    }
+    // codex start
+    // fun removeMode(mode: Mode) {
+    //     if (activeMode === mode) {
+    //         restore()
+    //     }
+    //
+    //     if (modes.remove(mode)) {
+    //         mode.base = null
+    //         mode.unregister()
+    //     }
+    // }
+    // codex end
 
-    fun removeMode(mode: Mode) {
-        if (activeMode === mode) {
-            restore()
-        }
-
-        if (modes.remove(mode)) {
-            mode.base = null
-            mode.unregister()
-        }
-    }
-
-    @AddonApi
-    fun getModeStrings(): Array<String> = modes.mapToArray { it.name }
+    // codex start
+    // @AddonApi
+    // fun getModeStrings(): Array<String> = modes.mapToArray { it.name }
+    // codex end
 
 }
 

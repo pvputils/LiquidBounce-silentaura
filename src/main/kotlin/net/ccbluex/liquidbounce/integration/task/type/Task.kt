@@ -45,12 +45,14 @@ open class Task(val name: String) {
         return subTasks.computeIfAbsent(subTaskName, ::Task)
     }
 
-    /**
-     * Creates or gets an existing download sub-task
-     */
-    fun getOrCreateFileTask(subTaskName: String): ResourceTask {
-        return subTasks.computeIfAbsent(subTaskName, ::ResourceTask) as ResourceTask
-    }
+    // codex start
+    // /**
+    //  * Creates or gets an existing download sub-task
+    //  */
+    // fun getOrCreateFileTask(subTaskName: String): ResourceTask {
+    //     return subTasks.computeIfAbsent(subTaskName, ::ResourceTask) as ResourceTask
+    // }
+    // codex end
 
     /**
      * Calculates aggregate progress of all subtasks

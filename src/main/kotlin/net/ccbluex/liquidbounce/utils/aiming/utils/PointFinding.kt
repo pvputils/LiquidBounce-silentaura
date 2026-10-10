@@ -29,19 +29,33 @@ import net.ccbluex.fastutil.mapToArray
 // codex end
 import net.ccbluex.liquidbounce.utils.math.add
 import net.ccbluex.liquidbounce.utils.math.vertices
-import net.ccbluex.liquidbounce.utils.math.firstHit
-import net.ccbluex.liquidbounce.utils.math.fma
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.firstHit
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.fma
+// codex end
 import net.ccbluex.liquidbounce.utils.math.geometry.Line
 import net.ccbluex.liquidbounce.utils.math.geometry.NormalizedPlane
 import net.ccbluex.liquidbounce.utils.math.geometry.PlaneSection
 import net.ccbluex.liquidbounce.utils.math.minus
 import net.ccbluex.liquidbounce.utils.math.toVec3d
-import net.ccbluex.liquidbounce.utils.math.withLength
-import net.minecraft.world.entity.projectile.arrow.Arrow
-import net.minecraft.world.item.Items
-import net.minecraft.world.level.ClipContext
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.withLength
+// codex end
+// codex start
+// import net.minecraft.world.entity.projectile.arrow.Arrow
+// codex end
+// codex start
+// import net.minecraft.world.item.Items
+// codex end
+// codex start
+// import net.minecraft.world.level.ClipContext
+// codex end
 import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.HitResult
+// codex start
+// import net.minecraft.world.phys.HitResult
+// codex end
 import net.minecraft.world.phys.Vec3
 import org.joml.Matrix3f
 import org.joml.Vector3f

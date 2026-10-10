@@ -20,28 +20,50 @@ package net.ccbluex.liquidbounce.deeplearn.models
 
 import ai.djl.Model
 import ai.djl.inference.Predictor
-import ai.djl.ndarray.NDManager
-import ai.djl.ndarray.types.Shape
+// codex start
+// import ai.djl.ndarray.NDManager
+// codex end
+// codex start
+// import ai.djl.ndarray.types.Shape
+// codex end
 import ai.djl.nn.Activation
 import ai.djl.nn.Blocks
 import ai.djl.nn.SequentialBlock
 import ai.djl.nn.core.Linear
 import ai.djl.nn.norm.BatchNorm
-import ai.djl.training.DefaultTrainingConfig
-import ai.djl.training.EasyTrain
-import ai.djl.training.dataset.ArrayDataset
-import ai.djl.training.initializer.XavierInitializer
-import ai.djl.training.listener.LoggingTrainingListener
-import ai.djl.training.loss.Loss
-import ai.djl.training.optimizer.Adam
-import ai.djl.training.tracker.Tracker
+// codex start
+// import ai.djl.training.DefaultTrainingConfig
+// codex end
+// codex start
+// import ai.djl.training.EasyTrain
+// codex end
+// codex start
+// import ai.djl.training.dataset.ArrayDataset
+// codex end
+// codex start
+// import ai.djl.training.initializer.XavierInitializer
+// codex end
+// codex start
+// import ai.djl.training.listener.LoggingTrainingListener
+// codex end
+// codex start
+// import ai.djl.training.loss.Loss
+// codex end
+// codex start
+// import ai.djl.training.optimizer.Adam
+// codex end
+// codex start
+// import ai.djl.training.tracker.Tracker
+// codex end
 import ai.djl.translate.TranslateException
 import ai.djl.translate.Translator
 import net.ccbluex.liquidbounce.config.types.group.Mode
 import net.ccbluex.liquidbounce.config.types.group.ModeValueGroup
 import net.ccbluex.liquidbounce.deeplearn.DeepLearningEngine
 import net.ccbluex.liquidbounce.deeplearn.DeepLearningEngine.modelsFolder
-import net.ccbluex.liquidbounce.deeplearn.listener.OverlayTrainingListener
+// codex start
+// import net.ccbluex.liquidbounce.deeplearn.listener.OverlayTrainingListener
+// codex end
 import java.io.Closeable
 import java.io.InputStream
 import java.nio.file.Path
@@ -83,43 +105,45 @@ abstract class ModelWrapper<I, O>(
         }
     }
 
-    fun train(features: FloatArray, labels: FloatArray) {
-        require(DeepLearningEngine.isInitialized) { "DeepLearningEngine is not initialized" }
-
-        require(features.isNotEmpty()) { "Features and labels must not be empty" }
-        require(labels.isNotEmpty()) { "Features and labels must not be empty" }
-
-        val outputSize = Math.toIntExact(outputs)
-        require(labels.size % outputSize == 0) { "Labels must contain $outputSize values per sample" }
-        val sampleCount = labels.size / outputSize
-        require(features.size % sampleCount == 0) { "Features must have the same sample count as labels" }
-        val inputSize = features.size / sampleCount
-
-        lock.write {
-            check(!closed) { "Model '$name' is closed" }
-            val trainingConfig = DefaultTrainingConfig(Loss.l2Loss())
-                .optInitializer(XavierInitializer(), "weight")
-                .optOptimizer(
-                    Adam.builder()
-                        .optLearningRateTracker(Tracker.fixed(0.001f))
-                        .build()
-                )
-                .addTrainingListeners(LoggingTrainingListener(), OverlayTrainingListener(NUM_EPOCH))
-
-            model.newTrainer(trainingConfig).use { trainer ->
-                NDManager.newBaseManager().use { manager ->
-                    val trainingSet = ArrayDataset.Builder()
-                        .setData(manager.create(features, Shape(sampleCount.toLong(), inputSize.toLong())))
-                        .optLabels(manager.create(labels, Shape(sampleCount.toLong(), outputs)))
-                        .setSampling(BATCH_SIZE, true)
-                        .build()
-                    trainer.initialize(Shape(BATCH_SIZE.toLong(), inputSize.toLong()))
-
-                    EasyTrain.fit(trainer, NUM_EPOCH, trainingSet, null)
-                }
-            }
-        }
-    }
+    // codex start
+    // fun train(features: FloatArray, labels: FloatArray) {
+    //     require(DeepLearningEngine.isInitialized) { "DeepLearningEngine is not initialized" }
+    //
+    //     require(features.isNotEmpty()) { "Features and labels must not be empty" }
+    //     require(labels.isNotEmpty()) { "Features and labels must not be empty" }
+    //
+    //     val outputSize = Math.toIntExact(outputs)
+    //     require(labels.size % outputSize == 0) { "Labels must contain $outputSize values per sample" }
+    //     val sampleCount = labels.size / outputSize
+    //     require(features.size % sampleCount == 0) { "Features must have the same sample count as labels" }
+    //     val inputSize = features.size / sampleCount
+    //
+    //     lock.write {
+    //         check(!closed) { "Model '$name' is closed" }
+    //         val trainingConfig = DefaultTrainingConfig(Loss.l2Loss())
+    //             .optInitializer(XavierInitializer(), "weight")
+    //             .optOptimizer(
+    //                 Adam.builder()
+    //                     .optLearningRateTracker(Tracker.fixed(0.001f))
+    //                     .build()
+    //             )
+    //             .addTrainingListeners(LoggingTrainingListener(), OverlayTrainingListener(NUM_EPOCH))
+    //
+    //         model.newTrainer(trainingConfig).use { trainer ->
+    //             NDManager.newBaseManager().use { manager ->
+    //                 val trainingSet = ArrayDataset.Builder()
+    //                     .setData(manager.create(features, Shape(sampleCount.toLong(), inputSize.toLong())))
+    //                     .optLabels(manager.create(labels, Shape(sampleCount.toLong(), outputs)))
+    //                     .setSampling(BATCH_SIZE, true)
+    //                     .build()
+    //                 trainer.initialize(Shape(BATCH_SIZE.toLong(), inputSize.toLong()))
+    //
+    //                 EasyTrain.fit(trainer, NUM_EPOCH, trainingSet, null)
+    //             }
+    //         }
+    //     }
+    // }
+    // codex end
 
     fun load(stream: InputStream) {
         lock.write {

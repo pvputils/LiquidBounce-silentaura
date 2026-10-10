@@ -148,15 +148,17 @@ class SimulatedPlayerCache(internal val simulatedPlayer: SimulatedPlayer) {
         }
     }
 
-    fun simulate(): Sequence<SimulatedPlayerSnapshot> = sequence {
-        var idx = 0
-
-        while (true) {
-            yield(getSnapshotAt(idx))
-
-            idx++
-        }
-    }
+    // codex start
+    // fun simulate(): Sequence<SimulatedPlayerSnapshot> = sequence {
+    //     var idx = 0
+    //
+    //     while (true) {
+    //         yield(getSnapshotAt(idx))
+    //
+    //         idx++
+    //     }
+    // }
+    // codex end
 
     fun getSnapshotsBetween(tickRange: IntRange): List<SimulatedPlayerSnapshot> {
         check(tickRange.last < 60 * 20) { "tried to simulate a player for more than a minute!" }
@@ -168,17 +170,19 @@ class SimulatedPlayerCache(internal val simulatedPlayer: SimulatedPlayer) {
         }
     }
 
-    fun simulateBetween(tickRange: IntRange): Sequence<SimulatedPlayerSnapshot> {
-        check(tickRange.last < 60 * 20) { "tried to simulate a player for more than a minute!" }
-
-        simulateUntil(tickRange.last + 1)
-
-        return sequence {
-            for (i in tickRange) {
-                yield(getSnapshotAt(i))
-            }
-        }
-    }
+    // codex start
+    // fun simulateBetween(tickRange: IntRange): Sequence<SimulatedPlayerSnapshot> {
+    //     check(tickRange.last < 60 * 20) { "tried to simulate a player for more than a minute!" }
+    //
+    //     simulateUntil(tickRange.last + 1)
+    //
+    //     return sequence {
+    //         for (i in tickRange) {
+    //             yield(getSnapshotAt(i))
+    //         }
+    //     }
+    // }
+    // codex end
 
 }
 

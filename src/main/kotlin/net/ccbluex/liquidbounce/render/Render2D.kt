@@ -81,13 +81,15 @@ private fun Matrix3x2fc.transformMaxBounds(
 val ScreenRectangle.isEmpty: Boolean
     get() = width == 0 || height == 0
 
-@OptIn(ExperimentalContracts::class)
-inline fun ScreenRectangle.ifEmpty(defaultValue: () -> ScreenRectangle): ScreenRectangle {
-    contract {
-        callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
-    }
-    return if (isEmpty) defaultValue() else this
-}
+// codex start
+// @OptIn(ExperimentalContracts::class)
+// inline fun ScreenRectangle.ifEmpty(defaultValue: () -> ScreenRectangle): ScreenRectangle {
+//     contract {
+//         callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
+//     }
+//     return if (isEmpty) defaultValue() else this
+// }
+// codex end
 
 /**
  * @see net.minecraft.client.renderer.state.gui.ColoredRectangleRenderState.getBounds

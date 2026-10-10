@@ -37,8 +37,14 @@ inline fun optional(value: Long): OptionalLong = OptionalLong.of(value)
 
 inline fun optional(value: Double): OptionalDouble = OptionalDouble.of(value)
 
-inline fun OptionalInt.toNullable(): Int? = if (isPresent) asInt else null
+// codex start
+// inline fun OptionalInt.toNullable(): Int? = if (isPresent) asInt else null
+// codex end
 
-inline fun OptionalLong.toNullable(): Long? = if (isPresent) asLong else null
+// codex start
+// inline fun OptionalLong.toNullable(): Long? = if (isPresent) asLong else null
+// codex end
 
-inline fun OptionalDouble.toNullable(): Double? = if (isPresent) asDouble else null
+// codex start
+// inline fun OptionalDouble.toNullable(): Double? = if (isPresent) asDouble else null
+// codex end

@@ -26,22 +26,28 @@ class Chronometer @JvmOverloads constructor(private var lastUpdate: Long = 0) {
     val elapsed: Long
         get() = System.currentTimeMillis() - lastUpdate
 
-    fun elapsedUntil(time: Long) = time - lastUpdate
+    // codex start
+    // fun elapsedUntil(time: Long) = time - lastUpdate
+    // codex end
 
     @JvmOverloads
     fun hasElapsed(ms: Long = 0) = lastUpdate + ms < System.currentTimeMillis()
 
-    @JvmOverloads
-    fun hasAtLeastElapsed(ms: Long = 0) = lastUpdate + ms <= System.currentTimeMillis()
+    // codex start
+    // @JvmOverloads
+    // fun hasAtLeastElapsed(ms: Long = 0) = lastUpdate + ms <= System.currentTimeMillis()
+    // codex end
 
     @JvmOverloads
     fun reset(lastUpdate: Long = System.currentTimeMillis()) {
         this.lastUpdate = lastUpdate
     }
 
-    fun waitForAtLeast(ms: Long) {
-        this.lastUpdate = this.lastUpdate.coerceAtLeast(System.currentTimeMillis() + ms)
-    }
+    // codex start
+    // fun waitForAtLeast(ms: Long) {
+    //     this.lastUpdate = this.lastUpdate.coerceAtLeast(System.currentTimeMillis() + ms)
+    // }
+    // codex end
 
     override fun toString(): String {
         return "Chronometer(lastUpdate=$lastUpdate)"

@@ -43,32 +43,34 @@ open class FakePlayer @JvmOverloads constructor(
     var onRemoval: Consumer<in FakePlayer>? = null,
 ) : RemotePlayer(level, gameProfile), MinecraftShortcuts {
 
-    /**
-     * Loads the attributes from the player into the fake player.
-     */
-    fun loadAttributes(snapshot: PosPoseSnapshot) {
-        this.setPos(snapshot.x, snapshot.y, snapshot.z)
-        this.xo = snapshot.lastX
-        this.yo = snapshot.lastY
-        this.zo = snapshot.lastZ
-        this.xOld = snapshot.lastX
-        this.yOld = snapshot.lastY
-        this.zOld = snapshot.lastZ
-        snapshot.currentSwing?.let {
-            this.swing(it.hand, it.animation, false)
-        }
-        this.yRot = snapshot.yaw
-        this.yRotO = snapshot.lastYaw
-        this.xRot = snapshot.pitch
-        this.xRotO = snapshot.lastPitch
-        this.yBodyRot = snapshot.bodyYaw
-        this.yBodyRotO = snapshot.lastBodyYaw
-        this.yHeadRot = snapshot.headYaw
-        this.yHeadRotO = snapshot.lastHeadYaw
-        this.pose = snapshot.pose
-        this.inventory.replaceWith(snapshot.inventory)
-        this.walkAnimation.position = snapshot.limbPos
-    }
+    // codex start
+    // /**
+    //  * Loads the attributes from the player into the fake player.
+    //  */
+    // fun loadAttributes(snapshot: PosPoseSnapshot) {
+    //     this.setPos(snapshot.x, snapshot.y, snapshot.z)
+    //     this.xo = snapshot.lastX
+    //     this.yo = snapshot.lastY
+    //     this.zo = snapshot.lastZ
+    //     this.xOld = snapshot.lastX
+    //     this.yOld = snapshot.lastY
+    //     this.zOld = snapshot.lastZ
+    //     snapshot.currentSwing?.let {
+    //         this.swing(it.hand, it.animation, false)
+    //     }
+    //     this.yRot = snapshot.yaw
+    //     this.yRotO = snapshot.lastYaw
+    //     this.xRot = snapshot.pitch
+    //     this.xRotO = snapshot.lastPitch
+    //     this.yBodyRot = snapshot.bodyYaw
+    //     this.yBodyRotO = snapshot.lastBodyYaw
+    //     this.yHeadRot = snapshot.headYaw
+    //     this.yHeadRotO = snapshot.lastHeadYaw
+    //     this.pose = snapshot.pose
+    //     this.inventory.replaceWith(snapshot.inventory)
+    //     this.walkAnimation.position = snapshot.limbPos
+    // }
+    // codex end
 
     /**
      * @see net.minecraft.world.entity.LivingEntity.checkTotemDeathProtection

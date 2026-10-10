@@ -52,12 +52,14 @@ class Alignment(
 
     val guiScaledVerticalOffset get() = verticalOffset.toFloat() / mc.window.guiScale
 
-    fun setFrom(other: Alignment) {
-        this.horizontalAlignment = other.horizontalAlignment
-        this.horizontalOffset = other.horizontalOffset
-        this.verticalAlignment = other.verticalAlignment
-        this.verticalOffset = other.verticalOffset
-    }
+    // codex start
+    // fun setFrom(other: Alignment) {
+    //     this.horizontalAlignment = other.horizontalAlignment
+    //     this.horizontalOffset = other.horizontalOffset
+    //     this.verticalAlignment = other.verticalAlignment
+    //     this.verticalOffset = other.verticalOffset
+    // }
+    // codex end
 
     /**
      * @return Scaled bounds follows [com.mojang.blaze3d.platform.Window.guiScale]

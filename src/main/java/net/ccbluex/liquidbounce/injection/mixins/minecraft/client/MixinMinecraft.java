@@ -22,7 +22,9 @@ import com.mojang.blaze3d.platform.Window;
 import net.ccbluex.liquidbounce.LiquidBounce;
 import net.ccbluex.liquidbounce.event.CoroutineTicker;
 import net.ccbluex.liquidbounce.event.EventManager;
-import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
+// codex start
+// import net.ccbluex.liquidbounce.event.TickLoopTaskExecutor;
+// codex end
 import net.ccbluex.liquidbounce.event.events.*;
 import net.ccbluex.liquidbounce.features.misc.SelfDestruct;
 import net.ccbluex.liquidbounce.render.ClientTesselator;
@@ -201,25 +203,31 @@ public abstract class MixinMinecraft {
     @Inject(method = "tick", at = @At("HEAD"))
     private void hookTickEvent(CallbackInfo callbackInfo) {
         CoroutineTicker.INSTANCE.beginMinecraftTick();
-        TickLoopTaskExecutor.INSTANCE.onTickLoopStart();
+        // codex start
+        // TickLoopTaskExecutor.INSTANCE.onTickLoopStart();
+        // codex end
         CoroutineTicker.INSTANCE.tick();
         EventManager.INSTANCE.callEvent(GameTickEvent.INSTANCE);
     }
 
-    @Inject(method = "tick", at = @At(
-        value = "INVOKE",
-        target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V",
-        shift = At.Shift.AFTER
-    ))
-    private void hookTickLoopCompletedAfterTickEndPacket(CallbackInfo callbackInfo) {
-        TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
-    }
+    // codex start
+    // @Inject(method = "tick", at = @At(
+    //     value = "INVOKE",
+    //     target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V",
+    //     shift = At.Shift.AFTER
+    // ))
+    // private void hookTickLoopCompletedAfterTickEndPacket(CallbackInfo callbackInfo) {
+    //     TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
+    // }
+    // codex end
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void fallbackCompleteTickLoop(CallbackInfo callbackInfo) {
-        if (TickLoopTaskExecutor.INSTANCE.isInTickLoop()) {
-            TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
-        }
+        // codex start
+        // if (TickLoopTaskExecutor.INSTANCE.isInTickLoop()) {
+        //     TickLoopTaskExecutor.INSTANCE.onTickLoopCompleted();
+        // }
+        // codex end
 
         CoroutineTicker.INSTANCE.endMinecraftTick();
     }

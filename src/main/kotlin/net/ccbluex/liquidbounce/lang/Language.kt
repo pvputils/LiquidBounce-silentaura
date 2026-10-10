@@ -93,13 +93,15 @@ object LanguageManager : ValueGroup("Language") {
 
     private val sources = CopyOnWriteArrayList(listOf(clientTranslations))
 
-    /**
-     * Earlier sources win, so an add-on cannot override a built-in key.
-     */
-    fun registerSource(source: TranslationSource) {
-        sources += source
-        languageRegistry.clear()
-    }
+    // codex start
+    // /**
+    //  * Earlier sources win, so an add-on cannot override a built-in key.
+    //  */
+    // fun registerSource(source: TranslationSource) {
+    //     sources += source
+    //     languageRegistry.clear()
+    // }
+    // codex end
 
     private fun loadLanguage(choice: ClientLanguage): net.ccbluex.liquidbounce.lang.ClientLanguage? {
         require(choice != ClientLanguage.AUTO) { "Cannot load language ${choice.code} because it is auto" }

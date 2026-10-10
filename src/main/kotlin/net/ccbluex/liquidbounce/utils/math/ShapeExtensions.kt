@@ -76,21 +76,23 @@ fun interface DoubleFaceConsumer {
     )
 }
 
-/**
- * Order: bigger first
- */
 // codex start
-// fun VoxelShape.toSortedAabbs(): MutableList<AABB> {
-//     val list = ArrayList<AABB>()
-//     this.toAabbs(list)
-//     list.sortWith(AABB_BIGGER_FIRST)
-//     return list
+// /**
+//  * Order: bigger first
+//  */
+// // codex start
+// // fun VoxelShape.toSortedAabbs(): MutableList<AABB> {
+// //     val list = ArrayList<AABB>()
+// //     this.toAabbs(list)
+// //     list.sortWith(AABB_BIGGER_FIRST)
+// //     return list
+// // }
+// // codex end
+//
+// fun VoxelShape.toAabbs(destination: MutableCollection<in AABB>) {
+//     this.forAllBoxes { x1, y1, z1, x2, y2, z2 -> destination.add(AABB(x1, y1, z1, x2, y2, z2)) }
 // }
 // codex end
-
-fun VoxelShape.toAabbs(destination: MutableCollection<in AABB>) {
-    this.forAllBoxes { x1, y1, z1, x2, y2, z2 -> destination.add(AABB(x1, y1, z1, x2, y2, z2)) }
-}
 
 infix fun VoxelShape.intersects(aabb: AABB): Boolean {
     if (this.isEmpty) return false

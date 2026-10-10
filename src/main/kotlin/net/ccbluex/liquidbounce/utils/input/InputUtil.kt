@@ -103,15 +103,17 @@ val availableMouseKeys: Set<String>
 
 val availableInputKeys: Set<String> = availableKeyboardKeys + availableMouseKeys + "none"
 
-/**
- * Try to parse the key into [InputBind.Modifier] instance.
- *
- * @return null if it's not a valid modifier.
- */
-fun InputConstants.Key.toModifierOrNull(): InputBind.Modifier? {
-    return if (this.type == InputConstants.Type.KEYBOARD) {
-        InputBind.Modifier.of(this.value)
-    } else {
-        null
-    }
-}
+// codex start
+// /**
+//  * Try to parse the key into [InputBind.Modifier] instance.
+//  *
+//  * @return null if it's not a valid modifier.
+//  */
+// fun InputConstants.Key.toModifierOrNull(): InputBind.Modifier? {
+//     return if (this.type == InputConstants.Type.KEYBOARD) {
+//         InputBind.Modifier.of(this.value)
+//     } else {
+//         null
+//     }
+// }
+// codex end

@@ -319,14 +319,16 @@ open class Value<T : Any>(
         visibleCondition = condition
     }
 
-    /**
-     * Uses [text] instead of a translation key, for descriptions that come from outside LiquidBounce.
-     */
-    @AddonApi
-    fun literalDescription(text: Supplier<String?>) = apply {
-        description = text
-        hasLiteralDescription = true
-    }
+    // codex start
+    // /**
+    //  * Uses [text] instead of a translation key, for descriptions that come from outside LiquidBounce.
+    //  */
+    // @AddonApi
+    // fun literalDescription(text: Supplier<String?>) = apply {
+    //     description = text
+    //     hasLiteralDescription = true
+    // }
+    // codex end
 
     fun independentDescription() = apply {
         independentDescription = true

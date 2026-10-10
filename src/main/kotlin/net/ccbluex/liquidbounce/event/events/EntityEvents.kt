@@ -24,7 +24,9 @@ import net.ccbluex.liquidbounce.event.CancellableEvent
 import net.ccbluex.liquidbounce.event.Event
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.engine.type.Color4b
-import net.ccbluex.liquidbounce.utils.combat.EntityTargetClassification
+// codex start
+// import net.ccbluex.liquidbounce.utils.combat.EntityTargetClassification
+// codex end
 import net.ccbluex.liquidbounce.utils.combat.EntityTargetingInfo
 import net.ccbluex.liquidbounce.utils.kotlin.Priority
 import net.ccbluex.liquidbounce.utils.kotlin.PriorityField
@@ -51,21 +53,25 @@ class AttackEntityEvent(
 class TagEntityEvent(val entity: Entity, var targetingInfo: EntityTargetingInfo) : Event() {
     val color: PriorityField<Color4b?> = PriorityField(null, Priority.NOT_IMPORTANT)
 
-    /**
-     * Don't start combat this target
-     */
-    fun dontTarget() {
-        if (this.targetingInfo.classification == EntityTargetClassification.TARGET) {
-            this.targetingInfo = this.targetingInfo.copy(classification = EntityTargetClassification.INTERESTING)
-        }
-    }
+    // codex start
+    // /**
+    //  * Don't start combat this target
+    //  */
+    // fun dontTarget() {
+    //     if (this.targetingInfo.classification == EntityTargetClassification.TARGET) {
+    //         this.targetingInfo = this.targetingInfo.copy(classification = EntityTargetClassification.INTERESTING)
+    //     }
+    // }
+    // codex end
 
-    /**
-     * Fully ignore that target
-     */
-    fun ignore() {
-        this.targetingInfo = targetingInfo.copy(classification = EntityTargetClassification.IGNORED)
-    }
+    // codex start
+    // /**
+    //  * Fully ignore that target
+    //  */
+    // fun ignore() {
+    //     this.targetingInfo = targetingInfo.copy(classification = EntityTargetClassification.IGNORED)
+    // }
+    // codex end
 
     fun assumeFriend() {
         this.targetingInfo = targetingInfo.copy(isFriend = true)

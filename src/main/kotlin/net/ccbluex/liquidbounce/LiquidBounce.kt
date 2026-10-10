@@ -52,7 +52,9 @@ import net.ccbluex.liquidbounce.utils.client.GitInfo
 import net.ccbluex.liquidbounce.utils.client.clientIdentifier
 import net.ccbluex.liquidbounce.utils.client.error.ErrorHandler
 import net.ccbluex.liquidbounce.utils.client.mc
-import net.ccbluex.liquidbounce.utils.combat.CombatManager
+// codex start
+// import net.ccbluex.liquidbounce.utils.combat.CombatManager
+// codex end
 import net.ccbluex.liquidbounce.utils.entity.RenderedEntities
 import net.ccbluex.liquidbounce.utils.inventory.InventoryManager
 import net.ccbluex.liquidbounce.utils.io.readText
@@ -255,7 +257,9 @@ object LiquidBounce : EventListener {
         // codex start
         // InteractionTracker
         // codex end
-        CombatManager
+        // codex start
+        // CombatManager
+        // codex end
         FriendManager
         InventoryManager
         // codex start

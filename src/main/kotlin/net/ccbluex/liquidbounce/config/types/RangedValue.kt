@@ -20,8 +20,12 @@
 package net.ccbluex.liquidbounce.config.types
 
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
-import net.ccbluex.liquidbounce.utils.math.sq
-import kotlin.properties.ReadOnlyProperty
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.sq
+// codex end
+// codex start
+// import kotlin.properties.ReadOnlyProperty
+// codex end
 
 /**
  * Ranged value adds support for closed ranges
@@ -67,16 +71,18 @@ class RangedValue<T : Any>(
     }
 
     companion object {
-        @JvmStatic
-        fun RangedValue<ClosedFloatingPointRange<Float>>.squared():
-            ReadOnlyProperty<Any?, ClosedFloatingPointRange<Float>> {
-            val current = get()
-            var value = current.start.sq()..current.endInclusive.sq()
-            onChanged {
-                value = it.start.sq()..it.endInclusive.sq()
-            }
-            return ReadOnlyProperty { _, _ -> value }
-        }
+        // codex start
+        // @JvmStatic
+        // fun RangedValue<ClosedFloatingPointRange<Float>>.squared():
+        //     ReadOnlyProperty<Any?, ClosedFloatingPointRange<Float>> {
+        //     val current = get()
+        //     var value = current.start.sq()..current.endInclusive.sq()
+        //     onChanged {
+        //         value = it.start.sq()..it.endInclusive.sq()
+        //     }
+        //     return ReadOnlyProperty { _, _ -> value }
+        // }
+        // codex end
     }
 
 }

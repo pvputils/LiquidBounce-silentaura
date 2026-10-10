@@ -49,7 +49,9 @@ sealed interface ItemSlot : ItemStackHolder {
      */
     fun getIdForServer(screen: AbstractContainerScreen<*>?): Int?
 
-    fun getIdForServerWithCurrentScreen() = getIdForServer(mc.gui.screen() as? AbstractContainerScreen<*>)
+    // codex start
+    // fun getIdForServerWithCurrentScreen() = getIdForServer(mc.gui.screen() as? AbstractContainerScreen<*>)
+    // codex end
 
     override fun hashCode(): Int
 

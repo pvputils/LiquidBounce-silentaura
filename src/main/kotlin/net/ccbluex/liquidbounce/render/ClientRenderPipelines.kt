@@ -30,15 +30,23 @@ import com.mojang.renderpearl.api.pipeline.RenderPipeline
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.renderpearl.api.pipeline.UniformType
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
-import net.ccbluex.fastutil.fastIterator
+// codex start
+// import net.ccbluex.fastutil.fastIterator
+// codex end
 import net.ccbluex.liquidbounce.LiquidBounce
-import net.ccbluex.liquidbounce.utils.client.gpuDevice
-import net.ccbluex.liquidbounce.utils.client.logger
+// codex start
+// import net.ccbluex.liquidbounce.utils.client.gpuDevice
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.client.logger
+// codex end
 import net.ccbluex.liquidbounce.utils.kotlin.optional
 import net.minecraft.client.renderer.BindGroupLayouts
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.resources.Identifier
-import net.minecraft.util.Util
+// codex start
+// import net.minecraft.util.Util
+// codex end
 
 object ClientRenderPipelines {
 
@@ -237,8 +245,10 @@ object ClientRenderPipelines {
         forWorldRender()
     }
 
-    @JvmStatic
-    fun relativeLines(useColor: Boolean) = if (useColor) LinesRelativeToCamera else LinesRelativeToCameraNoColor
+    // codex start
+    // @JvmStatic
+    // fun relativeLines(useColor: Boolean) = if (useColor) LinesRelativeToCamera else LinesRelativeToCameraNoColor
+    // codex end
 
     @JvmField
     val LineStrip = newPipeline("line_strip") {
@@ -301,8 +311,10 @@ object ClientRenderPipelines {
         forWorldRender()
     }
 
-    @JvmStatic
-    fun relativeQuads(useColor: Boolean) = if (useColor) QuadsRelativeToCamera else QuadsRelativeToCameraNoColor
+    // codex start
+    // @JvmStatic
+    // fun relativeQuads(useColor: Boolean) = if (useColor) QuadsRelativeToCamera else QuadsRelativeToCameraNoColor
+    // codex end
 
     /**
      * @see net.ccbluex.liquidbounce.features.module.modules.render.ModuleStorageESP
@@ -329,8 +341,10 @@ object ClientRenderPipelines {
         forWorldRender()
     }
 
-    @JvmStatic
-    fun outlineQuads(useColor: Boolean) = if (useColor) OutlineQuads else OutlineQuadsNoColor
+    // codex start
+    // @JvmStatic
+    // fun outlineQuads(useColor: Boolean) = if (useColor) OutlineQuads else OutlineQuadsNoColor
+    // codex end
 
     private val TexQuads = newPipeline("tex_quads") {
         withSnippet(RenderPipelines.GUI_TEXTURED_SNIPPET)
@@ -538,17 +552,19 @@ object ClientRenderPipelines {
         withColorTargetState(ColorTargetState.DEFAULT)
     }
 
-    /**
-     * Precompile
-     */
-    fun precompile() {
-        BROWSER
-        GUI
-
-        renderPipelines.fastIterator().forEach { (_, pipeline) ->
-            gpuDevice.compilePipeline(pipeline, ClientShaders, Util.backgroundExecutor())
-        }
-        logger.info("Registered ${renderPipelines.size} Render Pipelines.")
-    }
+    // codex start
+    // /**
+    //  * Precompile
+    //  */
+    // fun precompile() {
+    //     BROWSER
+    //     GUI
+    //
+    //     renderPipelines.fastIterator().forEach { (_, pipeline) ->
+    //         gpuDevice.compilePipeline(pipeline, ClientShaders, Util.backgroundExecutor())
+    //     }
+    //     logger.info("Registered ${renderPipelines.size} Render Pipelines.")
+    // }
+    // codex end
 
 }

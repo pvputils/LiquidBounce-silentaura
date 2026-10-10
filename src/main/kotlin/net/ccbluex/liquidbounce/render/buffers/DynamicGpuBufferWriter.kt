@@ -26,7 +26,9 @@ import net.ccbluex.liquidbounce.utils.render.write
 import net.ccbluex.liquidbounce.utils.text.formatAsCapacity
 import net.minecraft.util.Mth
 import java.nio.ByteBuffer
-import kotlin.math.max
+// codex start
+// import kotlin.math.max
+// codex end
 
 /**
  * Per-frame dynamic [com.mojang.blaze3d.buffers.GpuBuffer] writer for streaming VBO/IBO uploads.
@@ -139,10 +141,12 @@ class DynamicGpuBufferWriter @JvmOverloads constructor(
         pool.close()
     }
 
-    /**
-     * Peak bytes written in the current frame (for adaptive sizing).
-     */
-    fun peakBytes(): Int = max(peakBytesThisFrame, writeOffset)
+    // codex start
+    // /**
+    //  * Peak bytes written in the current frame (for adaptive sizing).
+    //  */
+    // fun peakBytes(): Int = max(peakBytesThisFrame, writeOffset)
+    // codex end
 
     fun interface GrowPolicy {
         /**

@@ -56,11 +56,13 @@ open class TargetTracker(
 
     var target: LivingEntity? = null
 
-    fun selectFirst(predicate: Predicate<LivingEntity>? = null): LivingEntity? {
-        val enemies = targets()
-        val selected = if (predicate != null) enemies.firstOrNull(predicate::test) else enemies.firstOrNull()
-        return selected.also { this.target = it }
-    }
+    // codex start
+    // fun selectFirst(predicate: Predicate<LivingEntity>? = null): LivingEntity? {
+    //     val enemies = targets()
+    //     val selected = if (predicate != null) enemies.firstOrNull(predicate::test) else enemies.firstOrNull()
+    //     return selected.also { this.target = it }
+    // }
+    // codex end
 
     fun <R> select(evaluator: (LivingEntity) -> R): R? {
         for (enemy in targets()) {
@@ -114,12 +116,14 @@ open class TargetSelector(
 
     private var comparator: Comparator<in LivingEntity> = TargetPriority.TYPE
 
-    /**
-     * Counts available targets.
-     */
-    fun countTargets(): Int = world.entitiesForRendering().count { entity ->
-        entity is LivingEntity && validate(entity)
-    }
+    // codex start
+    // /**
+    //  * Counts available targets.
+    //  */
+    // fun countTargets(): Int = world.entitiesForRendering().count { entity ->
+    //     entity is LivingEntity && validate(entity)
+    // }
+    // codex end
 
     /**
      * Update should be called to always pick the best target out of the current world context

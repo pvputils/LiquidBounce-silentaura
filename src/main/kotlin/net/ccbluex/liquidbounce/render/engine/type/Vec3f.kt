@@ -20,8 +20,12 @@ package net.ccbluex.liquidbounce.render.engine.type
 
 import net.ccbluex.liquidbounce.utils.math.fastCos
 import net.ccbluex.liquidbounce.utils.math.fastSin
-import net.ccbluex.liquidbounce.utils.math.toRadians
-import net.minecraft.client.Camera
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.toRadians
+// codex end
+// codex start
+// import net.minecraft.client.Camera
+// codex end
 import net.minecraft.core.Position
 import net.minecraft.core.Vec3i
 import net.minecraft.world.phys.Vec3
@@ -94,11 +98,13 @@ data class Vec3f(val x: Float, val y: Float, val z: Float) {
         @JvmField val Y_AXIS = Vec3f(0f, 1f, 0f)
         @JvmField val Z_AXIS = Vec3f(0f, 0f, 1f)
 
-        @JvmStatic
-        fun eyeVector(camera: Camera): Vec3f {
-            return Z_AXIS
-                .rotateX(-camera.xRot().toRadians())
-                .rotateY(-camera.yRot().toRadians())
-        }
+        // codex start
+        // @JvmStatic
+        // fun eyeVector(camera: Camera): Vec3f {
+        //     return Z_AXIS
+        //         .rotateX(-camera.xRot().toRadians())
+        //         .rotateY(-camera.yRot().toRadians())
+        // }
+        // codex end
     }
 }

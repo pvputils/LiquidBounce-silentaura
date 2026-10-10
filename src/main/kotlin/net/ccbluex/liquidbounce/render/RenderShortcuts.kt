@@ -36,7 +36,9 @@ import net.ccbluex.liquidbounce.render.utils.UnitCircle
 import net.ccbluex.liquidbounce.utils.client.gpuDevice
 import net.ccbluex.liquidbounce.utils.render.writeStd140
 import net.minecraft.client.renderer.texture.AbstractTexture
-import net.minecraft.core.Direction
+// codex start
+// import net.minecraft.core.Direction
+// codex end
 import net.minecraft.core.Vec3i
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.AABB
@@ -216,55 +218,59 @@ fun WorldRenderEnvironment.drawLine(p1: Vec3, p2: Vec3, argb: Int) =
         addVertex(pose, p2).setColor(argb)
     }
 
-/**
- * Draws lines with [width].
- * Modern GL doesn't support `glLineWidth` well, so draw with shader simulation.
- */
-fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, vararg positions: Vec3f) {
-    if (positions.isEmpty()) return
-    require(positions.size and 1 == 0)
+// codex start
+// /**
+//  * Draws lines with [width].
+//  * Modern GL doesn't support `glLineWidth` well, so draw with shader simulation.
+//  */
+// fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, vararg positions: Vec3f) {
+//     if (positions.isEmpty()) return
+//     require(positions.size and 1 == 0)
+//
+//     drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
+//         for (i in 0 until positions.size step 2) {
+//             val p1 = positions[i]
+//             val p2 = positions[i + 1]
+//             val norm1 = (p1 - p2).normalized()
+//             addVertex(pose, p1)
+//                 .setColor(argb)
+//                 .setNormal(pose, norm1)
+//                 .setLineWidth(width)
+//             addVertex(pose, p2)
+//                 .setColor(argb)
+//                 .setNormal(pose, -norm1)
+//                 .setLineWidth(width)
+//         }
+//     }
+// }
+// codex end
 
-    drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
-        for (i in 0 until positions.size step 2) {
-            val p1 = positions[i]
-            val p2 = positions[i + 1]
-            val norm1 = (p1 - p2).normalized()
-            addVertex(pose, p1)
-                .setColor(argb)
-                .setNormal(pose, norm1)
-                .setLineWidth(width)
-            addVertex(pose, p2)
-                .setColor(argb)
-                .setNormal(pose, -norm1)
-                .setLineWidth(width)
-        }
-    }
-}
-
-fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, positions: VertexList) {
-    if (positions.size == 0) return
-    require(positions.size and 1 == 0)
-
-    val p1 = Vector3f()
-    val p2 = Vector3f()
-    val norm1 = Vector3f()
-    drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
-        for (i in 0 until positions.size step 2) {
-            positions.vec(i, p1)
-            positions.vec(i + 1, p2)
-            val norm1 = p1.sub(p2, norm1).normalize()
-
-            addVertex(pose, p1)
-                .setColor(argb)
-                .setNormal(pose, norm1)
-                .setLineWidth(width)
-            addVertex(pose, p2)
-                .setColor(argb)
-                .setNormal(pose, norm1.negate())
-                .setLineWidth(width)
-        }
-    }
-}
+// codex start
+// fun WorldRenderEnvironment.drawLinesWithWidth(argb: Int, width: Float, positions: VertexList) {
+//     if (positions.size == 0) return
+//     require(positions.size and 1 == 0)
+//
+//     val p1 = Vector3f()
+//     val p2 = Vector3f()
+//     val norm1 = Vector3f()
+//     drawCustomMesh(pipeline = ClientRenderPipelines.LinesWithWidth) { pose ->
+//         for (i in 0 until positions.size step 2) {
+//             positions.vec(i, p1)
+//             positions.vec(i + 1, p2)
+//             val norm1 = p1.sub(p2, norm1).normalize()
+//
+//             addVertex(pose, p1)
+//                 .setColor(argb)
+//                 .setNormal(pose, norm1)
+//                 .setLineWidth(width)
+//             addVertex(pose, p2)
+//                 .setColor(argb)
+//                 .setNormal(pose, norm1.negate())
+//                 .setLineWidth(width)
+//         }
+//     }
+// }
+// codex end
 
 /**
  * Function to draw lines using the specified [positions] vectors.

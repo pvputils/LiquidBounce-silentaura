@@ -71,7 +71,9 @@ object FriendManager : Config("Friends"), EventListener {
 
         override fun compareTo(other: Friend): Int = this.name.compareTo(other.name)
 
-        fun getDefaultName(id: Int): String = "Friend $id"
+        // codex start
+        // fun getDefaultName(id: Int): String = "Friend $id"
+        // codex end
 
     }
 

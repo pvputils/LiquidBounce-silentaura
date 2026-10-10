@@ -23,11 +23,15 @@ import com.mojang.renderpearl.api.buffers.GpuBuffer
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice
 import com.mojang.renderpearl.api.pipeline.BindGroupLayout
 import com.mojang.renderpearl.api.pipeline.UniformType
-import com.mojang.renderpearl.api.commands.RenderPass
+// codex start
+// import com.mojang.renderpearl.api.commands.RenderPass
+// codex end
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.utils.client.gpuDevice
 import net.ccbluex.liquidbounce.utils.render.std140Size
-import net.minecraft.client.renderer.MappableRingBuffer
+// codex start
+// import net.minecraft.client.renderer.MappableRingBuffer
+// codex end
 import java.util.function.Supplier
 
 enum class ClientUniformDefine(val uboName: String, val size: Int) {
@@ -61,19 +65,23 @@ enum class ClientUniformDefine(val uboName: String, val size: Int) {
         ).slice()
     }
 
-    @JvmOverloads
-    fun createRingBuffer(
-        labelGetter: Supplier<String> = Supplier(this::label),
-    ): MappableRingBuffer {
-        return MappableRingBuffer(
-            labelGetter,
-            GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_MAP_WRITE,
-            this.size,
-        )
-    }
+    // codex start
+    // @JvmOverloads
+    // fun createRingBuffer(
+    //     labelGetter: Supplier<String> = Supplier(this::label),
+    // ): MappableRingBuffer {
+    //     return MappableRingBuffer(
+    //         labelGetter,
+    //         GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_MAP_WRITE,
+    //         this.size,
+    //     )
+    // }
+    // codex end
 
-    fun setTo(renderPass: RenderPass, slice: GpuBufferSlice) {
-        renderPass.setUniform(this.uboName, slice)
-    }
+    // codex start
+    // fun setTo(renderPass: RenderPass, slice: GpuBufferSlice) {
+    //     renderPass.setUniform(this.uboName, slice)
+    // }
+    // codex end
 
 }

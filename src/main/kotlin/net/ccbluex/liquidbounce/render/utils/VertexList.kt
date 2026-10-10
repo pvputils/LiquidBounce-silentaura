@@ -85,10 +85,12 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
         (vec.z - origin.z).toFloat(),
     )
 
-    fun addAllRelative(vertices: Iterable<Vec3>, origin: Vec3): MutableVertexList {
-        vertices.forEach { addRelative(it, origin) }
-        return this
-    }
+    // codex start
+    // fun addAllRelative(vertices: Iterable<Vec3>, origin: Vec3): MutableVertexList {
+    //     vertices.forEach { addRelative(it, origin) }
+    //     return this
+    // }
+    // codex end
 
     fun addRelativeToCamera(vec: Vec3, camera: Camera): MutableVertexList {
         val cameraPos = camera.position()
@@ -105,14 +107,16 @@ class MutableVertexList(initialVertexCapacity: Int = 0) : VertexList {
         return this
     }
 
-    inline fun <T> addAllRelative(
-        vertices: Iterable<T>,
-        origin: Vec3,
-        vertexMapper: (T) -> Vec3,
-    ): MutableVertexList {
-        vertices.forEach { addRelative(vertexMapper(it), origin) }
-        return this
-    }
+    // codex start
+    // inline fun <T> addAllRelative(
+    //     vertices: Iterable<T>,
+    //     origin: Vec3,
+    //     vertexMapper: (T) -> Vec3,
+    // ): MutableVertexList {
+    //     vertices.forEach { addRelative(vertexMapper(it), origin) }
+    //     return this
+    // }
+    // codex end
 
     inline fun <T> addAllRelativeToCamera(
         vertices: Iterable<T>,

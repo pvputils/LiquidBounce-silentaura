@@ -85,39 +85,47 @@ object ConfigSystem {
 
     val configs = ArrayList<Config>()
 
-    fun findValueByKey(key: String): Value<*>? {
-        ensureRootKeys()
-        val normalizedKey = normalizeKeyInput(key)
-        return configs.asSequence()
-            .flatMap { it.collectValuesRecursively(normalizedKey) }
-            .firstOrNull { it.key?.equals(normalizedKey, true) == true }
-    }
+    // codex start
+    // fun findValueByKey(key: String): Value<*>? {
+    //     ensureRootKeys()
+    //     val normalizedKey = normalizeKeyInput(key)
+    //     return configs.asSequence()
+    //         .flatMap { it.collectValuesRecursively(normalizedKey) }
+    //         .firstOrNull { it.key?.equals(normalizedKey, true) == true }
+    // }
+    // codex end
 
-    fun findValueGroupByKey(key: String): ValueGroup? {
-        ensureRootKeys()
-        val normalizedKey = normalizeKeyInput(key)
-        return configs.asSequence()
-            .flatMap { it.collectValueGroupsRecursively(normalizedKey) }
-            .firstOrNull { it.key?.equals(normalizedKey, true) == true }
-    }
+    // codex start
+    // fun findValueGroupByKey(key: String): ValueGroup? {
+    //     ensureRootKeys()
+    //     val normalizedKey = normalizeKeyInput(key)
+    //     return configs.asSequence()
+    //         .flatMap { it.collectValueGroupsRecursively(normalizedKey) }
+    //         .firstOrNull { it.key?.equals(normalizedKey, true) == true }
+    // }
+    // codex end
 
-    fun valueKeySequence(prefix: String): Sequence<String> = sequence {
-        ensureRootKeys()
-        for (valueGroup in configs) {
-            for (value in valueGroup.collectValuesRecursively(prefix)) {
-                value.key?.let { yield(it) }
-            }
-        }
-    }
+    // codex start
+    // fun valueKeySequence(prefix: String): Sequence<String> = sequence {
+    //     ensureRootKeys()
+    //     for (valueGroup in configs) {
+    //         for (value in valueGroup.collectValuesRecursively(prefix)) {
+    //             value.key?.let { yield(it) }
+    //         }
+    //     }
+    // }
+    // codex end
 
-    fun valueGroupsKeySequence(prefix: String): Sequence<String> = sequence {
-        ensureRootKeys()
-        for (valueGroup in configs) {
-            for (child in valueGroup.collectValueGroupsRecursively(prefix)) {
-                child.key?.let { yield(it) }
-            }
-        }
-    }
+    // codex start
+    // fun valueGroupsKeySequence(prefix: String): Sequence<String> = sequence {
+    //     ensureRootKeys()
+    //     for (valueGroup in configs) {
+    //         for (child in valueGroup.collectValueGroupsRecursively(prefix)) {
+    //             child.key?.let { yield(it) }
+    //         }
+    //     }
+    // }
+    // codex end
 
     /**
      * Create an config based on an existing tree
@@ -352,25 +360,29 @@ object ConfigSystem {
         }
     }
 
-    private fun ensureRootKeys() {
-        for (valueGroup in configs) {
-            if (valueGroup.key == null) {
-                valueGroup.walkKeyPath()
-            }
-        }
-    }
+    // codex start
+    // private fun ensureRootKeys() {
+    //     for (valueGroup in configs) {
+    //         if (valueGroup.key == null) {
+    //             valueGroup.walkKeyPath()
+    //         }
+    //     }
+    // }
+    // codex end
 
-    private fun normalizeKeyInput(key: String): String {
-        val trimmed = key.trim()
-        if (trimmed.isBlank()) {
-            return trimmed
-        }
-        val prefix = "$KEY_PREFIX."
-        return if (trimmed.startsWith(prefix, ignoreCase = true)) {
-            trimmed
-        } else {
-            prefix + trimmed
-        }
-    }
+    // codex start
+    // private fun normalizeKeyInput(key: String): String {
+    //     val trimmed = key.trim()
+    //     if (trimmed.isBlank()) {
+    //         return trimmed
+    //     }
+    //     val prefix = "$KEY_PREFIX."
+    //     return if (trimmed.startsWith(prefix, ignoreCase = true)) {
+    //         trimmed
+    //     } else {
+    //         prefix + trimmed
+    //     }
+    // }
+    // codex end
 
 }

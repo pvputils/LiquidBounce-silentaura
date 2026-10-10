@@ -78,18 +78,24 @@ object SilentHotbar : EventListener {
         return true
     }
 
-    fun resetSlot(requester: Any?) {
-        if (hotbarState?.requester === requester) {
-            hotbarState = null
-        }
-    }
+    // codex start
+    // fun resetSlot(requester: Any?) {
+    //     if (hotbarState?.requester === requester) {
+    //         hotbarState = null
+    //     }
+    // }
+    // codex end
 
-    fun isSlotModified() = hotbarState != null
+    // codex start
+    // fun isSlotModified() = hotbarState != null
+    // codex end
 
-    /**
-     * Returns if the slot is currently getting modified by a given requester
-     */
-    fun isSlotModifiedBy(requester: Any?) = hotbarState?.requester === requester
+    // codex start
+    // /**
+    //  * Returns if the slot is currently getting modified by a given requester
+    //  */
+    // fun isSlotModifiedBy(requester: Any?) = hotbarState?.requester === requester
+    // codex end
 
     @Suppress("unused")
     private val worldChangeHandler = handler<WorldChangeEvent> {

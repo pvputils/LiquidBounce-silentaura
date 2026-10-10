@@ -33,7 +33,9 @@ import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentGetter
 import net.minecraft.core.component.DataComponents
-import net.minecraft.core.registries.Registries
+// codex start
+// import net.minecraft.core.registries.Registries
+// codex end
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.ai.attributes.Attribute
@@ -70,30 +72,36 @@ import net.minecraft.world.item.WindChargeItem
 import net.minecraft.world.item.WritableBookItem
 import net.minecraft.world.item.WrittenBookItem
 import net.minecraft.world.item.component.UseEffects
-import net.minecraft.world.item.enchantment.Enchantment
+// codex start
+// import net.minecraft.world.item.enchantment.Enchantment
+// codex end
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.block.Block
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Create item with NBT tags
- *
- * @docs https://minecraft.gamepedia.com/Commands/give
- */
-fun ClientLevel.createItem(raw: String) = ItemParser(registryAccess())
-    .parse(StringReader(raw))
-    .createItemStack(1)
+// codex start
+// /**
+//  * Create item with NBT tags
+//  *
+//  * @docs https://minecraft.gamepedia.com/Commands/give
+//  */
+// fun ClientLevel.createItem(raw: String) = ItemParser(registryAccess())
+//     .parse(StringReader(raw))
+//     .createItemStack(1)
+// codex end
 
-/**
- * Create item with NBT tags
- *
- * @docs https://minecraft.gamepedia.com/Commands/give
- */
-fun createItem(stack: String, amount: Int = 1): ItemStack =
-    ItemParser(mc.level!!.registryAccess()).parse(StringReader(stack)).let {
-        ItemInput(it.item, it.components).createItemStack(amount)
-    }
+// codex start
+// /**
+//  * Create item with NBT tags
+//  *
+//  * @docs https://minecraft.gamepedia.com/Commands/give
+//  */
+// fun createItem(stack: String, amount: Int = 1): ItemStack =
+//     ItemParser(mc.level!!.registryAccess()).parse(StringReader(stack)).let {
+//         ItemInput(it.item, it.components).createItemStack(amount)
+//     }
+// codex end
 
 /**
  * Set player inventory item (Creative mode only)
@@ -242,8 +250,10 @@ fun DataComponentGetter.getAttributeValue(
 fun <E : Any> ResourceKey<Registry<E>>.getOrNull(): Registry<E>? =
     mc.level?.registryAccess()?.lookup(this)?.getOrNull()
 
-fun ResourceKey<Enchantment>.toRegistryEntryOrNull(): Holder<Enchantment>? =
-    Registries.ENCHANTMENT.getOrNull()?.get(this)?.getOrNull()
+// codex start
+// fun ResourceKey<Enchantment>.toRegistryEntryOrNull(): Holder<Enchantment>? =
+//     Registries.ENCHANTMENT.getOrNull()?.get(this)?.getOrNull()
+// codex end
 
 /**
  * @see net.minecraft.world.entity.player.Player.getDestroySpeed

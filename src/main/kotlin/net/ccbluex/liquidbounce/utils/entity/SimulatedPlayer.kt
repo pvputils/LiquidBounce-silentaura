@@ -880,29 +880,31 @@ class SimulatedPlayer(
         return player.attributes.getValue(attribute)
     }
 
-    fun clone(): SimulatedPlayer {
-        return SimulatedPlayer(
-            player,
-            input,
-            pos,
-            deltaMovement,
-            boundingBox,
-            yRot,
-            xRot,
-            isSprinting,
-            fallDistance,
-            jumpTriggerTime,
-            jumping,
-            fallFlying,
-            onGround,
-            horizontalCollision,
-            verticalCollision,
-            wasTouchingWater,
-            isSwimming,
-            wasUnderwater,
-            fluidInteraction.deepCopy(),
-        )
-    }
+    // codex start
+    // fun clone(): SimulatedPlayer {
+    //     return SimulatedPlayer(
+    //         player,
+    //         input,
+    //         pos,
+    //         deltaMovement,
+    //         boundingBox,
+    //         yRot,
+    //         xRot,
+    //         isSprinting,
+    //         fallDistance,
+    //         jumpTriggerTime,
+    //         jumping,
+    //         fallFlying,
+    //         onGround,
+    //         horizontalCollision,
+    //         verticalCollision,
+    //         wasTouchingWater,
+    //         isSwimming,
+    //         wasUnderwater,
+    //         fluidInteraction.deepCopy(),
+    //     )
+    // }
+    // codex end
 
     class SimulatedPlayerInput(
         val directionalInput: DirectionalInput,

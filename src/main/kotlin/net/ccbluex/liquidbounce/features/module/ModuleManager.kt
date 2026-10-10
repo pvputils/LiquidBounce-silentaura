@@ -626,16 +626,18 @@ object ModuleManager : EventListener, Collection<ClientModule> by modules {
         }.getOrThrow()
     }
 
-    fun removeModule(module: ClientModule) {
-        // The set compares by name, so check identity.
-        check(any { it === module }) { "Module '${module.name}' is not registered." }
-        modules.remove(module)
-
-        if (module.enabled) {
-            module.enabled = false
-        }
-        module.unregister()
-    }
+    // codex start
+    // fun removeModule(module: ClientModule) {
+    //     // The set compares by name, so check identity.
+    //     check(any { it === module }) { "Module '${module.name}' is not registered." }
+    //     modules.remove(module)
+    //
+    //     if (module.enabled) {
+    //         module.enabled = false
+    //     }
+    //     module.unregister()
+    // }
+    // codex end
 
     fun clear() {
         modules.clear()

@@ -22,12 +22,16 @@ package net.ccbluex.liquidbounce.config.types.list
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import it.unimi.dsi.fastutil.objects.Object2ObjectRBTreeMap
-import net.ccbluex.fastutil.mapToArray
+// codex start
+// import net.ccbluex.fastutil.mapToArray
+// codex end
 import net.ccbluex.liquidbounce.config.gson.stategies.Exclude
 import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.list.Tagged.Companion.makeLookupTable
-import net.ccbluex.liquidbounce.features.addon.AddonApi
+// codex start
+// import net.ccbluex.liquidbounce.features.addon.AddonApi
+// codex end
 import java.util.SortedMap
 
 class ChoiceListValue<T : Tagged>(
@@ -59,10 +63,12 @@ class ChoiceListValue<T : Tagged>(
         set(newValue)
     }
 
-    @AddonApi
-    fun getChoicesStrings(): Array<String> {
-        return choices.mapToArray { it.tag }
-    }
+    // codex start
+    // @AddonApi
+    // fun getChoicesStrings(): Array<String> {
+    //     return choices.mapToArray { it.tag }
+    // }
+    // codex end
 
 }
 

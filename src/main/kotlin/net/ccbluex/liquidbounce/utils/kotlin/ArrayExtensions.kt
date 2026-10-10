@@ -109,33 +109,37 @@ fun <T> List<T>.subList(fromIndex: Int): List<T> {
     return this.subList(fromIndex, this.size)
 }
 
-/**
- * Inserts a new element into a sorted list while maintaining the order.
- */
 // codex start
-// inline fun <T, K : Comparable<K>> MutableList<T>.sortedInsert(item: T, crossinline selector: (T) -> K?) {
-//     val insertIndex = binarySearchBy(selector(item), selector = selector).let {
-//         if (it >= 0) it else it.inv()
-//     }
-//
-//     add(insertIndex, item)
-// }
-//
 // /**
-//  * Transform a String to another String with same length by given [transform]
+//  * Inserts a new element into a sorted list while maintaining the order.
 //  */
+// // codex start
+// // inline fun <T, K : Comparable<K>> MutableList<T>.sortedInsert(item: T, crossinline selector: (T) -> K?) {
+// //     val insertIndex = binarySearchBy(selector(item), selector = selector).let {
+// //         if (it >= 0) it else it.inv()
+// //     }
+// //
+// //     add(insertIndex, item)
+// // }
+// //
+// // /**
+// //  * Transform a String to another String with same length by given [transform]
+// //  */
+// // codex end
+// inline fun String.mapString(transform: (Char) -> Char) = String(CharArray(length) {
+//     transform(this[it])
+// })
 // codex end
-inline fun String.mapString(transform: (Char) -> Char) = String(CharArray(length) {
-    transform(this[it])
-})
 
-/**
- * Transform a Collection to a String with by given [transform]
- */
-inline fun <T> Collection<T>.mapString(transform: (T) -> Char) = with(iterator()) {
-    String(CharArray(size) {
-        transform(next())
-    })
-}
+// codex start
+// /**
+//  * Transform a Collection to a String with by given [transform]
+//  */
+// inline fun <T> Collection<T>.mapString(transform: (T) -> Char) = with(iterator()) {
+//     String(CharArray(size) {
+//         transform(next())
+//     })
+// }
+// codex end
 
 inline fun <reified T> Stream<T>.toTypedArray(): Array<T> = toArray(::arrayOfNulls)
