@@ -432,13 +432,15 @@ object EventManager {
         return eventHook
     }
 
-    /**
-     * Unregisters a handler.
-     */
-    fun <T : Event> unregisterEventHook(eventClass: Class<out Event>, eventHook: EventHook<T>) {
-        @Suppress("UNCHECKED_CAST")
-        tables.registry[eventClass]?.remove(eventHook as EventHook<in Event>)
-    }
+    // codex start
+    // /**
+    //  * Unregisters a handler.
+    //  */
+    // fun <T : Event> unregisterEventHook(eventClass: Class<out Event>, eventHook: EventHook<T>) {
+    //     @Suppress("UNCHECKED_CAST")
+    //     tables.registry[eventClass]?.remove(eventHook as EventHook<in Event>)
+    // }
+    // codex end
 
     fun unregisterEventHandler(eventListener: EventListener) {
         tables.registry.values.forEach {

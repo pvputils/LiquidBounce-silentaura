@@ -44,9 +44,15 @@ import org.joml.Matrix3x2f
 import org.joml.Matrix3x2fStack
 import org.joml.Matrix3x2fc
 import org.joml.Vector2f
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
+// codex start
+// import kotlin.contracts.ExperimentalContracts
+// codex end
+// codex start
+// import kotlin.contracts.InvocationKind
+// codex end
+// codex start
+// import kotlin.contracts.contract
+// codex end
 
 private val LEFT_TOP = Vector2f()
 private val RIGHT_TOP = Vector2f()

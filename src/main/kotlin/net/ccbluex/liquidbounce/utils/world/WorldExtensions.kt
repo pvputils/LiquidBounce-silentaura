@@ -21,15 +21,21 @@
 package net.ccbluex.liquidbounce.utils.world
 
 import com.google.common.base.Predicates
-import net.ccbluex.liquidbounce.utils.math.expandToCube
+// codex start
+// import net.ccbluex.liquidbounce.utils.math.expandToCube
+// codex end
 import net.minecraft.util.AbortableIterationConsumer
 import net.minecraft.util.Continuation
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.level.EntityGetter
+// codex start
+// import net.minecraft.world.level.EntityGetter
+// codex end
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.level.entity.LevelEntityGetter
-import net.minecraft.world.phys.AABB
-import net.minecraft.world.phys.Vec3
+// codex start
+// import net.minecraft.world.phys.AABB
+// import net.minecraft.world.phys.Vec3
+// codex end
 import java.util.function.Consumer
 import java.util.function.Predicate
 
@@ -133,28 +139,32 @@ import java.util.function.Predicate
 // // codex end
 // codex end
 
-inline fun <reified T : Entity> EntityGetter.getEntitiesInCube(
-    midPos: Vec3,
-    range: Double,
-    predicate: Predicate<T> = Predicates.alwaysTrue(),
-): MutableList<T> {
-    return getEntitiesOfClass(
-        T::class.java,
-        midPos.expandToCube(range),
-        predicate,
-    ) // -> ArrayList
-}
+// codex start
+// inline fun <reified T : Entity> EntityGetter.getEntitiesInCube(
+//     midPos: Vec3,
+//     range: Double,
+//     predicate: Predicate<T> = Predicates.alwaysTrue(),
+// ): MutableList<T> {
+//     return getEntitiesOfClass(
+//         T::class.java,
+//         midPos.expandToCube(range),
+//         predicate,
+//     ) // -> ArrayList
+// }
+// codex end
 
-fun EntityGetter.getEntitiesInCube(
-    midPos: Vec3,
-    range: Double,
-    exclusion: Entity? = null,
-    predicate: Predicate<Entity> = Predicates.alwaysTrue(),
-): MutableList<Entity> {
-    val size = range * 2.0
-    val box = AABB.ofSize(midPos, size, size, size)
-    return getEntities(exclusion, box, predicate) // -> ArrayList
-}
+// codex start
+// fun EntityGetter.getEntitiesInCube(
+//     midPos: Vec3,
+//     range: Double,
+//     exclusion: Entity? = null,
+//     predicate: Predicate<Entity> = Predicates.alwaysTrue(),
+// ): MutableList<Entity> {
+//     val size = range * 2.0
+//     val box = AABB.ofSize(midPos, size, size, size)
+//     return getEntities(exclusion, box, predicate) // -> ArrayList
+// }
+// codex end
 
 // codex start
 // val Level.entityGetter: LevelEntityGetter<Entity>

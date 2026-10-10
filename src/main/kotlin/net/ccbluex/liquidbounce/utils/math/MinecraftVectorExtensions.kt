@@ -186,17 +186,30 @@ inline fun Vec3.multiply(factorX: Float = 1.0f, factorY: Float = 1.0f, factorZ: 
 inline fun Vec3.multiply(factorX: Double = 1.0, factorY: Double = 1.0, factorZ: Double = 1.0): Vec3 =
     multiply(factorX, factorY, factorZ)
 
-fun Vec3.horizontalDistanceTo(other: Vec3i): Double = horizontalDistanceTo(other.x.toDouble(), other.z.toDouble())
+// codex start
+// fun Vec3.horizontalDistanceTo(other: Vec3i): Double = horizontalDistanceTo(other.x.toDouble(), other.z.toDouble())
+// codex end
 
-fun Vec3.horizontalDistanceTo(other: Vec3): Double = horizontalDistanceTo(other.x, other.z)
+// codex start
+// fun Vec3.horizontalDistanceTo(other: Vec3): Double = horizontalDistanceTo(other.x, other.z)
+// codex end
 
-fun Vec3.horizontalDistanceTo(x: Double, z: Double): Double = sqrt(horizontalDistanceToSqr(x, z))
+// codex start
+// fun Vec3.horizontalDistanceTo(x: Double, z: Double): Double = sqrt(horizontalDistanceToSqr(x, z))
+// codex end
 
-fun Vec3.horizontalDistanceToSqr(other: Vec3i): Double = horizontalDistanceToSqr(other.x.toDouble(), other.z.toDouble())
+// codex start
+// fun Vec3.horizontalDistanceToSqr(other: Vec3i): Double =
+//     horizontalDistanceToSqr(other.x.toDouble(), other.z.toDouble())
+// codex end
 
-fun Vec3.horizontalDistanceToSqr(other: Vec3): Double = horizontalDistanceToSqr(other.x, other.z)
+// codex start
+// fun Vec3.horizontalDistanceToSqr(other: Vec3): Double = horizontalDistanceToSqr(other.x, other.z)
+// codex end
 
-fun Vec3.horizontalDistanceToSqr(x: Double, z: Double): Double = Mth.lengthSquared(this.x - x, this.z - z)
+// codex start
+// fun Vec3.horizontalDistanceToSqr(x: Double, z: Double): Double = Mth.lengthSquared(this.x - x, this.z - z)
+// codex end
 // codex start
 //
 // fun Position.distanceToCenterSqr(blockPos: Long): Double {
@@ -231,12 +244,14 @@ operator fun ChunkPos.contains(blockPos: Long): Boolean =
 // }
 // codex end
 
-fun Vec3.expandToCube(halfExtents: Double): AABB {
-    return AABB(
-        this.x - halfExtents, this.y - halfExtents, this.z - halfExtents,
-        this.x + halfExtents, this.y + halfExtents, this.z + halfExtents,
-    )
-}
+// codex start
+// fun Vec3.expandToCube(halfExtents: Double): AABB {
+//     return AABB(
+//         this.x - halfExtents, this.y - halfExtents, this.z - halfExtents,
+//         this.x + halfExtents, this.y + halfExtents, this.z + halfExtents,
+//     )
+// }
+// codex end
 
 inline fun Vec3i.toVec3d(
     xOffset: Double = 0.0,
@@ -284,10 +299,14 @@ fun Vec3.move(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Vec3 = apply {
 
 fun Vec3.move(other: Vec3): Vec3 = move(other.x, other.y, other.z)
 
-fun Vec3.scaleMut(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Vec3 = apply {
-    this.x *= x
-    this.y *= y
-    this.z *= z
-}
+// codex start
+// fun Vec3.scaleMut(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0): Vec3 = apply {
+//     this.x *= x
+//     this.y *= y
+//     this.z *= z
+// }
+// codex end
 
-fun Vec3.scaleMut(scale: Double = 1.0): Vec3 = scaleMut(x = scale, y = scale, z = scale)
+// codex start
+// fun Vec3.scaleMut(scale: Double = 1.0): Vec3 = scaleMut(x = scale, y = scale, z = scale)
+// codex end

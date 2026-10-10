@@ -235,12 +235,14 @@ data class Color4b(val argb: Int) {
 
     fun toTextColor(): TextColor = TextColor.fromRgb(argb)
 
-    /**
-     * @return the ARGB value in hex string with [format].
-     */
-    @JvmOverloads
-    fun toHexString(format: HexFormat = HexFormat.Default): String =
-        argb.toHexString(format)
+    // codex start
+    // /**
+    //  * @return the ARGB value in hex string with [format].
+    //  */
+    // @JvmOverloads
+    // fun toHexString(format: HexFormat = HexFormat.Default): String =
+    //     argb.toHexString(format)
+    // codex end
 
     /**
      * Get closest [DyeColor] entry with RGB 3D distance (ignoring alpha)

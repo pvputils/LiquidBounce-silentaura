@@ -22,8 +22,12 @@
 package net.ccbluex.liquidbounce.utils.render
 
 import com.google.common.base.Suppliers
-import com.google.common.util.concurrent.Runnables
-import com.mojang.renderpearl.api.GpuFormat
+// codex start
+// import com.google.common.util.concurrent.Runnables
+// codex end
+// codex start
+// import com.mojang.renderpearl.api.GpuFormat
+// codex end
 import com.mojang.renderpearl.api.buffers.GpuBuffer
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice
 import com.mojang.blaze3d.buffers.Std140Builder
@@ -52,7 +56,9 @@ import java.io.File
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
-import java.util.concurrent.CompletableFuture
+// codex start
+// import java.util.concurrent.CompletableFuture
+// codex end
 import java.util.function.Supplier
 
 fun PoseStack.reset() {
@@ -129,8 +135,10 @@ fun GpuBuffer.read(offset: Long, length: Long): ByteBuffer = this.map(offset, le
 inline fun GpuBufferSlice.write(byteBuffer: ByteBuffer) =
     gpuDevice.createCommandEncoder().writeToBuffer(this, byteBuffer)
 
-inline fun GpuBufferSlice.copyFrom(source: GpuBufferSlice) =
-    gpuDevice.createCommandEncoder().copyToBuffer(source, this)
+// codex start
+// inline fun GpuBufferSlice.copyFrom(source: GpuBufferSlice) =
+//     gpuDevice.createCommandEncoder().copyToBuffer(source, this)
+// codex end
 
 @Suppress("LongParameterList")
 inline fun GpuTexture.write(
@@ -154,19 +162,21 @@ inline fun GpuTexture.write(
     )
 }
 
-inline fun GpuTexture.copyTo(
-    destination: GpuBuffer,
-    offset: Long = 0L,
-    mipLevel: Int = 0,
-    x: Int = 0,
-    y: Int = 0,
-    width: Int = getWidth(mipLevel),
-    height: Int = getHeight(mipLevel),
-    callback: Runnable = Runnables.doNothing(),
-) = gpuDevice.createCommandEncoder().copyTextureToBuffer(
-    this, destination, offset, callback, mipLevel,
-    x, y, width, height,
-)
+// codex start
+// inline fun GpuTexture.copyTo(
+//     destination: GpuBuffer,
+//     offset: Long = 0L,
+//     mipLevel: Int = 0,
+//     x: Int = 0,
+//     y: Int = 0,
+//     width: Int = getWidth(mipLevel),
+//     height: Int = getHeight(mipLevel),
+//     callback: Runnable = Runnables.doNothing(),
+// ) = gpuDevice.createCommandEncoder().copyTextureToBuffer(
+//     this, destination, offset, callback, mipLevel,
+//     x, y, width, height,
+// )
+// codex end
 
 // codex start
 // fun GpuTexture.asyncCopyTo(
@@ -206,19 +216,21 @@ inline fun GpuTexture.copyTo(
 // // codex end
 // codex end
 
-@Suppress("LongParameterList")
-inline fun GpuTexture.copyFrom(
-    source: GpuTexture,
-    mipLevel: Int = 0,
-    intoX: Int = 0,
-    intoY: Int = 0,
-    sourceX: Int = 0,
-    sourceY: Int = 0,
-    width: Int = source.getWidth(mipLevel),
-    height: Int = source.getHeight(mipLevel),
-) = gpuDevice.createCommandEncoder().copyTextureToTexture(
-    source, this, mipLevel, intoX, intoY, sourceX, sourceY, width, height
-)
+// codex start
+// @Suppress("LongParameterList")
+// inline fun GpuTexture.copyFrom(
+//     source: GpuTexture,
+//     mipLevel: Int = 0,
+//     intoX: Int = 0,
+//     intoY: Int = 0,
+//     sourceX: Int = 0,
+//     sourceY: Int = 0,
+//     width: Int = source.getWidth(mipLevel),
+//     height: Int = source.getHeight(mipLevel),
+// ) = gpuDevice.createCommandEncoder().copyTextureToTexture(
+//     source, this, mipLevel, intoX, intoY, sourceX, sourceY, width, height
+// )
+// codex end
 
 // codex start
 // fun GpuTexture.saveToFile(file: File): CompletableFuture<*> =
@@ -228,74 +240,80 @@ inline fun GpuTexture.copyFrom(
 //     }, Util.ioPool())
 // codex end
 
-private fun GpuBufferSlice.readNativeImageRGBA(
-    width: Int,
-    height: Int,
-    destination: NativeImage = NativeImage(width, height, false),
-): NativeImage {
-    this.mapBuffer(read = true, write = false).use { mappedView ->
-        for (y in 0..<height) {
-            for (x in 0..<width) {
-                val abgr = mappedView.data().getInt((x + y * width) * GpuFormat.RGBA8_UNORM.blockSize())
-                destination.setPixelABGR(x, height - y - 1, abgr)
-            }
-        }
-    }
-    return destination
-}
+// codex start
+// private fun GpuBufferSlice.readNativeImageRGBA(
+//     width: Int,
+//     height: Int,
+//     destination: NativeImage = NativeImage(width, height, false),
+// ): NativeImage {
+//     this.mapBuffer(read = true, write = false).use { mappedView ->
+//         for (y in 0..<height) {
+//             for (x in 0..<width) {
+//                 val abgr = mappedView.data().getInt((x + y * width) * GpuFormat.RGBA8_UNORM.blockSize())
+//                 destination.setPixelABGR(x, height - y - 1, abgr)
+//             }
+//         }
+//     }
+//     return destination
+// }
+// codex end
 
-/**
- * @see net.minecraft.client.Screenshot.takeScreenshot
- */
-@JvmOverloads
-fun GpuTexture.toNativeImage(mipLevel: Int = 0): CompletableFuture<NativeImage> {
-    val width = this.getWidth(mipLevel)
-    val height = this.getHeight(mipLevel)
-    val pixelSize = this.format.blockSize()
-    val gpuBuffer = gpuDevice.createBuffer(
-        { "PixelBuffer - " + (this.label ?: "Anonymous") },
-        GpuBuffer.USAGE_MAP_READ or GpuBuffer.USAGE_COPY_DST,
-        width * height * pixelSize.toLong()
-    )
+// codex start
+// /**
+//  * @see net.minecraft.client.Screenshot.takeScreenshot
+//  */
+// @JvmOverloads
+// fun GpuTexture.toNativeImage(mipLevel: Int = 0): CompletableFuture<NativeImage> {
+//     val width = this.getWidth(mipLevel)
+//     val height = this.getHeight(mipLevel)
+//     val pixelSize = this.format.blockSize()
+//     val gpuBuffer = gpuDevice.createBuffer(
+//         { "PixelBuffer - " + (this.label ?: "Anonymous") },
+//         GpuBuffer.USAGE_MAP_READ or GpuBuffer.USAGE_COPY_DST,
+//         width * height * pixelSize.toLong()
+//     )
+//
+//     val future = CompletableFuture<NativeImage>()
+//
+//     this.copyTo(gpuBuffer, mipLevel = mipLevel) {
+//         future.complete(gpuBuffer.slice().readNativeImageRGBA(width, height))
+//         gpuBuffer.close()
+//     }
+//
+//     return future
+// }
+// codex end
 
-    val future = CompletableFuture<NativeImage>()
-
-    this.copyTo(gpuBuffer, mipLevel = mipLevel) {
-        future.complete(gpuBuffer.slice().readNativeImageRGBA(width, height))
-        gpuBuffer.close()
-    }
-
-    return future
-}
-
-@JvmOverloads
-fun GpuTexture.toBufferedImage(mipLevel: Int = 0): CompletableFuture<BufferedImage> {
-    val width = this.getWidth(mipLevel)
-    val height = this.getHeight(mipLevel)
-    val pixelSize = this.format.blockSize()
-    val gpuBuffer = gpuDevice.createBuffer(
-        { "PixelBuffer - " + (this.label ?: "Anonymous") },
-        GpuBuffer.USAGE_MAP_READ or GpuBuffer.USAGE_COPY_DST,
-        width * height * pixelSize.toLong()
-    )
-
-    val future = CompletableFuture<BufferedImage>()
-    this.copyTo(gpuBuffer, mipLevel = mipLevel) {
-        gpuBuffer.mapBuffer(read = true, write = false).use { mappedView ->
-            val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-            for (y in 0..<height) {
-                for (x in 0..<width) {
-                    val abgr = mappedView.data().getInt((x + y * width) * pixelSize)
-                    bufferedImage.setRGB(x, height - y - 1, ARGB.fromABGR(abgr))
-                }
-            }
-            future.complete(bufferedImage)
-        }
-        gpuBuffer.close()
-    }
-
-    return future
-}
+// codex start
+// @JvmOverloads
+// fun GpuTexture.toBufferedImage(mipLevel: Int = 0): CompletableFuture<BufferedImage> {
+//     val width = this.getWidth(mipLevel)
+//     val height = this.getHeight(mipLevel)
+//     val pixelSize = this.format.blockSize()
+//     val gpuBuffer = gpuDevice.createBuffer(
+//         { "PixelBuffer - " + (this.label ?: "Anonymous") },
+//         GpuBuffer.USAGE_MAP_READ or GpuBuffer.USAGE_COPY_DST,
+//         width * height * pixelSize.toLong()
+//     )
+//
+//     val future = CompletableFuture<BufferedImage>()
+//     this.copyTo(gpuBuffer, mipLevel = mipLevel) {
+//         gpuBuffer.mapBuffer(read = true, write = false).use { mappedView ->
+//             val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+//             for (y in 0..<height) {
+//                 for (x in 0..<width) {
+//                     val abgr = mappedView.data().getInt((x + y * width) * pixelSize)
+//                     bufferedImage.setRGB(x, height - y - 1, ARGB.fromABGR(abgr))
+//                 }
+//             }
+//             future.complete(bufferedImage)
+//         }
+//         gpuBuffer.close()
+//     }
+//
+//     return future
+// }
+// codex end
 
 fun DynamicTexture.uploadRect(
     mipLevel: Int,
@@ -309,34 +327,38 @@ fun DynamicTexture.uploadRect(
     x, y,
 )
 
-fun NativeImage.toBufferedImage(): BufferedImage {
-    val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+// codex start
+// fun NativeImage.toBufferedImage(): BufferedImage {
+//     val bufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+//
+//     bufferedImage.setRGB(
+//         0,
+//         0,
+//         width,
+//         height,
+//         pixels,
+//         0,
+//         width
+//     )
+//
+//     return bufferedImage
+// }
+// codex end
 
-    bufferedImage.setRGB(
-        0,
-        0,
-        width,
-        height,
-        pixels,
-        0,
-        width
-    )
-
-    return bufferedImage
-}
-
-fun BufferedImage.toNativeImage(): NativeImage {
-    val nativeImage = NativeImage(NativeImage.Format.RGBA, this.width, this.height, false)
-
-    try {
-        copyToNativeImage(nativeImage, width = width, height = height)
-    } catch (throwable: Throwable) {
-        nativeImage.close()
-        throw throwable
-    }
-
-    return nativeImage
-}
+// codex start
+// fun BufferedImage.toNativeImage(): NativeImage {
+//     val nativeImage = NativeImage(NativeImage.Format.RGBA, this.width, this.height, false)
+//
+//     try {
+//         copyToNativeImage(nativeImage, width = width, height = height)
+//     } catch (throwable: Throwable) {
+//         nativeImage.close()
+//         throw throwable
+//     }
+//
+//     return nativeImage
+// }
+// codex end
 
 @Suppress("LongParameterList")
 fun BufferedImage.copyToNativeImage(
@@ -512,9 +534,11 @@ value class KStd140SizeCalculator(val j: Std140SizeCalculator) {
             j.putMat4f()
         }
 
-    inline fun align(alignedSize: Int) {
-        j.align(alignedSize)
-    }
+    // codex start
+    // inline fun align(alignedSize: Int) {
+    //     j.align(alignedSize)
+    // }
+    // codex end
 
     inline operator fun Unit.plus(other: Unit) {
         // NOOP

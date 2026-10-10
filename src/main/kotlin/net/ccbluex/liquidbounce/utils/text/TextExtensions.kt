@@ -41,7 +41,9 @@ import net.minecraft.network.chat.contents.TranslatableContents
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.StringDecomposer
 import java.util.Optional
-import java.util.function.Function
+// codex start
+// import java.util.function.Function
+// codex end
 import java.util.function.UnaryOperator
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -94,7 +96,9 @@ inline fun List<Component>.asText(): Component = TextList.of(this)
 
 inline fun Array<out Component>.asText(): Component = TextList.of(this.unmodifiable())
 
-inline fun textOf(vararg parts: Component): Component = parts.asText()
+// codex start
+// inline fun textOf(vararg parts: Component): Component = parts.asText()
+// codex end
 
 inline operator fun FormattedCharSequence.plus(other: FormattedCharSequence) =
     FormattedCharSequence.fromPair(this, other)
@@ -112,44 +116,50 @@ inline fun buildText(builderAction: TextBuilder.() -> Unit): Component {
     return builder.build()
 }
 
-fun <T> Collection<T>.joinToText(
-    separator: Component,
-    prefix: Component? = null,
-    postfix: Component? = null,
-    transform: Function<in T, out Component>,
-): Component {
-    if (isEmpty()) {
-        return PlainText.EMPTY
-    }
+// codex start
+// fun <T> Collection<T>.joinToText(
+//     separator: Component,
+//     prefix: Component? = null,
+//     postfix: Component? = null,
+//     transform: Function<in T, out Component>,
+// ): Component {
+//     if (isEmpty()) {
+//         return PlainText.EMPTY
+//     }
+//
+//     val iterator = iterator()
+//     val offset = if (prefix == null) 0 else 1
+//     var arraySize = this.size * 2 - 1
+//     if (prefix != null) arraySize++
+//     if (postfix != null) arraySize++
+//
+//     return Array(arraySize) { i ->
+//         when {
+//             i == 0 && prefix != null -> prefix
+//             i == arraySize - 1 && postfix != null -> postfix
+//             i % 2 == offset -> transform.apply(iterator.next())
+//             else -> separator
+//         }
+//     }.asText()
+// }
+// codex end
 
-    val iterator = iterator()
-    val offset = if (prefix == null) 0 else 1
-    var arraySize = this.size * 2 - 1
-    if (prefix != null) arraySize++
-    if (postfix != null) arraySize++
+// codex start
+// /**
+//  * Joins a list of [String] into a single [Component] with the given [separator].
+//  */
+// @JvmName("stringsJoinToText")
+// fun Collection<String>.joinToText(separator: Component): Component =
+//     joinToText(separator, transform = Function(PlainText::of))
+// codex end
 
-    return Array(arraySize) { i ->
-        when {
-            i == 0 && prefix != null -> prefix
-            i == arraySize - 1 && postfix != null -> postfix
-            i % 2 == offset -> transform.apply(iterator.next())
-            else -> separator
-        }
-    }.asText()
-}
-
-/**
- * Joins a list of [String] into a single [Component] with the given [separator].
- */
-@JvmName("stringsJoinToText")
-fun Collection<String>.joinToText(separator: Component): Component =
-    joinToText(separator, transform = Function(PlainText::of))
-
-/**
- * Joins a list of [Component] into a single [Component] with the given [separator].
- */
-fun Collection<Component>.joinToText(separator: Component): Component =
-    joinToText(separator, transform = Function.identity())
+// codex start
+// /**
+//  * Joins a list of [Component] into a single [Component] with the given [separator].
+//  */
+// fun Collection<Component>.joinToText(separator: Component): Component =
+//     joinToText(separator, transform = Function.identity())
+// codex end
 
 inline fun FormattedCharSequence.codePointsToString(): String =
     AppenderCharSink.codePointsToString(this)

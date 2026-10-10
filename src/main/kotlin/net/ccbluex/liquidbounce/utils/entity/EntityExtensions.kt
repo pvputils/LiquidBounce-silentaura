@@ -31,7 +31,9 @@ import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.math.copy
 import net.ccbluex.liquidbounce.utils.math.fma
 import net.ccbluex.liquidbounce.utils.math.minus
-import net.ccbluex.liquidbounce.utils.movement.DirectionalInput
+// codex start
+// import net.ccbluex.liquidbounce.utils.movement.DirectionalInput
+// codex end
 import net.minecraft.client.player.ClientInput
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.core.Position
@@ -178,18 +180,20 @@ val LocalPlayer.airTicks: Int
 val LocalPlayer.onGroundTicks: Int
     get() = (this as LocalPlayerAddition).`liquid_bounce$getOnGroundTicks`()
 
-/**
- * Check if the attack speed is below 1 tick. If so, we have a cooldown.
- */
 // codex start
-// val LocalPlayer.hasCooldown: Boolean
-//     get() = !isOlderThanOrEqual1_8 && this.getAttributeValue(Attributes.ATTACK_SPEED) < 20.0
+// /**
+//  * Check if the attack speed is below 1 tick. If so, we have a cooldown.
+//  */
+// // codex start
+// // val LocalPlayer.hasCooldown: Boolean
+// //     get() = !isOlderThanOrEqual1_8 && this.getAttributeValue(Attributes.ATTACK_SPEED) < 20.0
+// // codex end
+//
+// @JvmOverloads
+// fun LocalPlayer.getMovementDirectionOfInput(input: DirectionalInput = DirectionalInput(this.input)): Float {
+//     return getMovementDirectionOfInput(this.yRot, input)
+// }
 // codex end
-
-@JvmOverloads
-fun LocalPlayer.getMovementDirectionOfInput(input: DirectionalInput = DirectionalInput(this.input)): Float {
-    return getMovementDirectionOfInput(this.yRot, input)
-}
 
 // codex start
 // val LivingEntity.usingItemOrNull: ItemStack?
@@ -313,27 +317,29 @@ fun Entity.lastRenderPos() = Vec3(this.xOld, this.yOld, this.zOld)
 // // codex end
 // codex end
 
-fun getMovementDirectionOfInput(facingYaw: Float, input: DirectionalInput = DirectionalInput(player.input)): Float {
-    var actualYaw = facingYaw
-    val forwardMultiplier = when {
-        input.backwards && !input.forwards -> {
-            actualYaw += 180f
-            -0.5f
-        }
-
-        input.forwards && !input.backwards -> 0.5f
-        else -> 1f
-    }
-
-    if (input.left && !input.right) {
-        actualYaw -= 90f * forwardMultiplier
-    }
-    if (input.right && !input.left) {
-        actualYaw += 90f * forwardMultiplier
-    }
-
-    return actualYaw
-}
+// codex start
+// fun getMovementDirectionOfInput(facingYaw: Float, input: DirectionalInput = DirectionalInput(player.input)): Float {
+//     var actualYaw = facingYaw
+//     val forwardMultiplier = when {
+//         input.backwards && !input.forwards -> {
+//             actualYaw += 180f
+//             -0.5f
+//         }
+//
+//         input.forwards && !input.backwards -> 0.5f
+//         else -> 1f
+//     }
+//
+//     if (input.left && !input.right) {
+//         actualYaw -= 90f * forwardMultiplier
+//     }
+//     if (input.right && !input.left) {
+//         actualYaw += 90f * forwardMultiplier
+//     }
+//
+//     return actualYaw
+// }
+// codex end
 
 @AddonApi
 inline val Entity.horizontalSpeed: Double

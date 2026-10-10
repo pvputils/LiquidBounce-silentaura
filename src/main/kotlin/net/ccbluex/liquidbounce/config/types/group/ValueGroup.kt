@@ -37,12 +37,16 @@ import net.ccbluex.liquidbounce.config.types.Value
 import net.ccbluex.liquidbounce.config.types.ValueType
 import net.ccbluex.liquidbounce.config.types.Vec3Value
 import net.ccbluex.liquidbounce.config.types.list.ChoiceListValue
-import net.ccbluex.liquidbounce.config.types.list.ItemListValue
+// codex start
+// import net.ccbluex.liquidbounce.config.types.list.ItemListValue
+// codex end
 import net.ccbluex.liquidbounce.config.types.list.ListValue
 import net.ccbluex.liquidbounce.config.types.list.MultiChoiceListValue
 import net.ccbluex.liquidbounce.config.types.list.MutableListValue
 import net.ccbluex.liquidbounce.config.types.list.RegistryListValue
-import net.ccbluex.liquidbounce.config.types.list.RegistryMutableListValue
+// codex start
+// import net.ccbluex.liquidbounce.config.types.list.RegistryMutableListValue
+// codex end
 import net.ccbluex.liquidbounce.config.types.list.Tagged
 import net.ccbluex.liquidbounce.event.EventListener
 import net.ccbluex.liquidbounce.features.addon.AddonApi
@@ -312,20 +316,24 @@ open class ValueGroup @JvmOverloads constructor(
         valueType: ValueType,
     ) = mutableList(name, defaultValue, valueType, E::class.java)
 
-    fun <T : MutableSet<E>, E> itemList(
-        name: String,
-        defaultValue: T,
-        items: Set<ItemListValue.NamedItem<E>>,
-        valueType: ValueType,
-        innerType: Class<E>,
-    ) = value(ItemListValue(name, defaultValue, items, valueType, innerType))
+    // codex start
+    // fun <T : MutableSet<E>, E> itemList(
+    //     name: String,
+    //     defaultValue: T,
+    //     items: Set<ItemListValue.NamedItem<E>>,
+    //     valueType: ValueType,
+    //     innerType: Class<E>,
+    // ) = value(ItemListValue(name, defaultValue, items, valueType, innerType))
+    // codex end
 
-    inline fun <T : MutableSet<E>, reified E> itemList(
-        name: String,
-        defaultValue: T,
-        items: Set<ItemListValue.NamedItem<E>>,
-        valueType: ValueType,
-    ) = itemList(name, defaultValue, items, valueType, E::class.java)
+    // codex start
+    // inline fun <T : MutableSet<E>, reified E> itemList(
+    //     name: String,
+    //     defaultValue: T,
+    //     items: Set<ItemListValue.NamedItem<E>>,
+    //     valueType: ValueType,
+    // ) = itemList(name, defaultValue, items, valueType, E::class.java)
+    // codex end
 
     fun <T : SequencedSet<E>, E> registryList(
         name: String,
@@ -340,18 +348,22 @@ open class ValueGroup @JvmOverloads constructor(
         valueType: ValueType,
     ) = registryList(name, defaultValue, valueType, E::class.java)
 
-    fun <T : MutableList<E>, E> registryMutableList(
-        name: String,
-        defaultValue: T,
-        valueType: ValueType,
-        innerType: Class<E>,
-    ) = value(RegistryMutableListValue(name, defaultValue, valueType, innerType))
+    // codex start
+    // fun <T : MutableList<E>, E> registryMutableList(
+    //     name: String,
+    //     defaultValue: T,
+    //     valueType: ValueType,
+    //     innerType: Class<E>,
+    // ) = value(RegistryMutableListValue(name, defaultValue, valueType, innerType))
+    // codex end
 
-    inline fun <T : MutableList<E>, reified E> registryMutableList(
-        name: String,
-        defaultValue: T,
-        valueType: ValueType,
-    ) = registryMutableList(name, defaultValue, valueType, E::class.java)
+    // codex start
+    // inline fun <T : MutableList<E>, reified E> registryMutableList(
+    //     name: String,
+    //     defaultValue: T,
+    //     valueType: ValueType,
+    // ) = registryMutableList(name, defaultValue, valueType, E::class.java)
+    // codex end
 
     private fun <T : Any> rangedValue(
         name: String,
@@ -491,8 +503,10 @@ open class ValueGroup @JvmOverloads constructor(
     fun <C : SequencedSet<Item>> items(name: String, default: C) =
         registryList(name, default, ValueType.ITEM)
 
-    fun <C : MutableList<Item>> itemList(name: String, default: C) =
-        registryMutableList(name, default, ValueType.ITEM)
+    // codex start
+    // fun <C : MutableList<Item>> itemList(name: String, default: C) =
+    //     registryMutableList(name, default, ValueType.ITEM)
+    // codex end
 
     fun <C : SequencedSet<SoundEvent>> sounds(name: String, default: C) =
         registryList(name, default, ValueType.SOUND_EVENT)

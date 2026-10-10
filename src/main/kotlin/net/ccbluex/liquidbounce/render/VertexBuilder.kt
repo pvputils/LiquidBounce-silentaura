@@ -54,8 +54,10 @@ inline fun VertexConsumer.addVertex(pose: Matrix4fc, pos: Vector3fc): VertexCons
 inline fun VertexConsumer.addVertex(pose: PoseStack.Pose, pos: Vector3fc): VertexConsumer =
     addVertex(pose, pos.x(), pos.y(), pos.z())
 
-inline fun VertexConsumer.setNormal(pose: PoseStack.Pose, normalVector: Vec3f): VertexConsumer =
-    setNormal(pose, normalVector.x, normalVector.y, normalVector.z)
+// codex start
+// inline fun VertexConsumer.setNormal(pose: PoseStack.Pose, normalVector: Vec3f): VertexConsumer =
+//     setNormal(pose, normalVector.x, normalVector.y, normalVector.z)
+// codex end
 
 inline fun VertexConsumer.setColor(color: Color4b): VertexConsumer = setColor(color.argb)
 

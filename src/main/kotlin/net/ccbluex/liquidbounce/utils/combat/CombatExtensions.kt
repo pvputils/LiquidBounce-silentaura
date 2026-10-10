@@ -20,8 +20,12 @@
 
 package net.ccbluex.liquidbounce.utils.combat
 
-import it.unimi.dsi.fastutil.objects.ObjectDoubleImmutablePair
-import it.unimi.dsi.fastutil.objects.ObjectDoublePair
+// codex start
+// import it.unimi.dsi.fastutil.objects.ObjectDoubleImmutablePair
+// codex end
+// codex start
+// import it.unimi.dsi.fastutil.objects.ObjectDoublePair
+// codex end
 import net.ccbluex.fastutil.component1
 import net.ccbluex.fastutil.component2
 import net.ccbluex.liquidbounce.config.types.list.Tagged
@@ -30,10 +34,16 @@ import net.ccbluex.liquidbounce.features.global.GlobalSettingsTarget
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.entity.isWithinWorldBorder
-import net.ccbluex.liquidbounce.utils.entity.squaredBoxedDistanceTo
-import net.ccbluex.liquidbounce.utils.world.getEntitiesInCube
+// codex start
+// import net.ccbluex.liquidbounce.utils.entity.squaredBoxedDistanceTo
+// codex end
+// codex start
+// import net.ccbluex.liquidbounce.utils.world.getEntitiesInCube
+// codex end
 import net.minecraft.client.CameraType
-import net.minecraft.client.multiplayer.ClientLevel
+// codex start
+// import net.minecraft.client.multiplayer.ClientLevel
+// codex end
 import net.minecraft.world.entity.Attackable
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -177,70 +187,76 @@ fun Entity?.shouldBeShown(enemyConf: Set<Targets> = GlobalSettingsTarget.visual)
 fun Entity?.shouldBeAttacked(enemyConf: Set<Targets> = GlobalSettingsTarget.combat) =
     this is Attackable && enemyConf.shouldAttack(this) && this.isWithinWorldBorder
 
-/**
- * Mirrors the vanilla server-side invalid attack disconnect checks
- *
- * @see net.minecraft.server.network.ServerGamePacketListenerImpl.handleAttack
- */
 // codex start
-// private fun Entity.canBeAttackedWithVanillaPacket() =
-//     this !is ItemEntity &&
-//         this !is ExperienceOrb &&
-//         this !== player &&
-//         (this !is AbstractArrow || this.isAttackable)
+// /**
+//  * Mirrors the vanilla server-side invalid attack disconnect checks
+//  *
+//  * @see net.minecraft.server.network.ServerGamePacketListenerImpl.handleAttack
+//  */
+// // codex start
+// // private fun Entity.canBeAttackedWithVanillaPacket() =
+// //     this !is ItemEntity &&
+// //         this !is ExperienceOrb &&
+// //         this !== player &&
+// //         (this !is AbstractArrow || this.isAttackable)
+// //
+// // /**
+// //  * Find the best enemy in the current world in a specific range.
+// //  */
+// // codex end
 //
+// @AddonApi
+// // codex start
+// // @JvmOverloads
+// // codex end
+// fun ClientLevel.findEnemy(
+//     range: ClosedFloatingPointRange<Float>,
+//     enemyConf: Set<Targets> = GlobalSettingsTarget.combat
+// ) = findEnemy(range.start, range.endInclusive, enemyConf)
+// codex end
+
+// codex start
 // /**
 //  * Find the best enemy in the current world in a specific range.
 //  */
+// @AddonApi
+// // codex start
+// // @JvmOverloads
+// // codex end
+// fun ClientLevel.findEnemy(
+//     minRange: Float,
+//     maxRange: Float,
+//     enemyConf: Set<Targets> = GlobalSettingsTarget.combat
+// ) = findEnemies(minRange, maxRange, enemyConf)
+//     .minByOrNull { (_, distSqr) -> distSqr }?.key()
 // codex end
 
-@AddonApi
 // codex start
-// @JvmOverloads
+// @AddonApi
+// // codex start
+// // @JvmOverloads
+// // codex end
+// fun ClientLevel.findEnemies(
+//     minRange: Float,
+//     maxRange: Float,
+//     enemyConf: Set<Targets> = GlobalSettingsTarget.combat
+// ): List<ObjectDoublePair<Entity>> {
+//     val minRangeSqr = minRange * minRange
+//     val maxRangeSqr = maxRange * maxRange
+//     val result = ArrayList<ObjectDoubleImmutablePair<Entity>>()
+//
+//     getEntitiesInCube(player.eyePosition, maxRange.toDouble()) {
+//         it.shouldBeAttacked(enemyConf)
+//     }.forEach { entity ->
+//         val distSqr = entity.squaredBoxedDistanceTo(player)
+//         if (distSqr in minRangeSqr..maxRangeSqr) {
+//             result += ObjectDoubleImmutablePair(entity, distSqr)
+//         }
+//     }
+//
+//     return result
+// }
 // codex end
-fun ClientLevel.findEnemy(
-    range: ClosedFloatingPointRange<Float>,
-    enemyConf: Set<Targets> = GlobalSettingsTarget.combat
-) = findEnemy(range.start, range.endInclusive, enemyConf)
-
-/**
- * Find the best enemy in the current world in a specific range.
- */
-@AddonApi
-// codex start
-// @JvmOverloads
-// codex end
-fun ClientLevel.findEnemy(
-    minRange: Float,
-    maxRange: Float,
-    enemyConf: Set<Targets> = GlobalSettingsTarget.combat
-) = findEnemies(minRange, maxRange, enemyConf)
-    .minByOrNull { (_, distSqr) -> distSqr }?.key()
-
-@AddonApi
-// codex start
-// @JvmOverloads
-// codex end
-fun ClientLevel.findEnemies(
-    minRange: Float,
-    maxRange: Float,
-    enemyConf: Set<Targets> = GlobalSettingsTarget.combat
-): List<ObjectDoublePair<Entity>> {
-    val minRangeSqr = minRange * minRange
-    val maxRangeSqr = maxRange * maxRange
-    val result = ArrayList<ObjectDoubleImmutablePair<Entity>>()
-
-    getEntitiesInCube(player.eyePosition, maxRange.toDouble()) {
-        it.shouldBeAttacked(enemyConf)
-    }.forEach { entity ->
-        val distSqr = entity.squaredBoxedDistanceTo(player)
-        if (distSqr in minRangeSqr..maxRangeSqr) {
-            result += ObjectDoubleImmutablePair(entity, distSqr)
-        }
-    }
-
-    return result
-}
 // codex start
 //
 // inline fun ClientLevel.getEntitiesBoxInRange(

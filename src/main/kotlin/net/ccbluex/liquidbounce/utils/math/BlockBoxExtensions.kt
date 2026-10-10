@@ -22,8 +22,12 @@ package net.ccbluex.liquidbounce.utils.math
 import net.ccbluex.liquidbounce.utils.client.world
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.world.level.ChunkPos
-import net.minecraft.world.level.chunk.ChunkAccess
+// codex start
+// import net.minecraft.world.level.ChunkPos
+// codex end
+// codex start
+// import net.minecraft.world.level.chunk.ChunkAccess
+// codex end
 import net.minecraft.world.level.levelgen.structure.BoundingBox
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
@@ -58,17 +62,21 @@ operator fun BoundingBox.contains(other: BoundingBox): Boolean =
         other.minZ() >= this.minZ() &&
         other.maxZ() <= this.maxZ()
 
-fun ChunkAccess.toBlockBox(): BoundingBox = this.pos.toBlockBox(minY = this.minY, maxY = this.maxY)
+// codex start
+// fun ChunkAccess.toBlockBox(): BoundingBox = this.pos.toBlockBox(minY = this.minY, maxY = this.maxY)
+// codex end
 
-@JvmOverloads
-fun ChunkPos.toBlockBox(
-    minY: Int = world.minY,
-    maxY: Int = world.maxY,
-): BoundingBox =
-    BoundingBox(
-        this.minBlockX, minY, this.minBlockZ,
-        this.maxBlockX, maxY, this.maxBlockZ,
-    )
+// codex start
+// @JvmOverloads
+// fun ChunkPos.toBlockBox(
+//     minY: Int = world.minY,
+//     maxY: Int = world.maxY,
+// ): BoundingBox =
+//     BoundingBox(
+//         this.minBlockX, minY, this.minBlockZ,
+//         this.maxBlockX, maxY, this.maxBlockZ,
+//     )
+// codex end
 
 val BoundingBox.boundingBox: AABB
     get() = AABB(

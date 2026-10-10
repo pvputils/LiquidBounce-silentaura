@@ -27,17 +27,25 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
+// codex start
+// import kotlin.contracts.ExperimentalContracts
+// codex end
+// codex start
+// import kotlin.contracts.InvocationKind
+// codex end
+// codex start
+// import kotlin.contracts.contract
+// codex end
 
-@OptIn(ExperimentalContracts::class)
-inline fun VoxelShape.ifEmpty(defaultValue: () -> VoxelShape): VoxelShape {
-    contract {
-        callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
-    }
-    return if (isEmpty) defaultValue() else this
-}
+// codex start
+// @OptIn(ExperimentalContracts::class)
+// inline fun VoxelShape.ifEmpty(defaultValue: () -> VoxelShape): VoxelShape {
+//     contract {
+//         callsInPlace(defaultValue, InvocationKind.AT_MOST_ONCE)
+//     }
+//     return if (isEmpty) defaultValue() else this
+// }
+// codex end
 
 inline fun VoxelShape?.orEmpty(): VoxelShape = this ?: Shapes.empty()
 

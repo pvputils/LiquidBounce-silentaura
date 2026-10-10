@@ -23,7 +23,9 @@ package net.ccbluex.liquidbounce.utils.math
 
 import net.minecraft.util.Mth
 import org.joml.Vector2f
-import java.math.RoundingMode
+// codex start
+// import java.math.RoundingMode
+// codex end
 
 inline fun Float.toRadians() = this * Mth.DEG_TO_RAD
 inline fun Double.toRadians() = this * Mth.DEG_TO_RAD

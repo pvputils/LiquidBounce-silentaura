@@ -19,15 +19,25 @@
 
 package net.ccbluex.liquidbounce.utils.io
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+// codex start
+// import kotlinx.coroutines.Dispatchers
+// codex end
+// codex start
+// import kotlinx.coroutines.withContext
+// codex end
 import java.io.IOException
 import javax.imageio.ImageIO
 import okio.Buffer
 import okio.BufferedSource
-import java.awt.Font
-import java.io.File
-import java.io.InputStream
+// codex start
+// import java.awt.Font
+// codex end
+// codex start
+// import java.io.File
+// codex end
+// codex start
+// import java.io.InputStream
+// codex end
 
 @Suppress("ThrowsCount")
 @Throws(IOException::class, IllegalArgumentException::class)
@@ -68,17 +78,21 @@ fun BufferedSource.ensurePngOrConvertJpeg(): BufferedSource {
     throw IllegalArgumentException("Unsupported image format: only PNG and JPEG are allowed")
 }
 
-suspend fun File.createFont(fontFormat: Int = Font.TRUETYPE_FONT): Font =
-    withContext(Dispatchers.IO) {
-        Font.createFont(fontFormat, this@createFont)
-    }
+// codex start
+// suspend fun File.createFont(fontFormat: Int = Font.TRUETYPE_FONT): Font =
+//     withContext(Dispatchers.IO) {
+//         Font.createFont(fontFormat, this@createFont)
+//     }
+// codex end
 
-suspend fun InputStream.createFont(fontFormat: Int = Font.TRUETYPE_FONT): Font =
-    withContext(Dispatchers.IO) {
-        this@createFont.use {
-            Font.createFont(fontFormat, it)
-        }
-    }
+// codex start
+// suspend fun InputStream.createFont(fontFormat: Int = Font.TRUETYPE_FONT): Font =
+//     withContext(Dispatchers.IO) {
+//         this@createFont.use {
+//             Font.createFont(fontFormat, it)
+//         }
+//     }
+// codex end
 
 // codex start
 // @JvmField

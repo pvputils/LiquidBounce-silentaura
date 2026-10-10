@@ -21,11 +21,17 @@
 
 package net.ccbluex.liquidbounce.utils.block
 
-import it.unimi.dsi.fastutil.ints.IntLongPair
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet
+// codex start
+// import it.unimi.dsi.fastutil.ints.IntLongPair
+// codex end
+// codex start
+// import it.unimi.dsi.fastutil.longs.LongOpenHashSet
+// codex end
 import net.ccbluex.liquidbounce.features.addon.AddonApi
 import net.ccbluex.liquidbounce.render.FULL_BOX
-import net.ccbluex.liquidbounce.utils.client.isOlderThan1_21_2
+// codex start
+// import net.ccbluex.liquidbounce.utils.client.isOlderThan1_21_2
+// codex end
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.client.world
@@ -33,11 +39,15 @@ import net.ccbluex.liquidbounce.utils.math.boundsOrNull
 import net.ccbluex.liquidbounce.utils.math.iterator
 import net.ccbluex.liquidbounce.utils.math.plus
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
+// codex start
+// import net.minecraft.core.Direction
+// codex end
 import net.minecraft.core.TypedInstance
 import net.minecraft.core.Vec3i
 import net.minecraft.tags.BlockTags
-import net.minecraft.world.entity.Entity
+// codex start
+// import net.minecraft.world.entity.Entity
+// codex end
 import net.minecraft.world.level.block.AbstractBedBlock
 import net.minecraft.world.level.block.AbstractChestBlock
 import net.minecraft.world.level.block.AbstractFurnaceBlock
@@ -78,7 +88,9 @@ import net.minecraft.world.level.block.NoteBlock
 import net.minecraft.world.level.block.RedstoneWireBlock
 import net.minecraft.world.level.block.RepeaterBlock
 import net.minecraft.world.level.block.RespawnAnchorBlock
-import net.minecraft.world.level.block.ShelfMushroomBlock
+// codex start
+// import net.minecraft.world.level.block.ShelfMushroomBlock
+// codex end
 import net.minecraft.world.level.block.ShulkerBoxBlock
 import net.minecraft.world.level.block.StonecutterBlock
 import net.minecraft.world.level.block.SweetBerryBushBlock
@@ -159,121 +171,123 @@ fun BlockState.outlineBox(blockPos: BlockPos): AABB {
     return outlineShape.boundsOrNull() ?: FULL_BOX
 }
 
-/**
- * Scan blocks around the position in a cuboid with filtering.
- *
- * Uses [net.minecraft.world.level.LevelReader.findBlocksIn] internally, which
- * skips whole chunk sections through the palette check and only scans loaded
- * sections within the world height.
- */
 // codex start
-// fun Vec3.searchBlocksInCuboid(
-//     radius: Float,
-//     filter: BiPredicate<BlockPos, BlockState>,
-// ): List<Pair<BlockPos, BlockState>> {
-//     val from = BlockPos(
-//         floor(this.x - radius).toInt(),
-//         floor(this.y - radius).toInt(),
-//         floor(this.z - radius).toInt(),
-//     )
-//     val to = BlockPos(
-//         ceil(this.x + radius).toInt(),
-//         ceil(this.y + radius).toInt(),
-//         ceil(this.z + radius).toInt(),
-//     )
-//
-//     return buildList {
-//         world.findBlocksIn(from, to).forEach { pos, state ->
-//             if (filter.test(pos, state)) {
-//                 this.add(pos.immutable to state)
-//             }
-//         }
-//     }
-// }
-//
 // /**
-//  * Scan blocks around the position in a cuboid, filtered and sorted by shape distance from this [Vec3].
-//  * Distance calculation is based on outline shape:
-//  * `shapeGetter.get(state, level, pos, collisionContext).move(pos).distanceToSqr(eyesPos)`.
+//  * Scan blocks around the position in a cuboid with filtering.
 //  *
-//  * @return pairs of [BlockPos] and its [BlockState], sorted by distance to the center
+//  * Uses [net.minecraft.world.level.LevelReader.findBlocksIn] internally, which
+//  * skips whole chunk sections through the palette check and only scans loaded
+//  * sections within the world height.
 //  */
 // // codex start
-// // fun Vec3.searchBlocksInRangeSorted(
-// //     range: Float,
-// //     shapeGetter: ClipContext.ShapeGetter = ClipContext.Block.OUTLINE,
-// //     collisionContext: CollisionContext = CollisionContext.of(player),
+// // fun Vec3.searchBlocksInCuboid(
+// //     radius: Float,
 // //     filter: BiPredicate<BlockPos, BlockState>,
-// // ): List<Pair<BlockPos, BlockState>> =
-// //     searchBlocksInCuboid(range + 1, filter)
-// //         .weightedFilterSortedByAtMost(range.sq().toDouble()) { (pos, state) ->
-// //             shapeGetter.get(state, world, pos, collisionContext)
-// //                 .move(pos)
-// //                 .distanceToSqr(this)
+// // ): List<Pair<BlockPos, BlockState>> {
+// //     val from = BlockPos(
+// //         floor(this.x - radius).toInt(),
+// //         floor(this.y - radius).toInt(),
+// //         floor(this.z - radius).toInt(),
+// //     )
+// //     val to = BlockPos(
+// //         ceil(this.x + radius).toInt(),
+// //         ceil(this.y + radius).toInt(),
+// //         ceil(this.z + radius).toInt(),
+// //     )
+// //
+// //     return buildList {
+// //         world.findBlocksIn(from, to).forEach { pos, state ->
+// //             if (filter.test(pos, state)) {
+// //                 this.add(pos.immutable to state)
+// //             }
 // //         }
-// //
-// // /**
-// //  * Scan blocks outwards from a bed
-// //  */
-// // codex end
-// // codex start
-// // fun BlockPos.searchBedLayer(state: BlockState, layers: Int): Sequence<IntLongPair> {
-// //     check(state.isBed) { "This function is only available for Beds" }
-// //
-// //     val anotherPartDirection = state.anotherBedPartDirection()!!
-// //     val bedDirection = anotherPartDirection.opposite
-// //
-// //     val left: Direction
-// //     val right: Direction
-// //     if (bedDirection.axis == Direction.Axis.X) {
-// //         left = Direction.SOUTH
-// //         right = Direction.NORTH
-// //     } else {
-// //         left = Direction.WEST
-// //         right = Direction.EAST
 // //     }
-// //
-// //     return searchLayer(layers, bedDirection, Direction.UP, left, right) +
-// //         relative(anotherPartDirection).searchLayer(layers, anotherPartDirection, Direction.UP, left, right)
 // // }
 // //
 // // /**
-// //  * Scan blocks outwards from center along given [directions], up to [layers]
+// //  * Scan blocks around the position in a cuboid, filtered and sorted by shape distance from this [Vec3].
+// //  * Distance calculation is based on outline shape:
+// //  * `shapeGetter.get(state, level, pos, collisionContext).move(pos).distanceToSqr(eyesPos)`.
 // //  *
-// //  * @return The layer to the BlockPos (long value)
+// //  * @return pairs of [BlockPos] and its [BlockState], sorted by distance to the center
 // //  */
+// // // codex start
+// // // fun Vec3.searchBlocksInRangeSorted(
+// // //     range: Float,
+// // //     shapeGetter: ClipContext.ShapeGetter = ClipContext.Block.OUTLINE,
+// // //     collisionContext: CollisionContext = CollisionContext.of(player),
+// // //     filter: BiPredicate<BlockPos, BlockState>,
+// // // ): List<Pair<BlockPos, BlockState>> =
+// // //     searchBlocksInCuboid(range + 1, filter)
+// // //         .weightedFilterSortedByAtMost(range.sq().toDouble()) { (pos, state) ->
+// // //             shapeGetter.get(state, world, pos, collisionContext)
+// // //                 .move(pos)
+// // //                 .distanceToSqr(this)
+// // //         }
+// // //
+// // // /**
+// // //  * Scan blocks outwards from a bed
+// // //  */
+// // // codex end
+// // // codex start
+// // // fun BlockPos.searchBedLayer(state: BlockState, layers: Int): Sequence<IntLongPair> {
+// // //     check(state.isBed) { "This function is only available for Beds" }
+// // //
+// // //     val anotherPartDirection = state.anotherBedPartDirection()!!
+// // //     val bedDirection = anotherPartDirection.opposite
+// // //
+// // //     val left: Direction
+// // //     val right: Direction
+// // //     if (bedDirection.axis == Direction.Axis.X) {
+// // //         left = Direction.SOUTH
+// // //         right = Direction.NORTH
+// // //     } else {
+// // //         left = Direction.WEST
+// // //         right = Direction.EAST
+// // //     }
+// // //
+// // //     return searchLayer(layers, bedDirection, Direction.UP, left, right) +
+// // //         relative(anotherPartDirection).searchLayer(layers, anotherPartDirection, Direction.UP, left, right)
+// // // }
+// // //
+// // // /**
+// // //  * Scan blocks outwards from center along given [directions], up to [layers]
+// // //  *
+// // //  * @return The layer to the BlockPos (long value)
+// // //  */
+// // // codex end
 // // codex end
+//
+// @Suppress("detekt:CognitiveComplexMethod")
+// fun BlockPos.searchLayer(layers: Int, vararg directions: Direction): Sequence<IntLongPair> =
+//     sequence {
+//         val longValueOfThis = this@searchLayer.asLong()
+//         val initialCapacity = layers * layers * directions.size / 2
+//
+//         val queue = ArrayDeque<IntLongPair>(initialCapacity).apply { add(IntLongPair.of(0, longValueOfThis)) }
+//         val visited = LongOpenHashSet(initialCapacity).apply { add(longValueOfThis) }
+//
+//         while (queue.isNotEmpty()) {
+//             val next = queue.removeFirst()
+//             val layer = next.leftInt()
+//             val pos = next.rightLong()
+//
+//             if (layer > 0) {
+//                 yield(next)
+//             }
+//
+//             if (layer >= layers) continue
+//
+//             // Search next layer
+//             for (direction in directions) {
+//                 val newLong = BlockPos.offset(pos, direction)
+//                 if (visited.add(newLong)) {
+//                     queue.add(IntLongPair.of(layer + 1, newLong))
+//                 }
+//             }
+//         }
+//     }
 // codex end
-
-@Suppress("detekt:CognitiveComplexMethod")
-fun BlockPos.searchLayer(layers: Int, vararg directions: Direction): Sequence<IntLongPair> =
-    sequence {
-        val longValueOfThis = this@searchLayer.asLong()
-        val initialCapacity = layers * layers * directions.size / 2
-
-        val queue = ArrayDeque<IntLongPair>(initialCapacity).apply { add(IntLongPair.of(0, longValueOfThis)) }
-        val visited = LongOpenHashSet(initialCapacity).apply { add(longValueOfThis) }
-
-        while (queue.isNotEmpty()) {
-            val next = queue.removeFirst()
-            val layer = next.leftInt()
-            val pos = next.rightLong()
-
-            if (layer > 0) {
-                yield(next)
-            }
-
-            if (layer >= layers) continue
-
-            // Search next layer
-            for (direction in directions) {
-                val newLong = BlockPos.offset(pos, direction)
-                if (visited.add(newLong)) {
-                    queue.add(IntLongPair.of(layer + 1, newLong))
-                }
-            }
-        }
-    }
 // codex start
 //
 // fun BlockPos.getSortedSphere(radius: Float): Array<BlockPos> {
@@ -627,17 +641,21 @@ fun BlockPos.searchLayer(layers: Int, vararg directions: Direction): Sequence<In
 // // codex end
 // codex end
 
-fun BlockPos?.fallDamageMultiplier(entity: Entity): Float =
-    this?.getBlock()?.fallDamageMultiplier(entity) ?: 1f
+// codex start
+// fun BlockPos?.fallDamageMultiplier(entity: Entity): Float =
+//     this?.getBlock()?.fallDamageMultiplier(entity) ?: 1f
+// codex end
 
-fun Block?.fallDamageMultiplier(entity: Entity): Float =
-    when (this) {
-        Blocks.WATER, Blocks.COBWEB, Blocks.POWDER_SNOW -> 0f
-        Blocks.HAY_BLOCK, Blocks.HONEY_BLOCK -> 0.2f
-        Blocks.SLIME_BLOCK -> if (entity.isSuppressingBounce && isOlderThan1_21_2) 1f else 0f
-        is AbstractBedBlock, is ShelfMushroomBlock -> 0.5f
-        else -> 1f
-    }
+// codex start
+// fun Block?.fallDamageMultiplier(entity: Entity): Float =
+//     when (this) {
+//         Blocks.WATER, Blocks.COBWEB, Blocks.POWDER_SNOW -> 0f
+//         Blocks.HAY_BLOCK, Blocks.HONEY_BLOCK -> 0.2f
+//         Blocks.SLIME_BLOCK -> if (entity.isSuppressingBounce && isOlderThan1_21_2) 1f else 0f
+//         is AbstractBedBlock, is ShelfMushroomBlock -> 0.5f
+//         else -> 1f
+//     }
+// codex end
 
 // codex start
 // fun BlockPos.isBlastResistant(): Boolean {

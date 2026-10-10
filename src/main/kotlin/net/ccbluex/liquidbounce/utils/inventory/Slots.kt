@@ -20,36 +20,52 @@ package net.ccbluex.liquidbounce.utils.inventory
 
 import net.ccbluex.fastutil.mapToArray
 import net.ccbluex.liquidbounce.features.addon.AddonApi
-import net.ccbluex.liquidbounce.utils.client.mc
-import net.minecraft.tags.TagKey
+// codex start
+// import net.ccbluex.liquidbounce.utils.client.mc
+// codex end
+// codex start
+// import net.minecraft.tags.TagKey
+// codex end
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import java.util.function.Predicate
+// codex start
+// import java.util.function.Predicate
+// codex end
 
-fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(item: Item): T? =
-    findClosestSlot { it.item === item }
+// codex start
+// fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(item: Item): T? =
+//     findClosestSlot { it.item === item }
+// codex end
 
-fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(itemTag: TagKey<Item>): T? =
-    findClosestSlot { it.`is`(itemTag) }
+// codex start
+// fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(itemTag: TagKey<Item>): T? =
+//     findClosestSlot { it.`is`(itemTag) }
+// codex end
 
-fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(vararg items: Item): T? =
-    findClosestSlot { it.item in items }
+// codex start
+// fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(vararg items: Item): T? =
+//     findClosestSlot { it.item in items }
+// codex end
 
-fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(items: Collection<Item>): T? =
-    findClosestSlot { it.item in items }
+// codex start
+// fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(items: Collection<Item>): T? =
+//     findClosestSlot { it.item in items }
+// codex end
 
-inline fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(predicate: (ItemStack) -> Boolean): T? {
-    var candidate: T? = null
-    for (slot in this) {
-        if (!predicate(slot.itemStack)) continue
-        candidate = if (candidate == null) {
-            slot
-        } else {
-            minOf(candidate, slot, HotbarItemSlot.PREFER_NEARBY)
-        }
-    }
-    return candidate
-}
+// codex start
+// inline fun <T : HotbarItemSlot> Iterable<T>.findClosestSlot(predicate: (ItemStack) -> Boolean): T? {
+//     var candidate: T? = null
+//     for (slot in this) {
+//         if (!predicate(slot.itemStack)) continue
+//         candidate = if (candidate == null) {
+//             slot
+//         } else {
+//             minOf(candidate, slot, HotbarItemSlot.PREFER_NEARBY)
+//         }
+//     }
+//     return candidate
+// }
+// codex end
 
 @AddonApi
 class Slots<T : ItemSlot>(private val slots: List<T>) : List<T> by slots {
@@ -59,15 +75,21 @@ class Slots<T : ItemSlot>(private val slots: List<T>) : List<T> by slots {
     val items: Array<Item>
         get() = slots.mapToArray { it.itemStack.item }
 
-    fun findSlot(item: Item): T? = findSlot { it.item === item }
+    // codex start
+    // fun findSlot(item: Item): T? = findSlot { it.item === item }
+    // codex end
 
-    // Java takes the Predicate overload; both would match a lambda otherwise.
-    @JvmSynthetic
-    inline fun findSlot(predicate: (ItemStack) -> Boolean): T? {
-        return if (mc.player == null) null else find { predicate(it.itemStack) }
-    }
+    // codex start
+    // // Java takes the Predicate overload; both would match a lambda otherwise.
+    // @JvmSynthetic
+    // inline fun findSlot(predicate: (ItemStack) -> Boolean): T? {
+    //     return if (mc.player == null) null else find { predicate(it.itemStack) }
+    // }
+    // codex end
 
-    fun findSlot(predicate: Predicate<ItemStack>): T? = findSlot(predicate::test)
+    // codex start
+    // fun findSlot(predicate: Predicate<ItemStack>): T? = findSlot(predicate::test)
+    // codex end
 
     operator fun plus(other: Slots<*>): Slots<ItemSlot> {
         return Slots(this.slots + other.slots)

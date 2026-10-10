@@ -21,14 +21,22 @@
 
 package net.ccbluex.liquidbounce.utils.item
 
-import com.mojang.brigadier.StringReader
+// codex start
+// import com.mojang.brigadier.StringReader
+// codex end
 import net.ccbluex.liquidbounce.utils.client.mc
 import net.ccbluex.liquidbounce.utils.client.player
 import net.ccbluex.liquidbounce.utils.entity.handItems
 import net.ccbluex.liquidbounce.utils.inventory.Slots
-import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.commands.arguments.item.ItemInput
-import net.minecraft.commands.arguments.item.ItemParser
+// codex start
+// import net.minecraft.client.multiplayer.ClientLevel
+// codex end
+// codex start
+// import net.minecraft.commands.arguments.item.ItemInput
+// codex end
+// codex start
+// import net.minecraft.commands.arguments.item.ItemParser
+// codex end
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentGetter
